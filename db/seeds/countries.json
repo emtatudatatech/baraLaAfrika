@@ -1,0 +1,2334 @@
+{
+  "$generated": {
+    "by": "python -m pipelines extract-pdf",
+    "source_pdf": "data/source/africa-state-symbology.pdf",
+    "source_pdf_sha256": "fa0f533bf8ba372dcf1afd49970821f0c0dc9e34ff552c19ab51651e3e1b0dc9",
+    "content_sha256": "16a7cf41ee06047ff10432b1cbd75985de21e18f5e5f726450a03e8edc3bf1de",
+    "note": "Edit freely, then run `python -m pipelines load`. Re-running extract-pdf will not overwrite edited seeds unless --force is given."
+  },
+  "regions": [
+    {
+      "slug": "north",
+      "name": "North Africa",
+      "description": "The symbology of North Africa is heavily influenced by its geographic dominance by the Sahara Desert, its Mediterranean coastline, and its deep historical integration with the Islamic and Arab worlds. Consequently, the vexillology of the region frequently incorporates the crescent moon and star, while national fauna often highlights species capable of surviving extreme arid conditions.",
+      "sort_order": 1,
+      "color_hex": null
+    },
+    {
+      "slug": "west",
+      "name": "West Africa",
+      "description": "West Africa presents a rich tapestry of states whose names are often deeply tied to ancient empires, major river systems, or early Portuguese exploration. The vexillology here is heavily dominated by the Ethiopian-inspired Pan-African colors (red, yellow, and green), reflecting a shared regional commitment to post-colonial solidarity and the rejection of European imperial aesthetics.",
+      "sort_order": 2,
+      "color_hex": null
+    },
+    {
+      "slug": "central",
+      "name": "Central Africa",
+      "description": "Central Africa encompasses the vast Congo Basin and impenetrable equatorial rainforests. The naming conventions here are heavily linked to major aquatic systems and early Portuguese navigational markers. The biological symbology shifts away from the savanna fauna seen elsewhere, highlighting the dense, elusive creatures of the deep jungle, such as panthers, okapis, and forest elephants.",
+      "sort_order": 3,
+      "color_hex": null
+    },
+    {
+      "slug": "east",
+      "name": "East Africa",
+      "description": "East Africa is a region of immense geographic and ecological diversity, stretching from the arid Horn of Africa to the tectonic Great Rift Valley and the island states of the Indian Ocean. The vexillology here is highly diverse, eschewing uniform Pan-Africanism for deeply localized designs. The biological symbology frequently features savanna apex predators, majestic birds, and ancient marine life.",
+      "sort_order": 4,
+      "color_hex": null
+    },
+    {
+      "slug": "southern",
+      "name": "Southern Africa",
+      "description": "Southern Africa is characterized by complex post-colonial transitions, immense mineral wealth, and unique high-veld ecologies. The vexillology often deviates from the standard Pan-African blocks, utilizing intricate geometric designs and specific cultural artifacts to signal post-apartheid and post-colonial rebirth. The zoology heavily emphasizes herd animals, reflecting the vast plains, savannas, and deserts.",
+      "sort_order": 5,
+      "color_hex": null
+    }
+  ],
+  "countries": [
+    {
+      "iso3": "DZA",
+      "iso2": "DZ",
+      "iso_numeric": 12,
+      "name": "Algeria",
+      "official_name": "People's Democratic Republic of Algeria",
+      "region": "north",
+      "flag_url_template": "https://flagcdn.com/w{width}/dz.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "The Islands",
+        "etymology_detail": "Algeria derives its name from the Arabic Al-Jaza'ir, meaning \"The Islands.\" This is a truncated form referencing four islands that formerly stood off the coast of Algiers before being joined to the mainland after Hayreddin Barbarossa captured the Peñón of Algiers in 1529.",
+        "etymology_category": "geographic_feature",
+        "flag_design_summary": "Green/White with Crescent & Star",
+        "flag_design_detail": "The Algerian flag is divided vertically into green and white, centered with a red crescent and star. The green signifies Islam, the white denotes purity and peace, and the red symbolizes the blood of martyrs shed during the brutal war for independence against France. The crescent and star are quintessential Islamic symbols.",
+        "national_symbol_summary": "Seal of Antiquity",
+        "national_symbol_detail": "Algeria’s national symbol in formal statecraft is its national emblem, which features the Hand of Fatima and the Atlas Mountains, but its most beloved and recognized emblem is its national animal, the Fennec Fox (Vulpes zerda).",
+        "national_animal_name": "Fennec Fox",
+        "national_animal_scientific": "Vulpes zerda",
+        "national_animal_detail": "Algeria’s national symbol in formal statecraft is its national emblem, which features the Hand of Fatima and the Atlas Mountains, but its most beloved and recognized emblem is its national animal, the Fennec Fox (Vulpes zerda). The Fennec Fox is highly adapted to the harsh Saharan environment, utilizing its oversized ears to radiate body heat to keep cool. It symbolizes resilience, agility, and survival, characteristics deeply woven into the Algerian national identity, and serves as the official moniker for their national football team, \"Les Fennecs\".",
+        "animal_status": "de_facto",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4, wikipedia-penon-of-algiers).\nThe flag design relies mainly on low-reliability or no sources (refs: 17).\nThe national symbol relies mainly on low-reliability or no sources (refs: 18).\nThe national animal relies mainly on low-reliability or no sources (refs: 18, 19).\n[corrected] etymology detail: The Peñón was held by Spain until Barbarossa captured it in 1529, so the islands cannot have been joined to the mainland in 1525. (source: wikipedia-penon-of-algiers)"
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-17"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-19"
+        },
+        {
+          "field": "etymology",
+          "source_key": "wikipedia-penon-of-algiers"
+        }
+      ]
+    },
+    {
+      "iso3": "EGY",
+      "iso2": "EG",
+      "iso_numeric": 818,
+      "name": "Egypt",
+      "official_name": "Arab Republic of Egypt",
+      "region": "north",
+      "flag_url_template": "https://flagcdn.com/w{width}/eg.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Home of the Soul of Ptah",
+        "etymology_detail": "Egypt derives its English name from the ancient Greek Aigyptos, which is a Hellenized corruption of the ancient Egyptian Hwt-ka-Ptah, meaning \"Home of the Soul of Ptah,\" referring to the ancient city of Memphis, the center of the cult of the creator god Ptah.",
+        "etymology_category": "colonial_or_translation",
+        "flag_design_summary": "Pan-Arab Tricolor with Eagle",
+        "flag_design_detail": "The Egyptian flag consists of horizontal bands of red, white, and black—the classic Pan-Arab colors originating from the 1952 Egyptian Revolution. Red symbolizes the struggle against foreign occupation, white represents the bloodless nature of the revolution, and black signifies the end of the dark days of monarchy and British colonialism. At the center of the flag is the Eagle of Saladin, which serves as both the national symbol and the central feature of the coat of arms.",
+        "national_symbol_summary": "Eagle of Saladin",
+        "national_symbol_detail": "At the center of the flag is the Eagle of Saladin, which serves as both the national symbol and the central feature of the coat of arms. The eagle represents power, beauty, and sovereignty, dating back to the Ayyubid dynasty.",
+        "national_animal_name": "Steppe Eagle",
+        "national_animal_scientific": null,
+        "national_animal_detail": "Correspondingly, the Steppe Eagle is considered the national animal, biologically embodying the vigilance and commanding strength of the state.",
+        "animal_status": "de_facto",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe flag design relies mainly on low-reliability or no sources (refs: 18).\nThe national symbol relies mainly on low-reliability or no sources (refs: 18).\nThe national animal relies mainly on low-reliability or no sources (refs: 23)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-23"
+        }
+      ]
+    },
+    {
+      "iso3": "LBY",
+      "iso2": "LY",
+      "iso_numeric": 434,
+      "name": "Libya",
+      "official_name": "State of Libya",
+      "region": "north",
+      "flag_url_template": "https://flagcdn.com/w{width}/ly.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Land of the Libu",
+        "etymology_detail": "Libya takes its name from the ancient Greek term for North Africa, which was derived from the Libu, an indigenous Berber tribal confederation.",
+        "etymology_category": "ethnic_group",
+        "flag_design_summary": "Red/Black/Green with Crescent",
+        "flag_design_detail": "The current flag, reinstated following the 2011 revolution against Muammar Gaddafi, features horizontal bands of red, black, and green, with a white crescent and star centered on a broader black band. According to its designer, Omar Faiek Shennib, the red stands for the blood sacrificed for Libya's freedom, the black for the dark days of Italian occupation, and the green for agricultural wealth and future prosperity; these meanings are not defined in law. The crescent and star represent Islam.",
+        "national_symbol_summary": "Crescent and Star",
+        "national_symbol_detail": "Libya's national symbol is traditionally intertwined with the crescent and star motif.",
+        "national_animal_name": "Fennec Fox",
+        "national_animal_scientific": null,
+        "national_animal_detail": "Biologically, the Fennec Fox serves as the de facto national animal, chosen for its ability to thrive in the sprawling Libyan desert, representing the endurance and adaptability of the Libyan people in harsh conditions.",
+        "animal_status": "de_facto",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe national symbol relies mainly on low-reliability or no sources (refs: none).\nThe national animal relies mainly on low-reliability or no sources (refs: 18).\n[corrected] flag design detail: The colour meanings were presented as official; they are the designer's account. (source: wikipedia-flag-of-libya)"
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "wikipedia-flag-of-libya"
+        }
+      ]
+    },
+    {
+      "iso3": "MRT",
+      "iso2": "MR",
+      "iso_numeric": 478,
+      "name": "Mauritania",
+      "official_name": "Islamic Republic of Mauritania",
+      "region": "north",
+      "flag_url_template": "https://flagcdn.com/w{width}/mr.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Land of the Moors/Dark",
+        "etymology_detail": "Mauritania is named after the ancient Berber kingdom of Mauretania, derived from the Latin term for the indigenous Mauri (Moors) people, which roughly translates to \"dark\" or \"people of the dark land\".",
+        "etymology_category": "ethnic_group",
+        "flag_design_summary": "Green/Gold with Crescent & Star",
+        "flag_design_detail": "The flag consists of a green field with a gold crescent and star, flanked by two red bands added in 2017. The green and gold reflect Islamic heritage and the sands of the Sahara, respectively, while the recently added red bands symbolize the blood shed by those who fought for independence.",
+        "national_symbol_summary": "Crescent and Star",
+        "national_symbol_detail": "The crescent and star act as the primary national symbol.",
+        "national_animal_name": "Camel",
+        "national_animal_scientific": null,
+        "national_animal_detail": "Mauritania does not have a legally codified national animal, and its football team is named \"The Almoravids\" after the 11th-century dynasty. However, based on the country's ecology and profound cultural reliance on desert transport, the Dromedary Camel serves as the inferred symbol of Mauritanian endurance and nomadic heritage, a conclusion drawn from its prevalence in domestic heraldic motifs and daily life.",
+        "animal_status": "inferred",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: none).\nThe national animal relies mainly on low-reliability or no sources (refs: 20)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-20"
+        }
+      ]
+    },
+    {
+      "iso3": "MAR",
+      "iso2": "MA",
+      "iso_numeric": 504,
+      "name": "Morocco",
+      "official_name": "Kingdom of Morocco",
+      "region": "north",
+      "flag_url_template": "https://flagcdn.com/w{width}/ma.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "The West (Maghreb)",
+        "etymology_detail": "Morocco derives its English name from the Portuguese corruption of Marrakesh (the former capital), while its official Arabic name, Al-Maghrib al-Aqsa, translates to \"The Farthest West\" or \"The Place Where the Sun Sets\".",
+        "etymology_category": "colonial_or_translation",
+        "flag_design_summary": "Red with Green Pentagram",
+        "flag_design_detail": "The flag consists of a solid red field with a green pentagram (the Seal of Solomon) in the center. The red honors the historic ruling dynasties, specifically the Alaouite dynasty, signifying hardiness, valor, and strength.",
+        "national_symbol_summary": "Pentagram (Seal of Solomon)",
+        "national_symbol_detail": "The green pentagram acts as the supreme national symbol, representing the five pillars of Islam and the unbreakable relationship between God and the nation.",
+        "national_animal_name": "Barbary Lion",
+        "national_animal_scientific": null,
+        "national_animal_detail": "Morocco's national animal is the Barbary Lion (or Atlas Lion). Although functionally extinct in the wild, the Barbary Lion is deeply embedded in Moroccan royal iconography and folklore, representing supreme authority, majesty, and the historic wildness of the Atlas Mountains.",
+        "animal_status": "de_facto",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 5).\nThe flag design relies mainly on low-reliability or no sources (refs: 17).\nThe national symbol relies mainly on low-reliability or no sources (refs: 17)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-5"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-17"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-17"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-19"
+        }
+      ]
+    },
+    {
+      "iso3": "TUN",
+      "iso2": "TN",
+      "iso_numeric": 788,
+      "name": "Tunisia",
+      "official_name": "Republic of Tunisia",
+      "region": "north",
+      "flag_url_template": "https://flagcdn.com/w{width}/tn.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "City of Tunis",
+        "etymology_detail": "Tunisia is named directly after its capital city, Tunis, with the Latinate suffix \"-ia\" appended during the French protectorate era.",
+        "etymology_category": "colonial_or_translation",
+        "flag_design_summary": "Red with Crescent & Star",
+        "flag_design_detail": "The flag is red with a central white circle containing a red crescent and star. This design heavily mirrors the Ottoman flag, reflecting Tunisia's historical status as a highly autonomous Ottoman province for centuries prior to French colonization. The red signifies the blood of martyrs who resisted oppression, while the crescent and star denote Islam.",
+        "national_symbol_summary": "Carthaginian Galley/Lion/Balance",
+        "national_symbol_detail": "Tunisia's national emblem features a Carthaginian galley, a lion holding a sword, and a weighing scale, symbolizing freedom, order, and justice.",
+        "national_animal_name": "Barbary Horse / Eagle",
+        "national_animal_scientific": "Barbary Horse: Equus caballus",
+        "national_animal_detail": "The national animal is the Barbary Horse (Equus caballus), one of the oldest horse breeds and an ancestor of the modern thoroughbred, reflecting the region's long history of cavalry and equestrian mastery. Concurrently, the eagle—specifically the \"Carthage Eagle\"—is a dominant cultural symbol reflecting the ancient Carthaginian empire that once ruled the Mediterranean from Tunisian shores, serving as the namesake for the national football squad.",
+        "animal_status": "de_facto",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 5).\nThe flag design relies mainly on low-reliability or no sources (refs: 17).\nThe national symbol relies mainly on low-reliability or no sources (refs: none).\nThe national animal relies mainly on low-reliability or no sources (refs: 18, 19)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-5"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-17"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-19"
+        }
+      ]
+    },
+    {
+      "iso3": "BEN",
+      "iso2": "BJ",
+      "iso_numeric": 204,
+      "name": "Benin",
+      "official_name": "Republic of Benin",
+      "region": "west",
+      "flag_url_template": "https://flagcdn.com/w{width}/bj.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Bight of Benin",
+        "etymology_detail": "Benin was formerly known as Dahomey but changed its name in 1975 to honor the Bight of Benin, a body of water named after the historic Benin (Bini) Empire, which fell to the British. The change also replaced \"Dahomey\", a name associated only with the Fon people of the south.",
+        "etymology_category": "geographic_feature",
+        "flag_design_summary": "Green/Yellow/Red",
+        "flag_design_detail": "The flag features a vertical green band on the hoist side alongside horizontal yellow and red bands—classic Pan-African colors representing the forest and hope (green), wealth and the savanna (yellow), and courage and blood (red).",
+        "national_symbol_summary": "Leopard / Dahomey Iconography",
+        "national_symbol_detail": "The leopard was the sacred royal symbol of the historical Kingdom of Dahomey, embodying stealth, victory, and the absolute power of the monarch. This emblem of predatory prowess remains a powerful icon of Beninese heritage, although the national football team modestly adopted \"The Squirrels\" (Les Écureuils) in the 1960s to reflect a small nation aiming to climb high.",
+        "national_animal_name": "Leopard",
+        "national_animal_scientific": "Panthera pardus",
+        "national_animal_detail": "The national animal is the Leopard (Panthera pardus). The leopard was the sacred royal symbol of the historical Kingdom of Dahomey, embodying stealth, victory, and the absolute power of the monarch. This emblem of predatory prowess remains a powerful icon of Beninese heritage, although the national football team modestly adopted \"The Squirrels\" (Les Écureuils) in the 1960s to reflect a small nation aiming to climb high. Two leopards support the current national coat of arms.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4, 22, wikipedia-benin).\nThe flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: 18, 19).\n[corrected] etymology summary: The 'vexation' gloss is unsupported; the 1975 name comes from the Bight of Benin. (source: wikipedia-benin)\n[corrected] etymology detail: The Yoruba 'Ile-ibinu' ('land of vexation') gloss has no support in reference sources; replaced with the documented reason for the renaming. (source: wikipedia-benin)\n[corrected] national animal detail: Adds the emblem basis. (source: wikipedia-coat-of-arms-of-benin)\n[status] national animal: Two leopards support the current national coat of arms (reviewed 2026-10-15)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-22"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-19"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-19"
+        },
+        {
+          "field": "etymology",
+          "source_key": "wikipedia-benin"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "wikipedia-coat-of-arms-of-benin"
+        }
+      ]
+    },
+    {
+      "iso3": "BFA",
+      "iso2": "BF",
+      "iso_numeric": 854,
+      "name": "Burkina Faso",
+      "official_name": "Burkina Faso",
+      "region": "west",
+      "flag_url_template": "https://flagcdn.com/w{width}/bf.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Land of Upright Men",
+        "etymology_detail": "Burkina Faso abandoned its colonial name, Upper Volta (a reference to the upper tributaries of the Volta River), in 1984 under the revolutionary leadership of Thomas Sankara. The new name blends words from the local Mooré and Dioula languages to mean \"Land of Honest Men\" or \"Land of Upright People\".",
+        "etymology_category": null,
+        "flag_design_summary": "Red/Green with Yellow Star",
+        "flag_design_detail": "The flag is a horizontal bicolour of red and green with a central yellow star. Red represents the socialist revolution and the blood spilled for it, green signifies agricultural abundance, and the star represents the guiding light of the revolution.",
+        "national_symbol_summary": "White Stallions & Spears",
+        "national_symbol_detail": "The national symbol and animal is the White Stallion (Equus caballus). The state's coat of arms features two white stallions supporting a shield, and the national football team is named \"Les Étalons\".",
+        "national_animal_name": "White Stallion",
+        "national_animal_scientific": "Equus caballus",
+        "national_animal_detail": "The national symbol and animal is the White Stallion (Equus caballus). This selection traces back to the founding legend of the Mossi people, wherein Princess Yennenga, a legendary warrior, rode a white horse into the territory that would become Burkina Faso. The state's coat of arms features two white stallions supporting a shield, and the national football team is named \"Les Étalons\".",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe flag design relies mainly on low-reliability or no sources (refs: 17).\nThe national symbol relies mainly on low-reliability or no sources (refs: 18).\nThe national animal relies mainly on low-reliability or no sources (refs: 18)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-17"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        }
+      ]
+    },
+    {
+      "iso3": "CPV",
+      "iso2": "CV",
+      "iso_numeric": 132,
+      "name": "Cabo Verde",
+      "official_name": "Republic of Cabo Verde",
+      "region": "west",
+      "flag_url_template": "https://flagcdn.com/w{width}/cv.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Green Cape",
+        "etymology_detail": "Cabo Verde (Cape Verde) was named by Portuguese explorers in 1444 after the Cap-Vert peninsula on the mainland in modern-day Senegal. The term simply means \"Green Cape,\" reflecting its geographic setting.",
+        "etymology_category": "colonial_or_translation",
+        "flag_design_summary": "Blue with 10 Stars & Stripes",
+        "flag_design_detail": "The flag consists of five unequal horizontal bands of blue, white, red, white, and blue, with a circle of ten yellow five-pointed stars centered on the hoist half. The blue represents the vast Atlantic Ocean and the sky. The white and red bands represent the road toward the construction of the nation, with white for peace and red for effort.",
+        "national_symbol_summary": "Ten Stars",
+        "national_symbol_detail": "The ten stars, serving as a primary national symbol, represent the ten main islands of the archipelago.",
+        "national_animal_name": "Blue Shark",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The national animal is the Blue Shark. Because Cabo Verde is an isolated island nation heavily reliant on the marine ecosystem, the blue shark embodies oceanic dominance, maritime heritage, and the surrounding waters, serving as the namesake for the national football team (Tubarões Azuis).",
+        "animal_status": "sports_nickname",
+        "needs_review": true,
+        "review_notes": "The flag design relies mainly on low-reliability or no sources (refs: 16).\nThe national symbol relies mainly on low-reliability or no sources (refs: 16)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-3"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-16"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-16"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-19"
+        }
+      ]
+    },
+    {
+      "iso3": "CIV",
+      "iso2": "CI",
+      "iso_numeric": 384,
+      "name": "Côte d'Ivoire",
+      "official_name": "Republic of Côte d'Ivoire",
+      "region": "west",
+      "flag_url_template": "https://flagcdn.com/w{width}/ci.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Ivory Coast",
+        "etymology_detail": "Côte d'Ivoire (Ivory Coast) retains its French colonial name, derived directly from the pre-colonial and colonial trade in elephant ivory, much like the neighboring Gold Coast (Ghana) or Slave Coast (Benin).",
+        "etymology_category": "colonial_or_translation",
+        "flag_design_summary": "Orange/White/Green",
+        "flag_design_detail": "The flag is a vertical tricolor of orange, white, and green. Orange represents the savannahs of the north and the spirit of national development, white represents peace and unity, and green represents the lush coastal forests of the south and the hope for a better future.",
+        "national_symbol_summary": "Elephant Head",
+        "national_symbol_detail": "Unsurprisingly, the national symbol and animal is the African Elephant. The elephant is fundamentally tied to the country's etymology, is the central feature of the state's coat of arms (represented as an elephant head), and symbolizes immense strength, patience, and longevity in local cultures.",
+        "national_animal_name": "African Elephant",
+        "national_animal_scientific": null,
+        "national_animal_detail": "Unsurprisingly, the national symbol and animal is the African Elephant. The elephant is fundamentally tied to the country's etymology, is the central feature of the state's coat of arms (represented as an elephant head), and symbolizes immense strength, patience, and longevity in local cultures.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: 18).\nThe national animal relies mainly on low-reliability or no sources (refs: 18)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-3"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        }
+      ]
+    },
+    {
+      "iso3": "GMB",
+      "iso2": "GM",
+      "iso_numeric": 270,
+      "name": "The Gambia",
+      "official_name": "Republic of The Gambia",
+      "region": "west",
+      "flag_url_template": "https://flagcdn.com/w{width}/gm.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "River Gambia",
+        "etymology_detail": "Gambia derives its name from the Gambia River, which forms the geographic spine of the country. Early European visitors recorded the river's name as Gambra or Cambra (Alvise Cadamosto, 1455); its origin is uncertain.",
+        "etymology_category": "geographic_feature",
+        "flag_design_summary": "Red/Blue/Green Stripes",
+        "flag_design_detail": "The flag features top and bottom bands of red and green, separated by a central blue band with white fimbriations. Red represents the sun and the savannah, blue represents the Gambia River flowing through the center of the nation, and green represents the forests and agriculture. The white lines denote peace.",
+        "national_symbol_summary": "Axe and Hoe",
+        "national_symbol_detail": "The national symbols include a local agricultural hoe and an axe.",
+        "national_animal_name": "Hyena / Scorpion",
+        "national_animal_scientific": null,
+        "national_animal_detail": "Biologically, the Spotted Hyena is frequently cited as a national animal due to its prominent role as a clever trickster in Gambian folklore. Furthermore, the Emperor Scorpion is heavily associated with the nation (inspiring the football team's name, the Scorpions) due to its abundance in the West African rainforests and savannas, representing a small but potent defensive capability.",
+        "animal_status": "contested",
+        "needs_review": true,
+        "review_notes": "The flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: none).\nThe national animal relies mainly on low-reliability or no sources (refs: 18, 19).\n[corrected] etymology summary: The Portuguese 'exchange' derivation is unsupported. (source: wikipedia-gambia-river)\n[corrected] etymology detail: Neither the 'Kambra = river' nor the 'exchange' derivation is supported; the reference source records only the early name forms. (source: wikipedia-gambia-river)"
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-3"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-19"
+        },
+        {
+          "field": "etymology",
+          "source_key": "wikipedia-gambia-river"
+        }
+      ]
+    },
+    {
+      "iso3": "GHA",
+      "iso2": "GH",
+      "iso_numeric": 288,
+      "name": "Ghana",
+      "official_name": "Republic of Ghana",
+      "region": "west",
+      "flag_url_template": "https://flagcdn.com/w{width}/gh.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Warrior King",
+        "etymology_detail": "Ghana is named after the ancient Ghana Empire, meaning \"Warrior King.\" Notably, the modern state does not share territory with the ancient empire, but the name was adopted to invoke a sense of pre-colonial African glory.",
+        "etymology_category": "kingdom_or_ruler",
+        "flag_design_summary": "Red/Yellow/Green + Black Star",
+        "flag_design_detail": "Ghana's flag is highly significant as it was the first post-independence African flag to adopt the Ethiopian Pan-African colors (red, yellow, green). A central black star was added, adopted from Marcus Garvey's Black Star Line, serving as the lodestar of African freedom and unity.",
+        "national_symbol_summary": "Black Star",
+        "national_symbol_detail": "A central black star was added, adopted from Marcus Garvey's Black Star Line, serving as the lodestar of African freedom and unity. This Black Star is the supreme national symbol.",
+        "national_animal_name": "Tawny Eagle",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The national animal is the Tawny Eagle. Chosen as a symbol of protection, vision, and strength, two tawny eagles support the national coat of arms, keeping a vigilant gaze over the nation's wellbeing.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe flag design relies mainly on low-reliability or no sources (refs: 11, 19).\nThe national animal relies mainly on low-reliability or no sources (refs: 30)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-11"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-19"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-19"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-30"
+        }
+      ]
+    },
+    {
+      "iso3": "GIN",
+      "iso2": "GN",
+      "iso_numeric": 324,
+      "name": "Guinea",
+      "official_name": "Republic of Guinea",
+      "region": "west",
+      "flag_url_template": "https://flagcdn.com/w{width}/gn.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Black Africans",
+        "etymology_detail": "Guinea derives its name from a Portuguese term (Aguinaw) referencing the geographic region of \"Black Africans\".",
+        "etymology_category": "colonial_or_translation",
+        "flag_design_summary": "Red/Yellow/Green",
+        "flag_design_detail": "The flag is a vertical tricolor of the Pan-African red, yellow, and green, symbolizing the blood of martyrs, the wealth of the earth and sun, and the vegetation of the country, respectively.",
+        "national_symbol_summary": "Elephant / Shield",
+        "national_symbol_detail": "Historically featured on the 1960 coat of arms, the elephant signifies monumental strength, memory, and dignity.",
+        "national_animal_name": "African Elephant",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The national animal is the African Elephant, known locally as the Syli. Historically featured on the 1960 coat of arms, the elephant signifies monumental strength, memory, and dignity. The national football team is proudly called the \"Syli National\" (National Elephants).",
+        "animal_status": "de_facto",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: none).\nThe national animal relies mainly on low-reliability or no sources (refs: 18, 19)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-19"
+        }
+      ]
+    },
+    {
+      "iso3": "GNB",
+      "iso2": "GW",
+      "iso_numeric": 624,
+      "name": "Guinea-Bissau",
+      "official_name": "Republic of Guinea-Bissau",
+      "region": "west",
+      "flag_url_template": "https://flagcdn.com/w{width}/gw.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Black Bissau",
+        "etymology_detail": "Guinea-Bissau combined the regional name \"Guinea\" with the name of its capital city, Bissau, specifically to distinguish itself from neighboring French Guinea after independence.",
+        "etymology_category": "colonial_or_translation",
+        "flag_design_summary": "Red/Yellow/Green + Black Star",
+        "flag_design_detail": "The flag utilizes the Pan-African colors in a design heavily influenced by the flag of Ghana, featuring a black star on a red vertical band at the hoist, alongside yellow and green horizontal bands. The red denotes the blood of the liberation struggle, yellow the sun, green the forests, and the black star represents African unity.",
+        "national_symbol_summary": "Black Star / Seashell",
+        "national_symbol_detail": "The national symbol includes a seashell, reflecting its coastal geography.",
+        "national_animal_name": "African Wild Dog",
+        "national_animal_scientific": "Lycaon pictus",
+        "national_animal_detail": "The national animal is the African Wild Dog (Lycaon pictus). Native to the region, the wild dog is one of Africa's most successful and cooperative predators, symbolizing teamwork, persistence, and community defense.",
+        "animal_status": "sports_nickname",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: none)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-19"
+        }
+      ]
+    },
+    {
+      "iso3": "LBR",
+      "iso2": "LR",
+      "iso_numeric": 430,
+      "name": "Liberia",
+      "official_name": "Republic of Liberia",
+      "region": "west",
+      "flag_url_template": "https://flagcdn.com/w{width}/lr.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Free",
+        "etymology_detail": "Liberia, founded as a homeland for freed African-American slaves in 1847, derives its name from the Latin liber, meaning \"Free\".",
+        "etymology_category": "colonial_or_translation",
+        "flag_design_summary": "US-Style Stripes & Star",
+        "flag_design_detail": "The flag is heavily modeled on the United States flag, featuring eleven horizontal red and white stripes (representing the eleven signatories of the Liberian Declaration of Independence) and a single white star on a blue canton (signifying Liberia as the first independent republic on the African continent).",
+        "national_symbol_summary": "Star and Stripes",
+        "national_symbol_detail": "The national emblem features a ship arriving at the coast, symbolizing the arrival of the freed slaves.",
+        "national_animal_name": "Common Chimpanzee",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The national animal is the Common Chimpanzee. Liberia's dense forests hold one of the largest remaining wild chimpanzee populations in West Africa, alongside Guinea and Sierra Leone, making the primate a symbol of the nation's rich, unexploited rainforest biodiversity and environmental heritage.",
+        "animal_status": "de_facto",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: none).\nThe national animal relies mainly on low-reliability or no sources (refs: 18, wikipedia-western-chimpanzee).\n[corrected] national animal detail: Liberia is one of three countries with the largest remaining western chimpanzee populations, not the single largest. (source: wikipedia-western-chimpanzee)"
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "wikipedia-western-chimpanzee"
+        }
+      ]
+    },
+    {
+      "iso3": "MLI",
+      "iso2": "ML",
+      "iso_numeric": 466,
+      "name": "Mali",
+      "official_name": "Republic of Mali",
+      "region": "west",
+      "flag_url_template": "https://flagcdn.com/w{width}/ml.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Hippopotamus",
+        "etymology_detail": "Mali takes its name from the ancient Mali Empire. In the Malinke and Bamana languages, it translates to \"Hippopotamus,\" an animal historically associated with immense power and territorial dominance in the Niger River ecosystem. The hippopotamus was the clan symbol of the Keita dynasty, and the name later came to mean \"the place where the king lives\"; another theory derives it from a Fulani pronunciation of the name of the Mande peoples.",
+        "etymology_category": "kingdom_or_ruler",
+        "flag_design_summary": "Green/Yellow/Red",
+        "flag_design_detail": "The flag is a standard Pan-African vertical tricolor of green, yellow, and red.",
+        "national_symbol_summary": "Mosque / Bow and Arrow",
+        "national_symbol_detail": "The national emblem features the Great Mosque of Djenné, a bow, and an arrow, representing the country's Islamic heritage and its defensive readiness.",
+        "national_animal_name": "Eagle",
+        "national_animal_scientific": null,
+        "national_animal_detail": "Biologically, the national symbol defaults to the Eagle, which is rooted in the traditional hunting eagles of the Tuareg tribes. This raptor serves as the namesake for the national football team, \"The Eagles,\" embodying keen sight and striking speed.",
+        "animal_status": "sports_nickname",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4, wikipedia-mali).\nThe flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: none).\nThe national animal relies mainly on low-reliability or no sources (refs: 20).\n[corrected] etymology detail: The 'hippopotamus' meaning is supported as the original sense, but the alternatives were missing. (source: wikipedia-mali)"
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-20"
+        },
+        {
+          "field": "etymology",
+          "source_key": "wikipedia-mali"
+        }
+      ]
+    },
+    {
+      "iso3": "NER",
+      "iso2": "NE",
+      "iso_numeric": 562,
+      "name": "Niger",
+      "official_name": "Republic of the Niger",
+      "region": "west",
+      "flag_url_template": "https://flagcdn.com/w{width}/ne.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "River Niger / Flowing Water",
+        "etymology_detail": "Niger is named after the Niger River. The river’s name likely originates from the Tuareg phrase n'eghirren (\"flowing water\") or the Berber ger-n-ger (\"river of rivers\"), rather than the Latin niger (black).",
+        "etymology_category": "geographic_feature",
+        "flag_design_summary": "Orange/White/Green + Sun",
+        "flag_design_detail": "The flag features horizontal bands of orange, white, and green, with an orange sun in the center of the white band. Orange represents the northern reaches of the Sahara Desert, white represents purity and the Niger River, green represents the fertile southern regions, and the sun signifies independence and enlightenment.",
+        "national_symbol_summary": "Orange Sun / Weapons",
+        "national_symbol_detail": "The national emblem features the sun flanked by agricultural tools and weapons.",
+        "national_animal_name": "West African Giraffe",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The national animal is the West African Giraffe. Niger shelters the last remaining wild population of this specific giraffe subspecies, transforming it into a critical symbol of unique national heritage and conservation success.",
+        "animal_status": "de_facto",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: none).\nThe national animal relies mainly on low-reliability or no sources (refs: 18)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        }
+      ]
+    },
+    {
+      "iso3": "NGA",
+      "iso2": "NG",
+      "iso_numeric": 566,
+      "name": "Nigeria",
+      "official_name": "Federal Republic of Nigeria",
+      "region": "west",
+      "flag_url_template": "https://flagcdn.com/w{width}/ng.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Niger Area",
+        "etymology_detail": "Nigeria was named by Flora Shaw, a British journalist (and future wife of the colonial Governor-General Lord Lugard), who coined the term to describe the \"Niger Area\" around the Niger River.",
+        "etymology_category": "colonial_or_translation",
+        "flag_design_summary": "Green/White/Green",
+        "flag_design_detail": "The flag is a simple, elegant vertical triband of green, white, and green. The green represents agricultural wealth and natural beauty, while the white represents peace and unity.",
+        "national_symbol_summary": "Red Eagle & 'Y' Shield",
+        "national_symbol_detail": "The national symbol is the coat of arms, featuring a black shield with a white 'Y' shape representing the confluence of the Niger and Benue rivers. The national animal is the Eagle, specifically a red eagle that sits atop the national coat of arms.",
+        "national_animal_name": "Eagle",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The national animal is the Eagle, specifically a red eagle that sits atop the national coat of arms. The eagle was selected to represent strength, pride, and the overarching vision of Africa's most populous nation, serving as the inspiration for the \"Super Eagles\" football squad.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: 18).\nThe national animal relies mainly on low-reliability or no sources (refs: 18)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-1"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        }
+      ]
+    },
+    {
+      "iso3": "SEN",
+      "iso2": "SN",
+      "iso_numeric": 686,
+      "name": "Senegal",
+      "official_name": "Republic of Senegal",
+      "region": "west",
+      "flag_url_template": "https://flagcdn.com/w{width}/sn.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Senegal River (origin debated)",
+        "etymology_detail": "Senegal takes its name from the Senegal River, whose name has several proposed origins: the Wolof phrase sunuu gaal (\"our canoe\"), suggested by David Boilat; a Portuguese rendering of the name of the Zenaga (Sanhaja) people; or Serer words.",
+        "etymology_category": "geographic_feature",
+        "flag_design_summary": "Green/Yellow/Red + Star",
+        "flag_design_detail": "The flag is a Pan-African vertical tricolor of green, yellow, and red, with a green five-pointed star in the center representing hope and unity.",
+        "national_symbol_summary": "Baobab Tree / Lion",
+        "national_symbol_detail": "The national emblem includes the Baobab tree and the Lion.",
+        "national_animal_name": "Lion",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The national animal is the Lion, specifically revered as the \"Teranga Lion\". Teranga is a Wolof word meaning hospitality, generosity, and respect. The lion, a pan-African symbol of royal power, when combined with teranga, represents a nation that is fiercely strong yet fundamentally welcoming, generous, and peaceful.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4, wikipedia-senegal).\nThe flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: none).\n[corrected] etymology summary: The 'our boat' gloss is one of several proposals for the river's name. (source: wikipedia-senegal)\n[corrected] etymology detail: The Wolof phrase was misspelled ('Il sunu gaol') and presented as the established origin; it is one of several proposals. (source: wikipedia-senegal)"
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-19"
+        },
+        {
+          "field": "etymology",
+          "source_key": "wikipedia-senegal"
+        }
+      ]
+    },
+    {
+      "iso3": "SLE",
+      "iso2": "SL",
+      "iso_numeric": 694,
+      "name": "Sierra Leone",
+      "official_name": "Republic of Sierra Leone",
+      "region": "west",
+      "flag_url_template": "https://flagcdn.com/w{width}/sl.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Lion Mountains",
+        "etymology_detail": "Sierra Leone was named Serra Leoa (\"Lion Mountains\") by Portuguese explorer Pedro de Sintra in 1462, reportedly because the coastal mountains resembled the shape of a lion or because thunderstorms rolling over the mountains sounded like a lion's roar.",
+        "etymology_category": "colonial_or_translation",
+        "flag_design_summary": "Green/White/Blue",
+        "flag_design_detail": "The flag consists of horizontal bands of green, white, and blue, representing agriculture and mountains (green), peace and justice (white), and the Atlantic Ocean (blue).",
+        "national_symbol_summary": "Lion & Oil Palms",
+        "national_symbol_detail": "The national symbol includes oil palms and a lion.",
+        "national_animal_name": "Lion",
+        "national_animal_scientific": null,
+        "national_animal_detail": "Appropriately, the national animal is the Lion, tying directly back to the country’s etymological roots and signifying bravery and sovereignty.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: none).\nThe national animal relies mainly on low-reliability or no sources (refs: 18)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-3"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        }
+      ]
+    },
+    {
+      "iso3": "TGO",
+      "iso2": "TG",
+      "iso_numeric": 768,
+      "name": "Togo",
+      "official_name": "Togolese Republic",
+      "region": "west",
+      "flag_url_template": "https://flagcdn.com/w{width}/tg.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Water/Lake",
+        "etymology_detail": "Togo takes its name from the town of Togoville on the northern shores of Lake Togo; the name translates to \"Water\" or \"Lake\" in the local Ewe language.",
+        "etymology_category": "geographic_feature",
+        "flag_design_summary": "Green/Yellow/Red + Star",
+        "flag_design_detail": "The flag features five horizontal alternating green and yellow stripes with a white star on a red canton. The layout resembles the Liberian flag, while utilizing the Pan-African colors to represent agriculture (green), labor (yellow), and the blood shed for independence (red).",
+        "national_symbol_summary": "Two Red Lions",
+        "national_symbol_detail": "Two red lions standing on their hind legs and holding bows and arrows serve as supporters on the national coat of arms, symbolizing the vigilance and readiness of the Togolese people to defend their liberty.",
+        "national_animal_name": "Lion",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The national animal is the Lion. Two red lions standing on their hind legs and holding bows and arrows serve as supporters on the national coat of arms, symbolizing the vigilance and readiness of the Togolese people to defend their liberty.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 5).\nThe flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: 18).\nThe national animal relies mainly on low-reliability or no sources (refs: 18).\n[corrected] flag design detail: No source supports a deliberate imitation; the resemblance is kept as an observation."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-5"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        }
+      ]
+    },
+    {
+      "iso3": "AGO",
+      "iso2": "AO",
+      "iso_numeric": 24,
+      "name": "Angola",
+      "official_name": "Republic of Angola",
+      "region": "central",
+      "flag_url_template": "https://flagcdn.com/w{width}/ao.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "King (Ngola)",
+        "etymology_detail": "Angola is derived from the title Ngola, which was held by the kings of the Ndongo Kingdom before Portuguese colonization.",
+        "etymology_category": "kingdom_or_ruler",
+        "flag_design_summary": "Red/Black + Machete & Gear",
+        "flag_design_detail": "The flag is horizontally divided into red and black. The red represents the blood shed during the anti-colonial struggle, and the black represents the African continent. In the center is a yellow emblem consisting of a crossed cogwheel and machete, accompanied by a star. This explicitly Soviet-inspired iconography reflects the Marxist-Leninist ideology of the ruling MPLA party upon independence, symbolizing the union of industrial and agricultural workers.",
+        "national_symbol_summary": "Machete and Gear",
+        "national_symbol_detail": "In the center is a yellow emblem consisting of a crossed cogwheel and machete, accompanied by a star. This explicitly Soviet-inspired iconography reflects the Marxist-Leninist ideology of the ruling MPLA party upon independence, symbolizing the union of industrial and agricultural workers.",
+        "national_animal_name": "Giant Sable Antelope",
+        "national_animal_scientific": "Hippotragus niger variani",
+        "national_animal_detail": "The national animal is the Giant Sable Antelope (Hippotragus niger variani), known locally as the Palanca Negra. Found exclusively in Angola, this majestic animal with sweeping, curved horns was feared extinct during the brutal civil war but was spectacularly rediscovered in 2004. It is a profound symbol of endurance, beauty, and national uniqueness, heavily featured on currency, stamps, passports, and as the national football team's moniker.",
+        "animal_status": "de_facto",
+        "needs_review": true,
+        "review_notes": "The flag design relies mainly on low-reliability or no sources (refs: 2).\nThe national symbol relies mainly on low-reliability or no sources (refs: 2).\nThe national animal relies mainly on low-reliability or no sources (refs: 2, 18)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-3"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        }
+      ]
+    },
+    {
+      "iso3": "CMR",
+      "iso2": "CM",
+      "iso_numeric": 120,
+      "name": "Cameroon",
+      "official_name": "Republic of Cameroon",
+      "region": "central",
+      "flag_url_template": "https://flagcdn.com/w{width}/cm.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Shrimp",
+        "etymology_detail": "Cameroon traces its name to the 15th century when Portuguese explorers navigated the Wouri River and found an abundance of mud shrimp, naming it Rio dos Camarões (\"River of Shrimp\").",
+        "etymology_category": "colonial_or_translation",
+        "flag_design_summary": "Green/Red/Yellow + Star",
+        "flag_design_detail": "The flag is a vertical tricolor of green, red, and yellow, with a central yellow star. Green represents the lush southern forests, yellow the northern savannas, and red the unity linking them, with the star acting as the \"star of unity.\"",
+        "national_symbol_summary": "Star of Unity",
+        "national_symbol_detail": "Green represents the lush southern forests, yellow the northern savannas, and red the unity linking them, with the star acting as the \"star of unity.\"",
+        "national_animal_name": "Lion",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The national animal is the Lion. Despite being named after a crustacean, the state identifies with the lion to project power, vigilance, and sovereign authority. The lion does not appear on the national coat of arms; the association comes from the world-renowned football team, famously dubbed the \"Indomitable Lions\" because a lion represents strength that cannot be defeated or subjugated.",
+        "animal_status": "sports_nickname",
+        "needs_review": true,
+        "review_notes": "The flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: none).\nThe national animal relies mainly on low-reliability or no sources (refs: 18, wikipedia-coat-of-arms-of-cameroon).\n[corrected] national animal detail: The coat of arms of Cameroon (a shield with a map of Cameroon, scales of justice and crossed fasces) has no lion. (source: wikipedia-coat-of-arms-of-cameroon)"
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-1"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "wikipedia-coat-of-arms-of-cameroon"
+        }
+      ]
+    },
+    {
+      "iso3": "CAF",
+      "iso2": "CF",
+      "iso_numeric": 140,
+      "name": "Central African Republic",
+      "official_name": "Central African Republic",
+      "region": "central",
+      "flag_url_template": "https://flagcdn.com/w{width}/cf.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Geographic Center",
+        "etymology_detail": "Central African Republic (CAR) is a self-descriptive name highlighting the state's geographic position in the absolute center of the continent.",
+        "etymology_category": "geographic_feature",
+        "flag_design_summary": "Pan-African + Blue/White + Star",
+        "flag_design_detail": "The flag is highly unique, deliberately combining Pan-African colors (red, yellow, green) with French colonial colors (blue, white, red). It consists of four horizontal stripes (blue, white, green, yellow) intersected by a vertical red stripe down the center, with a yellow star in the canton. This design was created by the first president, Barthélemy Boganda, to symbolize the hope that France and Africa could march together in unity.",
+        "national_symbol_summary": "Star and Hand",
+        "national_symbol_detail": null,
+        "national_animal_name": "Forest Elephant / Big Cats",
+        "national_animal_scientific": "Forest Elephant: Loxodonta cyclotis",
+        "national_animal_detail": "The national animal is widely recognized as the Forest Elephant (Loxodonta cyclotis) due to the country's Dzanga Bai clearing, which hosts the world's largest gatherings of this elusive, highly intelligent species. Additionally, the state identifies with \"The Big Cats\" (Les Fauves), representing the pristine, untamed wilderness and apex predators of its northern savannas.",
+        "animal_status": "contested",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe flag design relies mainly on low-reliability or no sources (refs: 2).\nNo prose in the document describes the national symbol; only the table summary is available.\nThe national animal relies mainly on low-reliability or no sources (refs: 18, 19).\n[low] national symbol: The table's national symbol 'Star and Hand' is not described anywhere in the prose."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-19"
+        }
+      ]
+    },
+    {
+      "iso3": "TCD",
+      "iso2": "TD",
+      "iso_numeric": 148,
+      "name": "Chad",
+      "official_name": "Republic of Chad",
+      "region": "central",
+      "flag_url_template": "https://flagcdn.com/w{width}/td.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Lake",
+        "etymology_detail": "Chad is named after Lake Chad, the second-largest wetland in Africa. The word Tsade simply translates to \"Lake\" in the local Kanuri language.",
+        "etymology_category": "geographic_feature",
+        "flag_design_summary": "Blue/Yellow/Red",
+        "flag_design_detail": "The flag consists of vertical bands of blue, yellow, and red. The blue signifies the sky and hope, yellow represents the sun and the desert, and red represents the blood shed for independence. Because this flag is nearly identical to Romania's, the shades are kept distinctly darker.",
+        "national_symbol_summary": "Goat and Lion (Shield)",
+        "national_symbol_detail": "Chad's coat of arms features a Goat and a Lion supporting a shield marked with wavy blue lines representing the lake.",
+        "national_animal_name": "Goat",
+        "national_animal_scientific": null,
+        "national_animal_detail": "Chad's coat of arms features a Goat and a Lion supporting a shield marked with wavy blue lines representing the lake. The Goat serves as the specific national animal representation of the arid northern regions, symbolizing the traditional nomadic herding cultures and the immense resilience required to survive the Sahel.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The flag design relies mainly on low-reliability or no sources (refs: 2).\nThe national symbol relies mainly on low-reliability or no sources (refs: none).\nThe national animal relies mainly on low-reliability or no sources (refs: 18)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-3"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        }
+      ]
+    },
+    {
+      "iso3": "COG",
+      "iso2": "CG",
+      "iso_numeric": 178,
+      "name": "Republic of the Congo",
+      "official_name": "Republic of the Congo",
+      "region": "central",
+      "flag_url_template": "https://flagcdn.com/w{width}/cg.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Congo River",
+        "etymology_detail": "Republic of the Congo is named after the mighty Congo River, which in turn was named after the indigenous Kongo Kingdom.",
+        "etymology_category": "geographic_feature",
+        "flag_design_summary": "Green/Yellow/Red",
+        "flag_design_detail": "The flag utilizes the Pan-African colors of green, yellow, and red, arranged in a diagonal pattern. Green represents agriculture and forests, yellow represents the friendship and nobility of the people, and red is historically linked to the independence struggle.",
+        "national_symbol_summary": "Lion with Torch",
+        "national_symbol_detail": "The national emblem features a rampant lion holding a torch, symbolizing freedom.",
+        "national_animal_name": "Leopard / Red Devils",
+        "national_animal_scientific": null,
+        "national_animal_detail": "While lacking a formal statutory animal, the ecosystem is dominated by the Leopard, which is standard heraldry for the Congo basin. Culturally and athletically, the nation identifies strongly with the \"Red Devils\" (Diables Rouges), drawn from their traditional all-red sporting kits, invoking an aura of intimidation.",
+        "animal_status": "inferred",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: none)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-19"
+        }
+      ]
+    },
+    {
+      "iso3": "COD",
+      "iso2": "CD",
+      "iso_numeric": 180,
+      "name": "Democratic Republic of the Congo",
+      "official_name": "Democratic Republic of the Congo",
+      "region": "central",
+      "flag_url_template": "https://flagcdn.com/w{width}/cd.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Congo River (Kongo Kingdom)",
+        "etymology_detail": "Democratic Republic of the Congo (DRC) shares the same etymological root as its neighbor: the Congo River, named after the Kongo Kingdom. The gloss \"river that swallows rivers\" (Kikongo nzere) belongs to the river's other name, which gave the country its former name, Zaire.",
+        "etymology_category": "geographic_feature",
+        "flag_design_summary": "Blue with Yellow Star & Red Stripe",
+        "flag_design_detail": "The flag is sky blue, adorned with a yellow five-pointed star in the upper left canton, intersected by a yellow-fimbriated red diagonal stripe. The blue represents peace, the red signifies the blood of the country's martyrs, the yellow represents the country's immense mineral wealth, and the star represents a radiant future.",
+        "national_symbol_summary": "Leopard Head",
+        "national_symbol_detail": "The Leopard (Panthera pardus) is the supreme national symbol. The leopard signifies extreme power, stealth, and traditional chiefly authority. During the Mobutu era (when the country was known as Zaire), the leopard was the absolute symbol of state power, and the current coat of arms continues to prominently depict a leopard head.",
+        "national_animal_name": "Leopard / Okapi",
+        "national_animal_scientific": "Leopard: Panthera pardus",
+        "national_animal_detail": "The Leopard (Panthera pardus) is the supreme national symbol. The leopard signifies extreme power, stealth, and traditional chiefly authority. During the Mobutu era (when the country was known as Zaire), the leopard was the absolute symbol of state power, and the current coat of arms continues to prominently depict a leopard head. The Okapi, a forest giraffe endemic only to the DRC, also serves as a crucial natural symbol of the country's unique and irreplaceable biodiversity.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4, wikipedia-zaire).\nThe flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: 2, 19).\nThe national animal relies mainly on low-reliability or no sources (refs: 2, 19).\n[corrected] etymology summary: The table's gloss is unsupported and contradicted the prose. (source: wikipedia-zaire)\n[corrected] etymology detail: 'River swallowing rivers' is the etymology of 'Zaire', not of 'Congo'. (source: wikipedia-zaire)"
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-19"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-19"
+        },
+        {
+          "field": "etymology",
+          "source_key": "wikipedia-zaire"
+        }
+      ]
+    },
+    {
+      "iso3": "GNQ",
+      "iso2": "GQ",
+      "iso_numeric": 226,
+      "name": "Equatorial Guinea",
+      "official_name": "Republic of Equatorial Guinea",
+      "region": "central",
+      "flag_url_template": "https://flagcdn.com/w{width}/gq.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Equator + Black",
+        "etymology_detail": "Equatorial Guinea is a geographic portmanteau indicating its proximity to the Equator and its location in the Guinea region.",
+        "etymology_category": "geographic_feature",
+        "flag_design_summary": "Green/White/Red + Blue Triangle",
+        "flag_design_detail": "The flag features three horizontal stripes of green, white, and red, with a blue triangle at the hoist. Green represents natural resources, white is for peace, red is for the blood of independence, and the blue triangle signifies the sea connecting the mainland to the offshore islands. Centered in the white band is the national coat of arms containing a Silk Cotton Tree, known as the \"God Tree,\" under which the first treaty with a local ruler was supposedly signed.",
+        "national_symbol_summary": "Silk Cotton Tree",
+        "national_symbol_detail": "Centered in the white band is the national coat of arms containing a Silk Cotton Tree, known as the \"God Tree,\" under which the first treaty with a local ruler was supposedly signed.",
+        "national_animal_name": "Not established",
+        "national_animal_scientific": null,
+        "national_animal_detail": "No established national animal was found in the sources checked. The research document's claims are doubtful: it says the country identifies with the Silvery-cheeked Hornbill, a species not typical of Equatorial Guinea, and reveres the Giraffe as a national animal, but giraffes do not occur in Equatorial Guinea.",
+        "animal_status": "contested",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe flag design relies mainly on low-reliability or no sources (refs: 16).\nThe national symbol relies mainly on low-reliability or no sources (refs: none).\nThe national animal relies mainly on low-reliability or no sources (refs: 18, 31, wikipedia-list-of-national-animals, wikipedia-giraffe).\n[corrected] national animal name: No established national animal was found; the document's two claims are doubtful. (source: wikipedia-list-of-national-animals)\n[corrected] national animal detail: Giraffes are not found in Equatorial Guinea, and the country has no listed national animal. (source: wikipedia-giraffe)"
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-16"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-31"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "wikipedia-list-of-national-animals"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "wikipedia-giraffe"
+        }
+      ]
+    },
+    {
+      "iso3": "GAB",
+      "iso2": "GA",
+      "iso_numeric": 266,
+      "name": "Gabon",
+      "official_name": "Gabonese Republic",
+      "region": "central",
+      "flag_url_template": "https://flagcdn.com/w{width}/ga.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Cloak",
+        "etymology_detail": "Gabon is named after the Portuguese word Gabão, meaning \"cloak.\" Explorers named the Komo River estuary as such because its shape resembled a specific style of sailor's cloak with sleeves.",
+        "etymology_category": "colonial_or_translation",
+        "flag_design_summary": "Green/Yellow/Blue",
+        "flag_design_detail": "The flag features horizontal stripes of green, yellow, and blue. Green represents the vast equatorial forests, yellow the equator and the sun, and blue represents the Atlantic Ocean.",
+        "national_symbol_summary": "Black Panther / Ship",
+        "national_symbol_detail": "The national emblem features a ship representing the nation moving forward.",
+        "national_animal_name": "Black Panther",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The national animal is the Black Panther. The dense, shadowy rainforests of Gabon are one of the primary habitats for the melanistic form of the African leopard. The black panther symbolizes mystery, elegance, and lethal protection. Two black panthers support the national coat of arms.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: none).\nThe national animal relies mainly on low-reliability or no sources (refs: 18, wikipedia-coat-of-arms-of-gabon).\n[corrected] national animal detail: Adds the emblem basis. (source: wikipedia-coat-of-arms-of-gabon)\n[status] national animal: Two black panthers support the national coat of arms (reviewed 2026-10-15)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "wikipedia-coat-of-arms-of-gabon"
+        }
+      ]
+    },
+    {
+      "iso3": "STP",
+      "iso2": "ST",
+      "iso_numeric": 678,
+      "name": "São Tomé and Príncipe",
+      "official_name": "Democratic Republic of São Tomé and Príncipe",
+      "region": "central",
+      "flag_url_template": "https://flagcdn.com/w{width}/st.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Saints (St. Thomas/Prince)",
+        "etymology_detail": "Sao Tome and Principe was discovered by Portuguese explorers in 1470 on the feast day of Saint Thomas (São Tomé). The second island was named Príncipe in honor of the Prince of Portugal, to whom duties on the island's sugar crop were paid.",
+        "etymology_category": "colonial_or_translation",
+        "flag_design_summary": "Green/Yellow/Red + 2 Stars",
+        "flag_design_detail": "The flag features Pan-African colors—green, yellow, and green horizontal bands with a red triangle at the hoist—and two black stars representing the two main islands.",
+        "national_symbol_summary": "Falcon and Parrot",
+        "national_symbol_detail": "While lacking a codified large land mammal due to its isolated island geography, its coat of arms features a Falcon and a Parrot supporting a shield, representing the rich endemic avian life and ecological uniqueness of the tropical archipelago.",
+        "national_animal_name": "Falcon",
+        "national_animal_scientific": null,
+        "national_animal_detail": "While lacking a codified large land mammal due to its isolated island geography, its coat of arms features a Falcon and a Parrot supporting a shield, representing the rich endemic avian life and ecological uniqueness of the tropical archipelago.",
+        "animal_status": "inferred",
+        "needs_review": true,
+        "review_notes": "The flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: none).\nThe national animal relies mainly on low-reliability or no sources (refs: none).\n[medium] national animal: The prose has no national-animal sentence; the falcon comes only from the table ('Falcon (Inferred)') and the coat-of-arms sentence."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-3"
+        }
+      ]
+    },
+    {
+      "iso3": "BDI",
+      "iso2": "BI",
+      "iso_numeric": 108,
+      "name": "Burundi",
+      "official_name": "Republic of Burundi",
+      "region": "east",
+      "flag_url_template": "https://flagcdn.com/w{width}/bi.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Land of the Rundi",
+        "etymology_detail": "Burundi translates to \"Land of the Rundi,\" referencing the predominant local ethnic language and people.",
+        "etymology_category": "ethnic_group",
+        "flag_design_summary": "Red/Green + White Cross",
+        "flag_design_detail": "The flag features a white saltire (diagonal cross) dividing the field into red and green areas, with three stars in the center representing the three major ethnic groups (Hutu, Tutsi, Twa) and the national motto (Unity, Work, Progress).",
+        "national_symbol_summary": "Three Stars",
+        "national_symbol_detail": "The flag features a white saltire (diagonal cross) dividing the field into red and green areas, with three stars in the center representing the three major ethnic groups (Hutu, Tutsi, Twa) and the national motto (Unity, Work, Progress).",
+        "national_animal_name": "Spotted Hyena / Lion",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The national animals are the Spotted Hyena and the Lion. The lion appears directly on the coat of arms representing authority and courage. The spotted hyena is culturally significant, symbolizing endurance, adaptability, and the complex balance of survival and cooperation in densely populated, highly competitive habitats.",
+        "animal_status": "contested",
+        "needs_review": true,
+        "review_notes": "The flag design relies mainly on low-reliability or no sources (refs: 32).\nThe national symbol relies mainly on low-reliability or no sources (refs: 32).\nThe national animal relies mainly on low-reliability or no sources (refs: 18, 26, 29)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-3"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-32"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-32"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-26"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-29"
+        }
+      ]
+    },
+    {
+      "iso3": "COM",
+      "iso2": "KM",
+      "iso_numeric": 174,
+      "name": "Comoros",
+      "official_name": "Union of the Comoros",
+      "region": "east",
+      "flag_url_template": "https://flagcdn.com/w{width}/km.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Islands of the Moon",
+        "etymology_detail": "Comoros derives its name from the Arabic Jazā'ir al-Qamar, meaning \"Islands of the Moon\".",
+        "etymology_category": "geographic_feature",
+        "flag_design_summary": "4 Stripes + Crescent",
+        "flag_design_detail": "The flag features four horizontal stripes of yellow, white, red, and blue, representing the four islands of the archipelago, alongside a green triangle containing a white crescent and four stars denoting Islam.",
+        "national_symbol_summary": "Crescent and Four Stars",
+        "national_symbol_detail": "The flag features four horizontal stripes of yellow, white, red, and blue, representing the four islands of the archipelago, alongside a green triangle containing a white crescent and four stars denoting Islam.",
+        "national_animal_name": "Coelacanth",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The national animal is the Coelacanth. This incredibly rare, prehistoric lobe-finned fish was thought to have gone extinct 66 million years ago until a living specimen was caught off South Africa in 1938; a specimen from Comorian waters followed in 1952. It represents ancient heritage, biological mystery, and survival against all odds.",
+        "animal_status": "sports_nickname",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe flag design relies mainly on low-reliability or no sources (refs: 16).\nThe national symbol relies mainly on low-reliability or no sources (refs: 16).\n[corrected] national animal detail: The first modern coelacanth was found off South Africa (1938); the Comoros specimen came in 1952. (source: wikipedia-coelacanth)"
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-16"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-16"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-19"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "wikipedia-coelacanth"
+        }
+      ]
+    },
+    {
+      "iso3": "DJI",
+      "iso2": "DJ",
+      "iso_numeric": 262,
+      "name": "Djibouti",
+      "official_name": "Republic of Djibouti",
+      "region": "east",
+      "flag_url_template": "https://flagcdn.com/w{width}/dj.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Doormat (Debated)",
+        "etymology_detail": "Djibouti has a heavily debated etymology, with some attributing it to the Afar word Gabouri (\"plate\") or a localized word for \"Doormat,\" reflecting its geographic position as the entrance to the Red Sea.",
+        "etymology_category": null,
+        "flag_design_summary": "Blue/Green + White Triangle",
+        "flag_design_detail": "The flag features light blue and green horizontal bands with a white triangle at the hoist, containing a red star. The blue represents the sky and the Issa people, green the earth and the Afar people, white stands for peace, and the red star represents unity.",
+        "national_symbol_summary": "Red Star",
+        "national_symbol_detail": "The blue represents the sky and the Issa people, green the earth and the Afar people, white stands for peace, and the red star represents unity.",
+        "national_animal_name": "Camel",
+        "national_animal_scientific": null,
+        "national_animal_detail": "With no official animal codified, the ecosystem and culture are heavily reliant on the Camel, representing nomadic survival in the punishingly hot Horn of Africa.",
+        "animal_status": "inferred",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: none).\nThe national animal relies mainly on low-reliability or no sources (refs: none)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        }
+      ]
+    },
+    {
+      "iso3": "ERI",
+      "iso2": "ER",
+      "iso_numeric": 232,
+      "name": "Eritrea",
+      "official_name": "State of Eritrea",
+      "region": "east",
+      "flag_url_template": "https://flagcdn.com/w{width}/er.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Red Sea",
+        "etymology_detail": "Eritrea takes its name from the ancient Greek Erythra Thalassa, meaning the \"Red Sea,\" which forms its entire eastern border.",
+        "etymology_category": "geographic_feature",
+        "flag_design_summary": "Green/Red/Blue + Branch",
+        "flag_design_detail": "The flag features green and blue right triangles divided by a red isosceles triangle, containing a yellow olive branch wreath. The red signifies the bloodshed for independence from Ethiopia, while the wreath is a nod to the UN flag, referencing the UN's role in its history.",
+        "national_symbol_summary": "Camel and Wreath",
+        "national_symbol_detail": "The national emblem and animal is the Camel.",
+        "national_animal_name": "Camel",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The national emblem and animal is the Camel. Adopted upon independence, the camel was instrumental in transporting supplies and fighters across the harsh terrain during the 30-year war for liberation, representing ultimate sacrifice, endurance, and national resilience.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: 2).\nThe national animal relies mainly on low-reliability or no sources (refs: 2)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-2"
+        }
+      ]
+    },
+    {
+      "iso3": "ETH",
+      "iso2": "ET",
+      "iso_numeric": 231,
+      "name": "Ethiopia",
+      "official_name": "Federal Democratic Republic of Ethiopia",
+      "region": "east",
+      "flag_url_template": "https://flagcdn.com/w{width}/et.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Land of Burnt-Faced",
+        "etymology_detail": "Ethiopia derives its name from the ancient Greek Aithiopia, meaning \"Land of the Burnt-Faced\".",
+        "etymology_category": "colonial_or_translation",
+        "flag_design_summary": "Green/Yellow/Red + Star",
+        "flag_design_detail": "As one of only two African nations, with Liberia, never fully colonised (despite Italian rule in 1936–1941), its flag—horizontal stripes of green, yellow, and red—is the mother of all Pan-African colors. Green represents the fertile land, yellow represents peace, harmony, and the church, and red honors the sacrifice in defense of the nation. At the center is a blue disk with a golden pentagram, added in 1996 to symbolize the equality and unity of Ethiopia's diverse ethnic groups, with the rays representing a prosperous future.",
+        "national_symbol_summary": "Golden Pentagram",
+        "national_symbol_detail": "At the center is a blue disk with a golden pentagram, added in 1996 to symbolize the equality and unity of Ethiopia's diverse ethnic groups, with the rays representing a prosperous future.",
+        "national_animal_name": "Lion / Walia Ibex",
+        "national_animal_scientific": "Walia Ibex: Capra walie",
+        "national_animal_detail": "The Lion is traditionally associated with Ethiopia, specifically the Conquering Lion of Judah, heavily revered by Emperor Haile Selassie and the Rastafari movement. Biologically, the Walia Ibex (Capra walie), an endangered mountain goat endemic exclusively to the Ethiopian highlands, serves as a prominent modern national symbol.",
+        "animal_status": "contested",
+        "needs_review": true,
+        "review_notes": "The flag design relies mainly on low-reliability or no sources (refs: 11, wikipedia-ethiopia).\nThe national symbol relies mainly on low-reliability or no sources (refs: 11).\nThe national animal relies mainly on low-reliability or no sources (refs: 11, 19).\n[corrected] flag design detail: Liberia was also never colonised, and Italy ruled Ethiopia from 1936 to 1941. (source: wikipedia-ethiopia)"
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-3"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-11"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-11"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-11"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-19"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "wikipedia-ethiopia"
+        }
+      ]
+    },
+    {
+      "iso3": "KEN",
+      "iso2": "KE",
+      "iso_numeric": 404,
+      "name": "Kenya",
+      "official_name": "Republic of Kenya",
+      "region": "east",
+      "flag_url_template": "https://flagcdn.com/w{width}/ke.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Spotted Mountain",
+        "etymology_detail": "Kenya is an anglicized corruption of the Kikuyu word Kirinyaga, meaning \"Spotted Mountain\" or \"Where God Resides,\" referencing the snow-capped peaks of Mount Kenya.",
+        "etymology_category": "geographic_feature",
+        "flag_design_summary": "Black/Red/Green + Shield",
+        "flag_design_detail": "The flag comprises black, red, and green stripes separated by white fimbriations. Black represents the people, red the blood of independence, green the natural wealth, and white represents peace. Superimposed in the center is a traditional Maasai shield and two crossed spears, serving as the supreme national symbol representing the defense of freedom.",
+        "national_symbol_summary": "Maasai Shield",
+        "national_symbol_detail": "Superimposed in the center is a traditional Maasai shield and two crossed spears, serving as the supreme national symbol representing the defense of freedom.",
+        "national_animal_name": "Lion",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The national animal is the Lion. The Maasai Mara hosts one of the densest and most famous lion populations on earth, making the animal a symbol of Kenyan tourism, strength, and the wild savannah. Two lions support the national coat of arms.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The flag design relies mainly on low-reliability or no sources (refs: 2).\nThe national symbol relies mainly on low-reliability or no sources (refs: 2).\nThe national animal relies mainly on low-reliability or no sources (refs: 18, wikipedia-coat-of-arms-of-kenya).\n[corrected] national animal detail: Adds the emblem basis. (source: wikipedia-coat-of-arms-of-kenya)\n[status] national animal: Two lions support the national coat of arms (reviewed 2026-10-15)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-1"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "wikipedia-coat-of-arms-of-kenya"
+        }
+      ]
+    },
+    {
+      "iso3": "MDG",
+      "iso2": "MG",
+      "iso_numeric": 450,
+      "name": "Madagascar",
+      "official_name": "Republic of Madagascar",
+      "region": "east",
+      "flag_url_template": "https://flagcdn.com/w{width}/mg.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Error (Mogadiscio)",
+        "etymology_detail": "Madagascar ironically owes its name to a cartographic error by the 13th-century Venetian explorer Marco Polo, who confused the island with the Somali port of Mogadishu (Mogadiscio).",
+        "etymology_category": "colonial_or_translation",
+        "flag_design_summary": "White/Red/Green",
+        "flag_design_detail": "The flag features a white vertical band at the hoist and two horizontal bands of red and green. Red and white were the colors of the pre-colonial Merina kingdom, while green represents the Hova, the largest class of peasant commoners who played a key role in the independence movement.",
+        "national_symbol_summary": "Zebu Head / Baobab",
+        "national_symbol_detail": "The national emblem features a Zebu head and a Baobab tree.",
+        "national_animal_name": "Zebu / Lemur",
+        "national_animal_scientific": null,
+        "national_animal_detail": "While lacking a formal declaration, the nation is biologically synonymous with the Lemur, an endemic primate symbolizing the island's extreme evolutionary isolation, and the Zebu, a breed of cattle absolutely vital to Malagasy culture and agriculture.",
+        "animal_status": "inferred",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: none).\nThe national animal relies mainly on low-reliability or no sources (refs: none)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        }
+      ]
+    },
+    {
+      "iso3": "MWI",
+      "iso2": "MW",
+      "iso_numeric": 454,
+      "name": "Malawi",
+      "official_name": "Republic of Malawi",
+      "region": "east",
+      "flag_url_template": "https://flagcdn.com/w{width}/mw.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Flaming Water",
+        "etymology_detail": "Malawi translates to \"Flaming Water,\" a reference to the sun reflecting off the shimmering surface of Lake Malawi.",
+        "etymology_category": "geographic_feature",
+        "flag_design_summary": "Black/Red/Green + Sun",
+        "flag_design_detail": "The flag contains horizontal stripes of black, red, and green. The top black stripe contains a rising red sun with 31 rays, symbolizing the dawn of freedom and hope for the African continent.",
+        "national_symbol_summary": "Rising Sun",
+        "national_symbol_detail": "The top black stripe contains a rising red sun with 31 rays, symbolizing the dawn of freedom and hope for the African continent. This rising sun acts as the primary national symbol.",
+        "national_animal_name": "Fish Eagle / Leopard",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The national coat of arms is supported by a lion and a leopard and crested by a fish eagle; the fish eagle and leopard represent the dominant predators of the aquatic lake ecosystem and the terrestrial highlands.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe flag design relies mainly on low-reliability or no sources (refs: 2).\nThe national symbol relies mainly on low-reliability or no sources (refs: 2).\nThe national animal relies mainly on low-reliability or no sources (refs: 2, wikipedia-coat-of-arms-of-malawi).\n[corrected] national animal detail: The supporters are a lion and a leopard; the fish eagle is the crest. (source: wikipedia-coat-of-arms-of-malawi)"
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "wikipedia-coat-of-arms-of-malawi"
+        }
+      ]
+    },
+    {
+      "iso3": "MUS",
+      "iso2": "MU",
+      "iso_numeric": 480,
+      "name": "Mauritius",
+      "official_name": "Republic of Mauritius",
+      "region": "east",
+      "flag_url_template": "https://flagcdn.com/w{width}/mu.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Maurice of Nassau",
+        "etymology_detail": "Mauritius was named by Dutch sailors in 1598 after Prince Maurice of Nassau.",
+        "etymology_category": "colonial_or_translation",
+        "flag_design_summary": "4 Horizontal Stripes",
+        "flag_design_detail": "The flag consists of four horizontal bands of red, blue, yellow, and green, representing the bloodshed for independence, the Indian Ocean, the new light of freedom, and agriculture, respectively.",
+        "national_symbol_summary": "Key and Star",
+        "national_symbol_detail": "The national symbol involves a key and a star, referencing its motto as the \"Star and Key of the Indian Ocean\".",
+        "national_animal_name": "Dodo",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The national animal is the legendary Dodo. Though hunted to extinction by sailors in the 17th century, the flightless bird remains the ultimate symbol of the island's unique evolutionary history and serves as a permanent emblem of ecological memory and national pride. The dodo is a supporter on the national coat of arms.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The flag design relies mainly on low-reliability or no sources (refs: none).\n[corrected] national animal detail: Adds the emblem basis. (source: wikipedia-coat-of-arms-of-mauritius)\n[status] national animal: The dodo is a supporter on the national coat of arms (reviewed 2026-10-15)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-3"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-33"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-19"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "wikipedia-coat-of-arms-of-mauritius"
+        }
+      ]
+    },
+    {
+      "iso3": "RWA",
+      "iso2": "RW",
+      "iso_numeric": 646,
+      "name": "Rwanda",
+      "official_name": "Republic of Rwanda",
+      "region": "east",
+      "flag_url_template": "https://flagcdn.com/w{width}/rw.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Land",
+        "etymology_detail": "Rwanda simply translates to \"Land\" or \"Domain\" in Kinyarwanda.",
+        "etymology_category": "kingdom_or_ruler",
+        "flag_design_summary": "Blue/Yellow/Green + Sun",
+        "flag_design_detail": "The flag is a tricolor of blue, yellow, and green, with a sun in the upper right corner. Adopted in 2001 to distance the nation from the genocide associated with the previous flag (a red, yellow and green tricolour with a black \"R\"), the new colors represent peace (blue), economic development (yellow), and prosperity/hope (green).",
+        "national_symbol_summary": "Sun and Sorghum",
+        "national_symbol_detail": null,
+        "national_animal_name": "Leopard / Mountain Gorilla",
+        "national_animal_scientific": "Mountain Gorilla: Gorilla beringei beringei",
+        "national_animal_detail": "While the Leopard is a recognized heraldic symbol, the Mountain Gorilla (Gorilla beringei beringei) serves as the true biological symbol of the state. Rwanda's Volcanoes National Park protects a third of the world's remaining mountain gorillas, making them the crown jewel of Rwandan conservation, economic revitalization, and ecological stewardship.",
+        "animal_status": "contested",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe flag design relies mainly on low-reliability or no sources (refs: 4, wikipedia-flag-of-rwanda).\nNo prose in the document describes the national symbol; only the table summary is available.\nThe national animal relies mainly on low-reliability or no sources (refs: 18, 23).\n[low] national symbol: The table's national symbol 'Sun and Sorghum' is not described anywhere in the prose.\n[corrected] flag design detail: The 1961-2001 flag was red, yellow and green with a black 'R', not red-black-green. (source: wikipedia-flag-of-rwanda)"
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-23"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "wikipedia-flag-of-rwanda"
+        }
+      ]
+    },
+    {
+      "iso3": "SYC",
+      "iso2": "SC",
+      "iso_numeric": 690,
+      "name": "Seychelles",
+      "official_name": "Republic of Seychelles",
+      "region": "east",
+      "flag_url_template": "https://flagcdn.com/w{width}/sc.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "French Minister",
+        "etymology_detail": "Seychelles was named by the French after Jean Moreau de Séchelles, King Louis XV's Minister of Finance.",
+        "etymology_category": "colonial_or_translation",
+        "flag_design_summary": "Oblique Bands",
+        "flag_design_detail": "The flag is highly unique, featuring five oblique bands of blue, yellow, red, white, and green radiating from the bottom left corner. This dynamic design represents a young country moving into the future. The blue and yellow signify the sea and sun, red for the people, white for social justice, and green for the land.",
+        "national_symbol_summary": "Giant Tortoise Shield",
+        "national_symbol_detail": null,
+        "national_animal_name": "Giant Tortoise",
+        "national_animal_scientific": null,
+        "national_animal_detail": "While historically associated with Pirates, the Aldabra Giant Tortoise is the primary biological symbol, representing extreme longevity, peacefulness, and the pristine, untouched ecology of the archipelago.",
+        "animal_status": "inferred",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 5).\nNo prose in the document describes the national symbol; only the table summary is available.\nThe national animal relies mainly on low-reliability or no sources (refs: 19, 24).\n[low] national symbol: The table's national symbol 'Giant Tortoise Shield' is not described anywhere in the prose."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-5"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-33"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-19"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-24"
+        }
+      ]
+    },
+    {
+      "iso3": "SOM",
+      "iso2": "SO",
+      "iso_numeric": 706,
+      "name": "Somalia",
+      "official_name": "Federal Republic of Somalia",
+      "region": "east",
+      "flag_url_template": "https://flagcdn.com/w{width}/so.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "People of Soma",
+        "etymology_detail": "Somalia is named after its indigenous inhabitants, the Somalis. The etymology may trace to a legendary ancestor, Soma, or to the phrase so mal (\"go milk\"), reflecting their deep pastoralist and nomadic heritage.",
+        "etymology_category": "ethnic_group",
+        "flag_design_summary": "Blue with White Star",
+        "flag_design_detail": "The flag is a light blue field with a single white five-pointed star in the center. The blue pays homage to the United Nations, which helped the country transition to independence, while the star represents the five regions historically inhabited by the Somali people.",
+        "national_symbol_summary": "Five-Pointed Star",
+        "national_symbol_detail": "The blue pays homage to the United Nations, which helped the country transition to independence, while the star represents the five regions historically inhabited by the Somali people.",
+        "national_animal_name": "Leopard",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The national animal is the Leopard, two of which proudly support the national coat of arms, signifying ferocity and protection.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: none).\nThe national animal relies mainly on low-reliability or no sources (refs: 18)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        }
+      ]
+    },
+    {
+      "iso3": "SSD",
+      "iso2": "SS",
+      "iso_numeric": 728,
+      "name": "South Sudan",
+      "official_name": "Republic of South Sudan",
+      "region": "east",
+      "flag_url_template": "https://flagcdn.com/w{width}/ss.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "South of Sudan",
+        "etymology_detail": "South Sudan derives its name from its geographic location south of Sudan.",
+        "etymology_category": "geographic_feature",
+        "flag_design_summary": "Black/Red/Green + Star",
+        "flag_design_detail": "The flag resembles that of Kenya, with horizontal black, red, and green stripes separated by white borders, but uniquely includes a blue triangle at the hoist with a yellow star. The blue represents the waters of the Nile, and the yellow star represents unity, hope, and determination.",
+        "national_symbol_summary": "Fish Eagle Emblem",
+        "national_symbol_detail": "The national animal is the African Fish Eagle, whose image adorns the national seal, representing vision, strength, and the critical importance of the White Nile to the nation's survival.",
+        "national_animal_name": "African Fish Eagle",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The national animal is the African Fish Eagle, whose image adorns the national seal, representing vision, strength, and the critical importance of the White Nile to the nation's survival.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: 24).\nThe national animal relies mainly on low-reliability or no sources (refs: 24)."
+      },
+      "sources": [
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-19"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-24"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-24"
+        }
+      ]
+    },
+    {
+      "iso3": "SDN",
+      "iso2": "SD",
+      "iso_numeric": 729,
+      "name": "Sudan",
+      "official_name": "Republic of the Sudan",
+      "region": "east",
+      "flag_url_template": "https://flagcdn.com/w{width}/sd.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Land of the Blacks",
+        "etymology_detail": "Sudan takes its name from the Arabic Bilad as-Sudan, meaning \"Land of the Blacks\".",
+        "etymology_category": "ethnic_group",
+        "flag_design_summary": "Pan-Arab Tricolor",
+        "flag_design_detail": "The flag uses the Pan-Arab colors in horizontal stripes of red, white, and black, with a green triangle at the hoist. Red signifies the martyrs, white represents peace, black represents the nation itself (Sudan), and green signifies Islam and agricultural prosperity.",
+        "national_symbol_summary": "Secretary Bird",
+        "national_symbol_detail": "The national animal is the Secretary Bird, a unique, long-legged raptor famous for stomping venomous snakes to death, representing martial prowess, focus, and environmental dominance.",
+        "national_animal_name": "Secretary Bird / Nile Crocodile",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The national animal is the Secretary Bird, a unique, long-legged raptor famous for stomping venomous snakes to death, representing martial prowess, focus, and environmental dominance. The Nile Crocodile also serves as a potent symbol of the river that forms the country's geographic and economic spine. A secretary bird bearing a shield forms the national emblem.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: 20).\nThe national animal relies mainly on low-reliability or no sources (refs: 20, wikipedia-emblem-of-sudan).\n[corrected] national animal name: The prose names the secretary bird as the national animal; the table listed the crocodile first. (source: wikipedia-emblem-of-sudan)\n[corrected] national animal detail: Adds the emblem basis for the secretary bird. (source: wikipedia-emblem-of-sudan)"
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-20"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-20"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "wikipedia-emblem-of-sudan"
+        }
+      ]
+    },
+    {
+      "iso3": "TZA",
+      "iso2": "TZ",
+      "iso_numeric": 834,
+      "name": "Tanzania",
+      "official_name": "United Republic of Tanzania",
+      "region": "east",
+      "flag_url_template": "https://flagcdn.com/w{width}/tz.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Tanganyika + Zanzibar",
+        "etymology_detail": "Tanzania is a portmanteau of the two states that merged to form the nation in 1964: Tanganyika and Zanzibar.",
+        "etymology_category": "geographic_feature",
+        "flag_design_summary": "Green/Yellow/Black/Blue",
+        "flag_design_detail": "The flag is divided diagonally by a yellow-fimbriated black band, with a green upper triangle representing agriculture and a blue lower triangle representing the Indian Ocean. The black band represents the Swahili people, and the yellow stripes signify mineral wealth.",
+        "national_symbol_summary": "Uhuru Torch",
+        "national_symbol_detail": "The national symbol includes the Uhuru Torch, symbolizing freedom and enlightenment.",
+        "national_animal_name": "Giraffe",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The national animal is the Giraffe. Standing as the tallest land mammal, the giraffe travels in highly social groups and was chosen because it represents grace, peaceful coexistence, and intriguing beauty, perfectly aligning with Tanzania's identity as a stable, unified nation with immense wildlife reserves.",
+        "animal_status": "de_facto",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 5).\nThe national symbol relies mainly on low-reliability or no sources (refs: none).\nThe national animal relies mainly on low-reliability or no sources (refs: 24, 35)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-5"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-36"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-24"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-35"
+        }
+      ]
+    },
+    {
+      "iso3": "UGA",
+      "iso2": "UG",
+      "iso_numeric": 800,
+      "name": "Uganda",
+      "official_name": "Republic of Uganda",
+      "region": "east",
+      "flag_url_template": "https://flagcdn.com/w{width}/ug.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Land of the Ganda",
+        "etymology_detail": "Uganda is derived from the Swahili Uganda, meaning \"Land of the Ganda People\" (referencing the powerful Buganda kingdom).",
+        "etymology_category": "ethnic_group",
+        "flag_design_summary": "Black/Yellow/Red + Crane",
+        "flag_design_detail": "The flag consists of six horizontal bands of black, yellow, and red, representing the African people, the sunshine, and the brotherhood of all men, respectively. At the center is a white circle containing the supreme national symbol and animal: the Grey Crowned Crane.",
+        "national_symbol_summary": "Grey Crowned Crane",
+        "national_symbol_detail": "At the center is a white circle containing the supreme national symbol and animal: the Grey Crowned Crane.",
+        "national_animal_name": "Grey Crowned Crane",
+        "national_animal_scientific": null,
+        "national_animal_detail": "At the center is a white circle containing the supreme national symbol and animal: the Grey Crowned Crane. The crane is a gentle, elegant bird, chosen specifically because it was historically a neutral symbol unassociated with any of the country's past kingdoms or rival tribes, and is known for its beautiful golden crest.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 5).\nThe flag design relies mainly on low-reliability or no sources (refs: 2).\nThe national symbol relies mainly on low-reliability or no sources (refs: 2).\nThe national animal relies mainly on low-reliability or no sources (refs: 2, 19)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-5"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-19"
+        }
+      ]
+    },
+    {
+      "iso3": "BWA",
+      "iso2": "BW",
+      "iso_numeric": 72,
+      "name": "Botswana",
+      "official_name": "Republic of Botswana",
+      "region": "southern",
+      "flag_url_template": "https://flagcdn.com/w{width}/bw.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Land of the Free/Tswana",
+        "etymology_detail": "Botswana means \"Land of the Tswana,\" the dominant ethnic group, with etymological origins suggesting a translation of \"Free Men\".",
+        "etymology_category": "ethnic_group",
+        "flag_design_summary": "Blue with Black/White Band",
+        "flag_design_detail": "The flag is light blue with a horizontal black band framed by white stripes. The blue represents the critical importance of rain (Pula) in the Kalahari desert. The black and white bands signify racial harmony and the cooperation of diverse people.",
+        "national_symbol_summary": "Cogwheels & Zebras",
+        "national_symbol_detail": "Two zebras also support the national coat of arms alongside cogwheels representing industry.",
+        "national_animal_name": "Zebra",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The national animal is the Zebra. The black and white stripes of the zebra directly correlate with the flag's central bands, biologically signifying national unity, racial harmony, and a shared future without racial division. Two zebras also support the national coat of arms alongside cogwheels representing industry.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe national symbol relies mainly on low-reliability or no sources (refs: 18).\nThe national animal relies mainly on low-reliability or no sources (refs: 18)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-27"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        }
+      ]
+    },
+    {
+      "iso3": "SWZ",
+      "iso2": "SZ",
+      "iso_numeric": 748,
+      "name": "Eswatini",
+      "official_name": "Kingdom of Eswatini",
+      "region": "southern",
+      "flag_url_template": "https://flagcdn.com/w{width}/sz.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Place of the Swazi",
+        "etymology_detail": "Eswatini deliberately abandoned the colonial name Swaziland in 2018 at the behest of King Mswati III, adopting Eswatini, meaning \"Place of the Swazi,\" to shed the final vestiges of British nomenclature.",
+        "etymology_category": "ethnic_group",
+        "flag_design_summary": "Blue/Yellow/Red + Shield",
+        "flag_design_detail": "The flag features horizontal stripes of blue, yellow, red, yellow, and blue. The central red stripe contains a traditional Swazi ox hide combat shield and two spears, representing the aggressive defense of the nation's ancient traditions.",
+        "national_symbol_summary": "Swazi Shield",
+        "national_symbol_detail": "The central red stripe contains a traditional Swazi ox hide combat shield and two spears, representing the aggressive defense of the nation's ancient traditions.",
+        "national_animal_name": "Lion / Elephant",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The lion and elephant are heavily symbolic in Swazi culture, representing the King (the Lion) and the Queen Mother (the She-Elephant) in the traditional dual-monarchy governance structure, and act as the primary faunal symbols of state authority.",
+        "animal_status": "inferred",
+        "needs_review": true,
+        "review_notes": "The flag design relies mainly on low-reliability or no sources (refs: 2).\nThe national symbol relies mainly on low-reliability or no sources (refs: 2).\nThe national animal relies mainly on low-reliability or no sources (refs: none)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-3"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-2"
+        }
+      ]
+    },
+    {
+      "iso3": "LSO",
+      "iso2": "LS",
+      "iso_numeric": 426,
+      "name": "Lesotho",
+      "official_name": "Kingdom of Lesotho",
+      "region": "southern",
+      "flag_url_template": "https://flagcdn.com/w{width}/ls.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Land of the Sotho",
+        "etymology_detail": "Lesotho translates to \"Land of the Sotho\" or \"Land of the Human Beings\".",
+        "etymology_category": "ethnic_group",
+        "flag_design_summary": "Blue/White/Green + Hat",
+        "flag_design_detail": "Enclaved entirely within the borders of South Africa, the mountainous nation's flag consists of horizontal blue, white, and green stripes. In the center is a black silhouette of a Mokotlo, the traditional Basotho woven hat, which serves as the supreme national symbol. The blue represents rain, white represents peace, and green represents prosperity.",
+        "national_symbol_summary": "Basotho Hat",
+        "national_symbol_detail": "In the center is a black silhouette of a Mokotlo, the traditional Basotho woven hat, which serves as the supreme national symbol.",
+        "national_animal_name": "Crocodile",
+        "national_animal_scientific": null,
+        "national_animal_detail": "The national animal is the Crocodile (Likuena). The crocodile is the ancient totem of the royal Bakoena clan of King Moshoeshoe I, the founder of the nation, and serves as the fierce moniker for the national football team. A crocodile (koena) is the charge on the shield of the national coat of arms.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The flag design relies mainly on low-reliability or no sources (refs: 2).\nThe national symbol relies mainly on low-reliability or no sources (refs: 2).\n[corrected] national animal detail: Adds the emblem basis. (source: wikipedia-coat-of-arms-of-lesotho)\n[status] national animal: A crocodile is the charge on the shield of the national coat of arms (reviewed 2026-10-15)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-3"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-19"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "wikipedia-coat-of-arms-of-lesotho"
+        }
+      ]
+    },
+    {
+      "iso3": "MOZ",
+      "iso2": "MZ",
+      "iso_numeric": 508,
+      "name": "Mozambique",
+      "official_name": "Republic of Mozambique",
+      "region": "southern",
+      "flag_url_template": "https://flagcdn.com/w{width}/mz.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Musa Ben Mbiki",
+        "etymology_detail": "Mozambique is named after Musa Ben Mbiki, an Arab trader and ruler who controlled the Island of Mozambique before the Portuguese arrived.",
+        "etymology_category": "kingdom_or_ruler",
+        "flag_design_summary": "Pan-African + AK-47 & Hoe",
+        "flag_design_detail": "The flag is notable worldwide for its uncompromising symbolism; it features the Pan-African colors radiating from a red triangle at the hoist. Inside the triangle is a yellow star overlaid with an open book, a hoe, and an AK-47 assault rifle with a bayonet attached. The book represents education, the hoe represents agriculture, and the rifle represents defense and the bloody, armed struggle required for independence during the Cold War era.",
+        "national_symbol_summary": "AK-47 and Hoe",
+        "national_symbol_detail": "Inside the triangle is a yellow star overlaid with an open book, a hoe, and an AK-47 assault rifle with a bayonet attached. The book represents education, the hoe represents agriculture, and the rifle represents defense and the bloody, armed struggle required for independence during the Cold War era.",
+        "national_animal_name": "Elephant / Mamba",
+        "national_animal_scientific": null,
+        "national_animal_detail": "While the Elephant is a prominent natural symbol, the nation is equally identified with the Mamba (Os Mambas), the deadliest and most feared snake in Africa, serving as the football team's insignia to project lethal speed.",
+        "animal_status": "contested",
+        "needs_review": true,
+        "review_notes": "The flag design relies mainly on low-reliability or no sources (refs: 2).\nThe national symbol relies mainly on low-reliability or no sources (refs: 2).\nThe national animal relies mainly on low-reliability or no sources (refs: 18, 19)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-3"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-19"
+        }
+      ]
+    },
+    {
+      "iso3": "NAM",
+      "iso2": "NA",
+      "iso_numeric": 516,
+      "name": "Namibia",
+      "official_name": "Republic of Namibia",
+      "region": "southern",
+      "flag_url_template": "https://flagcdn.com/w{width}/na.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Area With Nothing",
+        "etymology_detail": "Namibia derives its name from the Namib Desert. In the indigenous Nama language, Namib translates to \"An Area Where There Is Nothing,\" reflecting the vast, arid desolation of the coastal desert landscape.",
+        "etymology_category": "geographic_feature",
+        "flag_design_summary": "Blue/Red/Green/White/Yellow",
+        "flag_design_detail": "The flag features a red diagonal band edged in white, separating a blue upper triangle containing a gold sun from a green lower triangle. The colors signify the people's heroism (red), the sky and Atlantic Ocean (blue), agriculture (green), and life and energy (gold sun).",
+        "national_symbol_summary": "Gold Sun",
+        "national_symbol_detail": "The flag features a red diagonal band edged in white, separating a blue upper triangle containing a gold sun from a green lower triangle.",
+        "national_animal_name": "Gemsbok",
+        "national_animal_scientific": "Oryx gazella",
+        "national_animal_detail": "The national animal is the Gemsbok (Oryx gazella), a large antelope uniquely adapted to survive in the extreme conditions of the Namib desert, capable of going weeks without drinking water, symbolizing the hardiness of the Namibian people. Two oryx (gemsbok) support the national coat of arms.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 4).\nThe flag design relies mainly on low-reliability or no sources (refs: none).\nThe national symbol relies mainly on low-reliability or no sources (refs: none).\nThe national animal relies mainly on low-reliability or no sources (refs: 18, wikipedia-coat-of-arms-of-namibia).\n[corrected] national animal detail: Adds the emblem basis. (source: wikipedia-coat-of-arms-of-namibia)\n[status] national animal: Two oryx (gemsbok) support the national coat of arms (reviewed 2026-10-15)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-4"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "wikipedia-coat-of-arms-of-namibia"
+        }
+      ]
+    },
+    {
+      "iso3": "ZAF",
+      "iso2": "ZA",
+      "iso_numeric": 710,
+      "name": "South Africa",
+      "official_name": "Republic of South Africa",
+      "region": "southern",
+      "flag_url_template": "https://flagcdn.com/w{width}/za.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Geographic",
+        "etymology_detail": "South Africa takes a purely geographic name.",
+        "etymology_category": "geographic_feature",
+        "flag_design_summary": "Multicolored \"Y\" shape",
+        "flag_design_detail": "Following the dismantling of Apartheid, a new flag was introduced in 1994. It features a unique \"Y\" shape (a pall) in green, outlined in white and yellow, separating panels of red, blue, and black. The \"Y\" symbolizes the convergence of diverse elements within South African society, taking the road ahead in unity. Popular readings link the colours to the banners of the ANC and the old Boer republics, but the government states that no universal symbolism should be attached to any of the colours.",
+        "national_symbol_summary": "Protea & Motto",
+        "national_symbol_detail": "The national coat of arms contains the motto ǃke e꞉ ǀxarra ǁke in the extinct ǀXam language, meaning \"Diverse people unite,\" alongside a Secretary Bird, protea flower, and elephant tusks. The nation also honors the Blue Crane (national bird), Galjoen (national fish), King Protea (national flower), and Real Yellowwood (national tree).",
+        "national_animal_name": "Springbok",
+        "national_animal_scientific": "Antidorcas marsupialis",
+        "national_animal_detail": "The national animal is the Springbok (Antidorcas marsupialis). Famous for its stiff-legged jumping display known as \"pronking,\" the springbok is the ultimate symbol of the arid high-veld and the beloved emblem of the world-champion national rugby team. The springbok is listed as the national animal among South Africa's official national symbols.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: none).\nThe flag design relies mainly on low-reliability or no sources (refs: 38, wikipedia-flag-of-south-africa).\nThe national animal relies mainly on low-reliability or no sources (refs: 18, wikipedia-national-symbols-of-south-africa).\n[corrected] flag design detail: The colour meanings were presented as official; the government attaches no symbolism to the colours. (source: wikipedia-flag-of-south-africa)\n[corrected] national symbol detail: The motto was printed with slashes in place of the ǀXam click letters. (source: wikipedia-coat-of-arms-of-south-africa)\n[corrected] national animal detail: Adds the official basis. (source: wikipedia-national-symbols-of-south-africa)\n[status] national animal: Listed as the national animal among South Africa's official national symbols (reviewed 2026-10-15)."
+      },
+      "sources": [
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-38"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-39"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "wikipedia-flag-of-south-africa"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "wikipedia-coat-of-arms-of-south-africa"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "wikipedia-national-symbols-of-south-africa"
+        }
+      ]
+    },
+    {
+      "iso3": "ZMB",
+      "iso2": "ZM",
+      "iso_numeric": 894,
+      "name": "Zambia",
+      "official_name": "Republic of Zambia",
+      "region": "southern",
+      "flag_url_template": "https://flagcdn.com/w{width}/zm.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Great River",
+        "etymology_detail": "Zambia is named after the Zambezi River, meaning \"Great River,\" which forms its southern border with Zimbabwe.",
+        "etymology_category": "geographic_feature",
+        "flag_design_summary": "Green + Orange Eagle",
+        "flag_design_detail": "The flag is predominantly green, with a block of three vertical stripes (red, black, and orange) in the lower right corner, topped by an orange African Fish Eagle. Green represents natural resources, red the struggle for freedom, black the people, and orange the immense copper wealth that drives the economy.",
+        "national_symbol_summary": "Orange Eagle",
+        "national_symbol_detail": "The flag is predominantly green, with a block of three vertical stripes (red, black, and orange) in the lower right corner, topped by an orange African Fish Eagle.",
+        "national_animal_name": "African Fish Eagle",
+        "national_animal_scientific": "Haliaeetus vocifer",
+        "national_animal_detail": "The African Fish Eagle (Haliaeetus vocifer) is the official national animal. With a haunting call often described as \"the sound of Africa,\" the eagle represents the people's ability to rise above the nation's problems with superior vision, freedom, and grace.",
+        "animal_status": "official",
+        "needs_review": true,
+        "review_notes": "The etymology relies mainly on low-reliability or no sources (refs: 5).\nThe flag design relies mainly on low-reliability or no sources (refs: 2).\nThe national symbol relies mainly on low-reliability or no sources (refs: 2).\nThe national animal relies mainly on low-reliability or no sources (refs: 2, 18)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-5"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-18"
+        }
+      ]
+    },
+    {
+      "iso3": "ZWE",
+      "iso2": "ZW",
+      "iso_numeric": 716,
+      "name": "Zimbabwe",
+      "official_name": "Republic of Zimbabwe",
+      "region": "southern",
+      "flag_url_template": "https://flagcdn.com/w{width}/zw.png",
+      "is_microstate_marker": false,
+      "profile": {
+        "etymology_summary": "Houses of Stone",
+        "etymology_detail": "Zimbabwe shed its colonial name (Rhodesia) in favor of the Shona phrase Dzimba-dza-mabwe, meaning \"Large Houses of Stone\". This refers directly to the ancient ruins of Great Zimbabwe, the capital of a historic and highly advanced trading empire, effectively reclaiming the land's deep history.",
+        "etymology_category": "kingdom_or_ruler",
+        "flag_design_summary": "Pan-African + Stone Bird",
+        "flag_design_detail": "The flag incorporates the Pan-African colors in seven horizontal stripes, with a white triangle at the hoist containing a red star and the Zimbabwe Bird.",
+        "national_symbol_summary": "Zimbabwe Bird",
+        "national_symbol_detail": "The Zimbabwe Bird, originally carved from soapstone in the ancient ruins, is the supreme national symbol, linking the modern state to its glorious pre-colonial past.",
+        "national_animal_name": "Sable Antelope",
+        "national_animal_scientific": null,
+        "national_animal_detail": "Biologically, the Sable Antelope serves as the national animal, representing the warrior spirit, endurance, and the rugged bushveld.",
+        "animal_status": "de_facto",
+        "needs_review": true,
+        "review_notes": "The flag design relies mainly on low-reliability or no sources (refs: 2).\nThe national symbol relies mainly on low-reliability or no sources (refs: 2)."
+      },
+      "sources": [
+        {
+          "field": "etymology",
+          "source_key": "symbology-ref-3"
+        },
+        {
+          "field": "flag_design",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_symbol",
+          "source_key": "symbology-ref-2"
+        },
+        {
+          "field": "national_animal",
+          "source_key": "symbology-ref-19"
+        }
+      ]
+    }
+  ]
+}

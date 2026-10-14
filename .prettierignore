@@ -10,3 +10,5 @@ data
 *.md
 uv.lock
 package-lock.json
+# Hand-curated reference data keeps its compact one-entry-per-line layout for review
+pipelines/africa_pipelines/reference

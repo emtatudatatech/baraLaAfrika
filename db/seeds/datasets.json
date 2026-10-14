@@ -1,0 +1,22 @@
+{
+  "$generated": {
+    "by": "python -m pipelines extract-pdf",
+    "source_pdf": "data/source/africa-state-symbology.pdf",
+    "source_pdf_sha256": "fa0f533bf8ba372dcf1afd49970821f0c0dc9e34ff552c19ab51651e3e1b0dc9",
+    "content_sha256": "1dcdfe18288b572240fff7c212ff781c47651e1041c988d7ecac2b4f82aec125",
+    "note": "Edit freely, then run `python -m pipelines load`. Re-running extract-pdf will not overwrite edited seeds unless --force is given."
+  },
+  "datasets": [
+    {
+      "key": "symbology-pdf",
+      "name": "State symbology of the African continent (research document)",
+      "provider": "Bara La Afrika project research",
+      "license": "Project research document; each cited source keeps its own terms",
+      "attribution": "State Symbology of the African Continent: Etymology, Vexillology, and Heraldic Fauna (project research document), with the sources it cites.",
+      "coverage_start": null,
+      "coverage_end": null,
+      "as_of": "2026-10-14",
+      "refresh_cadence": "manual"
+    }
+  ]
+}

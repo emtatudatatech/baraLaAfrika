@@ -55,9 +55,16 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v10
+      # Node provides the in-memory PGlite Postgres server the migration tests connect to.
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
       - run: sudo apt-get update && sudo apt-get install -y libcairo2
       - run: uv sync --locked
       - run: uv run ruff check .
       - run: uv run ruff format --check .
       - run: uv run mypy
+      # Includes `extract-pdf --check`: fails if the committed seeds are stale.
       - run: uv run pytest

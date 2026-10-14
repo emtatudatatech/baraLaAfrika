@@ -11,7 +11,7 @@
 
 History and Contemporary Africa appear in the navigation as "Coming soon".
 
-> **Status:** milestone 1 of 17 (scaffold) is complete: tooling, design system, app shell, CI. Data, API, maps and tables arrive in later milestones (see [Roadmap](#roadmap)).
+> **Status:** milestones 1–2 of 17 are complete: scaffold (tooling, design system, app shell, CI) and data foundation (database schema, PDF extraction, seeds, review report). The API, maps and tables arrive in later milestones (see [Roadmap](#roadmap)).
 
 ---
 
@@ -21,6 +21,7 @@ History and Contemporary Africa appear in the navigation as "Coming soon".
 - [Repository layout](#repository-layout)
 - [Prerequisites](#prerequisites)
 - [Getting started (local development)](#getting-started-local-development)
+- [Data: database and pipelines](#data-database-and-pipelines)
 - [Quality checks](#quality-checks)
 - [Environment variables](#environment-variables)
 - [Deployment (Netlify)](#deployment-netlify)
@@ -65,6 +66,8 @@ packages/shared/          types, zod schemas and constants shared by web + funct
 netlify/functions/        API functions (_shared/ holds HTTP and DB helpers)
 netlify/tests/            function tests (kept outside functions/ so they never deploy)
 db/migrations/            numbered .sql migrations
+db/roles.sql              one-time read/write role setup (run in the Neon SQL editor)
+db/tests/                 schema and seed tests against PGlite
 db/seeds/                 generated, reviewable JSON seeds (committed)
 pipelines/                Python package: `python -m pipelines <command>`
 scripts/                  build helpers (Material Symbols subsetting)
@@ -96,13 +99,46 @@ npm run dev                     # Vite dev server on http://localhost:5173
 
 Once the API exists (milestone 4), use `npm run dev:netlify` (Netlify CLI on http://localhost:8888) to run the site and the functions together. Before then, `npm run dev` is enough.
 
-The pipelines run from the repo root:
+The pipelines run from the repo root (`uv run python -m pipelines --help`); see the next section.
 
-```bash
-uv run python -m pipelines --help
-```
+## Data: database and pipelines
 
-The full first-run data sequence (`migrate → extract-pdf → flags → boundaries → load`) is documented here as each step lands.
+### One-time Neon setup
+
+1. Create a Neon project (one branch for production; optionally a branch per deploy preview).
+2. In the Neon SQL editor, as the database owner, run [`db/roles.sql`](db/roles.sql) after replacing its two placeholder passwords. It creates `bla_writer` (pipelines) and `bla_reader` (read-only, for the Netlify Functions).
+3. Put the connection strings where they belong (see [Environment variables](#environment-variables)): `bla_writer` → `DATABASE_URL_WRITE` in your local `.env` and the GitHub Actions secrets; `bla_reader` → `DATABASE_URL_READ` in the Netlify site settings.
+
+### First run
+
+| Step | Command | What it does | Status |
+|---|---|---|---|
+| 1 | `uv run python -m pipelines migrate` | Applies `db/migrations/*.sql` in order (checksummed; an applied file that was edited is an error) and grants `SELECT` to `bla_reader` | ✅ |
+| 2 | `uv run python -m pipelines extract-pdf` | Research PDF → `db/seeds/{countries,sources,datasets}.json` and `data/review_report.md`, with loud validation (54 countries; region counts 6/15/9/16/8; unique ISO codes; every summary field present; no stray citation digits) | ✅ |
+| 3 | `uv run python -m pipelines flags` | Flagpedia flags and region colours | milestone 3 |
+| 4 | `uv run python -m pipelines boundaries` | Natural Earth map geometry | milestone 5 |
+| 5 | `uv run python -m pipelines load` | Upserts the seeds into Neon | milestone 4 |
+
+`migrate --dry-run` lists pending migrations. `extract-pdf --check` validates without writing and fails if the committed seeds are stale; the pytest suite runs it.
+
+### Correcting the data
+
+The research document is not fully verified (see `data/review_report.md`). To correct it:
+
+1. Edit `db/seeds/countries.json` (or `sources.json`). For example, fix a summary, set `etymology_category`, change `animal_status`, or set `needs_review` to `false` once a record is checked.
+2. Run `python -m pipelines load` (from milestone 4).
+
+`extract-pdf` refuses to overwrite seeds you have edited (it compares a content hash recorded at generation time) unless you pass `--force`.
+
+How the extraction works and where its judgement calls live:
+
+- `pipelines/africa_pipelines/reference/african_states.json`: canonical names (with diacritics), ISO codes, regions, and every label the PDF uses for each country.
+- `pipelines/africa_pipelines/reference/symbology_curation.json`: the reviewed mapping of each country's prose sentences to profile fields, the animal-status decisions with their reasons, the reviewed etymology categories, the known inconsistencies (each marked corrected, status changed or open) and the **verified corrections**. Each correction replaces or appends exact text, gives its reason and cites the reference source it was checked against; that source is added to `sources` and cited on the corrected field. If a correction's original text stops matching, extraction fails rather than silently skipping it. The review report lists every correction with its before and after text.
+- `pipelines/africa_pipelines/reference/source_tiers.json`: the reliability tier for each cited website.
+
+### Local database for tests
+
+Tests never need a database server. Vitest runs the migrations and loads the seeds into **PGlite** (Postgres compiled to WebAssembly, in-process). pytest starts PGlite's socket server so the Python migration runner is tested over the real Postgres wire protocol.
 
 ## Quality checks
 
@@ -115,7 +151,7 @@ The full first-run data sequence (`migrate → extract-pdf → flags → boundar
 | `npm run screenshots` | Captures every page at desktop and mobile, light and dark, into `screenshots/` (gitignored) for visual review |
 | `uv run ruff check . && uv run ruff format --check .` | Python lint and format |
 | `uv run mypy` | Python type-check (strict) |
-| `uv run pytest` | Python tests |
+| `uv run pytest` | Python tests (needs `npm install` for the PGlite-backed database tests) |
 
 CI (`.github/workflows/ci.yml`) runs all of these on every push to `main` and on pull requests.
 
@@ -179,7 +215,7 @@ Decisions taken where the specification left room, or where the current ecosyste
 v1 milestones (stop points for review are marked ⏸):
 
 1. ✅ Scaffold
-2. Data foundation: migrations, PDF extraction, seeds, review report ⏸
+2. ✅ Data foundation: migrations, PDF extraction, seeds, review report ⏸
 3. Flags and region colours ⏸
 4. API (Neon connected)
 5. Map

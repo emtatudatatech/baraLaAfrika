@@ -1,0 +1,141 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  font-family: var(--font-text);
+  font-size: 100%;
+  line-height: var(--leading-normal);
+  color: var(--color-ink);
+  background: var(--color-bg);
+  scroll-padding-top: 5rem;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  overflow-x: clip;
+  font-weight: var(--weight-regular);
+  background: transparent;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Ambient mesh: the coloured light the glass refracts. Fixed so it does not repaint on scroll. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+
+  /* body is transparent so this layer sits between the html background and the content. */
+  background:
+    radial-gradient(42rem 32rem at 8% 6%, var(--mesh-1), transparent 70%),
+    radial-gradient(38rem 30rem at 92% 14%, var(--mesh-2), transparent 70%),
+    radial-gradient(44rem 34rem at 78% 96%, var(--mesh-3), transparent 70%),
+    radial-gradient(34rem 28rem at 12% 88%, var(--mesh-4), transparent 70%),
+    linear-gradient(180deg, var(--color-bg), var(--color-bg-deep));
+}
+
+@media (--more-contrast) {
+  body::before {
+    background: var(--color-bg);
+  }
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--color-accent);
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2.5px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* Brief colour cross-fade when the user toggles the theme (skipped for reduced motion). */
+@media (--motion-ok) {
+  html.theme-transition,
+  html.theme-transition *,
+  html.theme-transition *::before,
+  html.theme-transition *::after {
+    transition:
+      background-color var(--duration-med) var(--ease-out),
+      color var(--duration-med) var(--ease-out),
+      border-color var(--duration-med) var(--ease-out),
+      fill var(--duration-med) var(--ease-out),
+      stroke var(--duration-med) var(--ease-out) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,12 @@
+node_modules
+apps/web/dist
+apps/web/public/geo
+apps/web/public/flags
+coverage
+playwright-report
+test-results
+db/seeds
+data
+*.md
+uv.lock
+package-lock.json

@@ -1,0 +1,31 @@
+.icon {
+  display: inline-block;
+  flex: none;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  overflow: hidden;
+  font-family: var(--font-icons);
+  font-size: var(--icon-size);
+  font-style: normal;
+  font-weight: normal;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'opsz' 24;
+  font-feature-settings: 'liga';
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  direction: ltr;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.filled {
+  font-variation-settings:
+    'FILL' 1,
+    'wght' 400,
+    'opsz' 24;
+}

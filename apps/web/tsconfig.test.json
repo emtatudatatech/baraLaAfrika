@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../node_modules/.tsbuild/web-test",
+    "types": ["vite/client", "node", "@testing-library/jest-dom/vitest"]
+  },
+  "include": ["src", "src/**/*.json"],
+  "exclude": [],
+  "references": [
+    {
+      "path": "../../packages/shared"
+    }
+  ]
+}

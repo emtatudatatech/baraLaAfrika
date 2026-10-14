@@ -1,0 +1,5 @@
+{
+  "$comment": "Single source of truth for physical/unit constants shared by Python pipelines, TypeScript and SQL. Tests assert all three agree.",
+  "TROY_OZ_PER_TONNE": 32150.7466,
+  "METRES_PER_FOOT": 0.3048
+}

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#f6efe4" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#11131d" media="(prefers-color-scheme: dark)" />
+    <title>Bara La Afrika · Explore Africa's symbols, mountains and gold</title>
+    <meta
+      name="description"
+      content="Bara La Afrika is an interactive explorer of Africa's 54 states: the meaning of their names, flags and national animals, their mountains (Harim) and their gold (Dhahabu)."
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://flagcdn.com" crossorigin />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Bara La Afrika" />
+    <meta property="og:title" content="Bara La Afrika" />
+    <meta
+      property="og:description"
+      content="An interactive explorer of Africa's 54 states: names, flags, national symbols, mountains and gold."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <!-- Sets the theme before first paint (no flash). Hashed into the CSP at build time. -->
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var system = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        var stored = null;
+        try {
+          stored = window.localStorage.getItem('bla-theme');
+        } catch (e) {}
+        root.dataset.theme = stored === 'light' || stored === 'dark' ? stored : system;
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>Bara La Afrika needs JavaScript to show its interactive maps and tables.</noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

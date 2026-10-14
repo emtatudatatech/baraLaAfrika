@@ -1,0 +1,55 @@
+/**
+ * Every Material Symbols icon the app may render. The self-hosted font is subset to exactly
+ * these names by `uv run python -m scripts.build_icon_font`, which also verifies each name is
+ * in the current canonical Material Symbols set. Keep the list sorted; re-run the script after
+ * editing it (a unit test fails if the subset lock file is stale).
+ */
+export const ICON_NAMES = [
+  'account_balance',
+  'add_shopping_cart',
+  'altitude',
+  'arrow_downward',
+  'close',
+  'compare_arrows',
+  'contrast',
+  'dark_mode',
+  'date_range',
+  'diamond',
+  'download',
+  'error',
+  'explore',
+  'filter_alt',
+  'fit_screen',
+  'flag',
+  'height',
+  'history_edu',
+  'home',
+  'info',
+  'keyboard_arrow_down',
+  'landscape',
+  'landscape_2',
+  'light_mode',
+  'local_shipping',
+  'lock',
+  'map',
+  'menu',
+  'mountain_flag',
+  'open_in_new',
+  'paid',
+  'pets',
+  'public',
+  'refresh',
+  'savings',
+  'schedule',
+  'search',
+  'show_chart',
+  'south',
+  'table_view',
+  'trending_up',
+  'volcano',
+  'workspace_premium',
+  'zoom_in',
+  'zoom_out',
+] as const;
+
+export type IconName = (typeof ICON_NAMES)[number];

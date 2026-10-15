@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from pipelines.africa_pipelines import extract_pdf, flags, migrate
+from pipelines.africa_pipelines import extract_pdf, flags, load, migrate, status
 from pipelines.cli import Command
 
 ALL: list[Command] = [
@@ -23,5 +23,17 @@ ALL: list[Command] = [
         help="Fetch Flagpedia flags, compute flag palettes and region colours, write the report.",
         configure=flags.configure,
         run=flags.run,
+    ),
+    Command(
+        name="load",
+        help="Upsert the seeds into the database (uses DATABASE_URL_WRITE).",
+        configure=load.configure,
+        run=load.run,
+    ),
+    Command(
+        name="status",
+        help="Print the freshness of every dataset (uses DATABASE_URL_WRITE).",
+        configure=status.configure,
+        run=status.run,
     ),
 ]

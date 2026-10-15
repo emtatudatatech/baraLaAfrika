@@ -79,3 +79,13 @@ def test_grants_read_access_when_the_role_exists(pglite_url: str) -> None:
         assert allowed == (True, False)
         with pytest.raises(migrate.MigrationError, match="Invalid read-only role"):
             migrate.grant_read_access(conn, "bad; role")
+
+
+def test_dry_run_writes_nothing(
+    pglite_url: str, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    monkeypatch.setenv("DATABASE_URL_WRITE", pglite_url)
+    assert migrate.run(argparse.Namespace(dry_run=True, read_role="bla_reader")) == 0
+    assert "Pending: 0001_core.sql" in capsys.readouterr().out
+    with psycopg.connect(pglite_url) as conn:
+        assert conn.execute("SELECT to_regclass('public.schema_migrations')").fetchone() == (None,)

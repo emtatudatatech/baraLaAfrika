@@ -5,5 +5,19 @@
     "lib": ["ES2023", "DOM"],
     "types": ["node"]
   },
-  "include": ["vitest.config.ts", "playwright.config.ts", "e2e/**/*.ts", "db/tests/**/*.ts"]
+  "include": [
+    "vitest.config.ts",
+    "playwright.config.ts",
+    "e2e/**/*.ts",
+    "db/tests/**/*.ts",
+    "netlify/tests/**/*.ts"
+  ],
+  "references": [
+    {
+      "path": "./packages/shared"
+    },
+    {
+      "path": "./netlify"
+    }
+  ]
 }

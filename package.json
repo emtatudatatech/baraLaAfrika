@@ -14,7 +14,7 @@
   },
   "scripts": {
     "dev": "npm run dev -w apps/web",
-    "dev:netlify": "netlify dev",
+    "dev:netlify": "netlify dev --filter @bla/web",
     "build": "npm run build -w apps/web",
     "preview": "npm run preview -w apps/web",
     "lint": "eslint . && stylelint \"apps/web/src/**/*.css\"",
@@ -26,7 +26,8 @@
     "e2e": "playwright test",
     "e2e:install": "playwright install --with-deps chromium",
     "screenshots": "playwright test e2e/screenshots.spec.ts --project=screenshots",
-    "check": "npm run lint && npm run typecheck && npm run test && npm run build"
+    "check": "npm run lint && npm run typecheck && npm run test && npm run build",
+    "check:functions": "node scripts/check-function-bundles.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

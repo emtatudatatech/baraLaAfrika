@@ -85,10 +85,16 @@ def plan(migrations: list[Migration], applied: dict[str, str]) -> list[Migration
     return [m for m in migrations if m.version not in applied]
 
 
-def applied_checksums(conn: Connection) -> dict[str, str]:
+def applied_checksums(conn: Connection, *, create: bool = True) -> dict[str, str]:
+    """Applied migrations. With create=False (dry runs) nothing is written to the database."""
     cur = conn.cursor()
-    cur.execute(SCHEMA_MIGRATIONS_DDL)
-    conn.commit()
+    if create:
+        cur.execute(SCHEMA_MIGRATIONS_DDL)
+        conn.commit()
+    else:
+        cur.execute("SELECT to_regclass('public.schema_migrations') IS NOT NULL")
+        if not cur.fetchall()[0][0]:
+            return {}
     cur.execute("SELECT version, checksum FROM schema_migrations")
     return {str(v): str(c) for v, c in cur.fetchall()}
 
@@ -144,7 +150,7 @@ def run(args: argparse.Namespace) -> int:
     migrations = discover()
     url = require_env("DATABASE_URL_WRITE", purpose="apply migrations with the write role")
     with psycopg.connect(url) as conn:
-        pending = plan(migrations, applied_checksums(conn))
+        pending = plan(migrations, applied_checksums(conn, create=not args.dry_run))
         if args.dry_run:
             print("Pending: " + (", ".join(m.filename for m in pending) or "none"))
             return 0

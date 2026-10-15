@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 
-import { API_ERROR_CODES, type ApiError, type ApiErrorCode } from '@bla/shared';
+import { API_ERROR_CODES, type ApiError, type ApiErrorCode } from './contract';
 
 /** Reference data changes rarely: cache at the CDN for an hour, serve stale for a day. */
 export const REFERENCE_CACHE_CONTROL = 'public, s-maxage=3600, stale-while-revalidate=86400';

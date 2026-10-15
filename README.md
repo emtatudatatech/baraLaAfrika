@@ -11,7 +11,7 @@
 
 History and Contemporary Africa appear in the navigation as "Coming soon".
 
-> **Status:** milestones 1–3 of 17 are complete: scaffold (tooling, design system, app shell, CI), data foundation (database schema, PDF extraction, seeds, review report), and flags with computed region colours, which are **awaiting approval** before the app uses them. The API, maps and tables arrive in later milestones (see [Roadmap](#roadmap)).
+> **Status:** milestones 1–4 of 17 are complete: scaffold (tooling, design system, app shell, CI), data foundation (database schema, PDF extraction, seeds, review report), flags with approved region colours, and the API, connected to Neon. Maps and tables arrive in the next milestones (see [Roadmap](#roadmap)).
 
 ---
 
@@ -22,6 +22,7 @@ History and Contemporary Africa appear in the navigation as "Coming soon".
 - [Prerequisites](#prerequisites)
 - [Getting started (local development)](#getting-started-local-development)
 - [Data: database and pipelines](#data-database-and-pipelines)
+- [API](#api)
 - [Quality checks](#quality-checks)
 - [Environment variables](#environment-variables)
 - [Deployment (Netlify)](#deployment-netlify)
@@ -97,7 +98,9 @@ npx playwright install chromium # browser for end-to-end tests (one-time)
 npm run dev                     # Vite dev server on http://localhost:5173
 ```
 
-Once the API exists (milestone 4), use `npm run dev:netlify` (Netlify CLI on http://localhost:8888) to run the site and the functions together. Before then, `npm run dev` is enough.
+`npm run dev:netlify` runs the site **and the API functions** together on http://localhost:8888 (Netlify CLI, reading `DATABASE_URL_READ` from your `.env`). `npm run dev` runs the site alone. The CLI injects every `.env` variable locally, but the functions only ever read `DATABASE_URL_READ`.
+
+Local `netlify dev` quirk: after a 404 from a function, the emulator retries the same path with `.html`/`index.html` suffixes (to mimic static-file lookup), so a not-found message may name a suffixed path. Production returns the function's response as is.
 
 The pipelines run from the repo root (`uv run python -m pipelines --help`); see the next section.
 
@@ -115,9 +118,11 @@ The pipelines run from the repo root (`uv run python -m pipelines --help`); see 
 |---|---|---|---|
 | 1 | `uv run python -m pipelines migrate` | Applies `db/migrations/*.sql` in order (checksummed; an applied file that was edited is an error) and grants `SELECT` to `bla_reader` | ✅ |
 | 2 | `uv run python -m pipelines extract-pdf` | Research PDF → `db/seeds/{countries,sources,datasets}.json` and `data/review_report.md`, with loud validation (54 countries; region counts 6/15/9/16/8; unique ISO codes; every summary field present; no stray citation digits) | ✅ |
-| 3 | `uv run python -m pipelines flags` | Downloads the 54 flag SVGs from flagcdn.com (cached in `data/raw/flags/`, copied to `apps/web/public/flags/` as the offline fallback), computes each flag's palette and each region's colour, and writes `db/seeds/flags.json` and `data/region_colors_report.md` | ✅ (colours awaiting approval) |
+| 3 | `uv run python -m pipelines flags` | Downloads the 54 flag SVGs from flagcdn.com (cached in `data/raw/flags/`, copied to `apps/web/public/flags/` as the offline fallback), computes each flag's palette and each region's colour, and writes `db/seeds/flags.json` and `data/region_colors_report.md` | ✅ |
 | 4 | `uv run python -m pipelines boundaries` | Natural Earth map geometry | milestone 5 |
-| 5 | `uv run python -m pipelines load` | Upserts the seeds into Neon | milestone 4 |
+| 5 | `uv run python -m pipelines load` | Upserts the seeds into Neon (regions with the **approved** colours, countries, profiles, sources, citations, flag palettes, datasets). Only rows whose values changed are written, so re-runs report 0 changes; each run is logged in `ingestion_runs` and refuses to start while migrations are pending | ✅ |
+
+`uv run python -m pipelines status` prints every dataset's "as of" date, last refresh, cadence and last run (flagging overdue datasets).
 
 `migrate --dry-run` lists pending migrations. `extract-pdf --check` validates without writing and fails if the committed seeds are stale; the pytest suite runs it.
 
@@ -125,14 +130,16 @@ The pipelines run from the repo root (`uv run python -m pipelines --help`); see 
 
 Each region's identity colour is the **mode colour across its flags**: flags are rasterised, clustered into at most 8 colours in CIELAB, merged across flags (CIEDE2000 < 10) and summed per region; white, black and grey are excluded by default, and near-identical picks are resolved by giving the colour to the region where it has the larger share. Anti-aliasing blends at stripe edges are folded back into the real flag colours first. Every parameter is a command-line option (`python -m pipelines flags --help`), and `--include-neutrals` switches which result is selected (both are always reported).
 
-`data/region_colors_report.md` shows the picks with swatches, the top five candidates per region, every uniqueness decision, both results, per-flag palettes and automated checks (distinctness, colour-vision-deficiency simulation, contrast against the light and dark page). Colours are never adjusted by hand. `db/seeds/flags.json` records `"approved": false` until the colours are approved.
+`data/region_colors_report.md` shows the picks with swatches, the top five candidates per region, every uniqueness decision, both results, per-flag palettes and automated checks (distinctness, colour-vision-deficiency simulation, contrast against the light and dark page). Colours are never adjusted by hand.
+
+**Approval.** The approved colours (2026-10-15: North `#c1272d`, West `#009e49`, Central `#fcd116`, East `#418fde`, Southern `#001489`) are recorded in `pipelines/africa_pipelines/reference/region_colors_approval.json`, and `load` writes **only** those to `regions.color_hex`. If a later `flags` run computes different colours, the approved ones stay in use and the report says the computation differs, until a new approval is recorded there.
 
 ### Correcting the data
 
 The research document is not fully verified (see `data/review_report.md`). To correct it:
 
 1. Edit `db/seeds/countries.json` (or `sources.json`). For example, fix a summary, set `etymology_category`, change `animal_status`, or set `needs_review` to `false` once a record is checked.
-2. Run `python -m pipelines load` (from milestone 4).
+2. Run `uv run python -m pipelines load`.
 
 `extract-pdf` refuses to overwrite seeds you have edited (it compares a content hash recorded at generation time) unless you pass `--force`.
 
@@ -142,9 +149,30 @@ How the extraction works and where its judgement calls live:
 - `pipelines/africa_pipelines/reference/symbology_curation.json`: the reviewed mapping of each country's prose sentences to profile fields, the animal-status decisions with their reasons, the reviewed etymology categories, the known inconsistencies (each marked corrected, status changed or open) and the **verified corrections**. Each correction replaces or appends exact text, gives its reason and cites the reference source it was checked against; that source is added to `sources` and cited on the corrected field. If a correction's original text stops matching, extraction fails rather than silently skipping it. The review report lists every correction with its before and after text.
 - `pipelines/africa_pipelines/reference/source_tiers.json`: the reliability tier for each cited website.
 
+### Scheduled refresh
+
+`.github/workflows/data-refresh.yml` runs weekly (and on demand): `migrate` → `flags --refresh` → `load` → `status`, then calls the Netlify build hook if `load` changed any rows. If upstream flags changed the generated seeds, the run warns and uploads them (with the colour report) as the `refreshed-data` artifact for you to review and commit; the approved region colours are never replaced automatically. Repository secrets: `DATABASE_URL_WRITE` (required) and `NETLIFY_BUILD_HOOK` (optional).
+
 ### Local database for tests
 
 Tests never need a database server. Vitest runs the migrations and loads the seeds into **PGlite** (Postgres compiled to WebAssembly, in-process). pytest starts PGlite's socket server so the Python migration runner is tested over the real Postgres wire protocol.
+
+## API
+
+Netlify Functions in `netlify/functions/`, one file per route, each declaring its route with `config.path` (functions are matched before redirects; the `/api/*` → `/.netlify/functions/:splat` rewrite in `netlify.toml` remains the catch-all). All responses are JSON; request parameters are validated with zod against the shared contract in `packages/shared/src/schemas.ts`.
+
+| Route | Returns |
+|---|---|
+| `GET /api/regions` | The five regions in document order: name, description, approved `colorHex`, country count |
+| `GET /api/countries?region=<slug>&q=<text>` | Country summaries (all 54 without parameters): region, flag URLs (Flagpedia SVG, PNG template, self-hosted fallback), short profile fields, animal status, `needsReview`. `q` matches names, official names and ISO codes, accent-insensitively ("cote" finds Côte d'Ivoire) |
+| `GET /api/countries/:iso3` | The full profile: long texts, scientific name, review notes and every cited source with its reliability tier and the fields it supports. Unknown or malformed codes are 404 |
+| `GET /api/coverage?datasets=a,b` | Each dataset's provider, licence, attribution, coverage, "as of" date and last refresh; requested keys with no data yet are listed in `missing` |
+
+- **Errors** always have the shape `{ "error": { "code", "message" } }`: `bad_request` (400, invalid query parameters), `not_found` (404), `method_not_allowed` (405; only GET and HEAD), `service_unavailable` (503, database not configured) and `internal_error` (500; details are logged, never returned).
+- **Caching:** `Cache-Control: public, s-maxage=3600, stale-while-revalidate=86400` with a weak `ETag` (304 on `If-None-Match`). Errors are `no-store`.
+- **Database:** the Neon HTTP driver with the read-only `bla_reader` role (`DATABASE_URL_READ`); every query is parameterised (`netlify/functions/_shared/queries.ts`). Search uses the `search_fold()` SQL function and the `v_country_summary` view (migration 0002).
+- **Bundling:** functions import the shared contract by relative path (`_shared/contract.ts`), so Netlify's bundler inlines it. `npm run check:functions` builds the functions exactly as a deploy does and checks every bundle loads and answers.
+- **Web client:** `apps/web/src/lib/api.ts` (typed by the same contract).
 
 ## Quality checks
 
@@ -153,6 +181,7 @@ Tests never need a database server. Vitest runs the migrations and loads the see
 | `npm run check` | ESLint + Stylelint, `tsc -b`, Vitest, production build |
 | `npm run lint` / `npm run typecheck` / `npm test` / `npm run build` | individually |
 | `npm run format` / `npm run format:check` | Prettier |
+| `npm run check:functions` | Builds the Netlify Functions as a deploy does and checks each bundle loads and answers |
 | `npm run e2e` | Playwright: desktop (1440×900) and mobile (390×844) projects; includes axe accessibility checks in light and dark mode and no-horizontal-scroll checks at 320px |
 | `npm run screenshots` | Captures every page at desktop and mobile, light and dark, into `screenshots/` (gitignored) for visual review |
 | `uv run ruff check . && uv run ruff format --check .` | Python lint and format |
@@ -167,7 +196,7 @@ Copy `.env.example` to `.env` for local work. **Each variable belongs in exactly
 
 | Variable | Where it lives | Used by |
 |---|---|---|
-| `DATABASE_URL_READ` | Netlify site environment variables | Netlify Functions (read-only DB role) |
+| `DATABASE_URL_READ` | Netlify site environment variables (and local `.env` for `npm run dev:netlify`) | Netlify Functions (read-only DB role) |
 | `DATABASE_URL_WRITE` | local `.env`, GitHub Actions secret | Python pipelines only |
 | `COMTRADE_API_KEY` | local `.env`, GitHub Actions secret | `gold-trade` pipeline only |
 | `ENABLE_WGC_IMPORT` | local `.env` (default `false`) | optional manual WGC import |
@@ -214,6 +243,10 @@ Decisions taken where the specification left room, or where the current ecosyste
 - **Icon substitutions:** `terrain` is now only a legacy alias of `landscape`, and `filter_hdr` is not in the current canonical set. They are replaced by `landscape_2` and `mountain_flag` where the specification suggested them.
 - **Nav includes Dhahabu:** the nav order follows §1 of the specification (Home · Countries · Harim · Dhahabu · History · Contemporary Africa).
 - **Local database:** tests run SQL against **PGlite** (Postgres in WebAssembly), so neither local work nor CI needs a database server. Real data is loaded into Neon.
+- **API routing:** each function declares its own route with `config.path` (Netlify matches functions before redirects). The specified `/api/*` → `/.netlify/functions/:splat` rewrite is kept as the catch-all for unknown API paths.
+- **Malformed path codes are 404:** `/api/countries/KE` names a country that does not exist, the same as `/api/countries/XYZ`. Invalid query parameters are 400.
+- **Shared contract by relative path in functions:** Netlify's function bundler keeps workspace packages external and does not package their TypeScript source, so functions import it through `_shared/contract.ts` (relative path, inlined). CI checks the built bundles.
+- **Approved colours are pinned:** `load` writes the colours recorded in `region_colors_approval.json`, never a newer computation.
 - **Dev-tool advisories:** `npm audit` reports advisories in dev-only tooling (`netlify-cli`'s local server dependencies and Stylelint's glob dependencies). None of it ships to the browser or the deployed functions.
 
 ## Roadmap
@@ -222,8 +255,8 @@ v1 milestones (stop points for review are marked ⏸):
 
 1. ✅ Scaffold
 2. ✅ Data foundation: migrations, PDF extraction, seeds, review report ⏸
-3. ✅ Flags and region colours ⏸ (awaiting colour approval)
-4. API (Neon connected)
+3. ✅ Flags and region colours ⏸ (colours approved 2026-10-15)
+4. ✅ API (Neon connected)
 5. Map
 6. Countries table
 7. Ribbon and coverage

@@ -3,8 +3,13 @@
   "compilerOptions": {
     "outDir": "../node_modules/.tsbuild/netlify",
     "lib": ["ES2023", "DOM"],
-    "types": ["node"]
+    "types": ["node"],
+    "allowImportingTsExtensions": true
   },
-  "include": ["functions", "tests"],
-  "references": [{ "path": "../packages/shared" }]
+  "include": ["functions"],
+  "references": [
+    {
+      "path": "../packages/shared"
+    }
+  ]
 }

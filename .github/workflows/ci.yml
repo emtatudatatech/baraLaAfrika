@@ -28,6 +28,8 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+      # Builds the functions as a deploy does and checks every bundle loads and answers.
+      - run: npm run check:functions
 
   e2e:
     name: Playwright (desktop + mobile)

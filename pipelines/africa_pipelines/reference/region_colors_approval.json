@@ -1,0 +1,12 @@
+{
+  "$comment": "Region identity colours approved by the project owner. `load` writes these to regions.color_hex. If a later `flags` run computes different colours, these approved colours stay in use and the report flags the difference until a new approval is recorded here.",
+  "approved_on": "2026-10-15",
+  "selected": "strict",
+  "colors": {
+    "north": "#c1272d",
+    "west": "#009e49",
+    "central": "#fcd116",
+    "east": "#418fde",
+    "southern": "#001489"
+  }
+}

@@ -4,7 +4,9 @@
     "outDir": "../../node_modules/.tsbuild/shared",
     "rootDir": "../..",
     "lib": ["ES2023"],
-    "types": []
+    "types": [],
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true
   },
   "include": ["src", "../../config/*.json"]
 }

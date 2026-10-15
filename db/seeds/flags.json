@@ -1251,7 +1251,8 @@
   ],
   "region_colors": {
     "selected": "strict",
-    "approved": false,
+    "approved": true,
+    "approved_on": "2026-10-15",
     "strict": {
       "north": "#c1272d",
       "west": "#009e49",

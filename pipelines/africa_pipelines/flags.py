@@ -46,6 +46,7 @@ REPORT_PATH = DATA_DIR / "region_colors_report.md"
 SWATCH_DIR = DATA_DIR / "region_colors"
 MANIFEST_PATH = RAW_FLAGS_DIR / "manifest.json"
 MIN_STORED_SHARE = 0.00001  # palette entries below this round to 0 in flag_palette.area_share
+APPROVAL_PATH = Path(__file__).parent / "reference" / "region_colors_approval.json"
 
 
 class FlagsError(RuntimeError):
@@ -100,6 +101,14 @@ def _load_countries() -> list[dict[str, Any]]:
 def _region_order() -> list[str]:
     seed = json.loads((SEEDS_DIR / "countries.json").read_text(encoding="utf-8"))
     return [r["slug"] for r in sorted(seed["regions"], key=lambda r: r["sort_order"])]
+
+
+def load_approval() -> dict[str, Any] | None:
+    """Approved region colours (reference/region_colors_approval.json), if recorded."""
+    if not APPROVAL_PATH.exists():
+        return None
+    data: dict[str, Any] = json.loads(APPROVAL_PATH.read_text(encoding="utf-8"))
+    return data
 
 
 def _manifest() -> dict[str, str]:
@@ -194,6 +203,13 @@ def seed_payload(
     strict, with_neutrals = (
         (alternate, primary) if params.include_neutrals else (primary, alternate)
     )
+    selected = "with_neutrals" if params.include_neutrals else "strict"
+    chosen = with_neutrals if params.include_neutrals else strict
+    computed = {r: c.hex for r, c in chosen.picks.items()}
+    approval = load_approval()
+    approved = (
+        approval is not None and approval["selected"] == selected and approval["colors"] == computed
+    )
     return {
         "dataset": {
             "key": "flags-flagpedia",
@@ -222,8 +238,11 @@ def seed_payload(
             for p in palettes
         ],
         "region_colors": {
-            "selected": "with_neutrals" if params.include_neutrals else "strict",
-            "approved": False,
+            "selected": selected,
+            # True when this computation matches reference/region_colors_approval.json.
+            # `load` always writes the approved colours, never unapproved ones.
+            "approved": approved,
+            "approved_on": approval["approved_on"] if approved and approval else None,
             "strict": {r: c.hex for r, c in strict.picks.items()},
             "with_neutrals": {r: c.hex for r, c in with_neutrals.picks.items()},
         },
@@ -311,6 +330,7 @@ def run(args: argparse.Namespace) -> int:
         alternate=alternate,
         extra_codes=extra_codes,
         as_of=as_of,
+        approval=load_approval(),
     )
     print(summary)
     print(

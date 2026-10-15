@@ -4,7 +4,6 @@
   "version": "0.1.0",
   "type": "module",
   "dependencies": {
-    "@bla/shared": "*",
     "@neondatabase/serverless": "1.2.0",
     "zod": "4.6.7"
   },

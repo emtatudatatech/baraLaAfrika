@@ -15,7 +15,7 @@ export default tseslint.config(
       '.pytest_cache/**',
       '.ruff_cache/**',
       'apps/web/dist/**',
-      '.netlify/**',
+      '**/.netlify/**',
       'coverage/**',
       'playwright-report/**',
       'test-results/**',
@@ -53,11 +53,17 @@ export default tseslint.config(
     },
   },
   {
-    files: ['netlify/**/*.ts', 'e2e/**/*.ts', '**/*.config.{js,ts}', 'apps/web/build/**/*.ts'],
+    files: [
+      'netlify/**/*.ts',
+      'e2e/**/*.ts',
+      '**/*.config.{js,ts}',
+      'apps/web/build/**/*.ts',
+      'scripts/**/*.mjs',
+    ],
     languageOptions: { globals: globals.node },
   },
   {
-    files: ['**/*.js'],
+    files: ['**/*.{js,mjs}'],
     extends: [tseslint.configs.disableTypeChecked],
   },
 );

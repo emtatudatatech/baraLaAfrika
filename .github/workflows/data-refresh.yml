@@ -1,0 +1,80 @@
+name: Data refresh
+
+# Weekly refresh of the pipelines' data into Neon (Netlify scheduled functions are Node-only, so
+# the Python pipelines run here). Later milestones add their pipelines (mountains, gold) as steps.
+on:
+  schedule:
+    - cron: '17 3 * * 1' # Mondays 03:17 UTC
+  workflow_dispatch:
+
+concurrency:
+  group: data-refresh
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL_WRITE: ${{ secrets.DATABASE_URL_WRITE }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
+      - run: sudo apt-get update && sudo apt-get install -y libcairo2
+      - run: uv sync --locked
+
+      - name: Check the write credentials are configured
+        run: |
+          if [ -z "$DATABASE_URL_WRITE" ]; then
+            echo "::error::Set the DATABASE_URL_WRITE repository secret (Settings → Secrets and variables → Actions)."
+            exit 1
+          fi
+
+      - name: Apply migrations
+        run: uv run python -m pipelines migrate
+
+      - name: Refresh flags (Flagpedia)
+        run: uv run python -m pipelines flags --refresh
+
+      - name: Flag changes to committed seeds for review
+        id: seeds
+        run: |
+          if git diff --quiet -- db/seeds data/region_colors_report.md; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "::warning::Upstream data changed the generated seeds; download the 'refreshed-data' artifact, review data/region_colors_report.md and commit the changes."
+            git diff --stat -- db/seeds data
+          fi
+
+      - name: Upload refreshed seeds and reports
+        if: steps.seeds.outputs.changed == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: refreshed-data
+          path: |
+            db/seeds
+            data/region_colors_report.md
+            data/region_colors
+          retention-days: 30
+
+      - name: Load into Neon
+        id: load
+        run: uv run python -m pipelines load
+
+      - name: Dataset freshness
+        run: uv run python -m pipelines status
+
+      - name: Trigger a Netlify rebuild when data changed
+        if: steps.load.outputs.changed == 'true'
+        env:
+          NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+        run: |
+          if [ -n "$NETLIFY_BUILD_HOOK" ]; then
+            curl --fail --silent --show-error -X POST -d '{}' "$NETLIFY_BUILD_HOOK"
+            echo "Triggered a Netlify build."
+          else
+            echo "Data changed; NETLIFY_BUILD_HOOK is not set, so no rebuild was triggered."
+          fi

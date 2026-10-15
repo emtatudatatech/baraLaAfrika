@@ -1,7 +1,7 @@
 import { ApiErrorSchema } from '@bla/shared';
 import { describe, expect, it } from 'vitest';
 
-import { REFERENCE_CACHE_CONTROL, errorResponse, jsonResponse } from '../functions/_shared/http';
+import { REFERENCE_CACHE_CONTROL, errorResponse, jsonResponse } from '../functions/_shared/http.ts';
 
 describe('jsonResponse', () => {
   it('returns JSON with reference caching and an ETag', async () => {

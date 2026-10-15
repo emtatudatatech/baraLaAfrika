@@ -54,14 +54,20 @@ def read_seeds(seeds_dir: Path, approval_path: Path = APPROVAL_PATH) -> dict[str
     sources = _read(seeds_dir / "sources.json")
     datasets = _read(seeds_dir / "datasets.json")
     flags = _read(seeds_dir / "flags.json") if (seeds_dir / "flags.json").exists() else None
+    boundaries = (
+        _read(seeds_dir / "boundaries.json") if (seeds_dir / "boundaries.json").exists() else None
+    )
     approval = (
         json.loads(approval_path.read_text(encoding="utf-8")) if approval_path.exists() else None
     )
     return {
         "countries": countries,
         "sources": sources,
-        "datasets": datasets["datasets"] + ([flags["dataset"]] if flags else []),
+        "datasets": datasets["datasets"]
+        + ([flags["dataset"]] if flags else [])
+        + ([boundaries["dataset"]] if boundaries else []),
         "flags": flags,
+        "boundaries": boundaries,
         "approval": approval,
     }
 
@@ -291,6 +297,31 @@ def _load_flag_palettes(
         result.add("flag_palette", len(wanted ^ existing))
 
 
+def _load_boundaries(
+    cur: psycopg.Cursor[Any], boundaries: dict[str, Any], result: LoadResult
+) -> None:
+    """Map anchors and microstate markers computed by the boundaries pipeline."""
+    for country in boundaries["countries"]:
+        changed = _execute_counting(
+            cur,
+            """
+            UPDATE countries SET centroid_lon = %s, centroid_lat = %s, is_microstate_marker = %s
+            WHERE iso3 = %s
+              AND (centroid_lon, centroid_lat, is_microstate_marker)
+                  IS DISTINCT FROM (%s::double precision, %s::double precision, %s::boolean)
+            """,
+            (
+                country["centroid_lon"], country["centroid_lat"], country["is_microstate_marker"],
+                country["iso3"],
+                country["centroid_lon"], country["centroid_lat"], country["is_microstate_marker"],
+            ),
+        )  # fmt: skip
+        cur.execute("SELECT 1 FROM countries WHERE iso3 = %s", (country["iso3"],))
+        if cur.fetchone() is None:
+            raise LoadError(f"Boundaries for unknown country {country['iso3']!r}")
+        result.add("country_boundaries", changed)
+
+
 def check_migrations(conn: psycopg.Connection[Any]) -> None:
     pending = plan(discover(), applied_checksums(conn))
     if pending:
@@ -345,6 +376,8 @@ def load(conn: psycopg.Connection[Any], seeds_dir: Path = SEEDS_DIR) -> LoadResu
             _load_reference_data(cur, seeds, result)
             if seeds["flags"] is not None:
                 _load_flag_palettes(cur, seeds["flags"], result)
+            if seeds["boundaries"] is not None:
+                _load_boundaries(cur, seeds["boundaries"], result)
             per_dataset = {
                 "symbology-pdf": sum(
                     result.changes.get(t, 0)
@@ -357,6 +390,7 @@ def load(conn: psycopg.Connection[Any], seeds_dir: Path = SEEDS_DIR) -> LoadResu
                     )
                 ),
                 "flags-flagpedia": result.changes.get("flag_palette", 0),
+                "boundaries-natural-earth": result.changes.get("country_boundaries", 0),
             }
             for key, run_id in run_ids.items():
                 cur.execute(

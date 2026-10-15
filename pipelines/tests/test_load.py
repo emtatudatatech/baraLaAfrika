@@ -32,6 +32,10 @@ def test_first_load_populates_everything_with_approved_colours(pglite_url: str) 
         result = load.load(conn)
         assert result.changes["countries"] == 54
         assert result.changes["country_profiles"] == 54
+        assert result.changes["country_boundaries"] == 54
+        markers = scalar(conn, "SELECT count(*) FROM countries WHERE is_microstate_marker")
+        assert markers == 7
+        assert scalar(conn, "SELECT count(*) FROM countries WHERE centroid_lon IS NULL") == 0
         assert scalar(conn, "SELECT count(*) FROM sources") == 65
         palette_rows = scalar(conn, "SELECT count(*) FROM flag_palette")
         assert isinstance(palette_rows, int) and palette_rows > 54
@@ -48,7 +52,11 @@ def test_first_load_populates_everything_with_approved_colours(pglite_url: str) 
             "SELECT d.key, r.status::text FROM ingestion_runs r "
             "JOIN datasets d ON d.id = r.dataset_id"
         ).fetchall()
-        assert sorted(runs) == [("flags-flagpedia", "succeeded"), ("symbology-pdf", "succeeded")]
+        assert sorted(runs) == [
+            ("boundaries-natural-earth", "succeeded"),
+            ("flags-flagpedia", "succeeded"),
+            ("symbology-pdf", "succeeded"),
+        ]
         assert scalar(conn, "SELECT count(*) FROM datasets WHERE last_refreshed_at IS NULL") == 0
 
 

@@ -37,3 +37,10 @@ export async function waitForFonts(page: Page): Promise<void> {
     await document.fonts.ready;
   });
 }
+
+/** Waits until the page has finished every running CSS animation (e.g. the map's fade-in). */
+export async function waitForAnimations(page: Page): Promise<void> {
+  await page.evaluate(async () => {
+    await Promise.all(document.getAnimations().map((animation) => animation.finished));
+  });
+}

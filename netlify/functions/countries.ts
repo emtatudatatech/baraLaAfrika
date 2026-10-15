@@ -1,9 +1,9 @@
-import { type CountriesResponse, CountriesQuerySchema } from './_shared/contract';
+import { type CountriesResponse, CountriesQuerySchema } from './_shared/contract.ts';
 import type { Config } from '@netlify/functions';
 
-import { getDb } from './_shared/db';
-import { defineHandler, queryParams } from './_shared/handler';
-import { listCountries } from './_shared/queries';
+import { getDb } from './_shared/db.ts';
+import { defineHandler, queryParams } from './_shared/handler.ts';
+import { listCountries } from './_shared/queries.ts';
 
 /** GET /api/countries?region=<slug>&q=<search> → country summaries (all 54 without params). */
 export default defineHandler(async (request): Promise<CountriesResponse> => {

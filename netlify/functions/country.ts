@@ -1,9 +1,9 @@
-import { API_ERROR_CODES, type CountryResponse, Iso3ParamSchema } from './_shared/contract';
+import { API_ERROR_CODES, type CountryResponse, Iso3ParamSchema } from './_shared/contract.ts';
 import type { Config } from '@netlify/functions';
 
-import { getDb } from './_shared/db';
-import { HttpError, defineHandler } from './_shared/handler';
-import { getCountry } from './_shared/queries';
+import { getDb } from './_shared/db.ts';
+import { HttpError, defineHandler } from './_shared/handler.ts';
+import { getCountry } from './_shared/queries.ts';
 
 /** GET /api/countries/:iso3 → full profile with details, sources and review status. */
 export default defineHandler(async (_request, context): Promise<CountryResponse> => {

@@ -89,6 +89,47 @@ export const strings = {
       home: 'Go home',
     },
   },
+  map: {
+    label: 'Map of Africa showing the 54 countries coloured by region',
+    keyboardHint:
+      'Tab into the map, then use the arrow keys to move between countries and Enter to open one.',
+    zoomHint: 'Pinch or use the buttons to zoom. On a computer, hold Ctrl (or ⌘) and scroll.',
+    zoomIn: 'Zoom in',
+    zoomOut: 'Zoom out',
+    resetZoom: 'Reset the map',
+    loading: 'Loading the map…',
+    loadError: 'The map could not be loaded.',
+    countriesError: 'Country details could not be loaded, so the map shows boundaries only.',
+    retry: 'Retry',
+    disputed: 'Western Sahara',
+    disputedNote: 'Disputed territory (not one of the 54 states covered here)',
+    somalilandNote:
+      'Includes Somaliland, which declared independence in 1991 and governs itself but is not recognised as a state by the African Union or the United Nations.',
+    boundariesNote:
+      'Boundaries are shown as published by Natural Earth and do not imply endorsement of any border or territorial claim. Western Sahara (hatched) is a disputed territory. Somaliland is shown as part of Somalia.',
+    tableLink: 'See all countries as a table',
+    countryLabel: (name: string, region: string) => `${name}, ${region}`,
+  },
+  legend: {
+    title: 'Regions',
+    hint: 'Select a region to highlight it on the map.',
+    countries: (count: number) => (count === 1 ? '1 country' : `${String(count)} countries`),
+    viewInTable: 'View in table',
+    showAll: 'Show all regions',
+  },
+  popover: {
+    close: 'Close',
+    meaning: 'Name means',
+    animal: 'National animal',
+    seeInTable: 'See in table',
+  },
+  animalStatus: {
+    official: 'Official',
+    de_facto: 'De facto',
+    inferred: 'Inferred',
+    sports_nickname: 'Sports nickname',
+    contested: 'Contested',
+  },
   footer: {
     creditsHeading: 'Data, credits and licences',
     disclaimer:

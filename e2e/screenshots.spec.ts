@@ -1,6 +1,6 @@
 import { test } from '@playwright/test';
 
-import { ROUTES, useTheme, waitForFonts } from './helpers';
+import { ROUTES, useTheme, waitForAnimations, waitForFonts } from './helpers';
 
 /**
  * Captures every page at desktop (1440×900) and mobile (390×844) in light and dark mode into
@@ -25,7 +25,10 @@ for (const viewport of VIEWPORTS) {
         await useTheme(page, theme);
         await page.goto(route.path);
         await waitForFonts(page);
-        await page.waitForTimeout(150);
+        if (route.path === '/') {
+          await page.locator('[data-testid="africa-map"] [data-iso3]').first().waitFor();
+        }
+        await waitForAnimations(page);
         await page.screenshot({
           path: `screenshots/${route.name}-${viewport.name}-${theme}.png`,
           fullPage: true,

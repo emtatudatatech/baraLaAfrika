@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from pipelines.africa_pipelines import extract_pdf, flags, load, migrate, status
+from pipelines.africa_pipelines import boundaries, extract_pdf, flags, load, migrate, status
 from pipelines.cli import Command
 
 ALL: list[Command] = [
@@ -23,6 +23,12 @@ ALL: list[Command] = [
         help="Fetch Flagpedia flags, compute flag palettes and region colours, write the report.",
         configure=flags.configure,
         run=flags.run,
+    ),
+    Command(
+        name="boundaries",
+        help="Build the map topologies from Natural Earth and compute country anchors/markers.",
+        configure=boundaries.configure,
+        run=boundaries.run,
     ),
     Command(
         name="load",

@@ -35,6 +35,12 @@ for (const route of ROUTES) {
         await useTheme(page, theme);
         await page.goto(route.path);
         await waitForFonts(page);
+        if (route.path === '/') {
+          // Check the rendered map (all 54 country controls), not its loading state.
+          await expect(
+            page.getByTestId('africa-map').locator('[role="button"][data-iso3]'),
+          ).toHaveCount(54);
+        }
         await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
         await expectNoAxeViolations(page);
       });

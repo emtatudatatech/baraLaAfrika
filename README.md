@@ -11,7 +11,7 @@
 
 History and Contemporary Africa appear in the navigation as "Coming soon".
 
-> **Status:** milestones 1–4 of 17 are complete: scaffold (tooling, design system, app shell, CI), data foundation (database schema, PDF extraction, seeds, review report), flags with approved region colours, and the API, connected to Neon. Maps and tables arrive in the next milestones (see [Roadmap](#roadmap)).
+> **Status:** milestones 1–5 of 17 are complete: scaffold, data foundation, flags with approved region colours, the API (connected to Neon) and the **interactive map** on the home page. The countries table is next (see [Roadmap](#roadmap)).
 
 ---
 
@@ -23,6 +23,7 @@ History and Contemporary Africa appear in the navigation as "Coming soon".
 - [Getting started (local development)](#getting-started-local-development)
 - [Data: database and pipelines](#data-database-and-pipelines)
 - [API](#api)
+- [The map](#the-map)
 - [Quality checks](#quality-checks)
 - [Environment variables](#environment-variables)
 - [Deployment (Netlify)](#deployment-netlify)
@@ -119,7 +120,7 @@ The pipelines run from the repo root (`uv run python -m pipelines --help`); see 
 | 1 | `uv run python -m pipelines migrate` | Applies `db/migrations/*.sql` in order (checksummed; an applied file that was edited is an error) and grants `SELECT` to `bla_reader` | ✅ |
 | 2 | `uv run python -m pipelines extract-pdf` | Research PDF → `db/seeds/{countries,sources,datasets}.json` and `data/review_report.md`, with loud validation (54 countries; region counts 6/15/9/16/8; unique ISO codes; every summary field present; no stray citation digits) | ✅ |
 | 3 | `uv run python -m pipelines flags` | Downloads the 54 flag SVGs from flagcdn.com (cached in `data/raw/flags/`, copied to `apps/web/public/flags/` as the offline fallback), computes each flag's palette and each region's colour, and writes `db/seeds/flags.json` and `data/region_colors_report.md` | ✅ |
-| 4 | `uv run python -m pipelines boundaries` | Natural Earth map geometry | milestone 5 |
+| 4 | `uv run python -m pipelines boundaries` | Natural Earth 4.1.0 (1:50m, via world-atlas 2.0.2) → `apps/web/public/geo/africa.topo.json` (the 54 countries, Somaliland tagged as Somalia, Western Sahara as disputed) and `africa-context.topo.json` (neighbouring land, loaded after the countries); computes each country's area on the equal-area Equal Earth projection, a map anchor and whether it needs a circle marker; writes `db/seeds/boundaries.json` and `data/boundaries_report.md` | ✅ |
 | 5 | `uv run python -m pipelines load` | Upserts the seeds into Neon (regions with the **approved** colours, countries, profiles, sources, citations, flag palettes, datasets). Only rows whose values changed are written, so re-runs report 0 changes; each run is logged in `ingestion_runs` and refuses to start while migrations are pending | ✅ |
 
 `uv run python -m pipelines status` prints every dataset's "as of" date, last refresh, cadence and last run (flagging overdue datasets).
@@ -174,6 +175,22 @@ Netlify Functions in `netlify/functions/`, one file per route, each declaring it
 - **Bundling:** functions import the shared contract by relative path (`_shared/contract.ts`), so Netlify's bundler inlines it. `npm run check:functions` builds the functions exactly as a deploy does and checks every bundle loads and answers.
 - **Web client:** `apps/web/src/lib/api.ts` (typed by the same contract).
 
+## The map
+
+The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth** projection (`d3-geo`), fitted to a box from Cabo Verde to Mauritius (far islands such as South Africa's Prince Edward Islands stay reachable by panning).
+
+- **Fills** use the approved region colours as CSS variables (`--region-<slug>`), set from `/api/regions`, with the same colours in `tokens.css` as no-flash fallbacks (a test keeps them in sync with the approval).
+- **Dark theme:** `darkThemePalette()` (`lib/colour.ts`) keeps every hue. It lifts a colour's OKLCH lightness only to reach 3:1 against the dark map ocean (WCAG 1.4.11), then lifts the lighter of any pair closer than ΔE 30 until they separate. With the approved colours this changes only East (`#72b6fe`) and Southern (`#2b5acd`).
+- **Boundaries** are drawn once as meshes (borders and coastlines), with thin strokes that stay thin at any zoom. **Somaliland** is merged into Somalia (no internal line); Somalia's tooltip and profile explain this (declared independence in 1991, self-governing, not recognised by the African Union or UN), and screen readers hear the same note. **Western Sahara** is hatched, with the tooltip "Disputed territory". A note under the map states that boundaries do not imply endorsement of any claim.
+- **Small states** (under 20,000 km² on the map: Cabo Verde, São Tomé and Príncipe, Comoros, Mauritius, Seychelles, The Gambia, Eswatini) get clickable circle markers. Lesotho (about 30,000 km²) is large enough to click.
+- **Interaction:**
+  - Hover or keyboard focus shows a tooltip with the flag, name and region.
+  - Click or tap opens a short profile with "See in table": a popover on larger screens, a bottom sheet on phones. Escape closes it and returns focus.
+  - The **legend** isolates a region (others dim) and links to `/countries?region=…`.
+  - Zoom with the + / − / reset buttons, pinch, or Ctrl/⌘ + scroll; drag to pan. One-finger swipes still scroll the page on phones.
+- **Keyboard:** one Tab stop into the map, arrow keys move between countries (alphabetical), Home/End jump, Enter opens. The countries table is the accessible equivalent and is linked under the map.
+- Countries fade in by region (instant with reduced motion).
+
 ## Quality checks
 
 | Command | What it runs |
@@ -182,7 +199,7 @@ Netlify Functions in `netlify/functions/`, one file per route, each declaring it
 | `npm run lint` / `npm run typecheck` / `npm test` / `npm run build` | individually |
 | `npm run format` / `npm run format:check` | Prettier |
 | `npm run check:functions` | Builds the Netlify Functions as a deploy does and checks each bundle loads and answers |
-| `npm run e2e` | Playwright: desktop (1440×900) and mobile (390×844) projects; includes axe accessibility checks in light and dark mode and no-horizontal-scroll checks at 320px |
+| `npm run e2e` | Playwright: desktop (1440×900) and mobile (390×844) projects; includes axe accessibility checks in light and dark mode and no-horizontal-scroll checks at 320px. It runs the **real API handlers** (`e2e/api-server.ts`) on an in-memory Postgres loaded with the committed seeds, proxied behind `vite preview`, so no Neon connection is needed |
 | `npm run screenshots` | Captures every page at desktop and mobile, light and dark, into `screenshots/` (gitignored) for visual review |
 | `uv run ruff check . && uv run ruff format --check .` | Python lint and format |
 | `uv run mypy` | Python type-check (strict) |
@@ -247,6 +264,10 @@ Decisions taken where the specification left room, or where the current ecosyste
 - **Malformed path codes are 404:** `/api/countries/KE` names a country that does not exist, the same as `/api/countries/XYZ`. Invalid query parameters are 400.
 - **Shared contract by relative path in functions:** Netlify's function bundler keeps workspace packages external and does not package their TypeScript source, so functions import it through `_shared/contract.ts` (relative path, inlined). CI checks the built bundles.
 - **Approved colours are pinned:** `load` writes the colours recorded in `region_colors_approval.json`, never a newer computation.
+- **Map extent and markers:** the default view is fitted to a fixed box around the mainland and island states rather than to every geometry. The marker threshold (20,000 km²) is a `boundaries` option.
+- **Somaliland:** merged into Somalia on the map, following the research document's 54 recognised states. Western Sahara is shown as disputed and is not one of the 54.
+- **Natural Earth date:** the boundaries dataset's "as of" is the Natural Earth v4.1.0 release date (2018-05-23, from the GitHub release).
+- **Wheel zoom needs Ctrl/⌘** so the full-width map never traps page scrolling; buttons and pinch always zoom.
 - **Dev-tool advisories:** `npm audit` reports advisories in dev-only tooling (`netlify-cli`'s local server dependencies and Stylelint's glob dependencies). None of it ships to the browser or the deployed functions.
 
 ## Roadmap
@@ -257,7 +278,7 @@ v1 milestones (stop points for review are marked ⏸):
 2. ✅ Data foundation: migrations, PDF extraction, seeds, review report ⏸
 3. ✅ Flags and region colours ⏸ (colours approved 2026-10-15)
 4. ✅ API (Neon connected)
-5. Map
+5. ✅ Map
 6. Countries table
 7. Ribbon and coverage
 8. Harim data ⏸

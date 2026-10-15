@@ -3,7 +3,8 @@
   "compilerOptions": {
     "outDir": "node_modules/.tsbuild/tooling",
     "lib": ["ES2023", "DOM"],
-    "types": ["node"]
+    "types": ["node"],
+    "allowImportingTsExtensions": true
   },
   "include": [
     "vitest.config.ts",

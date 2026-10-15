@@ -79,6 +79,15 @@ export async function loadSeeds(db: PGlite): Promise<void> {
     dataset: SeedDataset;
     flags: { iso3: string; palette: { hex: string; area_share: number }[] }[];
   };
+  const boundaries = readJson('db', 'seeds', 'boundaries.json') as {
+    dataset: SeedDataset;
+    countries: {
+      iso3: string;
+      centroid_lon: number;
+      centroid_lat: number;
+      is_microstate_marker: boolean;
+    }[];
+  };
   const approval = readJson(
     'pipelines',
     'africa_pipelines',
@@ -86,7 +95,7 @@ export async function loadSeeds(db: PGlite): Promise<void> {
     'region_colors_approval.json',
   ) as { colors: Record<string, string> };
 
-  for (const d of [...datasets, flags.dataset]) {
+  for (const d of [...datasets, flags.dataset, boundaries.dataset]) {
     await db.query(
       `INSERT INTO datasets (key, name, provider, license, attribution, coverage_start,
          coverage_end, as_of, refresh_cadence, last_refreshed_at)
@@ -167,6 +176,13 @@ export async function loadSeeds(db: PGlite): Promise<void> {
         [c.iso3, s.source_key, s.field],
       );
     }
+  }
+  for (const b of boundaries.countries) {
+    await db.query(
+      `UPDATE countries SET centroid_lon = $2, centroid_lat = $3, is_microstate_marker = $4
+       WHERE iso3 = $1`,
+      [b.iso3, b.centroid_lon, b.centroid_lat, b.is_microstate_marker],
+    );
   }
   for (const flag of flags.flags) {
     for (const entry of flag.palette) {

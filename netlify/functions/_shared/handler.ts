@@ -1,17 +1,17 @@
-import { API_ERROR_CODES, type ApiErrorCode } from './contract';
+import { API_ERROR_CODES, type ApiErrorCode } from './contract.ts';
 import type { Context } from '@netlify/functions';
 import { ZodError } from 'zod';
 
-import { DatabaseNotConfiguredError } from './db';
-import { errorResponse, jsonResponse } from './http';
+import { DatabaseNotConfiguredError } from './db.ts';
+import { errorResponse, jsonResponse } from './http.ts';
 
 export class HttpError extends Error {
-  constructor(
-    readonly code: ApiErrorCode,
-    message: string,
-  ) {
+  readonly code: ApiErrorCode;
+
+  constructor(code: ApiErrorCode, message: string) {
     super(message);
     this.name = 'HttpError';
+    this.code = code;
   }
 }
 

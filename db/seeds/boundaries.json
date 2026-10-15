@@ -1,0 +1,395 @@
+{
+  "dataset": {
+    "key": "boundaries-natural-earth",
+    "name": "Country boundaries (Natural Earth 4.1.0, 1:50m)",
+    "provider": "Natural Earth (via the world-atlas package)",
+    "license": "Public domain (Natural Earth); world-atlas packaging ISC",
+    "attribution": "Made with Natural Earth. Boundaries do not imply endorsement of any border or territorial claim.",
+    "coverage_start": null,
+    "coverage_end": null,
+    "as_of": "2018-05-23",
+    "refresh_cadence": "static"
+  },
+  "source_url": "https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-50m.json",
+  "marker_area_km2": 20000.0,
+  "countries": [
+    {
+      "iso3": "AGO",
+      "area_km2": 1249382,
+      "centroid_lon": 17.5646,
+      "centroid_lat": -12.332,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "BDI",
+      "area_km2": 27217,
+      "centroid_lon": 29.8753,
+      "centroid_lat": -3.3595,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "BEN",
+      "area_km2": 116553,
+      "centroid_lon": 2.3281,
+      "centroid_lat": 9.6419,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "BFA",
+      "area_km2": 273691,
+      "centroid_lon": -1.7545,
+      "centroid_lat": 12.2695,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "BWA",
+      "area_km2": 580627,
+      "centroid_lon": 23.7984,
+      "centroid_lat": -22.1843,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "CAF",
+      "area_km2": 620988,
+      "centroid_lon": 20.4681,
+      "centroid_lat": 6.5682,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "CIV",
+      "area_km2": 322300,
+      "centroid_lon": -5.5697,
+      "centroid_lat": 7.6288,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "CMR",
+      "area_km2": 465903,
+      "centroid_lon": 12.7395,
+      "centroid_lat": 5.6914,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "COD",
+      "area_km2": 2334708,
+      "centroid_lon": 23.644,
+      "centroid_lat": -2.8773,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "COG",
+      "area_km2": 346856,
+      "centroid_lon": 15.2197,
+      "centroid_lat": -0.838,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "COM",
+      "area_km2": 1583,
+      "centroid_lon": 43.6848,
+      "centroid_lat": -11.8786,
+      "is_microstate_marker": true
+    },
+    {
+      "iso3": "CPV",
+      "area_km2": 3587,
+      "centroid_lon": -23.9592,
+      "centroid_lat": 15.9534,
+      "is_microstate_marker": true
+    },
+    {
+      "iso3": "DJI",
+      "area_km2": 21693,
+      "centroid_lon": 42.5606,
+      "centroid_lat": 11.7492,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "DZA",
+      "area_km2": 2322795,
+      "centroid_lon": 2.6172,
+      "centroid_lat": 28.1589,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "EGY",
+      "area_km2": 1003703,
+      "centroid_lon": 29.8615,
+      "centroid_lat": 26.4957,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "ERI",
+      "area_km2": 123672,
+      "centroid_lon": 38.8378,
+      "centroid_lat": 15.3594,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "ETH",
+      "area_km2": 1131762,
+      "centroid_lon": 39.6007,
+      "centroid_lat": 8.6228,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "GAB",
+      "area_km2": 260716,
+      "centroid_lon": 11.7884,
+      "centroid_lat": -0.5867,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "GHA",
+      "area_km2": 239590,
+      "centroid_lon": -1.2168,
+      "centroid_lat": 7.9534,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "GIN",
+      "area_km2": 244938,
+      "centroid_lon": -10.941,
+      "centroid_lat": 10.4363,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "GMB",
+      "area_km2": 10324,
+      "centroid_lon": -15.3956,
+      "centroid_lat": 13.4497,
+      "is_microstate_marker": true
+    },
+    {
+      "iso3": "GNB",
+      "area_km2": 32043,
+      "centroid_lon": -14.9238,
+      "centroid_lat": 12.0644,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "GNQ",
+      "area_km2": 26637,
+      "centroid_lon": 10.4707,
+      "centroid_lat": 1.565,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "KEN",
+      "area_km2": 594838,
+      "centroid_lon": 37.7954,
+      "centroid_lat": 0.6006,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "LBR",
+      "area_km2": 95650,
+      "centroid_lon": -9.322,
+      "centroid_lat": 6.453,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "LBY",
+      "area_km2": 1626379,
+      "centroid_lon": 18.0081,
+      "centroid_lat": 27.0311,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "LSO",
+      "area_km2": 30020,
+      "centroid_lon": 28.2273,
+      "centroid_lat": -29.58,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "MAR",
+      "area_km2": 582355,
+      "centroid_lon": -8.4564,
+      "centroid_lat": 29.8373,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "MDG",
+      "area_km2": 594617,
+      "centroid_lon": 46.703,
+      "centroid_lat": -19.3754,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "MLI",
+      "area_km2": 1258180,
+      "centroid_lon": -3.5427,
+      "centroid_lat": 17.3458,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "MOZ",
+      "area_km2": 790635,
+      "centroid_lon": 35.5335,
+      "centroid_lat": -17.2724,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "MRT",
+      "area_km2": 1038353,
+      "centroid_lon": -10.3467,
+      "centroid_lat": 20.2571,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "MUS",
+      "area_km2": 1880,
+      "centroid_lon": 57.5714,
+      "centroid_lat": -20.278,
+      "is_microstate_marker": true
+    },
+    {
+      "iso3": "MWI",
+      "area_km2": 119763,
+      "centroid_lon": 34.2884,
+      "centroid_lat": -13.2197,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "NAM",
+      "area_km2": 824740,
+      "centroid_lon": 17.2099,
+      "centroid_lat": -22.1304,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "NER",
+      "area_km2": 1185099,
+      "centroid_lon": 9.3856,
+      "centroid_lat": 17.419,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "NGA",
+      "area_km2": 911496,
+      "centroid_lon": 8.0897,
+      "centroid_lat": 9.5951,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "RWA",
+      "area_km2": 25377,
+      "centroid_lon": 29.9198,
+      "centroid_lat": -1.9903,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "SDN",
+      "area_km2": 1863035,
+      "centroid_lon": 29.9403,
+      "centroid_lat": 15.9905,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "SEN",
+      "area_km2": 197299,
+      "centroid_lon": -14.4732,
+      "centroid_lat": 14.3662,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "SLE",
+      "area_km2": 71878,
+      "centroid_lon": -11.7852,
+      "centroid_lat": 8.5719,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "SOM",
+      "area_km2": 642104,
+      "centroid_lon": 45.7074,
+      "centroid_lat": 4.7509,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "SSD",
+      "area_km2": 623990,
+      "centroid_lon": 30.2478,
+      "centroid_lat": 7.309,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "STP",
+      "area_km2": 979,
+      "centroid_lon": 6.7235,
+      "centroid_lat": 0.4434,
+      "is_microstate_marker": true
+    },
+    {
+      "iso3": "SWZ",
+      "area_km2": 17007,
+      "centroid_lon": 31.4817,
+      "centroid_lat": -26.5587,
+      "is_microstate_marker": true
+    },
+    {
+      "iso3": "SYC",
+      "area_km2": 172,
+      "centroid_lon": 55.476,
+      "centroid_lat": -4.6601,
+      "is_microstate_marker": true
+    },
+    {
+      "iso3": "TCD",
+      "area_km2": 1270914,
+      "centroid_lon": 18.645,
+      "centroid_lat": 15.3334,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "TGO",
+      "area_km2": 57156,
+      "centroid_lon": 0.9626,
+      "centroid_lat": 8.5251,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "TUN",
+      "area_km2": 156653,
+      "centroid_lon": 9.5478,
+      "centroid_lat": 34.1202,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "TZA",
+      "area_km2": 945782,
+      "centroid_lon": 34.7984,
+      "centroid_lat": -6.2766,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "UGA",
+      "area_km2": 242568,
+      "centroid_lon": 32.3695,
+      "centroid_lat": 1.2745,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "ZAF",
+      "area_km2": 1221594,
+      "centroid_lon": 25.1568,
+      "centroid_lat": -29.01,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "ZMB",
+      "area_km2": 755594,
+      "centroid_lon": 27.7749,
+      "centroid_lat": -13.4581,
+      "is_microstate_marker": false
+    },
+    {
+      "iso3": "ZWE",
+      "area_km2": 390203,
+      "centroid_lon": 29.8513,
+      "centroid_lat": -19.0041,
+      "is_microstate_marker": false
+    }
+  ]
+}

@@ -6,9 +6,9 @@ import type {
   Region,
   RegionSlug,
   Source,
-} from './contract';
+} from './contract.ts';
 
-import type { Db } from './db';
+import type { Db } from './db.ts';
 
 /* All SQL used by the API lives here: parameterised queries only. */
 

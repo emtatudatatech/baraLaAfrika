@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const PORT = 4173;
+const API_PORT = '4174';
 const isCI = Boolean(process.env.CI);
 
 /** iPhone 13-class metrics (390×844) on Chromium, so CI needs only one browser. */
@@ -21,12 +22,23 @@ export default defineConfig({
     baseURL: `http://localhost:${PORT}`,
     trace: 'retain-on-failure',
   },
-  webServer: {
-    command: 'npm run build && npm run preview',
-    url: `http://localhost:${PORT}`,
-    reuseExistingServer: !isCI,
-    timeout: 180_000,
-  },
+  webServer: [
+    {
+      // The real API handlers on an in-memory Postgres loaded with the committed seeds.
+      command: 'node e2e/api-server.ts',
+      url: `http://127.0.0.1:${API_PORT}/api/regions`,
+      reuseExistingServer: !isCI,
+      timeout: 60_000,
+      env: { E2E_API_PORT: API_PORT },
+    },
+    {
+      command: 'npm run build && npm run preview',
+      url: `http://localhost:${PORT}`,
+      reuseExistingServer: !isCI,
+      timeout: 180_000,
+      env: { BLA_API_PROXY: `http://127.0.0.1:${API_PORT}` },
+    },
+  ],
   projects: [
     {
       name: 'desktop',

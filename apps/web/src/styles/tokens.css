@@ -106,14 +106,28 @@
   --glass-saturate: 165%;
 
   /*
-   * Region identity colours. Placeholders (neutral) until the flag-mode colours from the
-   * `flags` pipeline are approved (milestone 3); the app then sets these from the API.
+   * Region identity colours: the approved flag-mode colours (2026-10-15). The app sets
+   * --region-<slug>-light/-dark from /api/regions at runtime; these literals are the
+   * no-flash fallbacks and are kept equal to reference/region_colors_approval.json and to
+   * darkThemePalette() by tests (src/styles/regionTokens.test.ts).
    */
-  --region-north: oklch(62% 0.02 60deg);
-  --region-west: oklch(58% 0.02 60deg);
-  --region-central: oklch(54% 0.02 60deg);
-  --region-east: oklch(66% 0.02 60deg);
-  --region-southern: oklch(50% 0.02 60deg);
+  --region-north: var(--region-north-light, #c1272d);
+  --region-west: var(--region-west-light, #009e49);
+  --region-central: var(--region-central-light, #fcd116);
+  --region-east: var(--region-east-light, #418fde);
+  --region-southern: var(--region-southern-light, #001489);
+
+  /* Map */
+  --map-ocean: oklch(93.5% 0.018 225deg);
+  --map-graticule: oklch(45% 0.03 230deg / 18%);
+  --map-context-land: oklch(87% 0.012 80deg);
+  --map-border: oklch(22% 0.02 50deg / 70%);
+  --map-coast: oklch(28% 0.03 50deg / 55%);
+  --map-disputed: oklch(72% 0.01 80deg);
+  --map-disputed-hatch: oklch(45% 0.01 80deg / 70%);
+  --map-highlight: oklch(18% 0.03 50deg);
+  --map-marker-ring: oklch(100% 0 0deg);
+  --map-dimmed-opacity: 0.22;
 }
 
 :root[data-theme='dark'] {
@@ -148,4 +162,20 @@
   --glass-edge-lo: oklch(100% 0 0deg / 4%);
   --glass-highlight: inset 0 1px 0 oklch(100% 0 0deg / 8%);
   --glass-shadow: 0 1px 2px oklch(0% 0 0deg / 30%), 0 14px 36px -12px oklch(0% 0 0deg / 55%);
+
+  /* Region colours lifted for contrast/distinctness on the dark map (hue unchanged). */
+  --region-north: var(--region-north-dark, #c1272d);
+  --region-west: var(--region-west-dark, #009e49);
+  --region-central: var(--region-central-dark, #fcd116);
+  --region-east: var(--region-east-dark, #72b6fe);
+  --region-southern: var(--region-southern-dark, #2b5acd);
+  --map-ocean: #0f1520; /* = DARK_MAP_BACKGROUND in lib/colour.ts */
+  --map-graticule: oklch(80% 0.03 250deg / 10%);
+  --map-context-land: oklch(29% 0.014 262deg);
+  --map-border: oklch(12% 0.02 262deg / 85%);
+  --map-coast: oklch(88% 0.02 80deg / 40%);
+  --map-disputed: oklch(40% 0.01 262deg);
+  --map-disputed-hatch: oklch(75% 0.01 262deg / 55%);
+  --map-highlight: oklch(97% 0.01 80deg);
+  --map-marker-ring: oklch(14% 0.02 262deg);
 }

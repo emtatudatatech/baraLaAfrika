@@ -9,12 +9,12 @@ import {
 import type { Context } from '@netlify/functions';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { seededDb } from '../../db/tests/seededDb';
-import countries from '../functions/countries';
-import country from '../functions/country';
-import coverage from '../functions/coverage';
-import { setDbForTesting } from '../functions/_shared/db';
-import regions from '../functions/regions';
+import { seededDb } from '../../db/tests/seededDb.ts';
+import countries from '../functions/countries.ts';
+import country from '../functions/country.ts';
+import coverage from '../functions/coverage.ts';
+import { setDbForTesting } from '../functions/_shared/db.ts';
+import regions from '../functions/regions.ts';
 
 let pg: PGlite;
 
@@ -169,18 +169,23 @@ describe('GET /api/coverage', () => {
   it('returns requested datasets and reports the ones not loaded yet', async () => {
     const response = await call(
       coverage,
-      '/api/coverage?datasets=symbology-pdf,flags-flagpedia,boundaries-natural-earth',
+      '/api/coverage?datasets=symbology-pdf,boundaries-natural-earth,mountains-baseline',
     );
     const body = CoverageResponseSchema.parse(await response.json());
-    expect(body.datasets.map((d) => d.key)).toEqual(['flags-flagpedia', 'symbology-pdf']);
-    expect(body.missing).toEqual(['boundaries-natural-earth']);
+    expect(body.datasets.map((d) => d.key)).toEqual(['boundaries-natural-earth', 'symbology-pdf']);
+    expect(body.missing).toEqual(['mountains-baseline']);
+    expect(body.datasets[0]).toMatchObject({ asOf: '2018-05-23', refreshCadence: 'static' });
     expect(body.datasets[1]).toMatchObject({ asOf: '2026-10-14', refreshCadence: 'manual' });
     expect(body.datasets[1]?.lastRefreshedAt).toBe('2026-10-15T08:00:00Z');
   });
 
   it('returns every dataset without a filter and rejects unknown keys', async () => {
     const all = CoverageResponseSchema.parse(await (await call(coverage, '/api/coverage')).json());
-    expect(all.datasets).toHaveLength(2);
+    expect(all.datasets.map((d) => d.key)).toEqual([
+      'boundaries-natural-earth',
+      'flags-flagpedia',
+      'symbology-pdf',
+    ]);
     expect(all.missing).toEqual([]);
     const bad = await call(coverage, '/api/coverage?datasets=symbology-pdf,nope');
     expect(bad.status).toBe(400);

@@ -1,7 +1,7 @@
 import type { PGlite } from '@electric-sql/pglite';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { migratedDb, seedCountries, seededDb } from './seededDb';
+import { migratedDb, seedCountries, seededDb } from './seededDb.ts';
 
 describe('schema', () => {
   let db: PGlite;

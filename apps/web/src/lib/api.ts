@@ -54,7 +54,24 @@ export async function apiGet<T>(path: string, signal?: AbortSignal): Promise<T> 
     }
     throw new ApiRequestError(response.status, 'http_error', `Request failed (${response.status})`);
   }
-  return (await response.json()) as T;
+  // A 200 that is not JSON is not the API: typically a dev server answering /api with the app's
+  // HTML page because no API is running behind it.
+  if (!(response.headers.get('Content-Type') ?? '').includes('json')) {
+    throw new ApiRequestError(
+      response.status,
+      'invalid_response',
+      'The server did not return JSON',
+    );
+  }
+  try {
+    return (await response.json()) as T;
+  } catch {
+    throw new ApiRequestError(
+      response.status,
+      'invalid_response',
+      'The server returned invalid JSON',
+    );
+  }
 }
 
 function withQuery(path: string, params: Record<string, string | undefined>): string {

@@ -1,7 +1,8 @@
 /*
- * End-to-end API server: the real Netlify Function handlers, served over HTTP on an in-memory
+ * Local API server: the real Netlify Function handlers, served over HTTP on an in-memory
  * Postgres (PGlite) with every migration and the committed seeds loaded. Playwright starts it
- * and `vite preview` proxies /api to it, so e2e tests exercise the real API without Neon.
+ * and `vite preview` proxies /api to it, so e2e tests exercise the real API without Neon;
+ * `npm run dev:local` uses it the same way behind the Vite dev server.
  */
 import { createServer } from 'node:http';
 
@@ -44,17 +45,26 @@ createServer((incoming, outgoing) => {
       { error: { code: 'not_found', message: 'Function not found' } },
       { status: 404 },
     );
-    for (const [pattern, handler] of routes) {
-      const match = pattern.exec(url);
-      if (match) {
-        const params = match.pathname.groups as Record<string, string>;
-        response = await handler(request, { params } as unknown as Context);
-        break;
+    try {
+      for (const [pattern, handler] of routes) {
+        const match = pattern.exec(url);
+        if (match) {
+          const params = match.pathname.groups as Record<string, string>;
+          response = await handler(request, { params } as unknown as Context);
+          break;
+        }
       }
+    } catch (error) {
+      // Never take the server down; answer like the deployed functions do.
+      console.error(error);
+      response = Response.json(
+        { error: { code: 'internal_error', message: 'Internal error' } },
+        { status: 500 },
+      );
     }
     outgoing.writeHead(response.status, Object.fromEntries(response.headers));
     outgoing.end(Buffer.from(await response.arrayBuffer()));
   })();
 }).listen(PORT, '127.0.0.1', () => {
-  console.log(`e2e API listening on http://127.0.0.1:${String(PORT)}`);
+  console.log(`Local API (seed data, in-memory Postgres) on http://127.0.0.1:${String(PORT)}`);
 });

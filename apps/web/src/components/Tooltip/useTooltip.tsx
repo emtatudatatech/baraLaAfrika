@@ -56,6 +56,8 @@ export function useTooltip({ content, placement = 'top' }: UseTooltipOptions): {
   const tooltipRef = useRef<HTMLDivElement>(null);
   const timer = useRef<number | undefined>(undefined);
   const lastPointerType = useRef<string>('mouse');
+  // A tap focuses the trigger before its click; the click alone decides (or it would toggle shut).
+  const touchPending = useRef(false);
 
   const schedule = useCallback((next: boolean, delay: number) => {
     window.clearTimeout(timer.current);
@@ -124,13 +126,15 @@ export function useTooltip({ content, placement = 'top' }: UseTooltipOptions): {
     },
     onPointerDown: (event) => {
       lastPointerType.current = event.pointerType;
+      touchPending.current = event.pointerType === 'touch';
     },
     onClick: () => {
+      touchPending.current = false;
       if (lastPointerType.current === 'touch') setOpen((value) => !value);
     },
     onFocus: () => {
       cancelScheduled();
-      setOpen(true);
+      if (!touchPending.current) setOpen(true);
     },
     onBlur: () => {
       schedule(false, 0);

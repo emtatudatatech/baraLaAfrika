@@ -15,6 +15,7 @@
   "scripts": {
     "dev": "npm run dev -w apps/web",
     "dev:netlify": "netlify dev --filter @bla/web",
+    "dev:local": "node scripts/dev-local.mjs",
     "build": "npm run build -w apps/web",
     "preview": "npm run preview -w apps/web",
     "lint": "eslint . && stylelint \"apps/web/src/**/*.css\"",

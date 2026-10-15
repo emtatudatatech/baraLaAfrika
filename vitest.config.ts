@@ -22,6 +22,7 @@ export default defineConfig({
             'netlify/tests/**/*.test.ts',
             'db/tests/**/*.test.ts',
             'apps/web/build/**/*.test.ts',
+            'scripts/**/*.test.ts',
           ],
         },
       },

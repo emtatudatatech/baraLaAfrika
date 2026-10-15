@@ -11,7 +11,7 @@
 
 History and Contemporary Africa appear in the navigation as "Coming soon".
 
-> **Status:** milestones 1–5 of 17 are complete: scaffold, data foundation, flags with approved region colours, the API (connected to Neon) and the **interactive map** on the home page. The countries table is next (see [Roadmap](#roadmap)).
+> **Status:** milestones 1–6 of 17 are complete: scaffold, data foundation, flags with approved region colours, the API (connected to Neon), the **interactive map** on the home page and the **countries table**. The data ribbon's live coverage is next (see [Roadmap](#roadmap)).
 
 ---
 
@@ -24,6 +24,7 @@ History and Contemporary Africa appear in the navigation as "Coming soon".
 - [Data: database and pipelines](#data-database-and-pipelines)
 - [API](#api)
 - [The map](#the-map)
+- [The countries table](#the-countries-table)
 - [Quality checks](#quality-checks)
 - [Environment variables](#environment-variables)
 - [Deployment (Netlify)](#deployment-netlify)
@@ -57,7 +58,7 @@ Python pipelines (uv, GitHub Actions cron) ── write role ────┘
 apps/web/                 React + Vite app
   index.html              Real HTML entry, incl. the no-flash theme bootstrap
   build/                  Vite plugin that generates the CSP (_headers)
-  public/                 favicon, robots.txt (later: topojson, flag fallbacks)
+  public/                 favicon (Africa silhouette), robots.txt, map topojson, flag fallbacks
   src/
     app/                  router, layout shell, theme provider, error boundaries
     features/             map, countries, harim, dhahabu, coverage (data ribbon)
@@ -96,10 +97,18 @@ npm install                     # all JS workspaces
 uv sync                         # Python venv for pipelines
 npx playwright install chromium # browser for end-to-end tests (one-time)
 
-npm run dev                     # Vite dev server on http://localhost:5173
+npm run dev:local               # site + API with the committed seed data: http://localhost:5173
 ```
 
-`npm run dev:netlify` runs the site **and the API functions** together on http://localhost:8888 (Netlify CLI, reading `DATABASE_URL_READ` from your `.env`). `npm run dev` runs the site alone. The CLI injects every `.env` variable locally, but the functions only ever read `DATABASE_URL_READ`.
+Three ways to run the site locally:
+
+| Command | Open | Data |
+|---|---|---|
+| `npm run dev:local` | http://localhost:5173 | The real API handlers on an in-memory Postgres loaded with the committed seeds (`e2e/api-server.ts`, port 4175), behind Vite's proxy. No database or `.env` needed. Ctrl+C stops both. |
+| `npm run dev:netlify` | http://localhost:8888 | The Netlify Functions emulator on **your Neon database** (`DATABASE_URL_READ` from `.env`). The CLI injects every `.env` variable locally, but the functions only ever read `DATABASE_URL_READ`. |
+| `npm run dev` | http://localhost:5173 | None: the site alone, for layout work. Where data would load, development builds explain which command to run instead. |
+
+`netlify dev` and the production CSP: the build writes the Content-Security-Policy to `apps/web/dist/_headers`, and Netlify merges `<publish>/_headers` into its config. Under `netlify dev` that CSP would block Vite's inline development scripts and leave a blank page, so `netlify.toml` points `publish` at `apps/web/public` in the `dev` context. Deploys still use `apps/web/dist` and its CSP (a test guards this).
 
 Local `netlify dev` quirk: after a 404 from a function, the emulator retries the same path with `.html`/`index.html` suffixes (to mimic static-file lookup), so a not-found message may name a suffixed path. Production returns the function's response as is.
 
@@ -191,6 +200,21 @@ The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth**
 - **Keyboard:** one Tab stop into the map, arrow keys move between countries (alphabetical), Home/End jump, Enter opens. The countries table is the accessible equivalent and is linked under the map.
 - Countries fade in by region (instant with reduced motion).
 
+## The countries table
+
+`/countries` (`apps/web/src/features/countries/`) lists all 54 countries with their flag, region, name meaning, national symbol and national animal.
+
+- **Filters live in the URL**, so every view can be shared: `?region=<slug>`, `?q=<search>`, `?sort=<column>` (a leading `-` sorts descending, e.g. `sort=-animal`) and `?country=<ISO3>` (opens that country's drawer). Invalid values are ignored. Filter changes replace the current history entry rather than adding one.
+- **Region chips** in the region colours, plus "All", each with its country count.
+- **Search** ignores case and accents ("cote" finds Côte d'Ivoire). It matches names, official names, ISO codes and every visible column, so "eagle" finds the countries whose animal is an eagle. The list loads once (shared with the map) and filters instantly; the API's `q` parameter matches names and codes only.
+- **Sorting:** every column but the flag. Ties sort by country name; regions sort in their display order (North → Southern). Phones get a "Sort by" menu.
+- **Flags** come from Flagpedia (`flagcdn.com`, 1x/2x, explicit size, lazy-loaded, self-hosted fallback). Hovering or focusing a flag shows the document's flag text (summary, then the full description); a tap toggles it on touch screens. Escape dismisses it, and it stays inside the viewport.
+- **Animal status:** anything short of official (de facto, inferred, sports nickname, contested) is badged in the table, so inference never reads as fact.
+- **Drawer:** a click on a row (or Enter on the country name) opens the full profile in a modal dialog: a side panel on wide screens, a bottom sheet on phones. It shows the long texts, the etymology category (when assigned), the animal status with its meaning, every source with its reliability tier and the fields it supports, and a "Needs verification" marker that expands to the review notes. Somalia's drawer explains Somaliland. Escape, the close button or a click on the backdrop close it, and focus returns to where it was.
+- **Phones (< 720px):** a stacked card list (flag, name, region), each expanding to the summaries and a button to the drawer.
+- **Desktop:** the column headers stay visible below the ribbon while scrolling. The table is laid out to fit from 720px up, so there is no horizontal scrolling and no sticky first column is needed.
+- Loading skeletons, an empty state with "Clear filters", and an error state with "Retry".
+
 ## Quality checks
 
 | Command | What it runs |
@@ -204,6 +228,8 @@ The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth**
 | `uv run ruff check . && uv run ruff format --check .` | Python lint and format |
 | `uv run mypy` | Python type-check (strict) |
 | `uv run pytest` | Python tests (needs `npm install` for the PGlite-backed database tests) |
+
+Vitest also checks the repository itself: `scripts/gitignore.test.ts` fails if `.gitignore` hides any source file, and `scripts/netlifyConfig.test.ts` keeps the production CSP out of `netlify dev`.
 
 CI (`.github/workflows/ci.yml`) runs all of these on every push to `main` and on pull requests.
 
@@ -246,6 +272,7 @@ Full deployment steps (Neon setup, Netlify site creation, env vars, preview bran
 - **Icons:** Google Material Symbols (Outlined) via `<Icon name="…" />`, which is `aria-hidden` by default. Icon-only buttons use `<IconButton label="…" />`. The font is **subset to the icons in `components/Icon/iconNames.ts`** (≈20 KiB instead of 4 MB) by `uv run python -m scripts.build_icon_font`. The script fails if a name is not in the current canonical Material Symbols set. Re-run it after editing the list; a test fails if the subset is stale.
 - **Theme:** follows `prefers-color-scheme` until the user toggles it. The choice persists in `localStorage` (failures are tolerated) and is applied before first paint by the inline script in `index.html`, so there is no flash.
 - **Strings:** all UI copy lives in `src/lib/strings.ts`, ready for translation.
+- **Favicon:** a dark-filled silhouette of Africa (mainland and Madagascar), built from the site's own Natural Earth boundaries (public domain) by `node scripts/build-favicon.mjs`. The SVG switches to a light fill when the browser uses a dark colour scheme, so it stays visible on dark tab strips; `favicon.ico` (16/32/48 px) is the fallback. The script also stamps the icon links in `index.html` with `?v=<hash of both files>`, so browsers that cached an older icon for the same address (another project on `localhost`, or a previous deploy) fetch the new one; a test checks the stamp is current. Material Symbols has no Africa icon. The home page's tab reads just "Bara La Afrika".
 
 ## Decisions and deviations
 
@@ -268,6 +295,8 @@ Decisions taken where the specification left room, or where the current ecosyste
 - **Somaliland:** merged into Somalia on the map, following the research document's 54 recognised states. Western Sahara is shown as disputed and is not one of the 54.
 - **Natural Earth date:** the boundaries dataset's "as of" is the Natural Earth v4.1.0 release date (2018-05-23, from the GitHub release).
 - **Wheel zoom needs Ctrl/⌘** so the full-width map never traps page scrolling; buttons and pinch always zoom.
+- **Countries search is client-side:** the table filters the cached list of 54 instead of calling `/api/countries?q=` on each keystroke. It is instant, and it also searches the visible columns (meanings, symbols, animals).
+- **"Needs verification" is shown in the drawer only:** every country currently has `needs_review` set (most cite low-reliability sources), so a marker on every row would carry no information. The drawer shows the marker and the reasons.
 - **Dev-tool advisories:** `npm audit` reports advisories in dev-only tooling (`netlify-cli`'s local server dependencies and Stylelint's glob dependencies). None of it ships to the browser or the deployed functions.
 
 ## Roadmap
@@ -279,7 +308,7 @@ v1 milestones (stop points for review are marked ⏸):
 3. ✅ Flags and region colours ⏸ (colours approved 2026-10-15)
 4. ✅ API (Neon connected)
 5. ✅ Map
-6. Countries table
+6. ✅ Countries table
 7. Ribbon and coverage
 8. Harim data ⏸
 9. Harim API and table

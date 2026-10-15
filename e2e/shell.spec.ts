@@ -41,6 +41,10 @@ for (const route of ROUTES) {
             page.getByTestId('africa-map').locator('[role="button"][data-iso3]'),
           ).toHaveCount(54);
         }
+        if (route.path === '/countries') {
+          // Check the loaded table or cards (and their 54 flag controls), not the skeleton.
+          await expect(page.getByTestId('flag-button')).toHaveCount(54);
+        }
         await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
         await expectNoAxeViolations(page);
       });
@@ -72,6 +76,28 @@ test('follows the system colour scheme when no choice is stored', async ({ page 
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
 });
 
+test('the favicon is the Africa silhouette and the home tab reads just the site name', async ({
+  page,
+  request,
+}) => {
+  await page.goto('/');
+  await expect(page).toHaveTitle('Bara La Afrika');
+  const icons = page.locator('link[rel="icon"]');
+  await expect(icons).toHaveCount(2);
+  // Versioned links (?v=<hash>) so browsers drop icons cached for the same address.
+  await expect(icons.nth(0)).toHaveAttribute('href', /^\/favicon\.ico\?v=[0-9a-f]{8}$/);
+  await expect(icons.nth(1)).toHaveAttribute('href', /^\/favicon\.svg\?v=[0-9a-f]{8}$/);
+  const svg = await request.get((await icons.nth(1).getAttribute('href')) ?? '');
+  expect(svg.ok()).toBe(true);
+  expect(svg.headers()['content-type']).toContain('image/svg+xml');
+  const body = await svg.text();
+  expect(body).toContain('<path');
+  expect(body).not.toContain('<text');
+  const ico = await request.get((await icons.nth(0).getAttribute('href')) ?? '');
+  expect(ico.ok()).toBe(true);
+  expect((await ico.body()).subarray(0, 4)).toEqual(Buffer.from([0, 0, 1, 0]));
+});
+
 test('unknown routes show the 404 page inside the shell', async ({ page }) => {
   await page.goto('/no-such-page');
   await expect(page.getByRole('heading', { level: 1, name: 'Page not found' })).toBeVisible();
@@ -85,6 +111,8 @@ test('unknown routes show the 404 page inside the shell', async ({ page }) => {
 test('skip link moves focus to the main content', async ({ page, isMobile }) => {
   test.skip(isMobile, 'keyboard-only flow');
   await page.goto('/countries');
+  // The router renders once the lazy route module has loaded; Tab before that has no target.
+  await expect(page.getByRole('heading', { level: 1, name: 'Countries' })).toBeVisible();
   await page.keyboard.press('Tab');
   const skip = page.getByRole('link', { name: 'Skip to main content' });
   await expect(skip).toBeFocused();

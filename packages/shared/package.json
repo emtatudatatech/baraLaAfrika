@@ -6,6 +6,7 @@
   "exports": {
     ".": "./src/index.ts"
   },
+  "sideEffects": false,
   "dependencies": {
     "zod": "4.6.7"
   }

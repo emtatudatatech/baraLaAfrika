@@ -43,7 +43,7 @@ export function HomePage() {
 
   return (
     <>
-      <title>{`${strings.site.name} · Explore Africa's symbols, mountains and gold`}</title>
+      <title>{strings.site.name}</title>
       <section className={styles.intro} aria-labelledby="home-title">
         <p className={styles.kicker}>{page.kicker}</p>
         <h1 id="home-title" className={styles.title}>
@@ -55,7 +55,7 @@ export function HomePage() {
       <section className={styles.hero} aria-label={strings.map.label}>
         <AfricaMap
           countries={countries.data?.countries}
-          countriesFailed={countries.status === 'error'}
+          countriesError={countries.error}
           onRetryCountries={countries.retry}
           isolatedRegion={isolated}
           regionOrder={regionList.map((r) => r.slug)}

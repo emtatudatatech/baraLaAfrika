@@ -110,6 +110,46 @@ button {
   border: 0;
 }
 
+/* Loading placeholder: a soft block with a slow sheen (static when motion is reduced). */
+.skeleton {
+  display: block;
+  border-radius: var(--radius-xs);
+  background:
+    linear-gradient(
+        90deg,
+        transparent 0%,
+        color-mix(in oklch, var(--color-surface-solid) 60%, transparent) 50%,
+        transparent 100%
+      )
+      0 0 / 200% 100% no-repeat,
+    var(--color-line);
+}
+
+@media (--motion-ok) {
+  .skeleton {
+    animation: skeleton-sheen 1.4s ease-in-out infinite;
+  }
+}
+
+@keyframes skeleton-sheen {
+  from {
+    background-position:
+      150% 0,
+      0 0;
+  }
+
+  to {
+    background-position:
+      -50% 0,
+      0 0;
+  }
+}
+
+/* The page behind a modal dialog (e.g. the country drawer) does not scroll. */
+html:has(dialog[open]:modal) {
+  overflow: hidden;
+}
+
 .tabular {
   font-variant-numeric: tabular-nums lining-nums;
 }

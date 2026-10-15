@@ -42,6 +42,11 @@ export const RefreshCadenceSchema = z.enum([
   'on_release',
 ]);
 
+export type AnimalStatus = z.infer<typeof AnimalStatusSchema>;
+export type EtymologyCategory = z.infer<typeof EtymologyCategorySchema>;
+export type ReliabilityTier = z.infer<typeof ReliabilityTierSchema>;
+export type ProfileField = z.infer<typeof ProfileFieldSchema>;
+
 const HexColourSchema = z.string().regex(/^#[0-9a-f]{6}$/);
 const IsoDateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 

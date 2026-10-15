@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { ApiRequestError, api } from './api';
+import { devApiHint } from './apiHint';
 
 /** Stubs fetch; a Response is cloned per call (bodies can only be read once). */
 function stubFetch(response: Response | Error | DOMException) {
@@ -55,8 +56,41 @@ describe('api client', () => {
     expect(error).toMatchObject({ code: 'network_error' });
   });
 
+  it('rejects a 200 that is not JSON (a dev server answering /api with the app page)', async () => {
+    stubFetch(
+      new Response('<!doctype html><html></html>', {
+        status: 200,
+        headers: { 'Content-Type': 'text/html' },
+      }),
+    );
+    await expect(api.countries()).rejects.toMatchObject({ status: 200, code: 'invalid_response' });
+    stubFetch(new Response('{"countries": [', { headers: { 'Content-Type': 'application/json' } }));
+    await expect(api.countries()).rejects.toMatchObject({ code: 'invalid_response' });
+  });
+
   it('lets aborts propagate unchanged', async () => {
     stubFetch(new DOMException('aborted', 'AbortError'));
     await expect(api.regions(new AbortController().signal)).rejects.toThrow('aborted');
+  });
+});
+
+describe('development API hints', () => {
+  const unreachable = new ApiRequestError(200, 'invalid_response', 'not JSON');
+  it('explain how to start an API in development only', () => {
+    expect(devApiHint(unreachable, true)).toContain('npm run dev:local');
+    expect(devApiHint(new ApiRequestError(0, 'network_error', 'down'), true)).toContain(
+      'npm run dev:netlify',
+    );
+    expect(devApiHint(new ApiRequestError(502, 'http_error', 'proxy'), true)).not.toBeNull();
+    expect(devApiHint(unreachable, false)).toBeNull();
+  });
+
+  it('point at the database when the API has none, and stay quiet for real API errors', () => {
+    expect(
+      devApiHint(new ApiRequestError(503, 'service_unavailable', 'No database'), true),
+    ).toContain('DATABASE_URL_READ');
+    expect(devApiHint(new ApiRequestError(404, 'not_found', 'No such country'), true)).toBeNull();
+    expect(devApiHint(new Error('other'), true)).toBeNull();
+    expect(devApiHint(undefined, true)).toBeNull();
   });
 });

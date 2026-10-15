@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router';
 
 import type { RouteDataHandle } from '../features/coverage/routeData';
+import { InitialLoad } from './InitialLoad';
 import { Layout } from './layout/Layout';
 import { NotFoundPage } from './NotFoundPage';
 import { RootErrorBoundary } from './RootErrorBoundary';
@@ -33,6 +34,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     Component: Layout,
+    HydrateFallback: InitialLoad,
     ErrorBoundary: RootErrorBoundary,
     children: [
       {

@@ -11,7 +11,8 @@
     "playwright.config.ts",
     "e2e/**/*.ts",
     "db/tests/**/*.ts",
-    "netlify/tests/**/*.ts"
+    "netlify/tests/**/*.ts",
+    "scripts/**/*.ts"
   ],
   "references": [
     {

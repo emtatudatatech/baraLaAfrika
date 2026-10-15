@@ -130,6 +130,103 @@ export const strings = {
     sports_nickname: 'Sports nickname',
     contested: 'Contested',
   },
+  animalStatusHint: {
+    official: 'Designated by the state (law, constitution or coat of arms).',
+    de_facto: 'Widely used as a national animal without a formal designation.',
+    inferred: 'Inferred by the research document; no official designation was found.',
+    sports_nickname: 'Taken from a national sports team’s nickname, not an official designation.',
+    contested: 'Sources disagree on this animal.',
+  },
+  etymologyCategory: {
+    geographic_feature: 'Geographic feature',
+    ethnic_group: 'People or ethnic group',
+    kingdom_or_ruler: 'Kingdom or ruler',
+    colonial_or_translation: 'Colonial name or translation',
+  },
+  reliabilityTier: {
+    primary: 'Primary source',
+    reference: 'Reference work',
+    secondary: 'Secondary source',
+    low: 'Low reliability',
+  },
+  profileField: {
+    etymology: 'Name meaning',
+    flag_design: 'Flag design',
+    national_symbol: 'National symbol',
+    national_animal: 'National animal',
+  },
+  countries: {
+    filtersLabel: 'Filter countries',
+    regionGroup: 'Region',
+    allRegions: 'All',
+    searchLabel: 'Search countries',
+    searchPlaceholder: 'Name, meaning, symbol or animal',
+    sortLabel: 'Sort by',
+    sortOptions: {
+      name: 'Country',
+      region: 'Region',
+      etymology: 'Name meaning',
+      symbol: 'National symbol',
+      animal: 'National animal',
+    },
+    ascending: 'A to Z',
+    descending: 'Z to A',
+    resultCount: (shown: number, total: number) =>
+      shown === total
+        ? `Showing all ${String(total)} countries`
+        : `Showing ${String(shown)} of ${String(total)} countries`,
+    caption:
+      'African countries with the meaning of their names, their flags, national symbols and national animals',
+    columns: {
+      flag: 'Flag design',
+      name: 'Country',
+      region: 'Region',
+      etymology: 'Name meaning',
+      symbol: 'National symbol',
+      animal: 'National animal',
+    },
+    flagButton: (name: string) => `Flag of ${name}`,
+    viewDetails: 'Full profile and sources',
+    empty: 'No countries match',
+    emptyHint: 'Try another search or region.',
+    clearFilters: 'Clear filters',
+    loadError: 'The countries could not be loaded.',
+    retry: 'Retry',
+  },
+  drawer: {
+    close: 'Close',
+    officialName: 'Official name',
+    meaning: 'Name meaning',
+    category: 'Category',
+    flag: 'Flag design',
+    symbol: 'National symbol',
+    animal: 'National animal',
+    sources: 'Sources',
+    sourcesNote:
+      'Sources as cited by the research document, plus any added during review. Reliability tiers are this project’s assessment.',
+    noSources: 'No sources are recorded for this country.',
+    usedFor: 'Used for',
+    newTab: '(opens in a new tab)',
+    needsReview: 'Needs verification',
+    needsReviewHint:
+      'Some of this text relies on low-reliability sources or has open questions. Why?',
+    noteKinds: {
+      correction: 'Corrected',
+      status: 'Status reviewed',
+      issue: 'Open question',
+      note: 'Note',
+    },
+    loading: 'Loading the full profile…',
+    loadError: 'The full profile could not be loaded.',
+    retry: 'Retry',
+  },
+  // Shown only in development builds (see lib/apiHint.ts). `code` spans are marked with backticks.
+  devHints: {
+    apiNotRunning:
+      'Development: no API answered. `npm run dev` serves the site only. Run `npm run dev:local` (the committed seed data, no database needed) or `npm run dev:netlify` (your Neon database).',
+    noDatabase:
+      'Development: the API has no database. Set `DATABASE_URL_READ` in `.env` for `npm run dev:netlify`, or run `npm run dev:local`.',
+  },
   footer: {
     creditsHeading: 'Data, credits and licences',
     disclaimer:

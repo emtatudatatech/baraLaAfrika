@@ -25,6 +25,15 @@
     max(var(--gutter), env(safe-area-inset-right));
 }
 
+/*
+ * Grid items default to `min-width: auto` (their content's minimum width), so one wide child
+ * (e.g. the countries table, for the frame before phones switch to cards) would widen the whole
+ * column and every block in it. Sections size to the column instead.
+ */
+.main > * {
+  min-width: 0;
+}
+
 .main:focus {
   outline: none;
 }

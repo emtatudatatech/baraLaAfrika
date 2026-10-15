@@ -28,7 +28,17 @@ for (const viewport of VIEWPORTS) {
         if (route.path === '/') {
           await page.locator('[data-testid="africa-map"] [data-iso3]').first().waitFor();
         }
+        if (route.path === '/countries') {
+          // The loaded list (the skeleton's sheen would never finish animating).
+          await page.getByTestId('flag-button').first().waitFor();
+        }
         await waitForAnimations(page);
+        // A full-page capture does not scroll, so lazy images below the fold would stay blank.
+        await page.evaluate(async () => {
+          const images = [...document.images];
+          for (const image of images) image.loading = 'eager';
+          await Promise.all(images.map((image) => image.decode().catch(() => undefined)));
+        });
         await page.screenshot({
           path: `screenshots/${route.name}-${viewport.name}-${theme}.png`,
           fullPage: true,

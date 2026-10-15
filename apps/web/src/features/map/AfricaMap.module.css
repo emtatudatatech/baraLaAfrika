@@ -180,6 +180,12 @@
   font-size: var(--text-sm);
 }
 
+/* The development hint (if any) takes its own row below the message and button. */
+.notice .noticeHint {
+  flex-basis: 100%;
+  max-width: none;
+}
+
 .retry {
   min-height: var(--touch-target);
   padding: 0 var(--space-4);

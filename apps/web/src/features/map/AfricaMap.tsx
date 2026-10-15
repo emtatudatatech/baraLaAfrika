@@ -15,6 +15,7 @@ import {
 } from 'react';
 import { Link } from 'react-router';
 
+import { DevApiHint } from '../../components/DevApiHint/DevApiHint';
 import { FlagImage } from '../../components/FlagImage/FlagImage';
 import { IconButton } from '../../components/IconButton/IconButton';
 import { placeTooltip } from '../../components/Tooltip/placeTooltip';
@@ -49,7 +50,8 @@ interface Anchor {
 
 export interface AfricaMapProps {
   countries: readonly CountrySummary[] | undefined;
-  countriesFailed: boolean;
+  /** Set when the country list failed to load (the map then shows boundaries only). */
+  countriesError: Error | undefined;
   onRetryCountries: () => void;
   isolatedRegion: RegionSlug | null;
   regionOrder: readonly RegionSlug[];
@@ -60,7 +62,7 @@ export interface AfricaMapProps {
 /** Interactive Equal Earth map of Africa: countries filled by region colour (spec §7.1). */
 export function AfricaMap({
   countries,
-  countriesFailed,
+  countriesError,
   onRetryCountries,
   isolatedRegion,
   regionOrder,
@@ -465,12 +467,13 @@ export function AfricaMap({
             />
           </div>
 
-          {countriesFailed && (
+          {countriesError !== undefined && (
             <div className={cx('glass glass--strong', styles.notice)} role="alert">
               <p>{strings.map.countriesError}</p>
               <button type="button" className={styles.retry} onClick={onRetryCountries}>
                 {strings.map.retry}
               </button>
+              <DevApiHint error={countriesError} className={styles.noticeHint} />
             </div>
           )}
         </div>

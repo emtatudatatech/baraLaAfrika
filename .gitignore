@@ -10,7 +10,10 @@ apps/web/dist/
 *.tsbuildinfo
 .netlify/
 .vite/
-coverage/
+# Test coverage output only (anchored: an unanchored `coverage/` hid src/features/coverage).
+/coverage/
+/apps/*/coverage/
+/packages/*/coverage/
 npm-debug.log*
 
 # ── Playwright ────────────────────────────────────────────────────────────────

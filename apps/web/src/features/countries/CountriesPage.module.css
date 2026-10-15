@@ -1,0 +1,120 @@
+.controls {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+}
+
+.search {
+  position: relative;
+  display: flex;
+  flex: 1 1 18rem;
+  align-items: center;
+  max-width: 32rem;
+}
+
+.searchIcon {
+  position: absolute;
+  left: var(--space-3);
+  color: var(--color-ink-muted);
+  pointer-events: none;
+}
+
+.search input {
+  width: 100%;
+  min-height: var(--touch-target);
+  padding: 0 var(--space-3) 0 calc(var(--space-3) + 20px + var(--space-2));
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-pill);
+  font: inherit;
+  color: var(--color-ink);
+  background: var(--glass-bg-strong);
+}
+
+.search input::placeholder {
+  color: var(--color-ink-muted);
+  opacity: 1;
+}
+
+.sort {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+}
+
+.sort select {
+  flex: 1;
+  min-width: 0;
+  min-height: var(--touch-target);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-md);
+  font: inherit;
+  color: var(--color-ink);
+  background: var(--glass-bg-strong);
+}
+
+.count {
+  margin: 0 0 0 auto;
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink-muted);
+}
+
+/*
+ * `clip` (unlike hidden/auto) does not make a scroll container, so the table's sticky header
+ * still sticks to the page. With the layout's `min-width: 0` on sections, a table wider than
+ * the column (the frame between a resize below 720px and the switch to cards) is clipped
+ * instead of widening the page.
+ */
+.results {
+  min-height: 12rem;
+  overflow-x: clip;
+}
+
+.panel {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-lg);
+}
+
+.state {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  padding: var(--space-10) var(--space-4);
+  text-align: center;
+  color: var(--color-ink-muted);
+}
+
+.state p {
+  margin: 0;
+}
+
+.stateTitle {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  color: var(--color-ink);
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target);
+  margin-top: var(--space-2);
+  padding: 0 var(--space-5);
+  border: 0;
+  border-radius: var(--radius-pill);
+  font: inherit;
+  font-weight: var(--weight-semibold);
+  color: var(--color-accent-ink);
+  background: var(--color-accent);
+}

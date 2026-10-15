@@ -11,7 +11,7 @@
 
 History and Contemporary Africa appear in the navigation as "Coming soon".
 
-> **Status:** milestones 1–2 of 17 are complete: scaffold (tooling, design system, app shell, CI) and data foundation (database schema, PDF extraction, seeds, review report). The API, maps and tables arrive in later milestones (see [Roadmap](#roadmap)).
+> **Status:** milestones 1–3 of 17 are complete: scaffold (tooling, design system, app shell, CI), data foundation (database schema, PDF extraction, seeds, review report), and flags with computed region colours, which are **awaiting approval** before the app uses them. The API, maps and tables arrive in later milestones (see [Roadmap](#roadmap)).
 
 ---
 
@@ -115,11 +115,17 @@ The pipelines run from the repo root (`uv run python -m pipelines --help`); see 
 |---|---|---|---|
 | 1 | `uv run python -m pipelines migrate` | Applies `db/migrations/*.sql` in order (checksummed; an applied file that was edited is an error) and grants `SELECT` to `bla_reader` | ✅ |
 | 2 | `uv run python -m pipelines extract-pdf` | Research PDF → `db/seeds/{countries,sources,datasets}.json` and `data/review_report.md`, with loud validation (54 countries; region counts 6/15/9/16/8; unique ISO codes; every summary field present; no stray citation digits) | ✅ |
-| 3 | `uv run python -m pipelines flags` | Flagpedia flags and region colours | milestone 3 |
+| 3 | `uv run python -m pipelines flags` | Downloads the 54 flag SVGs from flagcdn.com (cached in `data/raw/flags/`, copied to `apps/web/public/flags/` as the offline fallback), computes each flag's palette and each region's colour, and writes `db/seeds/flags.json` and `data/region_colors_report.md` | ✅ (colours awaiting approval) |
 | 4 | `uv run python -m pipelines boundaries` | Natural Earth map geometry | milestone 5 |
 | 5 | `uv run python -m pipelines load` | Upserts the seeds into Neon | milestone 4 |
 
 `migrate --dry-run` lists pending migrations. `extract-pdf --check` validates without writing and fails if the committed seeds are stale; the pytest suite runs it.
+
+### Region colours
+
+Each region's identity colour is the **mode colour across its flags**: flags are rasterised, clustered into at most 8 colours in CIELAB, merged across flags (CIEDE2000 < 10) and summed per region; white, black and grey are excluded by default, and near-identical picks are resolved by giving the colour to the region where it has the larger share. Anti-aliasing blends at stripe edges are folded back into the real flag colours first. Every parameter is a command-line option (`python -m pipelines flags --help`), and `--include-neutrals` switches which result is selected (both are always reported).
+
+`data/region_colors_report.md` shows the picks with swatches, the top five candidates per region, every uniqueness decision, both results, per-flag palettes and automated checks (distinctness, colour-vision-deficiency simulation, contrast against the light and dark page). Colours are never adjusted by hand. `db/seeds/flags.json` records `"approved": false` until the colours are approved.
 
 ### Correcting the data
 
@@ -216,7 +222,7 @@ v1 milestones (stop points for review are marked ⏸):
 
 1. ✅ Scaffold
 2. ✅ Data foundation: migrations, PDF extraction, seeds, review report ⏸
-3. Flags and region colours ⏸
+3. ✅ Flags and region colours ⏸ (awaiting colour approval)
 4. API (Neon connected)
 5. Map
 6. Countries table

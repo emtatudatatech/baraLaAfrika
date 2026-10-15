@@ -1,0 +1,1270 @@
+{
+  "dataset": {
+    "key": "flags-flagpedia",
+    "name": "Flag images (Flagpedia, flagcdn.com)",
+    "provider": "Flagpedia.net",
+    "license": "Flag images are in the public domain; served by the free flagcdn.com CDN",
+    "attribution": "Flags: Flagpedia.net (flagcdn.com)",
+    "coverage_start": null,
+    "coverage_end": null,
+    "as_of": "2026-10-15",
+    "refresh_cadence": "monthly"
+  },
+  "params": {
+    "raster_width": 320,
+    "max_clusters": 8,
+    "min_colour_share": 0.005,
+    "blend_anchor_share": 0.03,
+    "blend_tolerance": 12.0,
+    "merge_delta_e": 10.0,
+    "neutral_chroma": 10.0,
+    "uniqueness_delta_e": 20.0,
+    "include_neutrals": false,
+    "weight": "pixels",
+    "random_state": 0
+  },
+  "flags": [
+    {
+      "iso3": "AGO",
+      "iso2": "AO",
+      "source_url": "https://flagcdn.com/ao.svg",
+      "svg_sha256": "0f10545c2991c7ad5332dff881c0e176de0a021260e722af7cfdd996ce9b497e",
+      "palette": [
+        {
+          "hex": "#cc092f",
+          "area_share": 0.48435
+        },
+        {
+          "hex": "#000000",
+          "area_share": 0.47126
+        },
+        {
+          "hex": "#ffcb00",
+          "area_share": 0.0444
+        }
+      ]
+    },
+    {
+      "iso3": "BDI",
+      "iso2": "BI",
+      "source_url": "https://flagcdn.com/bi.svg",
+      "svg_sha256": "00f86f0400888d0ecf5a2b9bfa66f176af6095f413d53d622b6c061c1723cfd9",
+      "palette": [
+        {
+          "hex": "#ffffff",
+          "area_share": 0.34619
+        },
+        {
+          "hex": "#43b02a",
+          "area_share": 0.34536
+        },
+        {
+          "hex": "#c8102e",
+          "area_share": 0.30845
+        }
+      ]
+    },
+    {
+      "iso3": "BEN",
+      "iso2": "BJ",
+      "source_url": "https://flagcdn.com/bj.svg",
+      "svg_sha256": "03e7fd78282d719338630eaf2301fa9c9dbcbf57a9639a20e8fbb43353409569",
+      "palette": [
+        {
+          "hex": "#008751",
+          "area_share": 0.4
+        },
+        {
+          "hex": "#fcd116",
+          "area_share": 0.30141
+        },
+        {
+          "hex": "#e8112d",
+          "area_share": 0.29859
+        }
+      ]
+    },
+    {
+      "iso3": "BFA",
+      "iso2": "BF",
+      "source_url": "https://flagcdn.com/bf.svg",
+      "svg_sha256": "4c88dba85dcf8f799607e2ce32f5af58741ccd31f15fb917bf89f58a140f91a4",
+      "palette": [
+        {
+          "hex": "#ef2b2d",
+          "area_share": 0.49108
+        },
+        {
+          "hex": "#009e49",
+          "area_share": 0.48847
+        },
+        {
+          "hex": "#fcd116",
+          "area_share": 0.02045
+        }
+      ]
+    },
+    {
+      "iso3": "BWA",
+      "iso2": "BW",
+      "source_url": "https://flagcdn.com/bw.svg",
+      "svg_sha256": "e89b9cb27040b2995d2f66fca2492eb19434c0793d80ff70ce6819f2540e40a0",
+      "palette": [
+        {
+          "hex": "#6da9d2",
+          "area_share": 0.75117
+        },
+        {
+          "hex": "#000000",
+          "area_share": 0.16432
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.08451
+        }
+      ]
+    },
+    {
+      "iso3": "CAF",
+      "iso2": "CF",
+      "source_url": "https://flagcdn.com/cf.svg",
+      "svg_sha256": "f36cc981bf26cff6c9111be3edf29aa565164e713f9704e22d98116ac80816aa",
+      "palette": [
+        {
+          "hex": "#ffce00",
+          "area_share": 0.21612
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.21074
+        },
+        {
+          "hex": "#289728",
+          "area_share": 0.20684
+        },
+        {
+          "hex": "#003082",
+          "area_share": 0.19755
+        },
+        {
+          "hex": "#d21034",
+          "area_share": 0.16875
+        }
+      ]
+    },
+    {
+      "iso3": "CIV",
+      "iso2": "CI",
+      "source_url": "https://flagcdn.com/ci.svg",
+      "svg_sha256": "aaf7093dc7c4b1e65d6cd0a65cf20dc957971205a04985897fb3980bccb3a394",
+      "palette": [
+        {
+          "hex": "#009e60",
+          "area_share": 0.33437
+        },
+        {
+          "hex": "#f77f00",
+          "area_share": 0.33437
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.33125
+        }
+      ]
+    },
+    {
+      "iso3": "CMR",
+      "iso2": "CM",
+      "source_url": "https://flagcdn.com/cm.svg",
+      "svg_sha256": "e00c6cbb0cb7364bc1b825e145ae6232d611d0e457dfa621b6bfafa3b7c76a7f",
+      "palette": [
+        {
+          "hex": "#fcd116",
+          "area_share": 0.34754
+        },
+        {
+          "hex": "#007a5e",
+          "area_share": 0.33437
+        },
+        {
+          "hex": "#ce1126",
+          "area_share": 0.31809
+        }
+      ]
+    },
+    {
+      "iso3": "COD",
+      "iso2": "CD",
+      "source_url": "https://flagcdn.com/cd.svg",
+      "svg_sha256": "e2e70cf2f16e4ede17ec2a6d0b740c82b622e2cae6b3419d2217092f9c0872f4",
+      "palette": [
+        {
+          "hex": "#007fff",
+          "area_share": 0.6694
+        },
+        {
+          "hex": "#ce1021",
+          "area_share": 0.20083
+        },
+        {
+          "hex": "#f7d618",
+          "area_share": 0.12977
+        }
+      ]
+    },
+    {
+      "iso3": "COG",
+      "iso2": "CG",
+      "source_url": "https://flagcdn.com/cg.svg",
+      "svg_sha256": "3bff163be26e1c6877bf6aebdd3115eda88535d32c56b8c6406c998385caaebb",
+      "palette": [
+        {
+          "hex": "#009543",
+          "area_share": 0.33437
+        },
+        {
+          "hex": "#fbde4a",
+          "area_share": 0.33437
+        },
+        {
+          "hex": "#dc241f",
+          "area_share": 0.33125
+        }
+      ]
+    },
+    {
+      "iso3": "COM",
+      "iso2": "KM",
+      "source_url": "https://flagcdn.com/km.svg",
+      "svg_sha256": "21e3ee9de83bf7ac6b57400e92f63d81f1f174624e9a2f408a5dd23d4d8f8f04",
+      "palette": [
+        {
+          "hex": "#003da5",
+          "area_share": 0.21888
+        },
+        {
+          "hex": "#ffd100",
+          "area_share": 0.21862
+        },
+        {
+          "hex": "#009639",
+          "area_share": 0.21598
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.1904
+        },
+        {
+          "hex": "#ef3340",
+          "area_share": 0.15612
+        }
+      ]
+    },
+    {
+      "iso3": "CPV",
+      "iso2": "CV",
+      "source_url": "https://flagcdn.com/cv.svg",
+      "svg_sha256": "bcbf0add799b13377bdf842e1f380ff630650d3b7dba2d8f1273093cfa6ceb0f",
+      "palette": [
+        {
+          "hex": "#003893",
+          "area_share": 0.74156
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.16581
+        },
+        {
+          "hex": "#cf2027",
+          "area_share": 0.07979
+        },
+        {
+          "hex": "#f7d116",
+          "area_share": 0.01285
+        }
+      ]
+    },
+    {
+      "iso3": "DJI",
+      "iso2": "DJ",
+      "source_url": "https://flagcdn.com/dj.svg",
+      "svg_sha256": "072cd869e9430e51fe7d48b0bd33c882b6365386c9987c03cb76f802597af936",
+      "palette": [
+        {
+          "hex": "#6ab2e7",
+          "area_share": 0.35672
+        },
+        {
+          "hex": "#12ad2b",
+          "area_share": 0.35386
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.27496
+        },
+        {
+          "hex": "#d7141a",
+          "area_share": 0.01447
+        }
+      ]
+    },
+    {
+      "iso3": "DZA",
+      "iso2": "DZ",
+      "source_url": "https://flagcdn.com/dz.svg",
+      "svg_sha256": "51bda9bdc313fa5418550d94d46f31e0c396f4e70c810b629fac0430f4b7e638",
+      "palette": [
+        {
+          "hex": "#ffffff",
+          "area_share": 0.4792
+        },
+        {
+          "hex": "#006633",
+          "area_share": 0.46053
+        },
+        {
+          "hex": "#d21034",
+          "area_share": 0.06027
+        }
+      ]
+    },
+    {
+      "iso3": "EGY",
+      "iso2": "EG",
+      "source_url": "https://flagcdn.com/eg.svg",
+      "svg_sha256": "07129395f46d9e71844fe9b485e05bf49741bc72a480b567297d6d865f3d8150",
+      "palette": [
+        {
+          "hex": "#000000",
+          "area_share": 0.33333
+        },
+        {
+          "hex": "#ce1126",
+          "area_share": 0.33333
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.31313
+        },
+        {
+          "hex": "#c09300",
+          "area_share": 0.0202
+        }
+      ]
+    },
+    {
+      "iso3": "ERI",
+      "iso2": "ER",
+      "source_url": "https://flagcdn.com/er.svg",
+      "svg_sha256": "69f92c176c843d7c899eaa7beaa1f75a0499d49fbb24e2053ed98be77e176498",
+      "palette": [
+        {
+          "hex": "#e4002b",
+          "area_share": 0.44449
+        },
+        {
+          "hex": "#418fde",
+          "area_share": 0.25
+        },
+        {
+          "hex": "#43b02a",
+          "area_share": 0.25
+        },
+        {
+          "hex": "#ffc72c",
+          "area_share": 0.05551
+        }
+      ]
+    },
+    {
+      "iso3": "ETH",
+      "iso2": "ET",
+      "source_url": "https://flagcdn.com/et.svg",
+      "svg_sha256": "980ec719a0be7227e6769b9bf9198b182b743b9544326f4ef2566ecd3ebfeb94",
+      "palette": [
+        {
+          "hex": "#078930",
+          "area_share": 0.29785
+        },
+        {
+          "hex": "#da121a",
+          "area_share": 0.29781
+        },
+        {
+          "hex": "#fcdd09",
+          "area_share": 0.2552
+        },
+        {
+          "hex": "#0f47af",
+          "area_share": 0.14914
+        }
+      ]
+    },
+    {
+      "iso3": "GAB",
+      "iso2": "GA",
+      "source_url": "https://flagcdn.com/ga.svg",
+      "svg_sha256": "43e2be0bceff86a5e9611d197478256416e2ed1b106b9df24651d553bc87b41f",
+      "palette": [
+        {
+          "hex": "#009e60",
+          "area_share": 0.33333
+        },
+        {
+          "hex": "#3a75c4",
+          "area_share": 0.33333
+        },
+        {
+          "hex": "#fcd116",
+          "area_share": 0.33333
+        }
+      ]
+    },
+    {
+      "iso3": "GHA",
+      "iso2": "GH",
+      "source_url": "https://flagcdn.com/gh.svg",
+      "svg_sha256": "a8c4320f89adc39f1c43f0100031e6acfce9299aed5bf035732d00d34d44ee88",
+      "palette": [
+        {
+          "hex": "#006b3f",
+          "area_share": 0.33404
+        },
+        {
+          "hex": "#ce1126",
+          "area_share": 0.33333
+        },
+        {
+          "hex": "#fcd116",
+          "area_share": 0.3076
+        },
+        {
+          "hex": "#000000",
+          "area_share": 0.02503
+        }
+      ]
+    },
+    {
+      "iso3": "GIN",
+      "iso2": "GN",
+      "source_url": "https://flagcdn.com/gn.svg",
+      "svg_sha256": "4932e18d832d6a781bc00400b69136cc9406234d3800e1e66ea809550a84b423",
+      "palette": [
+        {
+          "hex": "#009460",
+          "area_share": 0.33437
+        },
+        {
+          "hex": "#ce1126",
+          "area_share": 0.33437
+        },
+        {
+          "hex": "#fcd116",
+          "area_share": 0.33125
+        }
+      ]
+    },
+    {
+      "iso3": "GMB",
+      "iso2": "GM",
+      "source_url": "https://flagcdn.com/gm.svg",
+      "svg_sha256": "d4418b31447cb5b7ddfcc3b47f3075795700363cc97132d9ab8b2de417027b98",
+      "palette": [
+        {
+          "hex": "#3a7728",
+          "area_share": 0.33333
+        },
+        {
+          "hex": "#ce1126",
+          "area_share": 0.33333
+        },
+        {
+          "hex": "#0c1c8c",
+          "area_share": 0.22066
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.11268
+        }
+      ]
+    },
+    {
+      "iso3": "GNB",
+      "iso2": "GW",
+      "source_url": "https://flagcdn.com/gw.svg",
+      "svg_sha256": "00dd3c3891158fcb6de6afc3f93b8b4afc20f6aea7c344f097350fc8c9c0ffbc",
+      "palette": [
+        {
+          "hex": "#009e49",
+          "area_share": 0.33281
+        },
+        {
+          "hex": "#fcd116",
+          "area_share": 0.33281
+        },
+        {
+          "hex": "#ce1126",
+          "area_share": 0.319
+        },
+        {
+          "hex": "#000000",
+          "area_share": 0.01537
+        }
+      ]
+    },
+    {
+      "iso3": "GNQ",
+      "iso2": "GQ",
+      "source_url": "https://flagcdn.com/gq.svg",
+      "svg_sha256": "c9127828406765ae4faf593ac240d82be9913bde2664ed462fc31dcae68eef52",
+      "palette": [
+        {
+          "hex": "#3e9a00",
+          "area_share": 0.3109
+        },
+        {
+          "hex": "#e32118",
+          "area_share": 0.3056
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.23316
+        },
+        {
+          "hex": "#0073ce",
+          "area_share": 0.12522
+        },
+        {
+          "hex": "#dddddd",
+          "area_share": 0.02512
+        }
+      ]
+    },
+    {
+      "iso3": "KEN",
+      "iso2": "KE",
+      "source_url": "https://flagcdn.com/ke.svg",
+      "svg_sha256": "0c65788e07b97827d85662c06cd74e83ab6027c8915579821df896446b26d4d5",
+      "palette": [
+        {
+          "hex": "#000000",
+          "area_share": 0.30402
+        },
+        {
+          "hex": "#bb0000",
+          "area_share": 0.29937
+        },
+        {
+          "hex": "#006600",
+          "area_share": 0.28945
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.10716
+        }
+      ]
+    },
+    {
+      "iso3": "LBR",
+      "iso2": "LR",
+      "source_url": "https://flagcdn.com/lr.svg",
+      "svg_sha256": "b722560baa4a55e843b78f3a3485ff4ad31e5acd659142add4ba3990be2578cb",
+      "palette": [
+        {
+          "hex": "#bf0a30",
+          "area_share": 0.48173
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.41912
+        },
+        {
+          "hex": "#002868",
+          "area_share": 0.09914
+        }
+      ]
+    },
+    {
+      "iso3": "LBY",
+      "iso2": "LY",
+      "source_url": "https://flagcdn.com/ly.svg",
+      "svg_sha256": "e2b019746d67350a9dcfc595616d0b73b868c8f3757f9516665e9141d8f0c117",
+      "palette": [
+        {
+          "hex": "#000000",
+          "area_share": 0.48812
+        },
+        {
+          "hex": "#239e46",
+          "area_share": 0.25
+        },
+        {
+          "hex": "#e70013",
+          "area_share": 0.25
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.01188
+        }
+      ]
+    },
+    {
+      "iso3": "LSO",
+      "iso2": "LS",
+      "source_url": "https://flagcdn.com/ls.svg",
+      "svg_sha256": "66002ab481b35579ef88633fea8114d698990afdaf94b0173e9c9d614d126b49",
+      "palette": [
+        {
+          "hex": "#ffffff",
+          "area_share": 0.36567
+        },
+        {
+          "hex": "#001489",
+          "area_share": 0.30047
+        },
+        {
+          "hex": "#009a44",
+          "area_share": 0.30047
+        },
+        {
+          "hex": "#000000",
+          "area_share": 0.03339
+        }
+      ]
+    },
+    {
+      "iso3": "MAR",
+      "iso2": "MA",
+      "source_url": "https://flagcdn.com/ma.svg",
+      "svg_sha256": "1f6f0d1bf2e6d69fc943eb0eb3a96a4e5f8473bfdd1bd6b5a4c903c6c7ee2fe2",
+      "palette": [
+        {
+          "hex": "#c1272d",
+          "area_share": 0.96969
+        },
+        {
+          "hex": "#006233",
+          "area_share": 0.03031
+        }
+      ]
+    },
+    {
+      "iso3": "MDG",
+      "iso2": "MG",
+      "source_url": "https://flagcdn.com/mg.svg",
+      "svg_sha256": "00a570504860576bcb032613cb185013ce9400e05fd9c1fdc274f9664d27f9d6",
+      "palette": [
+        {
+          "hex": "#fc3d32",
+          "area_share": 0.33437
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.33437
+        },
+        {
+          "hex": "#007e3a",
+          "area_share": 0.33125
+        }
+      ]
+    },
+    {
+      "iso3": "MLI",
+      "iso2": "ML",
+      "source_url": "https://flagcdn.com/ml.svg",
+      "svg_sha256": "ae9516c41b4bb5385e047fc66da8e0e3e3b9360a5850c36d4b5c21950be3853c",
+      "palette": [
+        {
+          "hex": "#14b53a",
+          "area_share": 0.33437
+        },
+        {
+          "hex": "#ce1126",
+          "area_share": 0.33437
+        },
+        {
+          "hex": "#fcd116",
+          "area_share": 0.33125
+        }
+      ]
+    },
+    {
+      "iso3": "MOZ",
+      "iso2": "MZ",
+      "source_url": "https://flagcdn.com/mz.svg",
+      "svg_sha256": "649e978eea07a70c6e7303a5291476b3f224063070abf4f6a5f4ddcbba7c1cf6",
+      "palette": [
+        {
+          "hex": "#fce100",
+          "area_share": 0.28389
+        },
+        {
+          "hex": "#007168",
+          "area_share": 0.27202
+        },
+        {
+          "hex": "#000000",
+          "area_share": 0.21458
+        },
+        {
+          "hex": "#d21034",
+          "area_share": 0.1788
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.0507
+        }
+      ]
+    },
+    {
+      "iso3": "MRT",
+      "iso2": "MR",
+      "source_url": "https://flagcdn.com/mr.svg",
+      "svg_sha256": "1655e7ed2d848678e50138df15f3db7b37ed7a9c4f61cdf7e26cfec12d0e7057",
+      "palette": [
+        {
+          "hex": "#00a95c",
+          "area_share": 0.54814
+        },
+        {
+          "hex": "#d01c1f",
+          "area_share": 0.39906
+        },
+        {
+          "hex": "#ffd700",
+          "area_share": 0.0528
+        }
+      ]
+    },
+    {
+      "iso3": "MUS",
+      "iso2": "MU",
+      "source_url": "https://flagcdn.com/mu.svg",
+      "svg_sha256": "c35ef8388abd492cb6ddbb0b46e3be87244ec1088682de208a745c93c4852a80",
+      "palette": [
+        {
+          "hex": "#1a206d",
+          "area_share": 0.25352
+        },
+        {
+          "hex": "#00a551",
+          "area_share": 0.24883
+        },
+        {
+          "hex": "#ea2839",
+          "area_share": 0.24883
+        },
+        {
+          "hex": "#ffd500",
+          "area_share": 0.24883
+        }
+      ]
+    },
+    {
+      "iso3": "MWI",
+      "iso2": "MW",
+      "source_url": "https://flagcdn.com/mw.svg",
+      "svg_sha256": "81a7dc8d3f32fcdc7cd98408f9602f53176a7ea3645770e4d852fc3646a2e576",
+      "palette": [
+        {
+          "hex": "#ce1126",
+          "area_share": 0.38822
+        },
+        {
+          "hex": "#339e35",
+          "area_share": 0.33333
+        },
+        {
+          "hex": "#000000",
+          "area_share": 0.27845
+        }
+      ]
+    },
+    {
+      "iso3": "NAM",
+      "iso2": "NA",
+      "source_url": "https://flagcdn.com/na.svg",
+      "svg_sha256": "ddc9fc887177f92e80fed16082c988924fbd19773ea33729fa3f2a1896d13814",
+      "palette": [
+        {
+          "hex": "#009543",
+          "area_share": 0.32205
+        },
+        {
+          "hex": "#003580",
+          "area_share": 0.29033
+        },
+        {
+          "hex": "#d21034",
+          "area_share": 0.2777
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.08256
+        },
+        {
+          "hex": "#ffce00",
+          "area_share": 0.02736
+        }
+      ]
+    },
+    {
+      "iso3": "NER",
+      "iso2": "NE",
+      "source_url": "https://flagcdn.com/ne.svg",
+      "svg_sha256": "286098862efda02108b4a8fe0c7f75b1275685be841c62a283d55412155781d9",
+      "palette": [
+        {
+          "hex": "#e05206",
+          "area_share": 0.38618
+        },
+        {
+          "hex": "#0db02b",
+          "area_share": 0.33212
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.28171
+        }
+      ]
+    },
+    {
+      "iso3": "NGA",
+      "iso2": "NG",
+      "source_url": "https://flagcdn.com/ng.svg",
+      "svg_sha256": "3dbebd9f8e31821d5fa22f976cfe9a338788fda81308f0d573e69fd9dfcce24e",
+      "palette": [
+        {
+          "hex": "#008751",
+          "area_share": 0.66875
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.33125
+        }
+      ]
+    },
+    {
+      "iso3": "RWA",
+      "iso2": "RW",
+      "source_url": "https://flagcdn.com/rw.svg",
+      "svg_sha256": "21b67e23f19a1bca9b4ad87ff788b4992cebc00a6deeca1eb9c56c16b63c0de8",
+      "palette": [
+        {
+          "hex": "#00a3e0",
+          "area_share": 0.48716
+        },
+        {
+          "hex": "#fad201",
+          "area_share": 0.26219
+        },
+        {
+          "hex": "#20603d",
+          "area_share": 0.25065
+        }
+      ]
+    },
+    {
+      "iso3": "SDN",
+      "iso2": "SD",
+      "source_url": "https://flagcdn.com/sd.svg",
+      "svg_sha256": "305064d3c23eac774752898e1b3e9ff8ab7ecdfa45495be446dc520de8415727",
+      "palette": [
+        {
+          "hex": "#000000",
+          "area_share": 0.29467
+        },
+        {
+          "hex": "#d21034",
+          "area_share": 0.29467
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.24396
+        },
+        {
+          "hex": "#007229",
+          "area_share": 0.1667
+        }
+      ]
+    },
+    {
+      "iso3": "SEN",
+      "iso2": "SN",
+      "source_url": "https://flagcdn.com/sn.svg",
+      "svg_sha256": "c0593c9c104142eadae2d76bd739b28a37d2218bf1ef4b37bf8fa9655bfab087",
+      "palette": [
+        {
+          "hex": "#00853f",
+          "area_share": 0.35533
+        },
+        {
+          "hex": "#e31b23",
+          "area_share": 0.33437
+        },
+        {
+          "hex": "#fdef42",
+          "area_share": 0.3103
+        }
+      ]
+    },
+    {
+      "iso3": "SLE",
+      "iso2": "SL",
+      "source_url": "https://flagcdn.com/sl.svg",
+      "svg_sha256": "21d7e0663d2b8e1d455a0e1456c63dfbb273becdacbf7c1fa0e22d915f136cf4",
+      "palette": [
+        {
+          "hex": "#0072c6",
+          "area_share": 0.33333
+        },
+        {
+          "hex": "#1eb53a",
+          "area_share": 0.33333
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.33333
+        }
+      ]
+    },
+    {
+      "iso3": "SOM",
+      "iso2": "SO",
+      "source_url": "https://flagcdn.com/so.svg",
+      "svg_sha256": "3a342342f94f00a74984e10743f4589e7856076df6686f05e3192cd0ee0300e1",
+      "palette": [
+        {
+          "hex": "#418fde",
+          "area_share": 0.9567
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.0433
+        }
+      ]
+    },
+    {
+      "iso3": "SSD",
+      "iso2": "SS",
+      "source_url": "https://flagcdn.com/ss.svg",
+      "svg_sha256": "0f2a925c6daf8945ff257938e04b0609441f698010d80c9717904c71a54a235e",
+      "palette": [
+        {
+          "hex": "#00914c",
+          "area_share": 0.26273
+        },
+        {
+          "hex": "#000000",
+          "area_share": 0.26092
+        },
+        {
+          "hex": "#00b6f2",
+          "area_share": 0.20004
+        },
+        {
+          "hex": "#e22028",
+          "area_share": 0.18953
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.07184
+        },
+        {
+          "hex": "#ffe51a",
+          "area_share": 0.01494
+        }
+      ]
+    },
+    {
+      "iso3": "STP",
+      "iso2": "ST",
+      "source_url": "https://flagcdn.com/st.svg",
+      "svg_sha256": "a95075950bff55641b4274439a909c6bda8005b22c397ef6315839ce9d0dec55",
+      "palette": [
+        {
+          "hex": "#009739",
+          "area_share": 0.53383
+        },
+        {
+          "hex": "#ffd100",
+          "area_share": 0.30852
+        },
+        {
+          "hex": "#ef3340",
+          "area_share": 0.12504
+        },
+        {
+          "hex": "#000000",
+          "area_share": 0.03262
+        }
+      ]
+    },
+    {
+      "iso3": "SWZ",
+      "iso2": "SZ",
+      "source_url": "https://flagcdn.com/sz.svg",
+      "svg_sha256": "3d48fcbb07942d6d590bceb07f8462db36130a625022f12710e53c6cfdc51f77",
+      "palette": [
+        {
+          "hex": "#3e5eb9",
+          "area_share": 0.39376
+        },
+        {
+          "hex": "#b10c0c",
+          "area_share": 0.33671
+        },
+        {
+          "hex": "#ffd900",
+          "area_share": 0.13085
+        },
+        {
+          "hex": "#000000",
+          "area_share": 0.07325
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.06542
+        }
+      ]
+    },
+    {
+      "iso3": "SYC",
+      "iso2": "SC",
+      "source_url": "https://flagcdn.com/sc.svg",
+      "svg_sha256": "b7a1ccdf0b210a2273426eaf334679dba7d3f5a90dddd91882beffa891bf3035",
+      "palette": [
+        {
+          "hex": "#d22730",
+          "area_share": 0.33434
+        },
+        {
+          "hex": "#007a33",
+          "area_share": 0.16668
+        },
+        {
+          "hex": "#002f6c",
+          "area_share": 0.16666
+        },
+        {
+          "hex": "#fed141",
+          "area_share": 0.16666
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.16566
+        }
+      ]
+    },
+    {
+      "iso3": "TCD",
+      "iso2": "TD",
+      "source_url": "https://flagcdn.com/td.svg",
+      "svg_sha256": "46d9a786225c476c021be32564d43497ec48d654694379969ac86d4aec8cf8a0",
+      "palette": [
+        {
+          "hex": "#002664",
+          "area_share": 0.33437
+        },
+        {
+          "hex": "#c60c30",
+          "area_share": 0.33437
+        },
+        {
+          "hex": "#fecb00",
+          "area_share": 0.33125
+        }
+      ]
+    },
+    {
+      "iso3": "TGO",
+      "iso2": "TG",
+      "source_url": "https://flagcdn.com/tg.svg",
+      "svg_sha256": "8d50a4818de595d967b3cd0d6b0dc91ce0532b1679813af9eea27a560a7662c1",
+      "palette": [
+        {
+          "hex": "#006a4e",
+          "area_share": 0.45582
+        },
+        {
+          "hex": "#ffce00",
+          "area_share": 0.32069
+        },
+        {
+          "hex": "#d21034",
+          "area_share": 0.1989
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.02459
+        }
+      ]
+    },
+    {
+      "iso3": "TUN",
+      "iso2": "TN",
+      "source_url": "https://flagcdn.com/tn.svg",
+      "svg_sha256": "b0d8964ee6ff40309779e0a1ea2780926a85edf9f1715c22ecbd04e14a4be9b4",
+      "palette": [
+        {
+          "hex": "#e70013",
+          "area_share": 0.90665
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.09335
+        }
+      ]
+    },
+    {
+      "iso3": "TZA",
+      "iso2": "TZ",
+      "source_url": "https://flagcdn.com/tz.svg",
+      "svg_sha256": "0bdf0b45ec36def31a5ef9e162fe40bbca1d78a522bde23cb4f42d5929affdbc",
+      "palette": [
+        {
+          "hex": "#000000",
+          "area_share": 0.29881
+        },
+        {
+          "hex": "#1eb53a",
+          "area_share": 0.29115
+        },
+        {
+          "hex": "#00a3dd",
+          "area_share": 0.28996
+        },
+        {
+          "hex": "#fcd116",
+          "area_share": 0.12007
+        }
+      ]
+    },
+    {
+      "iso3": "UGA",
+      "iso2": "UG",
+      "source_url": "https://flagcdn.com/ug.svg",
+      "svg_sha256": "b0d36274f9eac739b04046783a38c18bebd42587a0b0b1cc3d31a32e1ec05374",
+      "palette": [
+        {
+          "hex": "#fcdc04",
+          "area_share": 0.33371
+        },
+        {
+          "hex": "#000000",
+          "area_share": 0.31561
+        },
+        {
+          "hex": "#d90000",
+          "area_share": 0.31006
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.04061
+        }
+      ]
+    },
+    {
+      "iso3": "ZAF",
+      "iso2": "ZA",
+      "source_url": "https://flagcdn.com/za.svg",
+      "svg_sha256": "6fbf0b68db7024ac996c92b1bbc62efe9a3bf12e469efaa29ae4fe0fa5c6da39",
+      "palette": [
+        {
+          "hex": "#007749",
+          "area_share": 0.31315
+        },
+        {
+          "hex": "#e03c31",
+          "area_share": 0.21119
+        },
+        {
+          "hex": "#001489",
+          "area_share": 0.21068
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.1206
+        },
+        {
+          "hex": "#000000",
+          "area_share": 0.09013
+        },
+        {
+          "hex": "#ffb81c",
+          "area_share": 0.05425
+        }
+      ]
+    },
+    {
+      "iso3": "ZMB",
+      "iso2": "ZM",
+      "source_url": "https://flagcdn.com/zm.svg",
+      "svg_sha256": "b64a4ec9612720033a3e8de806cfdd112a8ce48f35b2ec66e013d6c5e25e3445",
+      "palette": [
+        {
+          "hex": "#198a00",
+          "area_share": 0.74802
+        },
+        {
+          "hex": "#ef7d00",
+          "area_share": 0.09695
+        },
+        {
+          "hex": "#000000",
+          "area_share": 0.07823
+        },
+        {
+          "hex": "#de2010",
+          "area_share": 0.0768
+        }
+      ]
+    },
+    {
+      "iso3": "ZWE",
+      "iso2": "ZW",
+      "source_url": "https://flagcdn.com/zw.svg",
+      "svg_sha256": "f0b79e8841f06a4afed5a90142b1c202776dc1d1c82328f310458d7c0ee975d9",
+      "palette": [
+        {
+          "hex": "#006400",
+          "area_share": 0.26848
+        },
+        {
+          "hex": "#ffd200",
+          "area_share": 0.25309
+        },
+        {
+          "hex": "#d40000",
+          "area_share": 0.2284
+        },
+        {
+          "hex": "#ffffff",
+          "area_share": 0.1367
+        },
+        {
+          "hex": "#000000",
+          "area_share": 0.11334
+        }
+      ]
+    }
+  ],
+  "region_colors": {
+    "selected": "strict",
+    "approved": false,
+    "strict": {
+      "north": "#c1272d",
+      "west": "#009e49",
+      "central": "#fcd116",
+      "east": "#418fde",
+      "southern": "#001489"
+    },
+    "with_neutrals": {
+      "north": "#c1272d",
+      "west": "#009e49",
+      "central": "#fcd116",
+      "east": "#ffffff",
+      "southern": "#6da9d2"
+    }
+  }
+}

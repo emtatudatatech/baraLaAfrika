@@ -9,6 +9,11 @@ export default tseslint.config(
   {
     ignores: [
       '**/node_modules/**',
+      // Python virtualenv and tool caches (third-party packages ship their own JS).
+      '.venv/**',
+      '.mypy_cache/**',
+      '.pytest_cache/**',
+      '.ruff_cache/**',
       'apps/web/dist/**',
       '.netlify/**',
       'coverage/**',

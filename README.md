@@ -11,7 +11,7 @@
 
 History and Contemporary Africa appear in the navigation as "Coming soon".
 
-> **Status:** milestones 1–6 of 17 are complete: scaffold, data foundation, flags with approved region colours, the API (connected to Neon), the **interactive map** on the home page and the **countries table**. The data ribbon's live coverage is next (see [Roadmap](#roadmap)).
+> **Status:** milestones 1–7 of 17 are complete: scaffold, data foundation, flags with approved region colours, the API (connected to Neon), the **interactive map** on the home page, the **countries table** and the **data ribbon** with live coverage and the shared time range. Harim's mountain data is next (see [Roadmap](#roadmap)).
 
 ---
 
@@ -25,6 +25,7 @@ History and Contemporary Africa appear in the navigation as "Coming soon".
 - [API](#api)
 - [The map](#the-map)
 - [The countries table](#the-countries-table)
+- [The data ribbon and time range](#the-data-ribbon-and-time-range)
 - [Quality checks](#quality-checks)
 - [Environment variables](#environment-variables)
 - [Deployment (Netlify)](#deployment-netlify)
@@ -215,6 +216,26 @@ The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth**
 - **Desktop:** the column headers stay visible below the ribbon while scrolling. The table is laid out to fit from 720px up, so there is no horizontal scrolling and no sticky first column is needed.
 - Loading skeletons, an empty state with "Clear filters", and an error state with "Retry".
 
+## The data ribbon and time range
+
+The strip at the top of every page (`apps/web/src/features/coverage/`) shows the data behind the current view.
+
+- **Route config:** each route declares its datasets and whether its data is a time series in its `handle` (`ROUTE_DATA` in `app/router.tsx`). The ribbon fetches `/api/coverage` for exactly those datasets (one cached request, shared with the time range).
+- **Summary line:** the kind (reference data or time series), "as of" (the newest date among the datasets), each dataset's short label (with its covered range on time-series pages, e.g. `Gold price: Jan 1990–Sep 2026`) and "Refreshed 2 days ago" (the latest pipeline run). Datasets with no row yet show "(not loaded yet)". Phones show one line; the arrow opens the details.
+- **Details:** for each dataset its full name, "as of", covered range, update cadence, last refresh (date and how long ago), provider and licence.
+- **Dates** are calendar dates formatted in UTC (`14 Oct 2026`), so no time zone shifts them. Ranges use the dataset's granularity from its cadence: months (`Sep 2026`), quarters (`Q2 2026`) or years (`2024`).
+- **Date-range control:** read-only on reference pages ("Not time-dependent", with the explanation on hover, focus or in the details). On time-series pages (`/dhahabu`) it is a year picker with presets (last 5 years, last 10 years, since 2000, all years) and From/To lists. It is bounded by the data's coverage and never goes beyond it. With no data loaded it shows "No data yet" instead of inventing a range.
+- **URL:** the range lives in `?from=&to=` (years). The full coverage is the default and leaves no params; values outside the data are clamped and a reversed range is put in order, so shared links always resolve to a valid range. Reference pages ignore the params.
+
+**For views (Dhahabu from milestone 15, and later modules):**
+
+```ts
+const { interactive, bounds, range, referenceYear, setRange } = useTimeRange();
+// range: { start, end } years for charts; referenceYear (= range.end) for tables, maps and cards.
+```
+
+To add a dataset, add its key to `DATASET_KEYS` (`packages/shared/src/datasets.ts`), give it a short label in `strings.datasets`, and list it in the route's `handle`. Its coverage then appears in the ribbon and, for series, extends the range's bounds.
+
 ## Quality checks
 
 | Command | What it runs |
@@ -297,6 +318,8 @@ Decisions taken where the specification left room, or where the current ecosyste
 - **Wheel zoom needs Ctrl/⌘** so the full-width map never traps page scrolling; buttons and pinch always zoom.
 - **Countries search is client-side:** the table filters the cached list of 54 instead of calling `/api/countries?q=` on each keystroke. It is instant, and it also searches the visible columns (meanings, symbols, animals).
 - **"Needs verification" is shown in the drawer only:** every country currently has `needs_review` set (most cite low-reliability sources), so a marker on every row would carry no information. The drawer shows the marker and the reasons.
+- **"As of" in the ribbon is the newest date among a view's datasets** (as in the specification's example). Each dataset's own date is in the details, so older sources (e.g. Natural Earth 2018) are never hidden.
+- **Year granularity for the shared range:** the specification asks for a year-range control on `/dhahabu`, so `?from=&to=` are years. Monthly series can still be drawn month by month inside the chosen years.
 - **Dev-tool advisories:** `npm audit` reports advisories in dev-only tooling (`netlify-cli`'s local server dependencies and Stylelint's glob dependencies). None of it ships to the browser or the deployed functions.
 
 ## Roadmap
@@ -309,7 +332,7 @@ v1 milestones (stop points for review are marked ⏸):
 4. ✅ API (Neon connected)
 5. ✅ Map
 6. ✅ Countries table
-7. Ribbon and coverage
+7. ✅ Ribbon and coverage
 8. Harim data ⏸
 9. Harim API and table
 10. Harim statistics band ⏸

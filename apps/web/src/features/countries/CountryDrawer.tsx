@@ -1,4 +1,5 @@
 import type { CountrySummary } from '@bla/shared';
+import { Link } from 'react-router';
 
 import { AnimalStatusBadge } from '../../components/AnimalStatusBadge/AnimalStatusBadge';
 import {
@@ -12,9 +13,11 @@ import {
 } from '../../components/Drawer/Drawer';
 import { drawerStyles } from '../../components/Drawer/drawerStyles';
 import { FlagImage } from '../../components/FlagImage/FlagImage';
+import { Icon } from '../../components/Icon/Icon';
 import { RegionChip } from '../../components/RegionChip/RegionChip';
 import { api } from '../../lib/api';
 import { strings } from '../../lib/strings';
+import { formatElevation, useUnits } from '../../lib/units';
 import { useResource } from '../../lib/useResource';
 import { territoryNote } from '../map/territoryNotes';
 import styles from './CountryDrawer.module.css';
@@ -31,6 +34,12 @@ export function CountryDrawer({ country, onClose }: CountryDrawerProps) {
   const full = detail.status === 'success' ? detail.data.country : undefined;
   const note = territoryNote(country.iso3);
   const loading = detail.status === 'loading';
+  // Cross-link to Harim: the same summary the mountains page uses (one cached request).
+  const mountains = useResource('mountains:summary', () => api.mountainSummary());
+  const highest = mountains.data?.countries.find(
+    (row) => row.country.iso3 === country.iso3,
+  )?.highestPeak;
+  const [unit] = useUnits();
 
   return (
     <Drawer
@@ -54,6 +63,21 @@ export function CountryDrawer({ country, onClose }: CountryDrawerProps) {
       onClose={onClose}
     >
       {note !== undefined && <p className={styles.territory}>{note}</p>}
+
+      {highest && (
+        <p className={styles.peakLink} data-testid="drawer-highest-peak">
+          <Icon name="landscape" size={20} />
+          <span>
+            {strings.drawer.highestPeak}:{' '}
+            <Link to={`/harim?country=${country.iso3}`}>
+              {strings.drawer.highestPeakLink(
+                highest.name,
+                formatElevation(highest.elevationM, unit),
+              )}
+            </Link>
+          </span>
+        </p>
+      )}
 
       {country.needsReview && <DrawerReview notes={full?.reviewNotes ?? null} />}
 

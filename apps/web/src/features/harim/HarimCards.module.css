@@ -141,3 +141,17 @@
   width: 40%;
   height: 1rem;
 }
+
+.selectedItem {
+  margin-inline: calc(-1 * var(--space-2));
+  padding-inline: var(--space-2);
+  border-radius: var(--radius-sm);
+  background: color-mix(in oklch, var(--color-focus) 14%, transparent);
+}
+
+.headEnd {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-block: calc(-1 * var(--space-2));
+}

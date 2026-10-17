@@ -11,7 +11,7 @@
 
 History and Contemporary Africa appear in the navigation as "Coming soon".
 
-> **Status:** milestones 1–10 of 17 are complete: scaffold, data foundation, flags with approved region colours, the API (connected to Neon), the **interactive map**, the **countries table**, the **data ribbon**, the **Harim mountain data**, the **Harim API and tables** and the **Harim statistics band** (awaiting review). Next: the Harim map and chart (milestone 11). See [Roadmap](#roadmap).
+> **Status:** milestones 1–11 of 17 are complete: scaffold, data foundation, flags with approved region colours, the API (connected to Neon), the **interactive map**, the **countries table**, the **data ribbon**, the **Harim mountain data**, the **Harim API and tables**, the **Harim statistics band** and the **Harim map and chart**. Next: Harim ranges, peak pages and export (milestone 12). See [Roadmap](#roadmap).
 
 ---
 
@@ -233,6 +233,7 @@ The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth**
   - Zoom with the + / − / reset buttons, pinch, or Ctrl/⌘ + scroll; drag to pan. One-finger swipes still scroll the page on phones.
 - **Keyboard:** one Tab stop into the map, arrow keys move between countries (alphabetical), Home/End jump, Enter opens. The countries table is the accessible equivalent and is linked under the map.
 - Countries fade in by region (instant with reduced motion).
+- **Shared base:** `features/map/MapBase.tsx` holds what every map has: the fitted Equal Earth projection, context land, graticule, borders and coastlines, d3-zoom with the + / − / reset buttons, and a controller for camera moves (fit a box, centre a point, animated unless the viewer prefers reduced motion). The home map and the Harim map add their own layers on top.
 
 ## The countries table
 
@@ -267,6 +268,17 @@ The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth**
   - **Layout:** from 1280px the four hero cards, then the five compact cards in one row; 720–1279px three columns; phones a scroll-snap carousel (hero cards first) with dots, scrolling inside itself so the page never scrolls sideways.
   - **Most prominent peak** is not shown: the card needs prominence for at least 80% of the mountains of 3,000 m or more, and the catalogue has it for about a third (Wikidata's coverage). It appears automatically if that changes.
   - **Colours:** height-band and volcanic-status tokens (`--band-*`, `--volcanic-*` in `tokens.css`), tuned for each theme and shared with the map; text always gives the same numbers.
+- **Map** (`features/harim/map/`): the shared Africa map with countries in a muted tint of their region colour, and the mountains on top.
+  - **Glyphs:** a triangle per mountain, its size on a square-root scale of height, coloured by height band (above 5,000 m, 4,000–5,000, 3,000–4,000, 3,000 m or lower). Shared border peaks get a dotted ring; territory peaks are grey. A legend gives each band's count.
+  - **Decluttering:** at first the map shows every national high point and the 25 tallest other peaks; more appear as you zoom, and all from 4×. Peaks close enough for their glyphs to touch are drawn as one (the tallest, with a count bubble), named by their range when they share one ("Virunga ×3"); a group opens a list of its peaks. Smaller maps (phones) get smaller glyphs and fewer peaks.
+  - **Labels:** a greedy placer, tallest first, tries four spots around each glyph and keeps the first that overlaps no other label, glyph or map control; the rest stay unlabelled, so more names appear as you zoom.
+  - **Interaction:** hover or keyboard focus shows a tooltip (name, height in both units, flags); a click or Enter opens a card with "Full details" (the drawer) and "Show in the table". The peaks are one tab stop: arrow keys move between them, tallest first, and each is named for screen readers ("Mount Kenya, 5,199 metres, Kenya").
+  - **Linked with the table:** hovering a row highlights its peak on the map; "Show on the map" (a pin button on every row, and "Show on the map" for an expanded country) centres the map on the peak or country and opens the card; "Show in the table" opens the country's row (or finds the row in All peaks), highlights it and moves focus to it. Expanding a country, choosing a country or region, or opening a peak's drawer also moves the map there. "Fit the map to …" appears when a country is chosen.
+  - **"Area of influence"** (off by default): golden dashed circles that grow with height, captioned as illustrative only, not a geological or administrative boundary.
+  - The map follows the same filters as the table; peaks under the zoom buttons are left out so no tap target hides beneath them.
+- **Chart: "Highest peak by country"** (`features/harim/chart/`): a horizontal bar per country in its region colour, highest first or A to Z, following the region filter, with a dashed line at Kilimanjaro. Hover or tap a bar for its peak and height; "Show the data as a table" is the accessible equivalent.
+- **Geology card:** "Why are Africa's highest mountains where they are?", adapted from the prototype's notes and checked against eight Wikipedia articles (linked). The prototype called the High Atlas a remnant of ancient events; it rose mainly in the last 66 million years, so the card says so. Open on larger screens, collapsed on phones.
+- **Cross-links:** the Countries drawer shows "Highest peak: …", linking to `/harim?country=<ISO3>` (that country's row, expanded, and the map fitted to it); each Harim row links back to the country's profile.
 - **Peak drawer:** a click on any mountain or summit opens it: height in both units with its confidence, the source of the height and every other sourced height, prominence, isolation, coordinates, range, type, massif and summits (each opens in the same drawer), local names and name origin with their sources ("Unsourced" otherwise), notes, the "Needs verification" reasons and all sources by field.
 - **URL state:** `?view=country|peaks`, `region`, `q`, `sort`, `country`, `minHeight`, `volcanic`, `range` and `peak` (the open drawer). Invalid values are ignored; `view=ranges` shows the by-country view with a note until the ranges view arrives (milestone 12). Switching to By country drops the peak-only filters. A `country` in the URL filters to that country and opens its row (the link from other pages).
 - **Units:** a metres/feet toggle, remembered in this browser (`bla-units`) and applied everywhere on the page. Below sea level uses a true minus sign (`−155 m`).
@@ -351,6 +363,7 @@ Full deployment steps (Neon setup, Netlify site creation, env vars, preview bran
 - **Icons:** Google Material Symbols (Outlined) via `<Icon name="…" />`, which is `aria-hidden` by default. Icon-only buttons use `<IconButton label="…" />`. The font is **subset to the icons in `components/Icon/iconNames.ts`** (≈20 KiB instead of 4 MB) by `uv run python -m scripts.build_icon_font`. The script fails if a name is not in the current canonical Material Symbols set. Re-run it after editing the list; a test fails if the subset is stale.
 - **Theme:** follows `prefers-color-scheme` until the user toggles it. The choice persists in `localStorage` (failures are tolerated) and is applied before first paint by the inline script in `index.html`, so there is no flash.
 - **Strings:** all UI copy lives in `src/lib/strings.ts`, ready for translation.
+- **Signature:** every page ends with "© {year} Michael Maina Mwangi. All rights reserved." and "Proudly built in Kenya." with the self-hosted Kenyan flag (`SiteFooter.tsx`). The year comes from the visitor's clock, so it never goes stale.
 - **Favicon:** a dark-filled silhouette of Africa (mainland and Madagascar), built from the site's own Natural Earth boundaries (public domain) by `node scripts/build-favicon.mjs`. The SVG switches to a light fill when the browser uses a dark colour scheme, so it stays visible on dark tab strips; `favicon.ico` (16/32/48 px) is the fallback. The script also stamps the icon links in `index.html` with `?v=<hash of both files>`, so browsers that cached an older icon for the same address (another project on `localhost`, or a previous deploy) fetch the new one; a test checks the stamp is current. Material Symbols has no Africa icon. The home page's tab reads just "Bara La Afrika".
 
 ## Decisions and deviations
@@ -383,6 +396,10 @@ Decisions taken where the specification left room, or where the current ecosyste
 - **Unsourced massif summits are not invented:** Mount Emin, Mount Gessi and Mount Luigi di Savoia are modelled as single mountains because no consulted source names their summits.
 - **Volcanoes from the Global Volcanism Program:** Wikidata's "instance of" misses many volcanoes (Mount Meru and Ol Doinyo Lengai are typed only as "mountain"), so a Global Volcanism Program ID (P1886) also makes a mountain a volcano. This was found while building the tables in milestone 9 and changed 34 peaks' type from "peak" to "volcano" (nothing else in the catalogue changed). Volcanoes neither identifies are curated with a quoted source (Mount Kenya so far). Volcanic status is taken only from what a source states, so it is unknown for most volcanoes.
 - **Statistics band:** "Most prominent peak" is hidden because prominence is known for only about a third of the mountains of 3,000 m or more (the specification's 80% rule). "Busiest range" filters All peaks to the range until the range pages exist (milestone 12). "Peaks above 4,000 m" filters from 4,001 m because the bands are strict (Abuye Meda, exactly 4,000 m, is in the 3,000–4,000 m band).
+- **Height-band colours:** the prototype's red, orange, yellow and green are kept, but their lightness now steps in order (so the order also reads without colour) and adjacent bands were checked for normal and colour-blind vision with a palette validator, in both themes. Pale bands get a dark outline on the light map; the legend always gives the counts in text.
+- **Map selection opens a card first:** a click on a peak opens a small card ("Full details", "Show in the table") rather than scrolling the page away from the map; "Show in the table" then highlights the row and moves focus to it.
+- **Close groups stay grouped:** peaks a few kilometres apart (the Rwenzori summits, parts of the Virunga) can still touch at the closest zoom, so they remain a group whose list opens on click.
+- **Map before chart, below the table:** the page keeps the specification's order (statistics, table, map, chart). The table is too wide to sit beside the map without clipping, so the two are linked by the actions above instead.
 - **Heights never wrap from their unit:** heights use a no-break space (`5,895 m`).
 - **Harim tables:** the region chip sits under the country name (one column fewer), so the By country table fits from 720px. All peaks uses the compact list below 1024px, because its six columns cannot fit a narrower panel without clipping.
 - **Low-point types** add `river` and `salt_flat` to the specification's examples (many landlocked countries' lowest points are rivers; several North African ones are salt flats).
@@ -401,8 +418,8 @@ v1 milestones (stop points for review are marked ⏸):
 7. ✅ Ribbon and coverage
 8. ✅ Harim data ⏸
 9. ✅ Harim API and table
-10. ✅ Harim statistics band ⏸ (awaiting review)
-11. Harim map and chart
+10. ✅ Harim statistics band ⏸
+11. ✅ Harim map and chart
 12. Harim ranges, peak pages and export
 13. Dhahabu source and licence check ⏸
 14. Dhahabu data ⏸

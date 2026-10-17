@@ -130,13 +130,15 @@
   --map-dimmed-opacity: 0.22;
 
   /*
-   * Height bands (the Harim prototype's scale, re-tuned for each theme) and volcanic status.
-   * Shared by the statistics band, the map and the legend; text always accompanies them.
+   * Height bands: the Harim prototype's hues (red > 5,000 m, orange, yellow, green ≤ 3,000 m),
+   * re-tuned per theme so lightness also steps in order and adjacent bands stay distinct for
+   * normal and colour-blind vision (checked with the dataviz palette validator). Pale bands get
+   * an outline on the map, and a text legend always accompanies them. Volcanic status likewise.
    */
-  --band-above-5000: oklch(52% 0.19 28deg);
-  --band-4000-5000: oklch(64% 0.17 52deg);
-  --band-3000-4000: oklch(76% 0.15 88deg);
-  --band-up-to-3000: oklch(52% 0.13 138deg);
+  --band-above-5000: oklch(46% 0.18 25deg);
+  --band-4000-5000: oklch(60% 0.17 50deg);
+  --band-3000-4000: oklch(73% 0.15 88deg);
+  --band-up-to-3000: oklch(84% 0.13 135deg);
   --volcanic-active: oklch(55% 0.2 30deg);
   --volcanic-dormant: oklch(68% 0.15 65deg);
   --volcanic-extinct: oklch(50% 0.04 60deg);
@@ -191,10 +193,10 @@
   --map-disputed-hatch: oklch(75% 0.01 262deg / 55%);
   --map-highlight: oklch(97% 0.01 80deg);
   --map-marker-ring: oklch(14% 0.02 262deg);
-  --band-above-5000: oklch(68% 0.19 28deg);
-  --band-4000-5000: oklch(78% 0.15 60deg);
-  --band-3000-4000: oklch(88% 0.13 95deg);
-  --band-up-to-3000: oklch(74% 0.15 138deg);
+  --band-above-5000: oklch(58% 0.2 24deg);
+  --band-4000-5000: oklch(71% 0.17 50deg);
+  --band-3000-4000: oklch(83% 0.16 90deg);
+  --band-up-to-3000: oklch(92% 0.12 138deg);
   --volcanic-active: oklch(70% 0.19 30deg);
   --volcanic-dormant: oklch(80% 0.13 70deg);
   --volcanic-extinct: oklch(66% 0.04 60deg);

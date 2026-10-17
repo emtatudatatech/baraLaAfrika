@@ -64,6 +64,7 @@ export async function waitForContent(page: Page, path: string): Promise<void> {
     // One expandable row (or card) per country, and the statistics band's final figures.
     await expect(page.getByTestId('harim-country-toggle')).toHaveCount(54);
     await waitForStats(page);
+    await waitForMap(page);
   }
 }
 
@@ -71,4 +72,22 @@ export async function waitForContent(page: Page, path: string): Promise<void> {
 export async function waitForStats(page: Page): Promise<void> {
   await expect(page.getByTestId('stat-card').first()).toBeVisible();
   await expect(page.locator('[data-counting]')).toHaveCount(0);
+}
+
+/** Waits until the Harim map shows its peaks and any camera move has finished. */
+export async function waitForMap(page: Page): Promise<void> {
+  await expect(page.getByTestId('harim-map-peak').first()).toBeAttached();
+  let last = '';
+  await expect
+    .poll(
+      async () => {
+        await page.waitForTimeout(200);
+        const now = (await page.getByTestId('harim-map').getAttribute('data-zoom')) ?? '';
+        const settled = now === last;
+        last = now;
+        return settled;
+      },
+      { intervals: [0] },
+    )
+    .toBe(true);
 }

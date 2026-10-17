@@ -3,11 +3,13 @@ import { Link } from 'react-router';
 
 import { DevApiHint } from '../../components/DevApiHint/DevApiHint';
 import { Icon } from '../../components/Icon/Icon';
+import { IconButton } from '../../components/IconButton/IconButton';
 import { cx } from '../../lib/cx';
 import { strings } from '../../lib/strings';
 import type { Unit } from '../../lib/units';
 import type { Resource } from '../../lib/useResource';
 import styles from './CountryPeaks.module.css';
+import type { PeakLinks } from './peakLinks';
 import { mountainsOf } from './harimQuery';
 import { ConfidenceBadge, HighPointBadge, Height, SharedBadge } from './PeakBits';
 import { countryNames, peakTypeLabel } from './peakFormat';
@@ -22,6 +24,7 @@ export interface CountryPeaksProps {
   /** Show the lowest point and relief (when their table columns are hidden, and on phones). */
   showLowPoint: boolean;
   onOpenPeak: (slug: string) => void;
+  links: PeakLinks;
 }
 
 /**
@@ -36,6 +39,7 @@ export function CountryPeaks({
   unit,
   showLowPoint,
   onOpenPeak,
+  links,
 }: CountryPeaksProps) {
   const { country } = row;
   const mountains =
@@ -97,9 +101,16 @@ export function CountryPeaks({
             {mountains.map((mountain) => (
               <li
                 key={mountain.slug}
-                className={styles.peak}
+                className={cx(styles.peak, links.selected === mountain.slug && styles.selected)}
                 data-slug={mountain.slug}
+                data-selected={links.selected === mountain.slug || undefined}
                 data-testid="country-peak"
+                onPointerEnter={(event) => {
+                  if (event.pointerType !== 'touch') links.onHover(mountain.slug);
+                }}
+                onPointerLeave={() => {
+                  links.onHover(null);
+                }}
               >
                 <div className={styles.peakHead}>
                   <button
@@ -113,6 +124,16 @@ export function CountryPeaks({
                     {mountain.name}
                   </button>
                   <Height metres={mountain.elevationM} unit={unit} both />
+                  <IconButton
+                    icon="location_on"
+                    label={strings.harim.map.showOnMap(mountain.name)}
+                    iconSize={20}
+                    className={styles.mapButton}
+                    data-testid="show-on-map"
+                    onClick={() => {
+                      links.onShowOnMap(mountain.slug);
+                    }}
+                  />
                 </div>
                 <p className={styles.meta}>
                   {mountain.range && (
@@ -158,11 +179,27 @@ export function CountryPeaks({
           </ul>
         ))}
 
-      <Link className={styles.profile} to={`/countries?country=${country.iso3}`}>
-        <Icon name="flag" size={18} />
-        {text.countryProfile}
-        <span className="visually-hidden">: {country.name}</span>
-      </Link>
+      <div className={styles.actions}>
+        <Link className={styles.profile} to={`/countries?country=${country.iso3}`}>
+          <Icon name="flag" size={18} />
+          {text.countryProfile}
+          <span className="visually-hidden">: {country.name}</span>
+        </Link>
+        {mountains.length > 0 && (
+          <button
+            type="button"
+            className={styles.profile}
+            data-testid="show-country-on-map"
+            onClick={() => {
+              links.onShowCountryOnMap(country.iso3);
+            }}
+          >
+            <Icon name="location_on" size={18} />
+            {strings.harim.map.showCountryOnMap}
+            <span className="visually-hidden">: {country.name}</span>
+          </button>
+        )}
+      </div>
     </div>
   );
 }

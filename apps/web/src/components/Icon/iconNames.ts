@@ -10,6 +10,7 @@ export const ICON_NAMES = [
   'altitude',
   'arrow_downward',
   'arrow_forward',
+  'bar_chart',
   'close',
   'compare_arrows',
   'contrast',
@@ -31,6 +32,7 @@ export const ICON_NAMES = [
   'landscape_2',
   'light_mode',
   'local_shipping',
+  'location_on',
   'lock',
   'map',
   'menu',
@@ -50,6 +52,7 @@ export const ICON_NAMES = [
   'volcano',
   'workspace_premium',
   'zoom_in',
+  'zoom_in_map',
   'zoom_out',
 ] as const;
 

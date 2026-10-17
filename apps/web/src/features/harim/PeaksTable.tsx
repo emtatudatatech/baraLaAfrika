@@ -6,6 +6,8 @@ import { strings } from '../../lib/strings';
 import { type Unit, formatElevation } from '../../lib/units';
 import type { PeakSort } from './harimQuery';
 import styles from './HarimTable.module.css';
+import { IconButton } from '../../components/IconButton/IconButton';
+import type { PeakLinks } from './peakLinks';
 import { ConfidenceBadge, CountryList, Height, UltraBadge } from './PeakBits';
 import { isUltra, peakTypeLabel } from './peakFormat';
 
@@ -20,6 +22,7 @@ export interface PeaksTableProps {
   countries: ReadonlyMap<string, CountryRef>;
   unit: Unit;
   onOpenPeak: (slug: string) => void;
+  links: PeakLinks;
 }
 
 function ariaSort(sort: PeakSort, column: SortColumn) {
@@ -49,6 +52,7 @@ export function PeaksTable({
   countries,
   unit,
   onOpenPeak,
+  links,
 }: PeaksTableProps) {
   const header = (column: SortColumn, label: string, className?: string) => {
     const direction = ariaSort(sort, column);
@@ -86,8 +90,29 @@ export function PeaksTable({
       </thead>
       <tbody>
         {mountains.map((mountain) => (
-          <tr key={mountain.slug} data-slug={mountain.slug}>
+          <tr
+            key={mountain.slug}
+            data-slug={mountain.slug}
+            data-selected={links.selected === mountain.slug || undefined}
+            className={cx(links.selected === mountain.slug && styles.selectedRow)}
+            onPointerEnter={(event) => {
+              if (event.pointerType !== 'touch') links.onHover(mountain.slug);
+            }}
+            onPointerLeave={() => {
+              links.onHover(null);
+            }}
+          >
             <th scope="row" className={styles.nameCell}>
+              <IconButton
+                icon="location_on"
+                label={strings.harim.map.showOnMap(mountain.name)}
+                iconSize={20}
+                className={styles.mapButton}
+                data-testid="show-on-map"
+                onClick={() => {
+                  links.onShowOnMap(mountain.slug);
+                }}
+              />
               <button
                 type="button"
                 className={styles.linkButton}

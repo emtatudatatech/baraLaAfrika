@@ -248,3 +248,18 @@
   font-size: var(--text-xs);
   font-weight: var(--weight-regular);
 }
+
+/* The peak selected on the map. */
+.table tbody tr.selectedRow > * {
+  background: color-mix(in oklch, var(--color-focus) 12%, transparent);
+}
+
+.table tbody tr.selectedRow > :first-child {
+  box-shadow: inset 3px 0 0 var(--color-focus);
+}
+
+.mapButton {
+  float: right;
+  margin: calc(-1 * var(--space-2)) calc(-1 * var(--space-2)) 0 var(--space-1);
+  color: var(--color-ink-muted);
+}

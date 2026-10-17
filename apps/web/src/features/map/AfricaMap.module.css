@@ -22,12 +22,7 @@
 
 /* Square-ish on phones (Africa is about as tall as it is wide), tall hero on larger screens. */
 .frame {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
   aspect-ratio: 0.95;
-  border-radius: var(--radius-xl);
-  background: var(--map-ocean);
 }
 
 @media (--bp-md) {
@@ -35,36 +30,6 @@
     aspect-ratio: auto;
     height: clamp(26rem, calc(100dvh - 15rem), 52rem);
   }
-}
-
-.svg {
-  display: block;
-  cursor: grab;
-  user-select: none;
-}
-
-.svg:active {
-  cursor: grabbing;
-}
-
-.ocean {
-  fill: var(--map-ocean);
-}
-
-.graticule {
-  fill: none;
-  stroke: var(--map-graticule);
-  stroke-width: 0.6;
-  vector-effect: non-scaling-stroke;
-  pointer-events: none;
-}
-
-.context {
-  fill: var(--map-context-land);
-  stroke: var(--map-coast);
-  stroke-width: 0.4;
-  vector-effect: non-scaling-stroke;
-  pointer-events: none;
 }
 
 .country,
@@ -86,38 +51,11 @@
 }
 
 .disputed {
-  fill: url('#disputed-hatch');
-}
-
-.disputedFill {
-  fill: var(--map-disputed);
-}
-
-.disputedHatch {
-  stroke: var(--map-disputed-hatch);
-  stroke-width: 1.5;
+  cursor: default;
 }
 
 .dimmed {
   opacity: var(--map-dimmed-opacity);
-}
-
-.borders {
-  fill: none;
-  stroke: var(--map-border);
-  stroke-width: 0.75;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-  pointer-events: none;
-}
-
-.coast {
-  fill: none;
-  stroke: var(--map-coast);
-  stroke-width: 0.6;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-  pointer-events: none;
 }
 
 .markerHit {
@@ -145,24 +83,6 @@
   from {
     opacity: 0;
   }
-}
-
-.zoomControls {
-  position: absolute;
-  top: var(--space-3);
-  right: var(--space-3);
-  display: grid;
-  gap: var(--space-2);
-}
-
-.status {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-content: center;
-  gap: var(--space-3);
-  text-align: center;
-  color: var(--color-ink-muted);
 }
 
 .notice {

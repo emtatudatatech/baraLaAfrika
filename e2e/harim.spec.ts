@@ -253,7 +253,7 @@ test('a peak opens in the drawer with sourced heights; Escape closes it', async 
   await page
     .getByTestId('country-peak')
     .first()
-    .getByRole('button', { name: 'Mount Kilimanjaro' })
+    .getByRole('button', { name: 'Mount Kilimanjaro', exact: true })
     .click();
   await expect(page).toHaveURL(/peak=mount-kilimanjaro/);
   const drawer = page.getByTestId('peak-drawer');
@@ -266,7 +266,9 @@ test('a peak opens in the drawer with sourced heights; Escape closes it', async 
   await drawer.getByRole('button', { name: 'Mawenzi' }).click();
   await expect(page).toHaveURL(/peak=mawenzi/);
   await expect(drawer.getByRole('heading', { level: 2, name: 'Mawenzi' })).toBeVisible();
-  await expect(drawer.getByRole('button', { name: 'Mount Kilimanjaro' })).toBeVisible();
+  await expect(
+    drawer.getByRole('button', { name: 'Mount Kilimanjaro', exact: true }),
+  ).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(drawer).toHaveCount(0);
   await expect(page).not.toHaveURL(/peak=/);
@@ -330,7 +332,7 @@ test('desktop: the tables are never wider than their panel (they would be clippe
   test.skip(isMobile, 'desktop tables');
   const fits = () =>
     page.evaluate(() => {
-      const table = document.querySelector('table[data-testid^="harim-"]');
+      const table = document.querySelector('#harim-results table');
       const panel = table?.parentElement;
       return table && panel ? table.getBoundingClientRect().width <= panel.clientWidth : null;
     });

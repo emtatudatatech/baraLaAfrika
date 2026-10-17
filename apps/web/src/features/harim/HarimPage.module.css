@@ -247,3 +247,8 @@
   color: var(--color-accent-ink);
   background: var(--color-accent);
 }
+
+.mapSlot {
+  min-width: 0;
+  scroll-margin-top: calc(var(--ribbon-height, 0px) + var(--space-4));
+}

@@ -5,6 +5,7 @@
     "altitude",
     "arrow_downward",
     "arrow_forward",
+    "bar_chart",
     "close",
     "compare_arrows",
     "contrast",
@@ -26,6 +27,7 @@
     "landscape_2",
     "light_mode",
     "local_shipping",
+    "location_on",
     "lock",
     "map",
     "menu",
@@ -45,8 +47,9 @@
     "volcano",
     "workspace_premium",
     "zoom_in",
+    "zoom_in_map",
     "zoom_out"
   ],
   "source": "material-symbols@0.48.0",
-  "sha256": "1e21faea97397c75bde84656563a0248f8500887f4d51b2eba873024b10857df"
+  "sha256": "280b04c1b62c8cffd48a0f71a03c24308019bb71dca80a498f0185e70cce4167"
 }

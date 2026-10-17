@@ -1,0 +1,92 @@
+/* The shared map frame and base layers (used by the home map and the Harim map). */
+.frame {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  border-radius: var(--radius-xl);
+  background: var(--map-ocean);
+}
+
+.svg {
+  display: block;
+  cursor: grab;
+  user-select: none;
+}
+
+.svg:active {
+  cursor: grabbing;
+}
+
+.ocean {
+  fill: var(--map-ocean);
+}
+
+.graticule {
+  fill: none;
+  stroke: var(--map-graticule);
+  stroke-width: 0.6;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+.context {
+  fill: var(--map-context-land);
+  stroke: var(--map-coast);
+  stroke-width: 0.4;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+.disputedFill {
+  fill: var(--map-disputed);
+}
+
+.disputedHatch {
+  stroke: var(--map-disputed-hatch);
+  stroke-width: 1.5;
+}
+
+.borders {
+  fill: none;
+  stroke: var(--map-border);
+  stroke-width: 0.75;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+.coast {
+  fill: none;
+  stroke: var(--map-coast);
+  stroke-width: 0.6;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+.controls {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  display: grid;
+  gap: var(--space-2);
+}
+
+.status {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: var(--space-3);
+  text-align: center;
+  color: var(--color-ink-muted);
+}
+
+.retry {
+  min-height: var(--touch-target);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-pill);
+  font-weight: var(--weight-semibold);
+  background: var(--glass-bg-strong);
+}

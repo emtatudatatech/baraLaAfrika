@@ -1,5 +1,5 @@
 import { type CountryRef, REGION_SLUGS, VOLCANIC_FILTERS } from '@bla/shared';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router';
 
 import { DevApiHint } from '../../components/DevApiHint/DevApiHint';
@@ -29,7 +29,12 @@ import {
   sortSummary,
   updateParams,
 } from './harimQuery';
+import { HighestPeakChart } from './chart/HighestPeakChart';
+import { GeologyCard } from './GeologyCard';
+import { type HarimMapHandle, HarimMap } from './map/HarimMap';
+import { toMapPeak } from './map/mapModel';
 import { PeakDrawer } from './PeakDrawer';
+import type { PeakLinks } from './peakLinks';
 import { StatsBand } from './stats/StatsBand';
 import type { StatAction } from './stats/statsLogic';
 import { PeakList } from './PeakList';
@@ -75,8 +80,11 @@ export function HarimPage() {
   }
 
   const summary = useResource('mountains:summary', () => api.mountainSummary());
-  const needCatalogue = view.view === 'peaks' || expanded.size > 0;
-  const catalogue = useResource(needCatalogue ? 'mountains:all' : null, () => api.mountains());
+  // The whole catalogue: the map shows it, so it loads with the page.
+  const catalogue = useResource('mountains:all', () => api.mountains());
+  const territories = useResource('mountains:territories', () =>
+    api.mountains({ territories: true }),
+  );
 
   const rows = useMemo(() => summary.data?.countries ?? [], [summary.data]);
   const mountains = useMemo(() => catalogue.data?.mountains ?? [], [catalogue.data]);
@@ -108,6 +116,35 @@ export function HarimPage() {
     () => sortPeaks(filterPeaks(mountains, view, countries), view.sort as PeakSort),
     [mountains, view, countries],
   );
+
+  // The map shows the view's mountains: the filtered list on All peaks; by country, the
+  // mountains of the listed countries (plus territory peaks when nothing is filtered).
+  const showTerritories =
+    view.view === 'country' && view.region === null && view.country === null && view.q === '';
+  const mapPeaks = useMemo(() => {
+    const listed =
+      view.view === 'peaks'
+        ? visiblePeaks
+        : filterPeaks(
+            mountains,
+            { ...view, minHeight: null, volcanic: null, range: null },
+            countries,
+          );
+    const extra = showTerritories ? (territories.data?.mountains ?? []) : [];
+    return [...listed, ...extra].map(toMapPeak);
+  }, [view, visiblePeaks, mountains, countries, showTerritories, territories.data]);
+
+  // Linked selection between the tables and the map.
+  const mapRef = useRef<HarimMapHandle>(null);
+  const mapSectionRef = useRef<HTMLDivElement>(null);
+  const [mapReady, setMapReady] = useState(false);
+  const onMapReady = useCallback(() => {
+    setMapReady(true);
+  }, []);
+  const [hovered, setHovered] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
+  const revealRef = useRef<string | null>(null);
+  const [revealTick, setRevealTick] = useState(0);
 
   const regionOptions = useMemo<RegionOption[]>(
     () =>
@@ -156,6 +193,8 @@ export function HarimPage() {
       ? null
       : (rows.find((row) => row.country.region.slug === view.region)?.country.region.name ?? null);
   const toggleCountry = (iso3: string) => {
+    // Opening a row also brings that country's peaks into view on the map.
+    if (!expanded.has(iso3)) mapRef.current?.fitCountry(iso3);
     setExpanded((current) => {
       const next = new Set(current);
       if (next.has(iso3)) next.delete(iso3);
@@ -163,6 +202,68 @@ export function HarimPage() {
       return next;
     });
   };
+
+  const scrollTo = (element: Element | null) => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    element?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  };
+  const links: PeakLinks = {
+    selected,
+    onHover: setHovered,
+    onShowOnMap: (slug) => {
+      setSelected(slug);
+      mapRef.current?.focusPeak(slug);
+      scrollTo(mapSectionRef.current);
+    },
+    onShowCountryOnMap: (iso3) => {
+      mapRef.current?.fitCountry(iso3);
+      scrollTo(mapSectionRef.current);
+    },
+  };
+  // From the map: highlight the peak's row (opening its country by country) and bring it into
+  // view with focus on its name, so keyboard users land where the peak is listed.
+  const showInTable = (slug: string) => {
+    const mountain = mountains.find((m) => m.slug === slug);
+    if (!mountain) return;
+    setSelected(slug);
+    const iso3 = mountain.countries[0];
+    if (view.view === 'country' && iso3 !== undefined && !expanded.has(iso3)) {
+      setExpanded((current) => new Set(current).add(iso3));
+    }
+    revealRef.current = slug;
+    setRevealTick((n) => n + 1);
+  };
+  useEffect(() => {
+    const slug = revealRef.current;
+    if (slug === null) return;
+    revealRef.current = null;
+    const row = document.querySelector(`#harim-results [data-slug="${CSS.escape(slug)}"]`);
+    if (!row) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    row.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+    row.querySelector<HTMLElement>('button:not([data-testid="show-on-map"])')?.focus({
+      preventScroll: true,
+    });
+  }, [revealTick]);
+
+  // Camera moves that follow the filters and the drawer (once the map and catalogue are ready).
+  const mapPeaksRef = useRef(mapPeaks);
+  useEffect(() => {
+    mapPeaksRef.current = mapPeaks;
+  });
+  const catalogueReady = catalogue.status === 'success';
+  useEffect(() => {
+    if (!mapReady || !catalogueReady || view.country !== null) return;
+    if (view.region === null) mapRef.current?.reset();
+    else mapRef.current?.fitPeaks(mapPeaksRef.current.map((p) => p.slug));
+  }, [view.region, view.country, mapReady, catalogueReady]);
+  useEffect(() => {
+    if (mapReady && catalogueReady && view.country !== null)
+      mapRef.current?.fitCountry(view.country);
+  }, [view.country, mapReady, catalogueReady]);
+  useEffect(() => {
+    if (mapReady && catalogueReady && view.peak !== null) mapRef.current?.focusPeak(view.peak);
+  }, [view.peak, mapReady, catalogueReady]);
 
   useEffect(() => {
     const input = searchRef.current;
@@ -399,6 +500,7 @@ export function HarimPage() {
       </section>
 
       <section
+        id="harim-results"
         className={cx(styles.results, isWide && 'glass glass--strong', isWide && styles.panel)}
         aria-label={text.views[view.view]}
         aria-busy={loading}
@@ -448,6 +550,7 @@ export function HarimPage() {
               countries={countries}
               unit={unit}
               onOpenPeak={openPeak}
+              links={links}
             />
           ) : (
             <SummaryCards
@@ -458,6 +561,7 @@ export function HarimPage() {
               countries={countries}
               unit={unit}
               onOpenPeak={openPeak}
+              links={links}
             />
           ))}
 
@@ -475,6 +579,7 @@ export function HarimPage() {
               countries={countries}
               unit={unit}
               onOpenPeak={openPeak}
+              links={links}
             />
           ) : (
             <PeakList
@@ -482,6 +587,7 @@ export function HarimPage() {
               countries={countries}
               unit={unit}
               onOpenPeak={openPeak}
+              links={links}
             />
           ))}
 
@@ -493,6 +599,44 @@ export function HarimPage() {
       {!isPeaks && summary.status === 'success' && (
         <TerritoryPeaks countries={countries} unit={unit} onOpenPeak={openPeak} />
       )}
+
+      <div ref={mapSectionRef} className={styles.mapSlot}>
+        <HarimMap
+          handleRef={mapRef}
+          peaks={mapPeaks}
+          total={mapPeaks.length}
+          countries={countries}
+          region={view.region}
+          country={view.country}
+          unit={unit}
+          highlighted={hovered}
+          selected={selected}
+          onSelect={setSelected}
+          onOpenPeak={openPeak}
+          onShowInTable={showInTable}
+          onReady={onMapReady}
+        />
+      </div>
+
+      {summary.status === 'success' && (
+        <HighestPeakChart
+          rows={filterSummary(rows, { region: view.region, q: '' })}
+          referenceM={maxHeight}
+          unit={unit}
+          onOpenCountry={(iso3) => {
+            update({
+              view: 'country',
+              country: iso3,
+              minHeight: null,
+              volcanic: null,
+              range: null,
+            });
+            scrollTo(controlsRef.current);
+          }}
+        />
+      )}
+
+      <GeologyCard />
 
       {view.peak !== null && (
         <PeakDrawer

@@ -30,6 +30,21 @@ export function SiteFooter() {
         <p className={styles.disclaimer}>{strings.footer.disclaimer}</p>
         <p className={styles.disclaimer}>{strings.footer.notAdvice}</p>
       </div>
+      <div className={styles.bottomBar} data-testid="footer-brand">
+        {/* The visitor's current year, so the notice never goes stale. */}
+        <p>{strings.footer.copyright(new Date().getFullYear())}</p>
+        <p className={styles.builtIn}>
+          {strings.footer.builtIn}
+          <img
+            className={styles.flag}
+            src="/flags/ke.svg"
+            alt=""
+            width={20}
+            height={14}
+            decoding="async"
+          />
+        </p>
+      </div>
     </footer>
   );
 }

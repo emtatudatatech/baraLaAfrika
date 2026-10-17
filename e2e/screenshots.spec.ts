@@ -6,6 +6,7 @@ import {
   waitForAnimations,
   waitForContent,
   waitForFonts,
+  waitForMap,
   waitForStats,
 } from './helpers';
 
@@ -48,7 +49,10 @@ for (const viewport of VIEWPORTS) {
         // The loaded page (a skeleton's sheen would never finish animating).
         if (route.ready === null) await waitForContent(page, route.path);
         else await page.getByTestId(route.ready).first().waitFor();
-        if (route.path.startsWith('/harim')) await waitForStats(page);
+        if (route.path.startsWith('/harim')) {
+          await waitForStats(page);
+          await waitForMap(page);
+        }
         await waitForAnimations(page);
         // A full-page capture does not scroll, so lazy images below the fold would stay blank.
         await page.evaluate(async () => {

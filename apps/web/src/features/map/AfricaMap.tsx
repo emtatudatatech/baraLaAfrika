@@ -1,13 +1,9 @@
 import type { CountrySummary, RegionSlug } from '@bla/shared';
-import { geoGraticule10, geoPath } from 'd3-geo';
-import { select } from 'd3-selection';
-import { type ZoomBehavior, type ZoomTransform, zoom, zoomIdentity } from 'd3-zoom';
 import {
   type KeyboardEvent,
   type MouseEvent,
   type PointerEvent,
   type ReactNode,
-  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -17,31 +13,19 @@ import { Link } from 'react-router';
 
 import { DevApiHint } from '../../components/DevApiHint/DevApiHint';
 import { FlagImage } from '../../components/FlagImage/FlagImage';
-import { IconButton } from '../../components/IconButton/IconButton';
 import { placeTooltip } from '../../components/Tooltip/placeTooltip';
 import { cx } from '../../lib/cx';
 import { strings } from '../../lib/strings';
-import { useResource } from '../../lib/useResource';
 import styles from './AfricaMap.module.css';
 import { CountryPopover } from './CountryPopover';
 import { nextCountry } from './keyboard';
-import { fitAfricaProjection } from './projection';
+import { type MapContext, type MapController, MapBase } from './MapBase';
+import { disputedFill } from './mapPatterns';
 import { territoryNote, territoryNoteId } from './territoryNotes';
-import {
-  CONTEXT_TOPOLOGY_URL,
-  COUNTRIES_TOPOLOGY_URL,
-  type ContextTopology,
-  type CountriesTopology,
-  buildContextLand,
-  buildMapGeometry,
-  fetchJson,
-} from './topology';
 
-const MIN_ZOOM = 1;
-const MAX_ZOOM = 8;
-const ZOOM_STEP = 1.6;
 const MARKER_RADIUS = 6;
 const MARKER_HIT_RADIUS = 16;
+const MAP_ID = 'africa-map';
 
 interface Anchor {
   x: number;
@@ -68,45 +52,15 @@ export function AfricaMap({
   regionOrder,
   legend,
 }: AfricaMapProps) {
-  const geometry = useResource('geo:countries', () =>
-    fetchJson<CountriesTopology>(COUNTRIES_TOPOLOGY_URL).then(buildMapGeometry),
-  );
-  // The muted context land loads after the countries (spec §9: lazy-load the context layer).
-  const context = useResource(geometry.status === 'success' ? 'geo:context' : null, () =>
-    fetchJson<ContextTopology>(CONTEXT_TOPOLOGY_URL).then(buildContextLand),
-  );
-
-  const frameRef = useRef<HTMLDivElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
+  const controllerRef = useRef<MapController | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
-  const zoomRef = useRef<ZoomBehavior<SVGSVGElement, unknown> | null>(null);
   const focusTargets = useRef(new Map<string, SVGElement>());
 
-  const [size, setSize] = useState({ width: 0, height: 0 });
-  const [transform, setTransform] = useState<ZoomTransform>(zoomIdentity);
   const [hovered, setHovered] = useState<{ iso3: string; anchor: Anchor } | null>(null);
   const [focused, setFocused] = useState<{ iso3: string; anchor: Anchor | null } | null>(null);
   const [active, setActive] = useState<string | null>(null);
   const [selected, setSelected] = useState<{ iso3: string; anchor: Anchor } | null>(null);
 
-  useEffect(() => {
-    const frame = frameRef.current;
-    if (!frame) return;
-    const observer = new ResizeObserver(([entry]) => {
-      if (!entry) return;
-      const { width, height } = entry.contentRect;
-      setSize({ width: Math.round(width), height: Math.round(height) });
-    });
-    observer.observe(frame);
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
-  const projection = useMemo(
-    () => (size.width > 0 ? fitAfricaProjection(size.width, size.height) : null),
-    [size.width, size.height],
-  );
   const byIso3 = useMemo(() => new Map((countries ?? []).map((c) => [c.iso3, c])), [countries]);
   const order = useMemo(
     () => [...(countries ?? [])].sort((a, b) => a.name.localeCompare(b.name)).map((c) => c.iso3),
@@ -114,96 +68,12 @@ export function AfricaMap({
   );
   const currentActive = active ?? order[0] ?? null;
 
-  const drawn = useMemo(() => {
-    if (!projection || geometry.status !== 'success') return null;
-    const path = geoPath(projection);
-    return {
-      graticule: path(geoGraticule10()) ?? '',
-      borders: path(geometry.data.borders) ?? '',
-      coast: path(geometry.data.coast) ?? '',
-      shapes: geometry.data.shapes.map((shape) => ({ ...shape, d: path(shape.geometry) ?? '' })),
-    };
-  }, [projection, geometry]);
-  const contextPath = useMemo(
-    () =>
-      projection && context.status === 'success' ? (geoPath(projection)(context.data) ?? '') : '',
-    [projection, context],
-  );
-  const markers = useMemo(() => {
-    if (!projection) return [];
-    return (countries ?? []).flatMap((c) => {
-      if (!c.isMicrostateMarker || !c.centroid) return [];
-      const point = projection([c.centroid.lon, c.centroid.lat]);
-      return point ? [{ iso3: c.iso3, x: point[0], y: point[1] }] : [];
-    });
-  }, [projection, countries]);
-
-  // d3-zoom: buttons, pinch and two-finger pan on touch, Ctrl/⌘ + wheel on desktop (so plain
-  // scrolling still scrolls the page), drag to pan with the mouse.
-  useEffect(() => {
-    const svg = svgRef.current;
-    if (!svg || size.width === 0) return;
-    const behaviour = zoom<SVGSVGElement, unknown>()
-      .scaleExtent([MIN_ZOOM, MAX_ZOOM])
-      .extent([
-        [0, 0],
-        [size.width, size.height],
-      ])
-      .translateExtent([
-        [0, 0],
-        [size.width, size.height],
-      ])
-      .filter((event: Event) => {
-        if (event.type === 'wheel') {
-          const wheel = event as WheelEvent;
-          return wheel.ctrlKey || wheel.metaKey;
-        }
-        if (event.type.startsWith('touch')) return (event as TouchEvent).touches.length >= 2;
-        if (event.type === 'mousedown') return (event as globalThis.MouseEvent).button === 0;
-        return true;
-      })
-      .on('zoom', (event: { transform: ZoomTransform }) => {
-        setTransform(event.transform);
-      });
-    zoomRef.current = behaviour;
-    const selection = select(svg);
-    selection.call(behaviour);
-    // Let the browser keep one-finger page scrolling; d3 handles pinch and two-finger pan.
-    svg.style.touchAction = 'pan-x pan-y';
-    return () => {
-      selection.on('.zoom', null);
-    };
-  }, [size.width, size.height]);
-
-  const zoomBy = (factor: number) => {
-    const svg = svgRef.current;
-    const behaviour = zoomRef.current;
-    if (svg && behaviour) {
-      select(svg).call((selection) => {
-        behaviour.scaleBy(selection, factor);
-      });
-    }
-  };
-  const resetZoom = () => {
-    const svg = svgRef.current;
-    const behaviour = zoomRef.current;
-    if (svg && behaviour) {
-      select(svg).call((selection) => {
-        behaviour.transform(selection, zoomIdentity);
-      });
-    }
-  };
-
   /** Viewport coordinates of a country's anchor (for keyboard tooltips and popovers). */
   const anchorOf = (iso3: string): Anchor | null => {
-    const country = byIso3.get(iso3);
-    const svg = svgRef.current;
-    if (!country?.centroid || !projection || !svg) return null;
-    const point = projection([country.centroid.lon, country.centroid.lat]);
-    if (!point) return null;
-    const [x, y] = transform.apply(point);
-    const rect = svg.getBoundingClientRect();
-    return { x: rect.left + x, y: rect.top + y };
+    const centroid = byIso3.get(iso3)?.centroid;
+    return centroid
+      ? (controllerRef.current?.toViewport(centroid.lon, centroid.lat) ?? null)
+      : null;
   };
 
   const open = (iso3: string, anchor: Anchor | null) => {
@@ -285,188 +155,119 @@ export function AfricaMap({
   });
 
   const highlighted = selected?.iso3 ?? focused?.iso3 ?? hovered?.iso3 ?? null;
-  const highlightShape = drawn?.shapes.find((s) => s.iso3 === highlighted);
-  const k = transform.k;
   const selectedCountry = selected ? byIso3.get(selected.iso3) : undefined;
+
+  const renderCountries = ({ shapes }: MapContext) => (
+    <g className={styles.countries}>
+      {shapes.map((shape) => {
+        if (shape.disputed) {
+          return (
+            <path
+              key={shape.iso3}
+              d={shape.d}
+              className={styles.disputed}
+              style={{ fill: disputedFill(MAP_ID) }}
+              role="img"
+              aria-label={`${strings.map.disputed}: ${strings.map.disputedNote}`}
+              data-iso3={shape.iso3}
+              {...pointerHandlers(shape.iso3)}
+            />
+          );
+        }
+        const country = byIso3.get(shape.iso3);
+        if (!country) {
+          return <path key={shape.iso3} d={shape.d} className={styles.unknown} />;
+        }
+        const regionIndex = Math.max(0, regionOrder.indexOf(country.region.slug));
+        const dimmed = isolatedRegion !== null && country.region.slug !== isolatedRegion;
+        const style = {
+          '--fill': `var(--region-${country.region.slug})`,
+          '--delay': `${String(regionIndex * 90)}ms`,
+        };
+        // Small states are focused and clicked through their circle marker.
+        if (country.isMicrostateMarker) {
+          return (
+            <path
+              key={shape.iso3}
+              d={shape.d}
+              className={cx(styles.country, dimmed && styles.dimmed)}
+              style={style}
+              data-iso3={shape.iso3}
+              aria-hidden="true"
+            />
+          );
+        }
+        return (
+          <path
+            key={shape.iso3}
+            d={shape.d}
+            className={cx(styles.country, dimmed && styles.dimmed)}
+            style={style}
+            data-region={country.region.slug}
+            {...interactiveProps(
+              shape.iso3,
+              strings.map.countryLabel(country.name, country.region.name),
+            )}
+          />
+        );
+      })}
+    </g>
+  );
+
+  const renderOverlay = ({ projection, transform, shapes }: MapContext) => {
+    const k = transform.k;
+    const highlightShape = shapes.find((s) => s.iso3 === highlighted);
+    const markers = (countries ?? []).flatMap((c) => {
+      if (!c.isMicrostateMarker || !c.centroid) return [];
+      const point = projection([c.centroid.lon, c.centroid.lat]);
+      return point ? [{ iso3: c.iso3, x: point[0], y: point[1] }] : [];
+    });
+    return (
+      <>
+        <g className={styles.markers}>
+          {markers.map(({ iso3, x, y }) => {
+            const country = byIso3.get(iso3);
+            if (!country) return null;
+            const dimmed = isolatedRegion !== null && country.region.slug !== isolatedRegion;
+            return (
+              <g
+                key={iso3}
+                className={cx(styles.marker, dimmed && styles.dimmed)}
+                style={{ '--fill': `var(--region-${country.region.slug})` }}
+                data-region={country.region.slug}
+                {...interactiveProps(
+                  iso3,
+                  strings.map.countryLabel(country.name, country.region.name),
+                )}
+              >
+                <circle className={styles.markerHit} cx={x} cy={y} r={MARKER_HIT_RADIUS / k} />
+                <circle className={styles.markerDot} cx={x} cy={y} r={MARKER_RADIUS / k} />
+                {highlighted === iso3 && (
+                  <circle className={styles.markerRing} cx={x} cy={y} r={(MARKER_RADIUS + 4) / k} />
+                )}
+              </g>
+            );
+          })}
+        </g>
+        {highlightShape && !highlightShape.disputed && (
+          <path className={styles.highlight} d={highlightShape.d} />
+        )}
+      </>
+    );
+  };
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.stage}>
-        <div ref={frameRef} className={cx('glass', styles.frame)}>
-          {geometry.status === 'loading' && (
-            <p className={styles.status} role="status">
-              {strings.map.loading}
-            </p>
-          )}
-          {geometry.status === 'error' && (
-            <div className={styles.status} role="alert">
-              <p>{strings.map.loadError}</p>
-              <button type="button" className={styles.retry} onClick={geometry.retry}>
-                {strings.map.retry}
-              </button>
-            </div>
-          )}
-          {size.width > 0 && (
-            <svg
-              ref={svgRef}
-              className={styles.svg}
-              width={size.width}
-              height={size.height}
-              viewBox={`0 0 ${String(size.width)} ${String(size.height)}`}
-              role="group"
-              aria-label={strings.map.label}
-              aria-describedby="map-keyboard-hint"
-              data-testid="africa-map"
-            >
-              <defs>
-                <pattern
-                  id="disputed-hatch"
-                  width="6"
-                  height="6"
-                  patternUnits="userSpaceOnUse"
-                  patternTransform="rotate(45)"
-                >
-                  <rect width="6" height="6" className={styles.disputedFill} />
-                  <line x1="0" y1="0" x2="0" y2="6" className={styles.disputedHatch} />
-                </pattern>
-              </defs>
-              <rect className={styles.ocean} width={size.width} height={size.height} />
-              {drawn && (
-                <g transform={transform.toString()}>
-                  <path className={styles.graticule} d={drawn.graticule} />
-                  {contextPath && <path className={styles.context} d={contextPath} />}
-                  <g className={styles.countries}>
-                    {drawn.shapes.map((shape) => {
-                      if (shape.disputed) {
-                        return (
-                          <path
-                            key={shape.iso3}
-                            d={shape.d}
-                            className={styles.disputed}
-                            role="img"
-                            aria-label={`${strings.map.disputed}: ${strings.map.disputedNote}`}
-                            data-iso3={shape.iso3}
-                            {...pointerHandlers(shape.iso3)}
-                          />
-                        );
-                      }
-                      const country = byIso3.get(shape.iso3);
-                      if (!country) {
-                        return <path key={shape.iso3} d={shape.d} className={styles.unknown} />;
-                      }
-                      const regionIndex = Math.max(0, regionOrder.indexOf(country.region.slug));
-                      const dimmed =
-                        isolatedRegion !== null && country.region.slug !== isolatedRegion;
-                      const style = {
-                        '--fill': `var(--region-${country.region.slug})`,
-                        '--delay': `${String(regionIndex * 90)}ms`,
-                      };
-                      // Small states are focused and clicked through their circle marker.
-                      if (country.isMicrostateMarker) {
-                        return (
-                          <path
-                            key={shape.iso3}
-                            d={shape.d}
-                            className={cx(styles.country, dimmed && styles.dimmed)}
-                            style={style}
-                            data-iso3={shape.iso3}
-                            aria-hidden="true"
-                          />
-                        );
-                      }
-                      return (
-                        <path
-                          key={shape.iso3}
-                          d={shape.d}
-                          className={cx(styles.country, dimmed && styles.dimmed)}
-                          style={style}
-                          data-region={country.region.slug}
-                          {...interactiveProps(
-                            shape.iso3,
-                            strings.map.countryLabel(country.name, country.region.name),
-                          )}
-                        />
-                      );
-                    })}
-                  </g>
-                  <path className={styles.borders} d={drawn.borders} />
-                  <path className={styles.coast} d={drawn.coast} />
-                  <g className={styles.markers}>
-                    {markers.map(({ iso3, x, y }) => {
-                      const country = byIso3.get(iso3);
-                      if (!country) return null;
-                      const dimmed =
-                        isolatedRegion !== null && country.region.slug !== isolatedRegion;
-                      return (
-                        <g
-                          key={iso3}
-                          className={cx(styles.marker, dimmed && styles.dimmed)}
-                          style={{ '--fill': `var(--region-${country.region.slug})` }}
-                          data-region={country.region.slug}
-                          {...interactiveProps(
-                            iso3,
-                            strings.map.countryLabel(country.name, country.region.name),
-                          )}
-                        >
-                          <circle
-                            className={styles.markerHit}
-                            cx={x}
-                            cy={y}
-                            r={MARKER_HIT_RADIUS / k}
-                          />
-                          <circle
-                            className={styles.markerDot}
-                            cx={x}
-                            cy={y}
-                            r={MARKER_RADIUS / k}
-                          />
-                          {highlighted === iso3 && (
-                            <circle
-                              className={styles.markerRing}
-                              cx={x}
-                              cy={y}
-                              r={(MARKER_RADIUS + 4) / k}
-                            />
-                          )}
-                        </g>
-                      );
-                    })}
-                  </g>
-                  {highlightShape && !highlightShape.disputed && (
-                    <path className={styles.highlight} d={highlightShape.d} />
-                  )}
-                </g>
-              )}
-            </svg>
-          )}
-
-          <div className={styles.zoomControls}>
-            <IconButton
-              icon="zoom_in"
-              label={strings.map.zoomIn}
-              variant="glass"
-              onClick={() => {
-                zoomBy(ZOOM_STEP);
-              }}
-              disabled={k >= MAX_ZOOM}
-            />
-            <IconButton
-              icon="zoom_out"
-              label={strings.map.zoomOut}
-              variant="glass"
-              onClick={() => {
-                zoomBy(1 / ZOOM_STEP);
-              }}
-              disabled={k <= MIN_ZOOM}
-            />
-            <IconButton
-              icon="fit_screen"
-              label={strings.map.resetZoom}
-              variant="glass"
-              onClick={resetZoom}
-            />
-          </div>
-
+        <MapBase
+          label={strings.map.label}
+          describedBy="map-keyboard-hint"
+          testId={MAP_ID}
+          className={styles.frame}
+          controllerRef={controllerRef}
+          renderCountries={renderCountries}
+          renderOverlay={renderOverlay}
+        >
           {countriesError !== undefined && (
             <div className={cx('glass glass--strong', styles.notice)} role="alert">
               <p>{strings.map.countriesError}</p>
@@ -476,7 +277,7 @@ export function AfricaMap({
               <DevApiHint error={countriesError} className={styles.noticeHint} />
             </div>
           )}
-        </div>
+        </MapBase>
 
         {legend !== undefined && <div className={styles.legendSlot}>{legend}</div>}
       </div>

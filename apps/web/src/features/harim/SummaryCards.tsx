@@ -9,6 +9,7 @@ import { type Unit, formatElevation } from '../../lib/units';
 import type { Resource } from '../../lib/useResource';
 import { CountryPeaks } from './CountryPeaks';
 import styles from './HarimCards.module.css';
+import type { PeakLinks } from './peakLinks';
 
 const text = strings.harim;
 
@@ -20,6 +21,7 @@ export interface SummaryCardsProps {
   countries: ReadonlyMap<string, CountryRef>;
   unit: Unit;
   onOpenPeak: (slug: string) => void;
+  links: PeakLinks;
 }
 
 /**
@@ -34,6 +36,7 @@ export function SummaryCards({
   countries,
   unit,
   onOpenPeak,
+  links,
 }: SummaryCardsProps) {
   return (
     <ul className={styles.list} data-testid="harim-summary-cards">
@@ -93,6 +96,7 @@ export function SummaryCards({
                   unit={unit}
                   showLowPoint
                   onOpenPeak={onOpenPeak}
+                  links={links}
                 />
               </div>
             )}

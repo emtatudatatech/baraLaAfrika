@@ -220,6 +220,20 @@ describe('Layout', () => {
     expect(within(ribbon).getByTestId('ribbon-range')).toHaveTextContent('Not time-dependent');
   });
 
+  it('signs every page with the current year and "Proudly built in Kenya"', () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2031-03-01T12:00:00Z'));
+    try {
+      renderAt('/countries');
+      const footer = screen.getByRole('contentinfo');
+      expect(footer).toHaveTextContent('© 2031 Michael Maina Mwangi. All rights reserved.');
+      expect(within(footer).getByText('Proudly built in Kenya.')).toBeInTheDocument();
+      expect(footer.querySelector('img[src="/flags/ke.svg"]')).toHaveAttribute('alt', '');
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('has a skip link to the main landmark', () => {
     renderAt('/');
     expect(screen.getByRole('link', { name: 'Skip to main content' })).toHaveAttribute(

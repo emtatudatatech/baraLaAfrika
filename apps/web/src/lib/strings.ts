@@ -256,6 +256,8 @@ export const strings = {
       issue: 'Open question',
       note: 'Note',
     },
+    highestPeak: 'Highest peak',
+    highestPeakLink: (peak: string, height: string) => `${peak}, ${height}`,
     loading: 'Loading the full profile…',
     loadError: 'The full profile could not be loaded.',
     retry: 'Retry',
@@ -417,6 +419,88 @@ export const strings = {
         'The sources each value was taken from. Reliability tiers are this project’s assessment.',
       km: (value: number) => `${value.toLocaleString('en', { maximumFractionDigits: 1 })} km`,
     },
+    map: {
+      title: 'Map of the peaks',
+      label: 'Map of Africa’s catalogued mountains, sized and coloured by height',
+      keyboardHint:
+        'Tab into the map, then use the arrow keys to move from peak to peak (tallest first) and Enter to open one. Grouped peaks open a list.',
+      tableLink: 'The table above lists the same mountains',
+      peakLabel: (name: string, height: string, where: string) => `${name}, ${height}, ${where}`,
+      heightWords: (value: string, unit: 'm' | 'ft') =>
+        `${value} ${unit === 'm' ? 'metres' : 'feet'}`,
+      groupLabel: (label: string, count: number) =>
+        `${label}: ${String(count)} peaks close together. Open the list`,
+      showing: (shown: number, total: number) =>
+        shown >= total
+          ? `All ${String(total)} peaks are shown.`
+          : `Showing ${String(shown)} of ${String(total)} peaks. Zoom in to see more.`,
+      fitCountry: (country: string) => `Fit the map to ${country}`,
+      openDetails: 'Full details',
+      showInTable: 'Show in the table',
+      showOnMap: (name: string) => `Show ${name} on the map`,
+      showCountryOnMap: 'Show on the map',
+      zoomToGroup: 'Zoom in',
+      close: 'Close',
+      legendTitle: 'Height',
+      legendShared: 'Shared border peak',
+      legendTerritory: 'Territory peak (not one of the 54)',
+      legendGroup: 'Peaks close together',
+      halo: 'Show each peak’s “area of influence”',
+      haloNote:
+        'Illustrative only: each golden circle grows with the peak’s height. It is not a geological or administrative boundary.',
+      territory: (name: string) => `Territory: ${name}`,
+    },
+    chart: {
+      title: 'Highest peak by country',
+      description: (count: number) =>
+        `A bar for each of ${String(count)} countries showing the height of its highest point, coloured by region, with a line at Kilimanjaro, Africa’s highest.`,
+      sortLabel: 'Order',
+      sorts: { height: 'Highest first', name: 'A to Z' },
+      reference: (height: string) => `Kilimanjaro ${height}`,
+      tableToggle: 'Show the data as a table',
+      columns: { country: 'Country', peak: 'Highest peak', height: 'Height' },
+      regions: 'Regions',
+      showCountry: 'Show the country',
+    },
+    geology: {
+      title: 'Why are Africa’s highest mountains where they are?',
+      intro:
+        'Africa’s tallest mountains are not one great range: they come from a handful of very different geological stories.',
+      points: [
+        {
+          title: 'The East African Rift',
+          text: 'Africa is slowly splitting along the rift, a developing divergent plate boundary between the Nubian and Somali plates. Rising magma built its great volcanoes: Kilimanjaro, Mount Kenya, Mount Meru, Mount Elgon and the Virunga volcanoes such as Karisimbi and Nyiragongo. The Rwenzori are different: not volcanic at all, but a block of ancient crystalline rock pushed up about three million years ago.',
+        },
+        {
+          title: 'Lava plateaus lifted high',
+          text: 'The Ethiopian Highlands, home of Ras Dashen, are a broad dome raised by magma from the mantle and capped by flood basalts that began to pile up about 30 million years ago. The high Drakensberg along Lesotho’s borders is a thick layer of basalt that erupted about 180 million years ago; southern Africa has been uplifted over the past 20 million years and erosion has carved the escarpment back.',
+        },
+        {
+          title: 'A collision in the north',
+          text: 'The High Atlas rose mainly in the last 66 million years as Africa and Europe converged, the same convergence that raised the Alps and the Pyrenees. The Anti-Atlas to its south is far older, from a continental collision about 300 million years ago.',
+        },
+        {
+          title: 'Lone volcanoes',
+          text: 'The Cameroon line is a 1,600 km chain of volcanoes running from islands in the Gulf of Guinea to Mount Cameroon and beyond. In the Sahara, the Tibesti’s highest peaks, such as Emi Koussi, are volcanoes built over a hotspot.',
+        },
+        {
+          title: 'Old, stable interiors',
+          text: 'Much of the continent rests on cratons, ancient cores of the crust whose roots have stayed stable for billions of years. With little to push them up, they form plateaus and plains rather than high ranges.',
+        },
+      ],
+      sourcesNote:
+        'Adapted from the Harim prototype’s notes, corrected (the High Atlas is young, not a remnant of ancient events) and checked against these articles:',
+      sources: [
+        { title: 'East African Rift', url: 'https://en.wikipedia.org/wiki/East_African_Rift' },
+        { title: 'Rwenzori Mountains', url: 'https://en.wikipedia.org/wiki/Rwenzori_Mountains' },
+        { title: 'Ethiopian Highlands', url: 'https://en.wikipedia.org/wiki/Ethiopian_Highlands' },
+        { title: 'Drakensberg', url: 'https://en.wikipedia.org/wiki/Drakensberg' },
+        { title: 'Atlas Mountains', url: 'https://en.wikipedia.org/wiki/Atlas_Mountains' },
+        { title: 'Cameroon line', url: 'https://en.wikipedia.org/wiki/Cameroon_line' },
+        { title: 'Tibesti Mountains', url: 'https://en.wikipedia.org/wiki/Tibesti_Mountains' },
+        { title: 'Craton', url: 'https://en.wikipedia.org/wiki/Craton' },
+      ],
+    },
     stats: {
       title: 'At a glance',
       region: 'Region shown',
@@ -499,5 +583,7 @@ export const strings = {
     disclaimer:
       'Boundaries are shown as published by Natural Earth and do not imply endorsement of any border or territorial claim.',
     notAdvice: 'Informational only. Nothing here is financial advice.',
+    copyright: (year: number) => `© ${String(year)} Michael Maina Mwangi. All rights reserved.`,
+    builtIn: 'Proudly built in Kenya.',
   },
 } as const;

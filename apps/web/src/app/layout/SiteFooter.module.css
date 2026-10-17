@@ -1,6 +1,6 @@
 .footer {
   padding: var(--space-12) max(var(--gutter), env(safe-area-inset-left))
-    max(var(--space-8), env(safe-area-inset-bottom)) max(var(--gutter), env(safe-area-inset-right));
+    max(var(--space-5), env(safe-area-inset-bottom)) max(var(--gutter), env(safe-area-inset-right));
 }
 
 .inner {
@@ -64,4 +64,35 @@
   .credits {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
+
+/* The site's signature: copyright on the left, "built in Kenya" on the right (stacked on phones). */
+.bottomBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-6);
+  max-width: var(--content-max);
+  margin: var(--space-6) auto 0;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-line);
+  font-size: var(--text-xs);
+  color: var(--color-ink-muted);
+}
+
+.bottomBar p {
+  margin: 0;
+}
+
+.builtIn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.flag {
+  flex: none;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px var(--color-line-strong);
 }

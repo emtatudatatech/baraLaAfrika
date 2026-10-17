@@ -13,6 +13,7 @@ import type { CountrySort } from './harimQuery';
 import { HeightBar, Height, SharedBadge } from './PeakBits';
 import { countryNames } from './peakFormat';
 import styles from './HarimTable.module.css';
+import type { PeakLinks } from './peakLinks';
 
 const text = strings.harim;
 
@@ -31,6 +32,7 @@ export interface SummaryTableProps {
   countries: ReadonlyMap<string, CountryRef>;
   unit: Unit;
   onOpenPeak: (slug: string) => void;
+  links: PeakLinks;
 }
 
 function ariaSort(sort: CountrySort, column: SortColumn) {
@@ -101,6 +103,7 @@ export function SummaryTable({
   countries,
   unit,
   onOpenPeak,
+  links,
 }: SummaryTableProps) {
   const columnCount = showLowColumns ? 8 : 6;
   return (
@@ -155,6 +158,12 @@ export function SummaryTable({
                 data-iso3={country.iso3}
                 onClick={(event) => {
                   if (togglesRow(event)) onToggle(country.iso3);
+                }}
+                onPointerEnter={(event) => {
+                  if (event.pointerType !== 'touch') links.onHover(highestPeak?.slug ?? null);
+                }}
+                onPointerLeave={() => {
+                  links.onHover(null);
                 }}
               >
                 <td className={styles.flagCell}>
@@ -258,6 +267,7 @@ export function SummaryTable({
                       unit={unit}
                       showLowPoint={!showLowColumns}
                       onOpenPeak={onOpenPeak}
+                      links={links}
                     />
                   </td>
                 </tr>

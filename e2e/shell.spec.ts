@@ -21,6 +21,11 @@ for (const route of ROUTES) {
       await expect(page.getByRole('contentinfo')).toContainText(
         'do not imply endorsement of any border',
       );
+      // The site's signature, with the current year.
+      await expect(page.getByTestId('footer-brand')).toContainText(
+        `© ${String(new Date().getFullYear())} Michael Maina Mwangi. All rights reserved.`,
+      );
+      await expect(page.getByTestId('footer-brand')).toContainText('Proudly built in Kenya.');
     });
 
     test('has no horizontal overflow, including at 320px wide', async ({ page }) => {

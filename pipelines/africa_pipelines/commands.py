@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from pipelines.africa_pipelines import boundaries, extract_pdf, flags, load, migrate, status
+from pipelines.africa_pipelines import boundaries, extract_pdf, flags, harim, load, migrate, status
 from pipelines.cli import Command
 
 ALL: list[Command] = [
@@ -29,6 +29,12 @@ ALL: list[Command] = [
         help="Build the map topologies from Natural Earth and compute country anchors/markers.",
         configure=boundaries.configure,
         run=boundaries.run,
+    ),
+    Command(
+        name="mountains",
+        help="Build the Harim catalogue (prototype, Wikidata, Factbook, GeoNames) and its report.",
+        configure=harim.configure,
+        run=harim.run,
     ),
     Command(
         name="load",

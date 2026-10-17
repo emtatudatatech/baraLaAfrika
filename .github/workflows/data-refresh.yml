@@ -1,7 +1,9 @@
 name: Data refresh
 
 # Weekly refresh of the pipelines' data into Neon (Netlify scheduled functions are Node-only, so
-# the Python pipelines run here). Later milestones add their pipelines (mountains, gold) as steps.
+# the Python pipelines run here). Flags refresh weekly; the mountain catalogue (Wikidata, GeoNames,
+# the Factbook's final edition) monthly, on the first Monday, or on any manual run. Later
+# milestones add the gold pipelines as steps.
 on:
   schedule:
     - cron: '17 3 * * 1' # Mondays 03:17 UTC
@@ -38,14 +40,24 @@ jobs:
       - name: Refresh flags (Flagpedia)
         run: uv run python -m pipelines flags --refresh
 
+      # Fails loudly (and stops the load) when upstream changes need a curated decision; the
+      # problems are listed in the log. Fix them in harim_curation.json and commit.
+      - name: Refresh mountains (monthly, or when run by hand)
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "$(date -u +%d)" -le 7 ]; then
+            uv run python -m pipelines mountains --refresh
+          else
+            echo "Not the first Monday of the month; the committed mountain seeds are loaded as they are."
+          fi
+
       - name: Flag changes to committed seeds for review
         id: seeds
         run: |
-          if git diff --quiet -- db/seeds data/region_colors_report.md; then
+          if git diff --quiet -- db/seeds data/region_colors_report.md data/mountains_review_report.md; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "::warning::Upstream data changed the generated seeds; download the 'refreshed-data' artifact, review data/region_colors_report.md and commit the changes."
+            echo "::warning::Upstream data changed the generated seeds; download the 'refreshed-data' artifact, review data/region_colors_report.md and data/mountains_review_report.md, and commit the changes."
             git diff --stat -- db/seeds data
           fi
 
@@ -58,6 +70,7 @@ jobs:
             db/seeds
             data/region_colors_report.md
             data/region_colors
+            data/mountains_review_report.md
           retention-days: 30
 
       - name: Load into Neon

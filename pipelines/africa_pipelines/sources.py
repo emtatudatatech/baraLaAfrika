@@ -21,6 +21,8 @@ class TierRule:
     tier: Tier
     source_type: str
     note: str | None = None
+    # Optional URL path prefix, for hosts that serve sources of different kinds (e.g. GitHub).
+    path: str | None = None
 
 
 class UnclassifiedSourceError(ValueError):
@@ -31,15 +33,20 @@ class UnclassifiedSourceError(ValueError):
 def tier_rules() -> tuple[TierRule, ...]:
     data = json.loads(RULES_FILE.read_text())
     return tuple(
-        TierRule(r["domain"], r["tier"], r["source_type"], r.get("note")) for r in data["rules"]
+        TierRule(r["domain"], r["tier"], r["source_type"], r.get("note"), r.get("path"))
+        for r in data["rules"]
     )
 
 
 def classify(url: str) -> TierRule:
-    """The first tier rule whose domain matches the URL's host (exact or subdomain)."""
-    host = (urlparse(url).hostname or "").lower()
+    """The first tier rule whose domain matches the URL's host (exact or subdomain) and, if the
+    rule has one, whose path prefix matches the URL's path."""
+    parsed = urlparse(url)
+    host = (parsed.hostname or "").lower()
     for rule in tier_rules():
-        if host == rule.domain or host.endswith("." + rule.domain):
+        if not (host == rule.domain or host.endswith("." + rule.domain)):
+            continue
+        if rule.path is None or parsed.path.startswith(rule.path):
             return rule
     raise UnclassifiedSourceError(
         f"No reliability tier rule matches {url!r}; add one to {RULES_FILE.name}"

@@ -89,17 +89,30 @@ test('reference pages show live "as of" dates and refresh times from /api/covera
   await expectNoHorizontalOverflow(page);
 });
 
-test('pages whose data is not loaded yet say so', async ({ page, isMobile }) => {
+test('Harim shows the mountain datasets with their own as-of dates', async ({ page, isMobile }) => {
   await page.goto('/harim');
+  const ribbon = ribbonOf(page);
+  await expect(ribbon.getByTestId('ribbon-as-of')).toBeVisible();
+  await ribbon.getByRole('button', { name: 'Show data details' }).click();
+  const baseline = ribbon.locator('[data-dataset="mountains-baseline"]');
+  await expect(baseline).toContainText('emtatudatatech/harim@318dee9');
+  await expect(baseline).toContainText('21 Jul 2025');
+  await expect(ribbon.locator('[data-dataset="mountains-geonames"]')).toContainText('CC BY 4.0');
+  await expect(ribbon.locator('[data-dataset]')).toHaveCount(3);
+  if (!isMobile) await expect(ribbon).not.toContainText('not loaded yet');
+});
+
+test('pages whose data is not loaded yet say so', async ({ page, isMobile }) => {
+  await page.goto('/dhahabu');
   const ribbon = ribbonOf(page);
   if (isMobile) {
     await expect(ribbon).toContainText('No data loaded yet');
   } else {
-    await expect(ribbon).toContainText('Harim baseline (not loaded yet)');
+    await expect(ribbon).toContainText('Gold price (not loaded yet)');
   }
   await ribbon.getByRole('button', { name: 'Show data details' }).click();
-  await expect(ribbon.locator('[data-dataset]')).toHaveCount(3);
-  await expect(ribbon.getByText('not loaded yet', { exact: true })).toHaveCount(3);
+  await expect(ribbon.locator('[data-dataset]')).toHaveCount(4);
+  await expect(ribbon.getByText('not loaded yet', { exact: true })).toHaveCount(4);
 });
 
 test('a time-series page without data shows a "no data" state, never an invented range', async ({

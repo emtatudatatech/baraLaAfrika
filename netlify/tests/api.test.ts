@@ -169,14 +169,26 @@ describe('GET /api/coverage', () => {
   it('returns requested datasets and reports the ones not loaded yet', async () => {
     const response = await call(
       coverage,
-      '/api/coverage?datasets=symbology-pdf,boundaries-natural-earth,mountains-baseline',
+      '/api/coverage?datasets=symbology-pdf,boundaries-natural-earth,gold-price',
     );
     const body = CoverageResponseSchema.parse(await response.json());
     expect(body.datasets.map((d) => d.key)).toEqual(['boundaries-natural-earth', 'symbology-pdf']);
-    expect(body.missing).toEqual(['mountains-baseline']);
+    expect(body.missing).toEqual(['gold-price']);
     expect(body.datasets[0]).toMatchObject({ asOf: '2018-05-23', refreshCadence: 'static' });
     expect(body.datasets[1]).toMatchObject({ asOf: '2026-10-14', refreshCadence: 'manual' });
     expect(body.datasets[1]?.lastRefreshedAt).toBe('2026-10-15T08:00:00Z');
+  });
+
+  it('reports the Harim datasets with their own as-of dates', async () => {
+    const response = await call(
+      coverage,
+      '/api/coverage?datasets=mountains-baseline,mountains-wikidata,mountains-geonames',
+    );
+    const body = CoverageResponseSchema.parse(await response.json());
+    expect(body.missing).toEqual([]);
+    const baseline = body.datasets.find((d) => d.key === 'mountains-baseline');
+    expect(baseline).toMatchObject({ asOf: '2025-07-21', refreshCadence: 'manual' });
+    expect(baseline?.name).toContain('emtatudatatech/harim@318dee9');
   });
 
   it('returns every dataset without a filter and rejects unknown keys', async () => {
@@ -184,6 +196,9 @@ describe('GET /api/coverage', () => {
     expect(all.datasets.map((d) => d.key)).toEqual([
       'boundaries-natural-earth',
       'flags-flagpedia',
+      'mountains-baseline',
+      'mountains-geonames',
+      'mountains-wikidata',
       'symbology-pdf',
     ]);
     expect(all.missing).toEqual([]);

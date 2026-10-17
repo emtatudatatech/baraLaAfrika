@@ -36,6 +36,7 @@ def fetch_bytes(
     *,
     refresh: bool = False,
     min_interval: float = MIN_INTERVAL_SECONDS,
+    timeout: float = 30.0,
     client: httpx.Client | None = None,
 ) -> bytes:
     """Return the body of `url`, reading from `cache_path` when present (unless refresh)."""
@@ -44,7 +45,7 @@ def fetch_bytes(
     host = urlparse(url).hostname or ""
     owns_client = client is None
     http = client or httpx.Client(
-        headers={"User-Agent": USER_AGENT}, timeout=30.0, follow_redirects=True
+        headers={"User-Agent": USER_AGENT}, timeout=timeout, follow_redirects=True
     )
     try:
         for attempt in range(1, MAX_ATTEMPTS + 1):

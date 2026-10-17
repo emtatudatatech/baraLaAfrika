@@ -1,30 +1,157 @@
 {
   "$comment": "Reliability tier for each cited source, by domain (first match wins; every cited source must match a rule). Tiers: primary (official/government/statutory), reference (encyclopedias and curated references), secondary (journalism, think tanks, published books), low (forums, social media, fan wikis, quiz/aggregator and document-sharing sites). Edit and re-run extract-pdf to change.",
   "rules": [
-    { "domain": "cfr.org", "tier": "secondary", "source_type": "think_tank" },
-    { "domain": "britannica.com", "tier": "reference", "source_type": "encyclopedia" },
-    { "domain": "wikipedia.org", "tier": "reference", "source_type": "encyclopedia" },
-    { "domain": "the-star.co.ke", "tier": "secondary", "source_type": "news" },
-    { "domain": "kcur.org", "tier": "secondary", "source_type": "news" },
-    { "domain": "finglobal.com", "tier": "secondary", "source_type": "news" },
-    { "domain": "todobanderas.com", "tier": "secondary", "source_type": "book", "note": "Hosted PDF of a published flag reference book; the copy's provenance is unclear." },
-    { "domain": "voronoiapp.com", "tier": "low", "source_type": "aggregator" },
-    { "domain": "nationalthings.com", "tier": "low", "source_type": "aggregator" },
-    { "domain": "scribd.com", "tier": "low", "source_type": "document_sharing" },
-    { "domain": "quixoticguide.com", "tier": "low", "source_type": "aggregator" },
-    { "domain": "flags-and-anthems.com", "tier": "low", "source_type": "aggregator" },
-    { "domain": "mappr.co", "tier": "low", "source_type": "aggregator" },
-    { "domain": "bookey.app", "tier": "low", "source_type": "book_summary" },
-    { "domain": "nationalanimalquiz.com", "tier": "low", "source_type": "quiz" },
-    { "domain": "worldatlas.com", "tier": "low", "source_type": "aggregator" },
-    { "domain": "animalsandflags.com", "tier": "low", "source_type": "aggregator" },
-    { "domain": "geocountries.com", "tier": "low", "source_type": "aggregator" },
-    { "domain": "theanimalmap.com", "tier": "low", "source_type": "aggregator" },
-    { "domain": "a-z-animals.com", "tier": "low", "source_type": "aggregator" },
-    { "domain": "reddit.com", "tier": "low", "source_type": "forum" },
-    { "domain": "quora.com", "tier": "low", "source_type": "forum" },
-    { "domain": "facebook.com", "tier": "low", "source_type": "social_media" },
-    { "domain": "fandom.com", "tier": "low", "source_type": "fan_wiki" },
-    { "domain": "miraheze.org", "tier": "low", "source_type": "fan_wiki" }
+    {
+      "domain": "cfr.org",
+      "tier": "secondary",
+      "source_type": "think_tank"
+    },
+    {
+      "domain": "wikidata.org",
+      "tier": "reference",
+      "source_type": "knowledge_base",
+      "note": "Community-curated structured data; bulk-imported items are treated as copies of their source (see harim_reconcile)."
+    },
+    {
+      "domain": "geonames.org",
+      "tier": "reference",
+      "source_type": "gazetteer",
+      "note": "GeoNames gazetteer (CC BY 4.0)."
+    },
+    {
+      "domain": "github.com",
+      "path": "/factbook/",
+      "tier": "reference",
+      "source_type": "government_reference",
+      "note": "The CIA World Factbook's final edition (public domain), via the factbook.json mirror; the Factbook was discontinued in February 2026."
+    },
+    {
+      "domain": "github.com",
+      "path": "/emtatudatatech/harim/",
+      "tier": "secondary",
+      "source_type": "dataset",
+      "note": "The Harim prototype: curated by the project owner without citations; it decides which peaks exist, not their heights."
+    },
+    {
+      "domain": "britannica.com",
+      "tier": "reference",
+      "source_type": "encyclopedia"
+    },
+    {
+      "domain": "wikipedia.org",
+      "tier": "reference",
+      "source_type": "encyclopedia"
+    },
+    {
+      "domain": "the-star.co.ke",
+      "tier": "secondary",
+      "source_type": "news"
+    },
+    {
+      "domain": "kcur.org",
+      "tier": "secondary",
+      "source_type": "news"
+    },
+    {
+      "domain": "finglobal.com",
+      "tier": "secondary",
+      "source_type": "news"
+    },
+    {
+      "domain": "todobanderas.com",
+      "tier": "secondary",
+      "source_type": "book",
+      "note": "Hosted PDF of a published flag reference book; the copy's provenance is unclear."
+    },
+    {
+      "domain": "voronoiapp.com",
+      "tier": "low",
+      "source_type": "aggregator"
+    },
+    {
+      "domain": "nationalthings.com",
+      "tier": "low",
+      "source_type": "aggregator"
+    },
+    {
+      "domain": "scribd.com",
+      "tier": "low",
+      "source_type": "document_sharing"
+    },
+    {
+      "domain": "quixoticguide.com",
+      "tier": "low",
+      "source_type": "aggregator"
+    },
+    {
+      "domain": "flags-and-anthems.com",
+      "tier": "low",
+      "source_type": "aggregator"
+    },
+    {
+      "domain": "mappr.co",
+      "tier": "low",
+      "source_type": "aggregator"
+    },
+    {
+      "domain": "bookey.app",
+      "tier": "low",
+      "source_type": "book_summary"
+    },
+    {
+      "domain": "nationalanimalquiz.com",
+      "tier": "low",
+      "source_type": "quiz"
+    },
+    {
+      "domain": "worldatlas.com",
+      "tier": "low",
+      "source_type": "aggregator"
+    },
+    {
+      "domain": "animalsandflags.com",
+      "tier": "low",
+      "source_type": "aggregator"
+    },
+    {
+      "domain": "geocountries.com",
+      "tier": "low",
+      "source_type": "aggregator"
+    },
+    {
+      "domain": "theanimalmap.com",
+      "tier": "low",
+      "source_type": "aggregator"
+    },
+    {
+      "domain": "a-z-animals.com",
+      "tier": "low",
+      "source_type": "aggregator"
+    },
+    {
+      "domain": "reddit.com",
+      "tier": "low",
+      "source_type": "forum"
+    },
+    {
+      "domain": "quora.com",
+      "tier": "low",
+      "source_type": "forum"
+    },
+    {
+      "domain": "facebook.com",
+      "tier": "low",
+      "source_type": "social_media"
+    },
+    {
+      "domain": "fandom.com",
+      "tier": "low",
+      "source_type": "fan_wiki"
+    },
+    {
+      "domain": "miraheze.org",
+      "tier": "low",
+      "source_type": "fan_wiki"
+    }
   ]
 }

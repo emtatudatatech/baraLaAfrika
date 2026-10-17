@@ -11,7 +11,7 @@
 
 History and Contemporary Africa appear in the navigation as "Coming soon".
 
-> **Status:** milestones 1–7 of 17 are complete: scaffold, data foundation, flags with approved region colours, the API (connected to Neon), the **interactive map** on the home page, the **countries table** and the **data ribbon** with live coverage and the shared time range. Harim's mountain data is next (see [Roadmap](#roadmap)).
+> **Status:** milestones 1–8 of 17 are complete: scaffold, data foundation, flags with approved region colours, the API (connected to Neon), the **interactive map**, the **countries table**, the **data ribbon** and the **Harim mountain data** (awaiting review in `data/mountains_review_report.md` before the Harim pages are built). See [Roadmap](#roadmap).
 
 ---
 
@@ -131,11 +131,35 @@ The pipelines run from the repo root (`uv run python -m pipelines --help`); see 
 | 2 | `uv run python -m pipelines extract-pdf` | Research PDF → `db/seeds/{countries,sources,datasets}.json` and `data/review_report.md`, with loud validation (54 countries; region counts 6/15/9/16/8; unique ISO codes; every summary field present; no stray citation digits) | ✅ |
 | 3 | `uv run python -m pipelines flags` | Downloads the 54 flag SVGs from flagcdn.com (cached in `data/raw/flags/`, copied to `apps/web/public/flags/` as the offline fallback), computes each flag's palette and each region's colour, and writes `db/seeds/flags.json` and `data/region_colors_report.md` | ✅ |
 | 4 | `uv run python -m pipelines boundaries` | Natural Earth 4.1.0 (1:50m, via world-atlas 2.0.2) → `apps/web/public/geo/africa.topo.json` (the 54 countries, Somaliland tagged as Somalia, Western Sahara as disputed) and `africa-context.topo.json` (neighbouring land, loaded after the countries); computes each country's area on the equal-area Equal Earth projection, a map anchor and whether it needs a circle marker; writes `db/seeds/boundaries.json` and `data/boundaries_report.md` | ✅ |
-| 5 | `uv run python -m pipelines load` | Upserts the seeds into Neon (regions with the **approved** colours, countries, profiles, sources, citations, flag palettes, datasets). Only rows whose values changed are written, so re-runs report 0 changes; each run is logged in `ingestion_runs` and refuses to start while migrations are pending | ✅ |
+| 5 | `uv run python -m pipelines mountains` | Builds the Harim catalogue (see [Mountain data](#mountain-data-harim)) → `db/seeds/{mountains,mountain_ranges,country_low_points}.json` and `data/mountains_review_report.md` | ✅ (awaiting review) |
+| 6 | `uv run python -m pipelines load` | Upserts the seeds into Neon (regions with the **approved** colours, countries, profiles, sources, citations, flag palettes, the mountain catalogue, datasets). Only rows whose values changed are written, so re-runs report 0 changes; each run is logged in `ingestion_runs` and refuses to start while migrations are pending | ✅ |
 
 `uv run python -m pipelines status` prints every dataset's "as of" date, last refresh, cadence and last run (flagging overdue datasets).
 
 `migrate --dry-run` lists pending migrations. `extract-pdf --check` validates without writing and fails if the committed seeds are stale; the pytest suite runs it.
+
+### Mountain data (Harim)
+
+`python -m pipelines mountains` (`pipelines/africa_pipelines/harim*.py`) builds a catalogue covering all 54 countries. Every download is cached under `data/raw/` (gitignored), so re-runs are reproducible and offline; `--refresh` fetches again.
+
+- **Sources:**
+  - the Harim prototype at a pinned commit (`harim.html` and `README.md`), which decides which peaks exist;
+  - Wikidata: peaks per country, each country's P610 highest point and P1589 lowest point, prominence, isolation and GeoNames IDs (the class IDs used are checked against Wikidata on every run);
+  - the CIA World Factbook's **final edition** (public domain; discontinued in February 2026), via the factbook.json mirror at a pinned commit, as an independent check of every country's highest and lowest point;
+  - GeoNames dumps (CC BY 4.0), for elevation cross-checks (surveyed elevations only);
+  - Wikipedia, only for curated facts, each quoted.
+- **Elevation:** the value most of the most reliable sources agree on (within 10 m); every other value is kept in `elevation_alternatives`. Confidence is high when they agree within 10 m, medium within 50 m (or with one reliable source), low otherwise; any disagreement above 10 m, including the prototype's, sets `needs_review`. Values that bulk-imported Wikidata items copied from GeoNames count as GeoNames.
+- **Selection:** every country high point, every peak of 3,000 m or more, every prototype peak, and up to 8 notable peaks per country. Little-known points within 1.5 km of a mountain, or within a massif's radius, are parts of it, not separate mountains. Territory peaks (Réunion, the Canary Islands, Madeira…) are kept separate.
+- **Hierarchy:** massif → summit, two levels, only where a cited source names the summits (Kilimanjaro → Kibo, Mawenzi, Shira; Mount Kenya → Batian, Nelion, Point Lenana; and others). A massif counts as one mountain and stands exactly as high as its highest summit.
+- **Curation:** `pipelines/africa_pipelines/reference/harim_curation.json` holds the pinned commits, thresholds, prototype matches, massifs, sourced elevations, ranges, territories and the decisions where Wikidata and the Factbook disagree on a country's high or low point. `db/seeds/mountain_names.json` holds local names and name origins. Every text claim has a source URL and the exact quote; the run re-checks each quote against the cached source and fails if it is missing, so nothing is invented.
+- **Validation** (the run fails otherwise):
+  - every country has one high point and a low point below it;
+  - the hierarchy is valid and massif heights match their summits;
+  - slugs are unique and elevations sane;
+  - coordinates lie inside or within 5 km of every listed country on the map's own boundaries (island states are warned instead);
+  - any disagreement between sources on a country's high or low point needs a recorded decision.
+- **Report:** `data/mountains_review_report.md` lists the per-country high points, every decision and conflict, each prototype entry, elevations to review, the hierarchy, exclusions, territories, low points, ranges and names.
+- **Database:** migration `0003_harim.sql` enforces the same rules: 0–6,000 m, Africa's bounding box, summits under massifs, massif height checked at commit, one high point per country (never a summit), no territory peak in a country, sea-level coasts at 0 m, and sourced name origins.
 
 ### Region colours
 
@@ -162,7 +186,7 @@ How the extraction works and where its judgement calls live:
 
 ### Scheduled refresh
 
-`.github/workflows/data-refresh.yml` runs weekly (and on demand): `migrate` → `flags --refresh` → `load` → `status`, then calls the Netlify build hook if `load` changed any rows. If upstream flags changed the generated seeds, the run warns and uploads them (with the colour report) as the `refreshed-data` artifact for you to review and commit; the approved region colours are never replaced automatically. Repository secrets: `DATABASE_URL_WRITE` (required) and `NETLIFY_BUILD_HOOK` (optional).
+`.github/workflows/data-refresh.yml` runs weekly (and on demand): `migrate` → `flags --refresh` → `mountains --refresh` (first Monday of the month, or on a manual run) → `load` → `status`, then calls the Netlify build hook if `load` changed any rows. If upstream data changed the generated seeds, the run warns and uploads them (with the colour and mountain reports) as the `refreshed-data` artifact for you to review and commit; the approved region colours are never replaced automatically. Repository secrets: `DATABASE_URL_WRITE` (required) and `NETLIFY_BUILD_HOOK` (optional).
 
 ### Local database for tests
 
@@ -320,6 +344,10 @@ Decisions taken where the specification left room, or where the current ecosyste
 - **"Needs verification" is shown in the drawer only:** every country currently has `needs_review` set (most cite low-reliability sources), so a marker on every row would carry no information. The drawer shows the marker and the reasons.
 - **"As of" in the ribbon is the newest date among a view's datasets** (as in the specification's example). Each dataset's own date is in the details, so older sources (e.g. Natural Earth 2018) are never hidden.
 - **Year granularity for the shared range:** the specification asks for a year-range control on `/dhahabu`, so `?from=&to=` are years. Monthly series can still be drawn month by month inside the chosen years.
+- **Mountain confidence:** the specification's "more than 50 m apart → low confidence" is applied to the reliable sources, so a wrong prototype height alone does not make a well-sourced peak low-confidence. An outlier against a value two independent sources agree on gives medium; the disagreement is still flagged for review.
+- **The World Factbook as a cross-check:** it was discontinued in February 2026; its final edition (public domain) is used from a pinned mirror.
+- **Unsourced massif summits are not invented:** Mount Emin, Mount Gessi and Mount Luigi di Savoia are modelled as single mountains because no consulted source names their summits.
+- **Low-point types** add `river` and `salt_flat` to the specification's examples (many landlocked countries' lowest points are rivers; several North African ones are salt flats).
 - **Dev-tool advisories:** `npm audit` reports advisories in dev-only tooling (`netlify-cli`'s local server dependencies and Stylelint's glob dependencies). None of it ships to the browser or the deployed functions.
 
 ## Roadmap
@@ -333,7 +361,7 @@ v1 milestones (stop points for review are marked ⏸):
 5. ✅ Map
 6. ✅ Countries table
 7. ✅ Ribbon and coverage
-8. Harim data ⏸
+8. ✅ Harim data ⏸ (awaiting review)
 9. Harim API and table
 10. Harim statistics band ⏸
 11. Harim map and chart

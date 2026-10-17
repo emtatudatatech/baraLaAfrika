@@ -1,0 +1,603 @@
+{
+  "$comment": "Curation for `python -m pipelines mountains` (see harim_reconcile.py for the rules). Every text claim has a `source` URL and a `quote`; the run re-checks each quote against the cached source and fails if it is missing. Edit, re-run, review data/mountains_review_report.md.",
+  "baseline": {
+    "ref": "318dee97501fae44ef95c8008d4957d9a7526ef0"
+  },
+  "factbook": {
+    "ref": "783ed27f7a1116663c10e7b39d162d0c4500505d"
+  },
+  "selection": {
+    "candidate_limit": 80,
+    "always_include_m": 3000,
+    "notable_per_country": 8,
+    "notable_min_sitelinks": 3,
+    "notable_min_prominence_m": 500,
+    "subsidiary_km": 1.5,
+    "match_km": 10,
+    "border_tolerance_km": 5,
+    "island_tolerance_km": 15,
+    "agree_m": 10,
+    "review_m": 10,
+    "low_m": 50,
+    "priority": [
+      "wikidata",
+      "factbook",
+      "wikipedia",
+      "geonames",
+      "harim-prototype"
+    ]
+  },
+  "island_states": [
+    "CPV",
+    "STP",
+    "COM",
+    "MUS",
+    "SYC",
+    "MDG",
+    "GNQ"
+  ],
+  "exclude_classes": {
+    "Q46831": "mountain range",
+    "Q1437459": "non-geologically related mountain range",
+    "Q2624046": "mountain chain",
+    "Q75520": "plateau",
+    "Q878223": "highland",
+    "Q519105": "volcanic field",
+    "Q1174791": "escarpment",
+    "Q1970725": "natural region",
+    "Q3502482": "cultural region",
+    "Q184358": "reef",
+    "Q34763": "peninsula",
+    "Q23397": "lake",
+    "Q532": "village",
+    "Q3957": "town",
+    "Q486972": "human settlement",
+    "Q34442": "road",
+    "Q22698": "park",
+    "Q130003": "ski resort",
+    "Q182676": "mountain hut",
+    "Q17362920": "Wikimedia duplicated page"
+  },
+  "exclude_label_pattern": "\\b(mountains|mounts|monts|range|hills|highlands|plateau|escarpment|falaise|badlands|field|craters|bank|reef|massif|atlas|ridge)\\b",
+  "exclude": {},
+  "include": {},
+  "labels": {
+    "Q31396286": {
+      "name": "Vittorio Emanuele",
+      "reason": "The cited source's spelling (Wikidata's label is \"Victorio Emanuele\")."
+    },
+    "Q31396294": {
+      "name": "Edward Peak",
+      "reason": "The name in the cited source (Wikidata's label is \"Edward\")."
+    }
+  },
+  "baseline_matches": {
+    "harim.html|Mount Kilimanjaro (Kibo Peak)": "Q7296",
+    "harim.html|Mount Kenya (Batian Peak)": "Q172070",
+    "harim.html|Margherita Peak (Rwenzori Mountains)": "Q1895254",
+    "harim.html|Mount Meru": "Q309098",
+    "harim.html|Ras Dashen (Simien Mountains)": "Q275435",
+    "harim.html|Mount Karisimbi (Virunga Mountains)": "Q737859",
+    "harim.html|Mount Elgon": "Q732838",
+    "harim.html|Jebel Toubkal (Atlas Mountains)": "Q503433",
+    "harim.html|Mount Guna": "Q3779780",
+    "harim.html|Mount Cameroon": "Q190562",
+    "harim.html|M'Goun (Atlas Mountains)": "Q3050555",
+    "harim.html|Thabana Ntlenyana (Drakensberg)": "Q733132",
+    "harim.html|Mount Nyiragongo": "Q214696",
+    "harim.html|Emi Koussi (Tibesti Mountains)": "Q257441",
+    "harim.html|Mount Kinyeti": "Q948298",
+    "harim.html|Piton des Neiges": "Q1545452",
+    "harim.html|Jebel Marra (Deriba Caldera)": "Q2520348",
+    "harim.html|Mount Oku": "Q3322001",
+    "harim.html|Cathedral Peak (Drakensberg)": "Q1050879",
+    "harim.html|Sapitwa Peak (Mount Mulanje)": "Q3044073",
+    "harim.html|Tahat (Hoggar Mountains)": "Q822326",
+    "harim.html|Maromokotro (Tsaratanana Massif)": "Q1147144",
+    "harim.html|Pico do Fogo": "Q499108",
+    "harim.html|Mount Catherine": "Q1140642",
+    "harim.html|Mount Heha": "Q1649074",
+    "harim.html|Morro de Moco": "Q1348116",
+    "harim.html|Mount Nyangani": "Q152294",
+    "harim.html|Emba Soira": "Q1753730",
+    "harim.html|Mount Brandberg (Königstein)": "Q897834",
+    "harim.html|Bikku Bitti": "Q860146",
+    "harim.html|Chappal Waddi": "Q976055",
+    "harim.html|Pico de São Tomé": "Q1471391",
+    "harim.html|Lalla Khedidja": "Q3216533",
+    "harim.html|Mount Karthala": "Q527548",
+    "harim.html|Mount Bintumani (Loma Mansa)": "Q769525",
+    "harim.html|Monte Binga": "Q1353678",
+    "harim.html|Mont Nimba": "Q849129",
+    "harim.html|Pico Basile": "Q1518286",
+    "harim.html|Jebel Chambi": "Q1232136",
+    "harim.html|Mafinga Central": "Q18351462",
+    "README.md|Mount Kilimanjaro": "Q7296",
+    "README.md|Mount Kenya": "Q172070",
+    "README.md|Mount Stanley (Margherita Peak)": "Q221666",
+    "README.md|Mount Speke": "Q838875",
+    "README.md|Mount Baker": "Q253593",
+    "README.md|Mount Emin": "Q31567866",
+    "README.md|Mount Gessi": "Q10589781",
+    "README.md|Mount Luigi di Savoia": "Q1564286",
+    "README.md|Mount Meru": "Q309098",
+    "README.md|Ras Dashen": "Q275435",
+    "README.md|Mount Karisimbi": "Q737859",
+    "README.md|Mount Elgon (Wagagai Peak)": "Q732838",
+    "README.md|Toubkal": "Q503433",
+    "README.md|Mount Guna": "Q3779780",
+    "README.md|Mount Cameroon": "Q190562"
+  },
+  "merges": [
+    {
+      "qid": "Q20727403",
+      "into": "Q1394606",
+      "reason": "Uhuru Peak is the highest point of Kibo's crater rim; the catalogue has two levels (massif and summit), so it is recorded as Kibo's summit point.",
+      "source": "https://en.wikipedia.org/wiki/Mount_Kilimanjaro",
+      "quote": "Uhuru Peak is the highest summit on Kibo's crater rim"
+    }
+  ],
+  "massifs": [
+    {
+      "qid": "Q7296",
+      "radius_km": 12,
+      "top": "Q1394606",
+      "summits": [
+        "Q1394606",
+        "Q1283494",
+        "Q1516876"
+      ],
+      "source": "https://en.wikipedia.org/wiki/Mount_Kilimanjaro",
+      "quote": "composed of three distinct volcanic cones: Kibo, the highest"
+    },
+    {
+      "qid": "Q172070",
+      "radius_km": 3,
+      "top": "Q810817",
+      "summits": [
+        "Q810817",
+        "Q27193041",
+        "Q27195323"
+      ],
+      "source": "https://en.wikipedia.org/wiki/Mount_Kenya",
+      "quote": "the mountain's highest peaks are Batian (5,199 m), Nelion (5,188 m), and Point Lenana (4,985 m)"
+    },
+    {
+      "qid": "Q221666",
+      "radius_km": 1.5,
+      "top": "Q1895254",
+      "summits": [
+        "Q1895254"
+      ],
+      "source": "https://en.wikipedia.org/wiki/Rwenzori_Mountains",
+      "quote": "Mount Stanley has several subsidiary summits, with Margherita Peak being the highest point."
+    },
+    {
+      "qid": "Q838875",
+      "radius_km": 1.5,
+      "top": "Q31396286",
+      "summits": [
+        "Q31396286"
+      ],
+      "source": "https://en.wikipedia.org/wiki/Mount_Speke",
+      "quote": "Mount Speke's summits are Vittorio Emanuele 4,890 m",
+      "notes": [
+        "Its other summits in the cited source (Ensonga 4,865 m, Johnston 4,834 m, Trident 4,572 m) have no mapped coordinates, so they are not listed separately."
+      ]
+    },
+    {
+      "qid": "Q253593",
+      "radius_km": 1.5,
+      "top": "Q31396294",
+      "summits": [
+        "Q31396294"
+      ],
+      "source": "https://en.wikipedia.org/wiki/Mount_Baker_(Uganda)",
+      "quote": "Like all peaks in the Ruwenzori Range, Mount Baker has multiple jagged peaks along a ridge. The highest is Edward Peak."
+    },
+    {
+      "qid": "Q732838",
+      "radius_km": 8,
+      "top": "Q31525942",
+      "summits": [
+        "Q31525942"
+      ],
+      "source": "https://en.wikipedia.org/wiki/Mount_Elgon",
+      "quote": "The mountain's highest point, named \"Wagagai\", is located entirely within Uganda.",
+      "notes": [
+        "Its other major peaks in the cited source (Sudek 4,302 m, Koitobos 4,222 m, Mubiyi 4,211 m, Masaba 4,161 m) have no mapped coordinates, so they are not listed separately."
+      ]
+    },
+    {
+      "qid": "Q1510436",
+      "radius_km": 8,
+      "top": "Q3044073",
+      "summits": [
+        "Q3044073"
+      ],
+      "source": "https://en.wikipedia.org/wiki/Mount_Mulanje",
+      "quote": "Sapitwa Peak, the highest point on the massif at 3,002 m, is the highest point in Malawi."
+    },
+    {
+      "qid": "Q897834",
+      "radius_km": 6,
+      "top": "Q1796472",
+      "summits": [
+        "Q1796472"
+      ],
+      "source": "https://en.wikipedia.org/wiki/Brandberg_Mountain",
+      "quote": "With its highest point, the Königstein (German for 'King's Stone'), standing at 2,573 m"
+    }
+  ],
+  "elevations": [
+    {
+      "qid": "Q27193041",
+      "metres": 5188,
+      "source": "https://en.wikipedia.org/wiki/Mount_Kenya",
+      "quote": "Nelion (5,188 m)"
+    },
+    {
+      "qid": "Q27195323",
+      "metres": 4985,
+      "source": "https://en.wikipedia.org/wiki/Mount_Kenya",
+      "quote": "Point Lenana (4,985 m)"
+    },
+    {
+      "qid": "Q1283494",
+      "metres": 5149,
+      "source": "https://en.wikipedia.org/wiki/Mount_Kilimanjaro",
+      "quote": "Mawenzi at 5,149 m"
+    },
+    {
+      "qid": "Q1516876",
+      "metres": 4005,
+      "source": "https://en.wikipedia.org/wiki/Mount_Kilimanjaro",
+      "quote": "Shira, the lowest at 4,005 m"
+    },
+    {
+      "qid": "Q31396286",
+      "metres": 4890,
+      "source": "https://en.wikipedia.org/wiki/Mount_Speke",
+      "quote": "Vittorio Emanuele 4,890 m"
+    },
+    {
+      "qid": "Q31396294",
+      "metres": 4844,
+      "source": "https://en.wikipedia.org/wiki/Mount_Baker_(Uganda)",
+      "quote": "With a height of 4,844 metres"
+    },
+    {
+      "qid": "Q31525942",
+      "metres": 4321,
+      "source": "https://en.wikipedia.org/wiki/Mount_Elgon",
+      "quote": "Wagagai (4,321 metres"
+    },
+    {
+      "qid": "Q31567866",
+      "metres": 4798,
+      "source": "https://en.wikipedia.org/wiki/Rwenzori_Mountains",
+      "quote": "Mount Emin (4,798 metres"
+    },
+    {
+      "qid": "Q10589781",
+      "metres": 4715,
+      "source": "https://en.wikipedia.org/wiki/Rwenzori_Mountains",
+      "quote": "Mount Gessi (4,715 metres"
+    },
+    {
+      "qid": "Q1564286",
+      "metres": 4627,
+      "source": "https://en.wikipedia.org/wiki/Rwenzori_Mountains",
+      "quote": "Mount Luigi di Savoia (4,627 metres"
+    },
+    {
+      "qid": "Q111170430",
+      "metres": 266,
+      "source": "https://en.wikipedia.org/wiki/Monte_Torin",
+      "quote": "with an elevation of 266 metres"
+    }
+  ],
+  "high_points": {
+    "BDI": {
+      "qid": "Q1649074",
+      "factbook": "same",
+      "reason": "The Factbook's \"unnamed elevation on Mukike Range 2,685 m\" is Mount Heha (2,684 m in Wikidata), which Wikipedia names as Burundi's highest mountain.",
+      "source": "https://en.wikipedia.org/wiki/Mount_Heha",
+      "quote": "Mount Heha is the highest mountain in Burundi"
+    },
+    "BEN": {
+      "qid": "Q923330",
+      "factbook": "different",
+      "reason": "Mont Sokbaro (658 m) is Wikidata's high point and is mostly cited as Benin's highest point.",
+      "review": "Contested: satellite (SRTM) data puts an unnamed point near Kotopounga higher (672 m per Wikipedia; 675 m per the Factbook).",
+      "source": "https://en.wikipedia.org/wiki/Mont_Sokbaro",
+      "quote": "This designation is contested, as SRTM readings"
+    },
+    "BWA": {
+      "qid": "Q6897936",
+      "factbook": "same",
+      "reason": "Wikidata's P610 names Otse Hill (1,491 m), but its own elevations, the Factbook (\"Manyelanong Hill 1,495 m\") and Wikipedia put Monalanong Hill (1,494 m) highest.",
+      "review": "Otse Hill (1,491 m, a surveyed trigonometrical station) is also often cited as Botswana's highest point.",
+      "source": "https://en.wikipedia.org/wiki/Monalanong_Hill",
+      "quote": "Monalanong Hill is a mountain often considered the highest point of Botswana"
+    },
+    "CMR": {
+      "qid": "Q190562",
+      "factbook": "same",
+      "reason": "The Factbook's \"Fako on Mont Cameroun\" is the higher of Mount Cameroon's two peaks.",
+      "source": "https://en.wikipedia.org/wiki/Mount_Cameroon",
+      "quote": "Fako (the name of the higher of its two peaks)"
+    },
+    "GMB": {
+      "qid": "Q130316616",
+      "factbook": "different",
+      "reason": "Wikidata has no P610 high point for The Gambia; Sare Firasu Hill (51 m) is the highest mapped feature.",
+      "review": "The Factbook gives an unnamed 63 m elevation 3 km southeast of Sabi instead; The Gambia's true high point needs verification."
+    },
+    "GNB": {
+      "qid": "Q111170430",
+      "factbook": "different",
+      "reason": "Wikidata's P610 points to a \"Monte Torin\" item on the northern border; the Monte Torin that Wikipedia describes (266 m, near the southern border with Guinea) is a separate item, used here.",
+      "review": "The Factbook gives Dongol Ronde (277 m) as Guinea-Bissau's highest point instead.",
+      "source": "https://en.wikipedia.org/wiki/Monte_Torin",
+      "quote": "Monte Torin is the highest point of Guinea-Bissau"
+    },
+    "MUS": {
+      "qid": "Q1760978",
+      "factbook": "same",
+      "reason": "The Factbook's \"Mont Piton 828 m\" is Piton de la Petite Rivière Noire (828 m)."
+    },
+    "SDN": {
+      "qid": "Q2520348",
+      "factbook": "same",
+      "reason": "The Factbook's \"Jabal Marrah 3,042 m\" is the Jebel Marra massif, whose highest point is Deriba Caldera.",
+      "source": "https://en.wikipedia.org/wiki/Jebel_Marra",
+      "quote": "The highest point is Deriba Caldera."
+    },
+    "SEN": {
+      "qid": "Q135618139",
+      "factbook": "same",
+      "reason": "Wikidata's P610 (Népin Cliff, 531 m) has no coordinates; the Factbook's \"unnamed elevation 2.8 km southeast of Nepen Diaka 648 m\" matches Wikidata's 648 m Nepen Diakha.",
+      "review": "Named after the nearby village of Nepen Diakha; the point itself is unnamed."
+    }
+  },
+  "low_points": {
+    "CPV": {
+      "factbook": "different",
+      "reason": "Wikidata gives the Pedra de Lume salt ponds (30 m below sea level); the Factbook gives the Atlantic Ocean (sea level).",
+      "review": "The cited Wikipedia article on Pedra de Lume does not state its elevation; the below-sea-level value needs verification."
+    },
+    "ERI": {
+      "factbook": "same",
+      "reason": "The Factbook's \"near Kulul within the Danakil Depression\" (−75 m) is Lake Kulul (−75 m in Wikidata)."
+    },
+    "MRT": {
+      "factbook": "same",
+      "reason": "Sebkha de Ndrhamcha (Wikidata) and Sebkhet Te-n-Dghamcha (Factbook) are spellings of the same salt flat."
+    },
+    "TCD": {
+      "factbook": "same",
+      "metres": 155,
+      "reason": "The Factbook's \"Djourab\" is the desert containing the Bodélé Depression, Chad's lowest point.",
+      "source": "https://en.wikipedia.org/wiki/Bod%C3%A9l%C3%A9_Depression",
+      "quote": "Its bottom lies about 155 meters above sea level."
+    },
+    "UGA": {
+      "factbook": "different",
+      "reason": "Wikidata gives Lake Albert; the Factbook gives the Albert Nile (614 m), the river leaving the lake.",
+      "review": "The Factbook's Albert Nile (614 m) may be lower than Lake Albert; Uganda's lowest point needs verification."
+    }
+  },
+  "ranges": [
+    {
+      "slug": "high-atlas",
+      "name": "High Atlas",
+      "qid": "Q584279"
+    },
+    {
+      "slug": "middle-atlas",
+      "name": "Middle Atlas",
+      "qid": "Q1433137"
+    },
+    {
+      "slug": "anti-atlas",
+      "name": "Anti-Atlas",
+      "qid": "Q574853"
+    },
+    {
+      "slug": "tell-atlas",
+      "name": "Tell Atlas",
+      "qid": "Q1478180"
+    },
+    {
+      "slug": "saharan-atlas",
+      "name": "Saharan Atlas",
+      "qid": "Q1898305"
+    },
+    {
+      "slug": "rif",
+      "name": "Rif",
+      "qid": "Q275491"
+    },
+    {
+      "slug": "tunisian-dorsal",
+      "name": "Tunisian Dorsal",
+      "qid": "Q1250468"
+    },
+    {
+      "slug": "hoggar",
+      "name": "Hoggar Mountains",
+      "qid": "Q26399"
+    },
+    {
+      "slug": "tibesti",
+      "name": "Tibesti Mountains",
+      "qid": "Q309104"
+    },
+    {
+      "slug": "air",
+      "name": "Aïr Mountains",
+      "qid": "Q170383"
+    },
+    {
+      "slug": "marrah",
+      "name": "Marrah Mountains (Jebel Marra)",
+      "qid": "Q886772"
+    },
+    {
+      "slug": "sinai",
+      "name": "Sinai Mountains",
+      "qid": "Q2204331"
+    },
+    {
+      "slug": "cameroon-line",
+      "name": "Cameroon Line",
+      "qid": "Q945773"
+    },
+    {
+      "slug": "fouta-djallon",
+      "name": "Fouta Djallon",
+      "qid": "Q850245"
+    },
+    {
+      "slug": "togo-mountains",
+      "name": "Togo Mountains",
+      "qid": "Q581452"
+    },
+    {
+      "slug": "adrar-des-ifoghas",
+      "name": "Adrar des Ifoghas",
+      "qid": "Q366665"
+    },
+    {
+      "slug": "ethiopian-highlands",
+      "name": "Ethiopian Highlands",
+      "qid": "Q319288"
+    },
+    {
+      "slug": "semien",
+      "name": "Semien Mountains",
+      "qid": "Q1982017"
+    },
+    {
+      "slug": "bale",
+      "name": "Bale Mountains",
+      "qid": "Q2554147"
+    },
+    {
+      "slug": "rwenzori",
+      "name": "Rwenzori Mountains",
+      "qid": "Q106540"
+    },
+    {
+      "slug": "virunga",
+      "name": "Virunga Mountains",
+      "qid": "Q751607"
+    },
+    {
+      "slug": "mitumba",
+      "name": "Mitumba Mountains",
+      "qid": "Q182061"
+    },
+    {
+      "slug": "aberdare",
+      "name": "Aberdare Range",
+      "qid": "Q319371"
+    },
+    {
+      "slug": "crater-highlands",
+      "name": "Crater Highlands",
+      "qid": "Q576079"
+    },
+    {
+      "slug": "kipengere",
+      "name": "Kipengere Range",
+      "qid": "Q1296892"
+    },
+    {
+      "slug": "imatong",
+      "name": "Imatong Mountains",
+      "qid": "Q1659738"
+    },
+    {
+      "slug": "drakensberg",
+      "name": "Drakensberg",
+      "qid": "Q183295"
+    },
+    {
+      "slug": "maloti",
+      "name": "Maloti Mountains",
+      "qid": "Q3430420"
+    },
+    {
+      "slug": "auas",
+      "name": "Auas Mountains",
+      "qid": "Q758396"
+    },
+    {
+      "slug": "moka",
+      "name": "Moka Range",
+      "qid": "Q268180"
+    }
+  ],
+  "range_aliases": {
+    "Q753212": "hoggar"
+  },
+  "range_assignments": {
+    "Q1883683": "drakensberg",
+    "Q7229539": "drakensberg"
+  },
+  "territories": [
+    {
+      "name": "Réunion",
+      "qid": "Q17070",
+      "peaks": [
+        "Q1545452",
+        "Q1049644"
+      ]
+    },
+    {
+      "name": "Mayotte",
+      "qid": "Q17063",
+      "peaks": [
+        "Q210180"
+      ]
+    },
+    {
+      "name": "Canary Islands",
+      "qid": "Q5813",
+      "peaks": [
+        "Q38954"
+      ]
+    },
+    {
+      "name": "Madeira",
+      "qid": "Q26253",
+      "peaks": [
+        "Q473169"
+      ]
+    },
+    {
+      "name": "Saint Helena",
+      "qid": "Q34497",
+      "peaks": [
+        "Q3376351"
+      ]
+    },
+    {
+      "name": "Ascension Island",
+      "qid": "Q46197",
+      "peaks": [
+        "Q5602884"
+      ]
+    },
+    {
+      "name": "Tristan da Cunha",
+      "qid": "Q220982",
+      "peaks": [
+        "Q2062890"
+      ]
+    }
+  ],
+  "$comment_range_assignments": "Mafadi and Popple Peak are tagged with both the Drakensberg and the Maloti in Wikidata; they stand on the Drakensberg escarpment (the Lesotho–South Africa border)."
+}

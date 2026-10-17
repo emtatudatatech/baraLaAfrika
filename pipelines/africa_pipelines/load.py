@@ -1,9 +1,11 @@
 """`load`: upsert the committed seeds into the database (spec §5.4).
 
 Loads regions (with the approved region colours), countries, country profiles, sources,
-country↔source citations, flag palettes and dataset rows. Idempotent: every upsert only touches
-rows whose values actually changed, so a second run reports zero changes. Each run is logged in
-`ingestion_runs` (one per dataset); on failure nothing is loaded and the runs are marked failed.
+country↔source citations, flag palettes, map anchors, the Harim catalogue (ranges, mountains,
+their countries and sources, country low points) and dataset rows. Idempotent: every upsert
+only touches rows whose values actually changed, so a second run reports zero changes. Each run
+is logged in `ingestion_runs` (one per dataset); on failure nothing is loaded and the runs are
+marked failed.
 """
 
 from __future__ import annotations
@@ -19,6 +21,7 @@ from typing import Any, LiteralString
 
 import psycopg
 
+from . import harim_load
 from .migrate import applied_checksums, discover, plan
 from .settings import SEEDS_DIR, require_env
 
@@ -60,12 +63,17 @@ def read_seeds(seeds_dir: Path, approval_path: Path = APPROVAL_PATH) -> dict[str
     approval = (
         json.loads(approval_path.read_text(encoding="utf-8")) if approval_path.exists() else None
     )
+    harim = harim_load.read(seeds_dir)
+    if harim is not None:
+        harim_load.check_shared_sources(harim, sources["sources"])
     return {
         "countries": countries,
         "sources": sources,
         "datasets": datasets["datasets"]
         + ([flags["dataset"]] if flags else [])
-        + ([boundaries["dataset"]] if boundaries else []),
+        + ([boundaries["dataset"]] if boundaries else [])
+        + (harim["datasets"] if harim else []),
+        "harim": harim,
         "flags": flags,
         "boundaries": boundaries,
         "approval": approval,
@@ -378,6 +386,13 @@ def load(conn: psycopg.Connection[Any], seeds_dir: Path = SEEDS_DIR) -> LoadResu
                 _load_flag_palettes(cur, seeds["flags"], result)
             if seeds["boundaries"] is not None:
                 _load_boundaries(cur, seeds["boundaries"], result)
+            if seeds["harim"] is not None:
+                harim_load.load(cur, seeds["harim"], result.add)
+            harim_changes = sum(
+                result.changes.get(t, 0)
+                for t in ("mountain_ranges", "mountains", "mountain_countries",
+                          "mountain_sources", "country_low_points")
+            )  # fmt: skip
             per_dataset = {
                 "symbology-pdf": sum(
                     result.changes.get(t, 0)
@@ -391,6 +406,9 @@ def load(conn: psycopg.Connection[Any], seeds_dir: Path = SEEDS_DIR) -> LoadResu
                 ),
                 "flags-flagpedia": result.changes.get("flag_palette", 0),
                 "boundaries-natural-earth": result.changes.get("country_boundaries", 0),
+                "mountains-baseline": harim_changes,
+                "mountains-wikidata": harim_changes,
+                "mountains-geonames": harim_changes,
             }
             for key, run_id in run_ids.items():
                 cur.execute(

@@ -36,7 +36,12 @@ def test_first_load_populates_everything_with_approved_colours(pglite_url: str) 
         markers = scalar(conn, "SELECT count(*) FROM countries WHERE is_microstate_marker")
         assert markers == 7
         assert scalar(conn, "SELECT count(*) FROM countries WHERE centroid_lon IS NULL") == 0
-        assert scalar(conn, "SELECT count(*) FROM sources") == 65
+        symbology_sources = json.loads((SEEDS_DIR / "sources.json").read_text())["sources"]
+        harim = json.loads((SEEDS_DIR / "mountains.json").read_text())
+        expected_sources = {s["source_key"] for s in symbology_sources} | {
+            s["source_key"] for s in harim["sources"]
+        }
+        assert scalar(conn, "SELECT count(*) FROM sources") == len(expected_sources)
         palette_rows = scalar(conn, "SELECT count(*) FROM flag_palette")
         assert isinstance(palette_rows, int) and palette_rows > 54
         colours = {
@@ -55,9 +60,75 @@ def test_first_load_populates_everything_with_approved_colours(pglite_url: str) 
         assert sorted(runs) == [
             ("boundaries-natural-earth", "succeeded"),
             ("flags-flagpedia", "succeeded"),
+            ("mountains-baseline", "succeeded"),
+            ("mountains-geonames", "succeeded"),
+            ("mountains-wikidata", "succeeded"),
             ("symbology-pdf", "succeeded"),
         ]
         assert scalar(conn, "SELECT count(*) FROM datasets WHERE last_refreshed_at IS NULL") == 0
+
+
+def test_harim_catalogue_loads_with_its_rules_intact(pglite_url: str) -> None:
+    harim = json.loads((SEEDS_DIR / "mountains.json").read_text())["mountains"]
+    with migrated(pglite_url) as conn:
+        result = load.load(conn)
+        assert result.changes["mountains"] == len(harim)
+        assert scalar(conn, "SELECT count(*) FROM mountains") == len(harim)
+        assert scalar(conn, "SELECT count(*) FROM country_low_points") == 54
+        # Exactly one high point per country, never a summit.
+        assert (
+            scalar(
+                conn,
+                "SELECT count(DISTINCT country_id) FROM mountain_countries "
+                "WHERE is_country_high_point",
+            )
+            == 54
+        )
+        assert (
+            scalar(
+                conn,
+                "SELECT count(*) FROM mountain_countries mc JOIN mountains m "
+                "ON m.id = mc.mountain_id WHERE mc.is_country_high_point "
+                "AND m.summit_kind = 'summit'",
+            )
+            == 0
+        )
+        # Every massif equals its highest summit; every summit's parent is a massif.
+        assert (
+            scalar(
+                conn,
+                "SELECT count(*) FROM mountains m WHERE summit_kind = 'massif' AND elevation_m <> "
+                "(SELECT max(s.elevation_m) FROM mountains s WHERE s.parent_id = m.id)",
+            )
+            == 0
+        )
+        assert (
+            scalar(
+                conn,
+                "SELECT count(*) FROM mountains s JOIN mountains p ON p.id = s.parent_id "
+                "WHERE p.summit_kind <> 'massif'",
+            )
+            == 0
+        )
+        # Territory peaks are in no country; Kilimanjaro is Tanzania's high point.
+        assert (
+            scalar(
+                conn,
+                "SELECT count(*) FROM mountain_countries mc JOIN mountains m "
+                "ON m.id = mc.mountain_id WHERE m.territory_name IS NOT NULL",
+            )
+            == 0
+        )
+        assert (
+            scalar(
+                conn,
+                "SELECT m.slug FROM mountain_countries mc "
+                "JOIN mountains m ON m.id = mc.mountain_id "
+                "JOIN countries c ON c.id = mc.country_id WHERE c.iso3 = 'TZA' "
+                "AND mc.is_country_high_point",
+            )
+            == "mount-kilimanjaro"
+        )
 
 
 def test_second_load_changes_nothing_and_edits_change_one_row(
@@ -78,6 +149,30 @@ def test_second_load_changes_nothing_and_edits_change_one_row(
         result = load.load(conn, seeds)
         assert result.changes.get("country_profiles") == 1
         assert result.total == 1
+
+        # A Harim edit changes one mountain row, and a moved high point keeps one per country.
+        mountains_file = seeds / "mountains.json"
+        harim = json.loads(mountains_file.read_text(encoding="utf-8"))
+        botswana = [
+            m for m in harim["mountains"] if any(c["iso3"] == "BWA" for c in m["countries"])
+        ]
+        old = next(m for m in botswana if m["countries"][0]["is_country_high_point"])
+        new = next(m for m in botswana if m is not old)
+        old["countries"][0]["is_country_high_point"] = False
+        new["countries"][0]["is_country_high_point"] = True
+        mountains_file.write_text(json.dumps(harim, ensure_ascii=False), encoding="utf-8")
+        result = load.load(conn, seeds)
+        assert result.changes.get("mountain_countries") == 2
+        assert (
+            scalar(
+                conn,
+                "SELECT m.slug FROM mountain_countries mc "
+                "JOIN mountains m ON m.id = mc.mountain_id "
+                "JOIN countries c ON c.id = mc.country_id WHERE c.iso3 = 'BWA' "
+                "AND mc.is_country_high_point",
+            )
+            == new["slug"]
+        )
         assert (
             scalar(
                 conn,

@@ -297,6 +297,20 @@
       "quote": "with an elevation of 266 metres"
     }
   ],
+  "$comment_volcanoes": "Volcanoes Wikidata types only as \"mountain\" and the Global Volcanism Program does not list (it covers recent volcanism), each with a quoted source. `volcanic_status` only where the source states it.",
+  "volcanoes": [
+    {
+      "qid": "Q172070",
+      "name": "Mount Kenya",
+      "peak_type": "stratovolcano",
+      "volcanic_status": "extinct",
+      "source": "https://en.wikipedia.org/wiki/Mount_Kenya",
+      "quote": [
+        "Mount Kenya is a stratovolcano that was active in the Plio-Pleistocene",
+        "Since it became extinct"
+      ]
+    }
+  ],
   "high_points": {
     "BDI": {
       "qid": "Q1649074",

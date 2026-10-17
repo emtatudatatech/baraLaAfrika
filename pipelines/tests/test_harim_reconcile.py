@@ -14,7 +14,10 @@ from pipelines.africa_pipelines.harim_sources import FactbookExtreme, FactbookSn
 from pipelines.africa_pipelines.harim_wikidata import CountryExtreme, WikidataPeak
 
 ARTICLE = "https://en.wikipedia.org/wiki/Test_Massif"
-ARTICLE_TEXT = "The Test Massif's highest point is Kibo Test. It means 'spotted'."
+ARTICLE_TEXT = (
+    "The Test Massif's highest point is Kibo Test. It means 'spotted'. "
+    "Kenya Test is a stratovolcano that became extinct long ago."
+)
 
 
 def peak(qid: str, label: str, metres: float, lon: float, lat: float, **extra: Any) -> WikidataPeak:
@@ -131,6 +134,7 @@ def world(geography: Countries) -> tuple[Inputs, dict[str, Any], dict[str, Any]]
             }
         ],
         "elevations": [],
+        "volcanoes": [],
         "high_points": {},
         "low_points": {},
         "ranges": [{"slug": "test-range", "name": "Test Range", "qid": "Q900"}],
@@ -206,4 +210,36 @@ def test_fails_loudly_when_a_country_has_no_high_point(geography: Countries) -> 
     inputs, curation, names = world(geography)
     inputs.extremes = [e for e in inputs.extremes if not (e.iso3 == "KEN" and e.kind == "high")]
     with pytest.raises(ReconcileError, match="Kenya: Wikidata gives 0 high points"):
+        reconcile(inputs, curation, names)
+
+
+def test_applies_a_quoted_curated_volcano(geography: Countries) -> None:
+    inputs, curation, names = world(geography)
+    curation["volcanoes"] = [
+        {
+            "qid": "Q200",
+            "peak_type": "stratovolcano",
+            "volcanic_status": "extinct",
+            "source": ARTICLE,
+            "quote": ["Kenya Test is a stratovolcano", "became extinct"],
+        }
+    ]
+    result = reconcile(inputs, curation, names)
+    kenya = next(m for m in result.mountains if m.name == "Kenya Test")
+    assert (kenya.peak_type, kenya.volcanic_status) == ("stratovolcano", "extinct")
+    assert any(field == "volcanic_status" for _, field in kenya.sources)
+    assert any("Kenya Test: stratovolcano, extinct" in d for d in result.decisions)
+
+
+def test_rejects_an_unquoted_or_invalid_curated_volcano(geography: Countries) -> None:
+    inputs, curation, names = world(geography)
+    curation["volcanoes"] = [
+        {"qid": "Q200", "peak_type": "stratovolcano", "source": ARTICLE, "quote": "erupted"}
+    ]
+    with pytest.raises(ReconcileError, match="the quote 'erupted' is not in"):
+        reconcile(inputs, curation, names)
+    curation["volcanoes"] = [
+        {"qid": "Q200", "peak_type": "peak", "source": ARTICLE, "quote": "Kenya Test"}
+    ]
+    with pytest.raises(ReconcileError, match="'peak' is not a volcanic type"):
         reconcile(inputs, curation, names)

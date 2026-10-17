@@ -36,7 +36,7 @@ PROTOTYPE_SOURCE = "harim-prototype"
 
 def curated_urls(curation: dict[str, Any], names: dict[str, Any]) -> set[str]:
     urls: set[str] = set()
-    for section in ("massifs", "elevations", "ranges", "merges"):
+    for section in ("massifs", "elevations", "ranges", "merges", "volcanoes"):
         urls |= {entry["source"] for entry in curation[section] if entry.get("source")}
     for section in ("high_points", "low_points"):
         urls |= {entry["source"] for entry in curation[section].values() if entry.get("source")}
@@ -56,6 +56,7 @@ def curated_qids(curation: dict[str, Any], names: dict[str, Any]) -> set[str]:
     qids |= {entry["qid"] for entry in curation["high_points"].values()}
     qids |= {entry["qid"] for entry in curation["low_points"].values() if entry.get("qid")}
     qids |= {entry["qid"] for entry in curation["elevations"]}
+    qids |= {entry["qid"] for entry in curation["volcanoes"]}
     qids |= {entry["qid"] for entry in names["entries"]}
     return qids
 

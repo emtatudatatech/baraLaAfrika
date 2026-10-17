@@ -9,12 +9,9 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
-from .harim_reconcile import Inputs, Mountain, Result
+from .harim_reconcile import VOLCANIC_PEAK_TYPES, Inputs, Mountain, Result
 
 CONFIDENCE = {"high": "high", "medium": "medium", "low": "**low**"}
-
-
-VOLCANIC_TYPES = {"stratovolcano", "shield_volcano", "volcano"}
 
 
 def listed_by_gvp(mountain: Mountain) -> bool:
@@ -48,6 +45,7 @@ def write(
         for iso3 in m.countries:
             by_country[iso3].append(m)
     high_point = {iso3: m for m in counted for iso3 in m.high_point_of}
+    curation_volcanoes = curation.get("volcanoes", [])
     review = [m for m in mountains if m.review]
 
     def why_not_listed(qid: str) -> str:
@@ -96,11 +94,12 @@ def write(
         'than 50 m apart → low"; it is applied to the reliable sources, so a wrong prototype '
         "height alone does not make a well-sourced peak low-confidence. Say if you want the "
         "literal reading.)",
-        f"- Volcanoes: **{sum(1 for m in counted if m.peak_type in VOLCANIC_TYPES)}** of the "
+        f"- Volcanoes: **{sum(1 for m in counted if m.peak_type in VOLCANIC_PEAK_TYPES)}** of the "
         "mountains, by Wikidata class (stratovolcano, shield volcano or another volcanic class) "
         "or because the Smithsonian Global Volcanism Program lists them (Wikidata P1886; "
-        f"{sum(1 for m in counted if listed_by_gvp(m))} are listed). Status only where Wikidata "
-        "states it as a class: "
+        f"{sum(1 for m in counted if listed_by_gvp(m))} are listed), or by a curated, quoted "
+        f"source ({len(curation_volcanoes)}; see the decisions below). Status only where a "
+        "source states it (a Wikidata class or the curated source): "
         + ", ".join(
             f"{status} {sum(1 for m in counted if m.volcanic_status == status)}"
             for status in ("active", "dormant", "extinct")

@@ -277,6 +277,9 @@ def family_of(peak: WikidataPeak) -> str:
     return "geonames" if peak.sitelinks <= 1 and peak.geonames_id else "wikidata"
 
 
+VOLCANIC_PEAK_TYPES = ("stratovolcano", "shield_volcano", "volcano")
+
+
 def peak_type_of(classes: list[str], summit_kind: str, *, gvp_volcano: bool = False) -> str:
     """The most specific volcanic class wins; an item the Global Volcanism Program lists is a
     volcano even when Wikidata types it only as a mountain."""
@@ -1180,6 +1183,42 @@ class Reconciler:
                 mountain.local_names.append(record)
                 mountain.sources.add((source.key, "local_names"))
 
+    def apply_curated_volcanoes(self) -> None:
+        """Volcanoes that neither Wikidata's classes nor the Global Volcanism Program identify,
+        each with a quoted source (which also supports the status, when one is given)."""
+        for entry in self.curation["volcanoes"]:
+            qid = entry["qid"]
+            what = f"volcano {entry.get('name', qid)} ({qid})"
+            mountain = self.mountains.get(qid)
+            if mountain is None:
+                self.problems.append(f"{what}: not in the catalogue")
+                continue
+            if entry["peak_type"] not in VOLCANIC_PEAK_TYPES:
+                self.problems.append(f"{what}: {entry['peak_type']!r} is not a volcanic type")
+                continue
+            status = entry.get("volcanic_status")
+            if status is not None and status not in VOLCANIC_STATUS_CLASSES.values():
+                self.problems.append(f"{what}: unknown volcanic status {status!r}")
+                continue
+            source = self.sourced(entry, what)
+            if source is None:
+                self.problems.append(f"{what}: a curated volcano needs a source")
+                continue
+            if mountain.peak_type in VOLCANIC_PEAK_TYPES and mountain.peak_type != "volcano":
+                self.warnings.append(
+                    f"{what}: already a {mountain.peak_type} in Wikidata; the curated entry "
+                    "may no longer be needed"
+                )
+            mountain.peak_type = entry["peak_type"]
+            if status is not None:
+                mountain.volcanic_status = status
+            mountain.sources.add((source.key, "volcanic_status"))
+            self.decisions.append(
+                f"{mountain.name}: {entry['peak_type'].replace('_', ' ')}"
+                + (f", {status}" if status else "")
+                + f" (curated from {source.title}; Wikidata types it only as a mountain)"
+            )
+
     def finalise(self) -> None:
         settings = self.settings
         for mountain in self.mountains.values():
@@ -1330,6 +1369,7 @@ class Reconciler:
         ranges = self.build_ranges()
         self.apply_names(names)
         self.finalise()
+        self.apply_curated_volcanoes()
         self.flag_neighbours()
         self.flag_higher_than_high_points()
         lows = self.resolve_low_points()

@@ -61,7 +61,14 @@ export async function waitForContent(page: Page, path: string): Promise<void> {
     await expect(page.getByTestId('flag-button')).toHaveCount(54);
   }
   if (path.startsWith('/harim')) {
-    // One expandable row (or card) per country.
+    // One expandable row (or card) per country, and the statistics band's final figures.
     await expect(page.getByTestId('harim-country-toggle')).toHaveCount(54);
+    await waitForStats(page);
   }
+}
+
+/** Waits until the statistics band shows its cards and has finished counting up. */
+export async function waitForStats(page: Page): Promise<void> {
+  await expect(page.getByTestId('stat-card').first()).toBeVisible();
+  await expect(page.locator('[data-counting]')).toHaveCount(0);
 }

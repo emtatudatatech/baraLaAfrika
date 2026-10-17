@@ -30,6 +30,8 @@ import {
   updateParams,
 } from './harimQuery';
 import { PeakDrawer } from './PeakDrawer';
+import { StatsBand } from './stats/StatsBand';
+import type { StatAction } from './stats/statsLogic';
 import { PeakList } from './PeakList';
 import { PeaksTable } from './PeaksTable';
 import { SummaryCards, SummaryCardsSkeleton } from './SummaryCards';
@@ -59,6 +61,7 @@ export function HarimPage() {
   const [lowColumns, setLowColumns] = useState<boolean | null>(null);
   const showLowColumns = isLg && (lowColumns ?? isXl);
   const searchRef = useRef<HTMLInputElement>(null);
+  const controlsRef = useRef<HTMLElement>(null);
 
   // Rows are expanded locally; a country chosen in the URL (e.g. from the Countries tab) opens.
   const [expanded, setExpanded] = useState<ReadonlySet<string>>(
@@ -138,6 +141,20 @@ export function HarimPage() {
   const openPeak = (slug: string) => {
     update({ peak: slug });
   };
+  // A statistics card either opens a peak or filters the list; then the list is brought into view.
+  const onStatAction = (action: StatAction) => {
+    if (action.kind === 'peak') {
+      openPeak(action.slug);
+      return;
+    }
+    update(action.change);
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    controlsRef.current?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  };
+  const regionName =
+    view.region === null
+      ? null
+      : (rows.find((row) => row.country.region.slug === view.region)?.country.region.name ?? null);
   const toggleCountry = (iso3: string) => {
     setExpanded((current) => {
       const next = new Set(current);
@@ -188,7 +205,15 @@ export function HarimPage() {
         </p>
       )}
 
-      <section className={styles.controls} aria-label={text.filtersLabel}>
+      <StatsBand
+        region={view.region}
+        regionName={regionName}
+        countries={countries}
+        unit={unit}
+        onAction={onStatAction}
+      />
+
+      <section ref={controlsRef} className={styles.controls} aria-label={text.filtersLabel}>
         <div className={styles.topRow}>
           <div role="group" aria-label={text.viewLabel} className={styles.segmented}>
             {(['country', 'peaks'] as const).map((option) => (

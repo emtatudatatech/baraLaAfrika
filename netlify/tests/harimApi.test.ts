@@ -6,6 +6,7 @@ import {
   MountainResponseSchema,
   MountainSummaryResponseSchema,
   MountainsResponseSchema,
+  REGION_SLUGS,
 } from '@bla/shared';
 import type { Context } from '@netlify/functions';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -204,6 +205,21 @@ describe('GET /api/mountains/stats', () => {
       await (await call(mountainsStats, '/api/mountains/stats?region=east')).json(),
     );
     expect(east.stats.every((s) => s.scope === 'east')).toBe(true);
+    // Every region's cards match the strict per-card contract (details and entities).
+    for (const region of REGION_SLUGS) {
+      const body = HarimStatsResponseSchema.parse(
+        await (await call(mountainsStats, `/api/mountains/stats?region=${region}`)).json(),
+      );
+      expect(
+        body.stats.map((s) => s.key),
+        region,
+      ).toEqual([...HARIM_STAT_KEYS]);
+    }
+    const tallest = africa.stats.find((s) => s.key === 'tallest_mountain');
+    expect(tallest?.entities[0]).toMatchObject({
+      slug: 'mount-kilimanjaro',
+      summitName: 'Mount Kibo',
+    });
     const bad = await call(mountainsStats, '/api/mountains/stats?region=asia');
     expect(bad.status).toBe(400);
   });

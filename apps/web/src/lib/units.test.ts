@@ -9,14 +9,14 @@ afterEach(() => {
 
 describe('formatElevation', () => {
   it('formats metres and feet with grouping', () => {
-    expect(formatElevation(5895)).toBe('5,895 m');
-    expect(formatElevation(5895, 'ft')).toBe('19,341 ft');
-    expect(formatElevation(0, 'ft')).toBe('0 ft');
+    expect(formatElevation(5895)).toBe('5,895\u00a0m');
+    expect(formatElevation(5895, 'ft')).toBe('19,341\u00a0ft');
+    expect(formatElevation(0, 'ft')).toBe('0\u00a0ft');
   });
 
   it('uses a true minus sign for depths below sea level', () => {
-    expect(formatElevation(-155)).toBe('−155 m');
-    expect(formatElevation(-155, 'ft')).toBe('−509 ft');
+    expect(formatElevation(-155)).toBe('−155\u00a0m');
+    expect(formatElevation(-155, 'ft')).toBe('−509\u00a0ft');
     expect(formatElevation(-155)).not.toContain('-');
   });
 

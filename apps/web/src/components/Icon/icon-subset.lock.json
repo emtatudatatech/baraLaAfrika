@@ -4,6 +4,7 @@
     "add_shopping_cart",
     "altitude",
     "arrow_downward",
+    "arrow_forward",
     "close",
     "compare_arrows",
     "contrast",
@@ -47,5 +48,5 @@
     "zoom_out"
   ],
   "source": "material-symbols@0.48.0",
-  "sha256": "88c7fa56b64c7b84bff3d7a155df4854b9eaa69a806427383858344b05d727a5"
+  "sha256": "1e21faea97397c75bde84656563a0248f8500887f4d51b2eba873024b10857df"
 }

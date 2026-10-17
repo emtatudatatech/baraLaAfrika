@@ -9,6 +9,7 @@ export const ICON_NAMES = [
   'add_shopping_cart',
   'altitude',
   'arrow_downward',
+  'arrow_forward',
   'close',
   'compare_arrows',
   'contrast',

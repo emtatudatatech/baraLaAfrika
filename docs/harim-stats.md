@@ -1,6 +1,6 @@
 # Harim statistics
 
-The cards at the top of `/harim` (spec 7.5.1). Every value is computed in the database by `v_harim_stats(scope_region)` (migration `db/migrations/0004_harim_views.sql`) and served by `GET /api/mountains/stats?region=<slug>`; nothing is computed in the browser. The **Definition** below is the exact text the API returns and the page shows in each card's "How is this calculated?" popover (a test checks they match).
+The cards at the top of `/harim` (spec 7.5.1). Every value is computed in the database by `v_harim_stats(scope_region)` (migration `db/migrations/0004_harim_views.sql`, revised by `0005_harim_stats_band.sql`) and served by `GET /api/mountains/stats?region=<slug>`; nothing is computed in the browser. The **Definition** below is the exact text the API returns and the page shows in each card's "How is this calculated?" popover (a test checks they match).
 
 ## Shared rules
 
@@ -23,7 +23,7 @@ The cards at the top of `/harim` (spec 7.5.1). Every value is computed in the da
 
 ### 2. Volcanic mountains (`volcanic_mountains`)
 
-**Definition.** Catalogued mountains that are volcanoes by type (stratovolcano, shield volcano or other volcano, from Wikidata or because the Smithsonian Global Volcanism Program lists them) or have a stated volcanic status. Status (active, dormant, extinct) is shown only where a source states it; the rest are counted as unknown.
+**Definition.** Catalogued mountains that are volcanoes by type (stratovolcano, shield volcano or other volcano: from Wikidata, because the Smithsonian Global Volcanism Program lists them, or from a curated, quoted source) or have a stated volcanic status. Status (active, dormant, extinct) is shown only where a source states it; the rest are counted as unknown.
 
 **Value and details.** `detail`: counts by status (`active`, `dormant`, `extinct`, `unknown`).
 
@@ -33,7 +33,7 @@ The cards at the top of `/harim` (spec 7.5.1). Every value is computed in the da
 
 **Definition.** The catalogued mountain with the greatest elevation. For a massif, its highest summit is named too. Ties are all listed.
 
-**Value and details.** `entities`: each mountain at the maximum elevation, with `summitName` (a massif's highest summit), its countries and confidence.
+**Value and details.** `entities`: each mountain at the maximum elevation, with `summitName` (a massif's highest summit), its countries, `confidence`, `needsReview` and `alternatives` (its other sourced heights, `[{ elevationM, source }]`).
 
 **Ties.** Every mountain at the maximum is listed, ordered by name for display.
 
@@ -41,7 +41,7 @@ The cards at the top of `/harim` (spec 7.5.1). Every value is computed in the da
 
 **Definition.** Africa's lowest "highest point": the lowest of the countries' highest points. It is not "the shortest mountain": the catalogue leaves out small hills, and some national high points are hills or flat ground rather than mountains. Ties are all listed.
 
-**Value and details.** `entities`: each country whose high point is at the minimum, with the high point's slug, name and elevation.
+**Value and details.** `entities`: each country whose high point is at the minimum, with the high point's slug, name and elevation, and its `confidence`, `needsReview` and `alternatives`.
 
 **Ties.** Every country at the minimum is listed, ordered by name for display.
 
@@ -71,9 +71,11 @@ The cards at the top of `/harim` (spec 7.5.1). Every value is computed in the da
 
 ### 8. Lowest point in Africa (`lowest_point`)
 
+For a region the label names it ("Lowest point in East Africa").
+
 **Definition.** The lowest of the countries' lowest points; negative values are below sea level. Ties are all listed.
 
-**Value and details.** `entities`: each country whose low point is at the minimum, with the point's name, elevation and kind.
+**Value and details.** `entities`: each country whose low point is at the minimum, with the point's name, elevation, kind and `needsReview`.
 
 **Ties.** Every country at the minimum is listed, ordered by name for display.
 
@@ -95,4 +97,10 @@ The cards at the top of `/harim` (spec 7.5.1). Every value is computed in the da
 
 ## Response shape
 
-`GET /api/mountains/stats?region=<slug>` returns `{ scope, asOf, stats: [{ key, label, value, unit, detail, entities, definition }] }`. `scope` is `null` (All Africa) or the region; `asOf` is the newest "as of" date of the mountain datasets. Entities carry a `kind` (`mountain`, `country` or `range`) and its key (`slug` or `iso3`), so each card can link to the peak, country or range.
+`GET /api/mountains/stats?region=<slug>` returns `{ stats: [{ key, label, value, unit, detail, entities, definition, scope, asOf }] }`, one row per statistic in the order above. `scope` is `null` (All Africa) or the region's slug; `asOf` is the newest "as of" date of the mountain datasets. Entities carry a `kind` (`mountain`, `country` or `range`) and its key (`slug` or `iso3`), so each card can link to the peak, country or range.
+
+## How the page shows them
+
+- The band shows the scope ("All Africa" or the region, in its colour) on every view, so a regional figure is never read as continental.
+- A height card shows a "sources disagree" marker when its mountain's confidence is low or another sourced height differs by more than 10 m (the review threshold); the marker lists the other heights. A low point marked for review shows a "needs verification" marker.
+- `most_prominent_peak` is hidden while `detail.available` is false. With the current catalogue prominence is known for about a third of the mountains of 3,000 m or more, so the card is not shown.

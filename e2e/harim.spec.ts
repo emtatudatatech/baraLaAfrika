@@ -173,7 +173,10 @@ test('All peaks filters by region and minimum height, kept in the URL', async ({
   expect(all).toBeGreaterThan(300);
   await page.getByTestId('harim-min-height').fill('4000');
   await expect(page).toHaveURL(/view=peaks&minHeight=4000/);
-  await expect(page.getByTestId('harim-min-height')).toHaveAttribute('aria-valuetext', '≥ 4,000 m');
+  await expect(page.getByTestId('harim-min-height')).toHaveAttribute(
+    'aria-valuetext',
+    '≥ 4,000\u00a0m',
+  );
   await expect.poll(async () => (await heights(items)).every((value) => value >= 4000)).toBe(true);
   const high = await items.count();
   expect(high).toBeGreaterThan(5);

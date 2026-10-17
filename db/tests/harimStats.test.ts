@@ -191,6 +191,33 @@ describe('v_harim_stats', () => {
     expect(all.greatest_relief?.entities.map((e) => e.iso3)).toEqual(['AAA']);
   });
 
+  it('carries confidence, review flags and other sourced heights for the band', async () => {
+    expect(all.tallest_mountain?.entities[0]).toMatchObject({
+      confidence: 'high',
+      needsReview: false,
+      alternatives: [],
+    });
+    await db.exec(`
+      UPDATE mountains SET elevation_alternatives = '[{"m": 4990, "source": "s"}, {"m": 5003, "source": "unknown-key"}]'
+      WHERE slug = 'kili';
+      UPDATE mountains SET elevation_confidence = 'low', needs_review = true
+      WHERE slug = 'gamma-hill';`);
+    const updated = await stats(db);
+    // Titles from the sources table; an unknown key falls back to the key itself.
+    expect(updated.tallest_mountain?.entities[0]?.alternatives).toEqual([
+      { elevationM: 4990, source: 'S' },
+      { elevationM: 5003, source: 'unknown-key' },
+    ]);
+    expect(updated.lowest_national_high_point?.entities[0]).toMatchObject({
+      confidence: 'low',
+      needsReview: true,
+      alternatives: [],
+    });
+    expect(updated.lowest_point?.entities.map((e) => e.needsReview)).toEqual([false, false]);
+    // Values are unchanged by the extra fields.
+    expect(Number(updated.tallest_mountain?.value)).toBe(5000);
+  });
+
   it('hides the most-prominent card when prominence is mostly unknown', () => {
     expect(all.most_prominent_peak?.value).toBeNull();
     expect(all.most_prominent_peak?.detail).toEqual({ available: false, coverage: 0 });
@@ -198,6 +225,8 @@ describe('v_harim_stats', () => {
 
   it('recomputes for a region, and shows 0 (not an error) when a region has no volcanoes', async () => {
     const north = await stats(db, 'north');
+    expect(all.lowest_point?.label).toBe('Lowest point in Africa');
+    expect(north.lowest_point?.label).toBe('Lowest point in North Africa');
     expect(Number(north.mountains_catalogued?.value)).toBe(1);
     expect(north.mountains_catalogued?.detail).toEqual({ countries: 1, territoryPeaks: 0 });
     expect(Number(north.volcanic_mountains?.value)).toBe(0);

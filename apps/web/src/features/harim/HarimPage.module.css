@@ -1,5 +1,6 @@
 /* minmax(0, 1fr): a long <select> option must never widen the page on a narrow phone. */
 .controls {
+  scroll-margin-top: calc(var(--ribbon-height, 0px) + var(--space-4));
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-3);

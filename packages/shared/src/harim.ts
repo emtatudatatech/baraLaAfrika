@@ -230,20 +230,155 @@ export const HARIM_STAT_KEYS = [
 export const HarimStatKeySchema = z.enum(HARIM_STAT_KEYS);
 export type HarimStatKey = z.infer<typeof HarimStatKeySchema>;
 
-export const HarimStatSchema = z.object({
-  key: HarimStatKeySchema,
+// Entities named by the cards (ties are all listed). Each kind links somewhere: a mountain to
+// its drawer, a country to its row, a range to its peaks.
+const StatAlternativeSchema = z.object({ elevationM: z.number().int(), source: z.string() });
+export type StatAlternative = z.infer<typeof StatAlternativeSchema>;
+
+export const StatMountainSchema = z.object({
+  kind: z.literal('mountain'),
+  slug: z.string(),
+  name: z.string(),
+  elevationM: z.number().int(),
+  /** A massif's highest summit. */
+  summitName: z.string().nullable(),
+  countries: z.array(z.string().length(3)),
+  confidence: ConfidenceSchema,
+  needsReview: z.boolean(),
+  /** The mountain's other sourced heights. */
+  alternatives: z.array(StatAlternativeSchema),
+  prominenceM: z.number().int().optional(),
+});
+export type StatMountain = z.infer<typeof StatMountainSchema>;
+
+const StatCountrySchema = z.object({
+  kind: z.literal('country'),
+  iso3: z.string().length(3),
+  name: z.string(),
+});
+
+export const StatHighPointSchema = StatCountrySchema.extend({
+  mountain: z.string(),
+  mountainName: z.string(),
+  elevationM: z.number().int(),
+  confidence: ConfidenceSchema,
+  needsReview: z.boolean(),
+  alternatives: z.array(StatAlternativeSchema),
+});
+export type StatHighPoint = z.infer<typeof StatHighPointSchema>;
+
+export const StatCountryCountSchema = StatCountrySchema.extend({ count: z.number().int() });
+export type StatCountryCount = z.infer<typeof StatCountryCountSchema>;
+
+export const StatRangeSchema = z.object({
+  kind: z.literal('range'),
+  slug: z.string(),
+  name: z.string(),
+  count: z.number().int(),
+  tallest: z.object({ slug: z.string(), name: z.string(), elevationM: z.number().int() }),
+});
+export type StatRange = z.infer<typeof StatRangeSchema>;
+
+export const StatLowPointSchema = StatCountrySchema.extend({
+  pointName: z.string(),
+  elevationM: z.number().int(),
+  feature: LowPointFeatureSchema,
+  needsReview: z.boolean(),
+});
+export type StatLowPoint = z.infer<typeof StatLowPointSchema>;
+
+export const StatReliefSchema = StatCountrySchema.extend({
+  highestM: z.number().int(),
+  highestName: z.string(),
+  lowestM: z.number().int(),
+  lowestName: z.string(),
+});
+export type StatRelief = z.infer<typeof StatReliefSchema>;
+
+const count = z.number().int().nonnegative();
+
+const statBase = {
   label: z.string(),
   value: z.number().nullable(),
   unit: z.string(),
-  detail: z.record(z.string(), z.unknown()),
-  /** Mountains, countries or ranges the card names; ties are all listed. */
-  entities: z.array(z.record(z.string(), z.unknown())),
   definition: z.string(),
   /** null = All Africa; otherwise the region the figures cover. */
   scope: z.enum(REGION_SLUGS).nullable(),
   asOf: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-});
+};
+const noDetail = z.object({}).strict();
+
+/** One card of the statistics band; `detail` and `entities` depend on the card (see docs). */
+export const HarimStatSchema = z.discriminatedUnion('key', [
+  z.object({
+    ...statBase,
+    key: z.literal('mountains_catalogued'),
+    detail: z.object({ countries: count, territoryPeaks: count }),
+    entities: z.array(z.never()),
+  }),
+  z.object({
+    ...statBase,
+    key: z.literal('volcanic_mountains'),
+    detail: z.object({ active: count, dormant: count, extinct: count, unknown: count }),
+    entities: z.array(z.never()),
+  }),
+  z.object({
+    ...statBase,
+    key: z.literal('tallest_mountain'),
+    detail: noDetail,
+    entities: z.array(StatMountainSchema),
+  }),
+  z.object({
+    ...statBase,
+    key: z.literal('lowest_national_high_point'),
+    detail: noDetail,
+    entities: z.array(StatHighPointSchema),
+  }),
+  z.object({
+    ...statBase,
+    key: z.literal('peaks_above_4000'),
+    detail: z.object({
+      above5000: count,
+      from4000to5000: count,
+      from3000to4000: count,
+      upTo3000: count,
+    }),
+    entities: z.array(z.never()),
+  }),
+  z.object({
+    ...statBase,
+    key: z.literal('most_mountainous_country'),
+    detail: noDetail,
+    entities: z.array(StatCountryCountSchema),
+  }),
+  z.object({
+    ...statBase,
+    key: z.literal('busiest_range'),
+    detail: noDetail,
+    entities: z.array(StatRangeSchema),
+  }),
+  z.object({
+    ...statBase,
+    key: z.literal('lowest_point'),
+    detail: noDetail,
+    entities: z.array(StatLowPointSchema),
+  }),
+  z.object({
+    ...statBase,
+    key: z.literal('greatest_relief'),
+    detail: noDetail,
+    entities: z.array(StatReliefSchema),
+  }),
+  z.object({
+    ...statBase,
+    key: z.literal('most_prominent_peak'),
+    detail: z.object({ available: z.boolean(), coverage: z.number().nullable() }),
+    entities: z.array(StatMountainSchema.required({ prominenceM: true })),
+  }),
+]);
 export type HarimStat = z.infer<typeof HarimStatSchema>;
+/** The card for one key. */
+export type HarimStatOf<K extends HarimStatKey> = Extract<HarimStat, { key: K }>;
 
 export const HarimStatsResponseSchema = z.object({ stats: z.array(HarimStatSchema) });
 export type HarimStatsResponse = z.infer<typeof HarimStatsResponseSchema>;

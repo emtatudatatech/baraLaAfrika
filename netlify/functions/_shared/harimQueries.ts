@@ -354,15 +354,20 @@ export async function getHarimStats(
   ]);
   const date = asOf[0]?.as_of;
   if (!date) return null;
-  return stats.map((row) => ({
-    key: row.key,
-    label: row.label,
-    value: row.value === null ? null : Number(row.value),
-    unit: row.unit,
-    detail: row.detail,
-    entities: row.entities,
-    definition: row.definition,
-    scope: region ?? null,
-    asOf: date,
-  }));
+  // The shape of each card's detail and entities is fixed by v_harim_stats (the API tests
+  // validate every card against HarimStatSchema).
+  return stats.map(
+    (row) =>
+      ({
+        key: row.key,
+        label: row.label,
+        value: row.value === null ? null : Number(row.value),
+        unit: row.unit,
+        detail: row.detail,
+        entities: row.entities,
+        definition: row.definition,
+        scope: region ?? null,
+        asOf: date,
+      }) as HarimStat,
+  );
 }

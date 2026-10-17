@@ -60,6 +60,7 @@ def world(geography: Countries) -> tuple[Inputs, dict[str, Any], dict[str, Any]]
         country_qids={"KEN": "Q114", "TZA": "Q924"},
         candidates={"KEN": [kenya, shared], "TZA": [massif, summit, nearby, meru, shared, hill]},
         items=items,
+        volcano_ids={"Q103": "222160"},
         extremes=[
             CountryExtreme(
                 "TZA", "high", "Q101", "Kibo Test", None, 5890, 37.356, -3.066, "NormalRank"
@@ -166,6 +167,13 @@ def test_builds_the_catalogue(geography: Countries) -> None:
     # Shared peaks keep both countries; ranges come only from curated range items.
     assert by_name["Shared Test"].countries == {"KEN", "TZA"}
     assert by_name["Meru Test"].range_slug == "test-range"
+    # Typed only as a mountain in Wikidata but listed by the Global Volcanism Program: a volcano,
+    # sourced to the GVP, with no status (none is stated).
+    meru = by_name["Meru Test"]
+    assert meru.peak_type == "volcano" and meru.volcanic_status is None
+    assert ("gvp-222160", "volcanic_status") in meru.sources
+    assert result.sources.records["gvp-222160"].url.startswith("https://volcano.si.edu/")
+    assert by_name["Kenya Test"].peak_type == "peak"
     # Not notable (one Wikipedia edition, no prominence): left out.
     assert "Small Hill" not in by_name
     assert {p.iso3: p.elevation_m for p in result.low_points.values()} == {"KEN": 0, "TZA": 0}

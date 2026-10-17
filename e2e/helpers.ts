@@ -41,6 +41,27 @@ export async function waitForFonts(page: Page): Promise<void> {
 /** Waits until the page has finished every running CSS animation (e.g. the map's fade-in). */
 export async function waitForAnimations(page: Page): Promise<void> {
   await page.evaluate(async () => {
-    await Promise.all(document.getAnimations().map((animation) => animation.finished));
+    // A cancelled animation (its element removed, e.g. a skeleton replaced by data) rejects.
+    await Promise.all(
+      document.getAnimations().map((animation) => animation.finished.catch(() => undefined)),
+    );
   });
+}
+
+/** Waits for a route's loaded data (not its skeleton), so checks see the real page. */
+export async function waitForContent(page: Page, path: string): Promise<void> {
+  if (path === '/') {
+    // All 54 country controls of the rendered map.
+    await expect(page.getByTestId('africa-map').locator('[role="button"][data-iso3]')).toHaveCount(
+      54,
+    );
+  }
+  if (path === '/countries') {
+    // The table or cards, with their 54 flag controls.
+    await expect(page.getByTestId('flag-button')).toHaveCount(54);
+  }
+  if (path.startsWith('/harim')) {
+    // One expandable row (or card) per country.
+    await expect(page.getByTestId('harim-country-toggle')).toHaveCount(54);
+  }
 }

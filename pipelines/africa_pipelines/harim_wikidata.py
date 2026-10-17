@@ -1,7 +1,7 @@
 """Wikidata queries for Harim (mountains): each country's highest and lowest points (P610,
-P1589), the peaks located in each country, and details for specific items (curated summits,
-territory peaks). Results are normalised into plain records; nothing is guessed: a value whose
-unit is unknown is dropped and reported."""
+P1589), the peaks located in each country, details for specific items (curated summits,
+territory peaks) and their Global Volcanism Program IDs (P1886). Results are normalised into
+plain records; nothing is guessed: a value whose unit is unknown is dropped and reported."""
 
 from __future__ import annotations
 
@@ -58,6 +58,11 @@ VOLCANO_CLASSES = {
     "Q1330974",
     "Q1325302",
 }
+
+# Wikidata's "Global Volcanism Program ID" (the Smithsonian's volcano number). Many volcanoes are
+# typed only as "mountain" in P31 (Mount Meru, Ol Doinyo Lengai), so an item with this ID counts
+# as a volcano too. The label is checked on every run, like the class IDs.
+GVP_PROPERTY = ("P1886", "Global Volcanism Program ID")
 
 COORD_RE = re.compile(r"^Point\((-?[\d.]+(?:E-?\d+)?) (-?[\d.]+(?:E-?\d+)?)\)$")
 
@@ -306,6 +311,34 @@ def fetch_items(qids: list[str], *, refresh: bool = False) -> dict[str, Wikidata
     return found
 
 
+def property_label_query(prop: str) -> str:
+    return f"""
+SELECT ?label WHERE {{
+  wd:{prop} rdfs:label ?label . FILTER(LANG(?label) = "en")
+}}"""
+
+
+def volcano_ids_query(qids: list[str]) -> str:
+    return f"""
+SELECT ?item ?vn WHERE {{
+  {values_clause("item", qids, literal=False)}
+  ?item wdt:{GVP_PROPERTY[0]} ?vn .
+}}"""
+
+
+def fetch_volcano_ids(qids: list[str], *, refresh: bool = False) -> dict[str, str]:
+    """QID → Global Volcanism Program volcano number, for the items that have one (the lowest
+    number when an item has several)."""
+    unique = sorted(set(qids))
+    found: dict[str, str] = {}
+    for start in range(0, len(unique), 200):
+        for row in sparql(volcano_ids_query(unique[start : start + 200]), refresh=refresh):
+            item, number = qid(row["item"]), row["vn"].strip()
+            if number and (item not in found or number < found[item]):
+                found[item] = number
+    return found
+
+
 def labels_query(qids: list[str]) -> str:
     return f"""
 SELECT ?item ?label WHERE {{
@@ -315,7 +348,8 @@ SELECT ?item ?label WHERE {{
 
 
 def verify_classes(*, refresh: bool = False) -> None:
-    """Fail unless every class QID still has the English label the code expects."""
+    """Fail unless every class QID (and the GVP property) still has the English label the code
+    expects."""
     rows = sparql(labels_query(sorted(PEAK_CLASSES)), refresh=refresh)
     actual = {qid(row["item"]): row["label"] for row in rows}
     wrong = [
@@ -323,5 +357,9 @@ def verify_classes(*, refresh: bool = False) -> None:
         for key, label in PEAK_CLASSES.items()
         if actual.get(key) != label
     ]
+    prop, label = GVP_PROPERTY
+    found = [row["label"] for row in sparql(property_label_query(prop), refresh=refresh)]
+    if found != [label]:
+        wrong.append(f"{prop} is {found!r}, expected {label!r}")
     if wrong:
         raise HarimWikidataError("Wikidata class IDs do not match: " + "; ".join(wrong))

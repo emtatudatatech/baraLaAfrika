@@ -6,12 +6,12 @@ import {
   filterCountries,
   parseSort,
   parseView,
-  searchFold,
   sortCountries,
   toggleSort,
   updateParams,
 } from './countryQuery';
-import { parseReviewNotes } from './reviewNotes';
+import { parseReviewNotes } from '../../lib/reviewNotes';
+import { searchFold } from '../../lib/searchFold';
 
 const REGION_NAMES: Record<RegionSlug, string> = {
   north: 'North Africa',

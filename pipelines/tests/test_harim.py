@@ -11,12 +11,14 @@ import pytest
 
 from pipelines.africa_pipelines import harim_baseline as baseline
 from pipelines.africa_pipelines import harim_sources as sources
+from pipelines.africa_pipelines import harim_wikidata
 from pipelines.africa_pipelines.harim_geo import Countries, haversine_km
 from pipelines.africa_pipelines.harim_reconcile import (
     Elevation,
     choose_elevation,
     names_match,
     one_edit_apart,
+    peak_type_of,
     slugify,
 )
 from pipelines.africa_pipelines.harim_wikidata import parse_peak, parse_point
@@ -290,3 +292,33 @@ def test_seeds_resolve_the_known_prototype_issues(seeds: dict[str, Any]) -> None
         "Mawenzi",
         "Shira",
     }
+
+
+def test_peak_type_counts_global_volcanism_program_volcanoes() -> None:
+    assert peak_type_of(["Q8502"], "standalone") == "peak"
+    assert peak_type_of(["Q8502"], "standalone", gvp_volcano=True) == "volcano"
+    # A more specific class still wins, and a listed massif is a volcano (its summit kind
+    # already says massif).
+    assert peak_type_of(["Q169358"], "standalone", gvp_volcano=True) == "stratovolcano"
+    assert peak_type_of(["Q1061151"], "massif", gvp_volcano=True) == "volcano"
+    assert peak_type_of(["Q1061151"], "massif") == "massif"
+
+
+def test_fetch_volcano_ids_keeps_one_number_per_item(monkeypatch: pytest.MonkeyPatch) -> None:
+    queries: list[str] = []
+
+    def fake_sparql(query: str, *, refresh: bool = False) -> list[dict[str, str]]:
+        queries.append(query)
+        entity = "http://www.wikidata.org/entity/"
+        return [
+            {"item": f"{entity}Q309098", "vn": "222160"},
+            {"item": f"{entity}Q7296", "vn": "222150"},
+            {"item": f"{entity}Q7296", "vn": "222149"},
+        ]
+
+    monkeypatch.setattr(harim_wikidata, "sparql", fake_sparql)
+    assert harim_wikidata.fetch_volcano_ids(["Q7296", "Q309098", "Q7296"]) == {
+        "Q309098": "222160",
+        "Q7296": "222149",
+    }
+    assert len(queries) == 1 and "wdt:P1886" in queries[0]

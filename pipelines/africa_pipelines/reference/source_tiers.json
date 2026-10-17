@@ -13,6 +13,12 @@
       "note": "Community-curated structured data; bulk-imported items are treated as copies of their source (see harim_reconcile)."
     },
     {
+      "domain": "volcano.si.edu",
+      "tier": "reference",
+      "source_type": "database",
+      "note": "Smithsonian Institution Global Volcanism Program, Volcanoes of the World."
+    },
+    {
       "domain": "geonames.org",
       "tier": "reference",
       "source_type": "gazetteer",

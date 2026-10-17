@@ -14,6 +14,13 @@ from .harim_reconcile import Inputs, Mountain, Result
 CONFIDENCE = {"high": "high", "medium": "medium", "low": "**low**"}
 
 
+VOLCANIC_TYPES = {"stratovolcano", "shield_volcano", "volcano"}
+
+
+def listed_by_gvp(mountain: Mountain) -> bool:
+    return any(key.startswith("gvp-") for key, _ in mountain.sources)
+
+
 def metres(value: float | int | None) -> str:
     if value is None:
         return "—"
@@ -89,6 +96,16 @@ def write(
         'than 50 m apart → low"; it is applied to the reliable sources, so a wrong prototype '
         "height alone does not make a well-sourced peak low-confidence. Say if you want the "
         "literal reading.)",
+        f"- Volcanoes: **{sum(1 for m in counted if m.peak_type in VOLCANIC_TYPES)}** of the "
+        "mountains, by Wikidata class (stratovolcano, shield volcano or another volcanic class) "
+        "or because the Smithsonian Global Volcanism Program lists them (Wikidata P1886; "
+        f"{sum(1 for m in counted if listed_by_gvp(m))} are listed). Status only where Wikidata "
+        "states it as a class: "
+        + ", ".join(
+            f"{status} {sum(1 for m in counted if m.volcanic_status == status)}"
+            for status in ("active", "dormant", "extinct")
+        )
+        + "; the rest are unknown.",
         "",
         "### Sources and as-of dates",
         "",
@@ -103,6 +120,8 @@ def write(
         "elevations only (the 90 m `dem` column is never used).",
         "- Wikipedia (CC BY-SA): only for curated facts, each with a quote re-checked on every "
         "run.",
+        "- Smithsonian Global Volcanism Program: only its volcano numbers, read from Wikidata "
+        "(P1886) and linked to each volcano's page; none of its data is copied.",
         "",
         "## Per-country high points (for review)",
         "",

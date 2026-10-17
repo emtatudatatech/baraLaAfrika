@@ -9,13 +9,8 @@ import { createServer } from 'node:http';
 import type { Context } from '@netlify/functions';
 
 import { seededDb } from '../db/tests/seededDb.ts';
-import countries from '../netlify/functions/countries.ts';
-import country from '../netlify/functions/country.ts';
-import coverage from '../netlify/functions/coverage.ts';
 import { setDbForTesting } from '../netlify/functions/_shared/db.ts';
-import regions from '../netlify/functions/regions.ts';
-
-type Handler = (request: Request, context: Context) => Promise<Response>;
+import { matchingFunctions } from '../netlify/tests/functionRoutes.ts';
 
 const PORT = Number(process.env.E2E_API_PORT ?? 4174);
 const pg = await seededDb();
@@ -24,14 +19,6 @@ setDbForTesting({
     return (await pg.query<Row>(text, [...params])).rows;
   },
 });
-
-/** Mirrors each function's config.path (URLPattern). */
-const routes: [URLPattern, Handler][] = [
-  [new URLPattern({ pathname: '/api/regions' }), regions],
-  [new URLPattern({ pathname: '/api/countries' }), countries],
-  [new URLPattern({ pathname: '/api/countries/:iso3' }), country],
-  [new URLPattern({ pathname: '/api/coverage' }), coverage],
-];
 
 createServer((incoming, outgoing) => {
   void (async () => {
@@ -46,13 +33,10 @@ createServer((incoming, outgoing) => {
       { status: 404 },
     );
     try {
-      for (const [pattern, handler] of routes) {
-        const match = pattern.exec(url);
-        if (match) {
-          const params = match.pathname.groups as Record<string, string>;
-          response = await handler(request, { params } as unknown as Context);
-          break;
-        }
+      const [match, ...others] = matchingFunctions(url.pathname);
+      if (others.length > 0) throw new Error(`Several functions match ${url.pathname}`);
+      if (match) {
+        response = await match.handler(request, { params: match.params } as unknown as Context);
       }
     } catch (error) {
       // Never take the server down; answer like the deployed functions do.

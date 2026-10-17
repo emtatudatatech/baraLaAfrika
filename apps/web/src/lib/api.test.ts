@@ -33,6 +33,23 @@ describe('api client', () => {
     );
   });
 
+  it('builds the Harim paths', async () => {
+    const fetchMock = stubFetch(Response.json({}));
+    await api.mountainSummary();
+    expect(fetchMock).toHaveBeenLastCalledWith('/api/mountains/summary', expect.anything());
+    await api.mountains();
+    expect(fetchMock).toHaveBeenLastCalledWith('/api/mountains', expect.anything());
+    await api.mountains({ territories: true });
+    expect(fetchMock).toHaveBeenLastCalledWith('/api/mountains?territories=1', expect.anything());
+    await api.mountain('mount-kenya');
+    expect(fetchMock).toHaveBeenLastCalledWith('/api/mountains/mount-kenya', expect.anything());
+    await api.mountainStats('east');
+    expect(fetchMock).toHaveBeenLastCalledWith(
+      '/api/mountains/stats?region=east',
+      expect.anything(),
+    );
+  });
+
   it('turns the API error shape into ApiRequestError', async () => {
     stubFetch(
       Response.json(

@@ -26,7 +26,7 @@ import {
   toggleSort,
   updateParams,
 } from './countryQuery';
-import { type RegionOption, RegionFilter } from './RegionFilter';
+import { type RegionOption, RegionFilter } from '../../components/RegionFilter/RegionFilter';
 
 /** `/countries`: all 54 countries, filterable, searchable and sortable, with URL state (§7.2). */
 export function CountriesPage() {

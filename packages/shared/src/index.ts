@@ -3,3 +3,5 @@ export * from './constants.ts';
 export * from './datasets.ts';
 export * from './regions.ts';
 export * from './schemas.ts';
+export * from './harim.ts';
+export * from './harimConstants.ts';

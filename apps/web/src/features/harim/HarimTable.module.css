@@ -1,0 +1,250 @@
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+}
+
+.table th,
+.table td {
+  padding: var(--space-2) var(--space-3);
+  text-align: start;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--color-line);
+}
+
+/* The header sticks below the persistent ribbon (its height is published as --ribbon-height). */
+.table thead th {
+  position: sticky;
+  top: var(--ribbon-height, 0);
+  z-index: var(--z-raised);
+  padding-block: var(--space-1);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--color-ink-muted);
+  background: var(--color-surface-solid);
+  border-bottom-color: var(--color-line-strong);
+}
+
+.table thead th:first-child {
+  border-top-left-radius: var(--radius-md);
+}
+
+.table thead th:last-child {
+  border-top-right-radius: var(--radius-md);
+}
+
+.flagCol {
+  width: 3.5rem;
+}
+
+.heightCol {
+  width: 9rem;
+}
+
+.numberCol,
+.numberCell {
+  text-align: end;
+}
+
+.table th.numberCol {
+  text-align: end;
+}
+
+.numberCell {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.sortButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--touch-target);
+  margin-inline: calc(-1 * var(--space-2));
+  padding: 0 var(--space-2);
+  border: 0;
+  border-radius: var(--radius-sm);
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  background: transparent;
+}
+
+.sortButton:hover {
+  color: var(--color-ink);
+  background: var(--color-accent-soft);
+}
+
+.sortActive {
+  color: var(--color-ink);
+}
+
+.sortIcon {
+  opacity: 0;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.sortActive .sortIcon {
+  opacity: 1;
+}
+
+.sortButton:not(.sortActive):hover .sortIcon,
+.sortButton:not(.sortActive):focus-visible .sortIcon {
+  opacity: 0.5;
+}
+
+.sortAsc {
+  transform: rotate(180deg);
+}
+
+.row {
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.row:hover,
+.rowOpen {
+  background: color-mix(in oklch, var(--accent) 8%, transparent);
+}
+
+.rowOpen > * {
+  border-bottom-color: transparent;
+}
+
+.table tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.detailRow > td {
+  padding-top: 0;
+  background: color-mix(in oklch, var(--accent) 5%, transparent);
+  box-shadow: inset 4px 0 0 var(--accent);
+}
+
+.flagCell {
+  padding-block: var(--space-1);
+}
+
+/* The base `max-width: 100%` would let a squeezed table shrink the flag column to nothing. */
+.flagCell img {
+  display: block;
+  max-width: none;
+}
+
+.nameCell {
+  font-weight: var(--weight-semibold);
+}
+
+.regionChip {
+  display: flex;
+  width: max-content;
+  margin-top: var(--space-1);
+  font-weight: var(--weight-medium);
+}
+
+.expandButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--touch-target);
+  margin-inline: calc(-1 * var(--space-1));
+  padding: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-xs);
+  font: inherit;
+  text-align: start;
+  color: var(--color-ink);
+  background: transparent;
+}
+
+.chevron {
+  flex: none;
+  color: var(--color-ink-muted);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.linkButton {
+  margin-inline: calc(-1 * var(--space-1));
+  padding: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-xs);
+  font: inherit;
+  font-weight: var(--weight-semibold);
+  text-align: start;
+  color: var(--color-ink);
+  background: transparent;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--accent, var(--color-accent)) 70%, transparent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+.linkButton:hover {
+  text-decoration-color: var(--color-ink);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+}
+
+.muted {
+  color: var(--color-ink-muted);
+}
+
+.heightCell {
+  white-space: nowrap;
+}
+
+.ranges {
+  max-width: 14rem;
+}
+
+.lowCell {
+  min-width: 8rem;
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.skeletonRow td {
+  height: 3.75rem;
+}
+
+.skeletonFlag {
+  display: block;
+  width: 40px;
+  height: 27px;
+}
+
+.skeletonText {
+  display: block;
+  width: 70%;
+  height: 0.9rem;
+}
+
+.stack[data-align='end'] {
+  align-items: flex-end;
+}
+
+.summitsNote {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-regular);
+}

@@ -40,6 +40,24 @@ export const CREDITS: readonly Credit[] = [
     note: 'Contains data from GeoNames (geonames.org)',
   },
   {
+    name: 'The World Factbook (final edition)',
+    href: 'https://github.com/factbook/factbook.json',
+    licence: 'Public domain (U.S. Government work)',
+    note: 'Countries’ highest and lowest points, as a cross-check',
+  },
+  {
+    name: 'Wikipedia',
+    href: 'https://www.wikipedia.org/',
+    licence: 'CC BY-SA 4.0',
+    note: 'Curated mountain facts, each cited to its article',
+  },
+  {
+    name: 'Smithsonian Global Volcanism Program',
+    href: 'https://volcano.si.edu/',
+    licence: 'Linked for reference only; no data republished',
+    note: 'Volcano pages, found through Wikidata',
+  },
+  {
     name: 'Harim prototype',
     href: 'https://github.com/emtatudatatech/harim',
     licence: 'Curated baseline by emtatudatatech',

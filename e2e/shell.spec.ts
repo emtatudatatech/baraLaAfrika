@@ -5,6 +5,7 @@ import {
   expectNoAxeViolations,
   expectNoHorizontalOverflow,
   useTheme,
+  waitForContent,
   waitForFonts,
 } from './helpers';
 
@@ -25,6 +26,7 @@ for (const route of ROUTES) {
     test('has no horizontal overflow, including at 320px wide', async ({ page }) => {
       await page.goto(route.path);
       await waitForFonts(page);
+      await waitForContent(page, route.path);
       await expectNoHorizontalOverflow(page);
       await page.setViewportSize({ width: 320, height: 640 });
       await expectNoHorizontalOverflow(page);
@@ -35,16 +37,7 @@ for (const route of ROUTES) {
         await useTheme(page, theme);
         await page.goto(route.path);
         await waitForFonts(page);
-        if (route.path === '/') {
-          // Check the rendered map (all 54 country controls), not its loading state.
-          await expect(
-            page.getByTestId('africa-map').locator('[role="button"][data-iso3]'),
-          ).toHaveCount(54);
-        }
-        if (route.path === '/countries') {
-          // Check the loaded table or cards (and their 54 flag controls), not the skeleton.
-          await expect(page.getByTestId('flag-button')).toHaveCount(54);
-        }
+        await waitForContent(page, route.path);
         await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
         await expectNoAxeViolations(page);
       });

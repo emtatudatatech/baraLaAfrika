@@ -1,0 +1,248 @@
+/* minmax(0, 1fr): a long <select> option must never widen the page on a narrow phone. */
+.controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+}
+
+.topRow,
+.toolbar,
+.statusRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+}
+
+.topRow {
+  justify-content: space-between;
+}
+
+/* Two or three mutually exclusive options (view, unit): pressed buttons in one pill. */
+.segmented {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-pill);
+  background: var(--glass-bg-strong);
+}
+
+.segmented button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: var(--touch-target);
+  min-height: calc(var(--touch-target) - 8px);
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-pill);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  justify-content: center;
+  color: var(--color-ink-muted);
+  background: transparent;
+}
+
+/* Phones: text only, so the view switch and the unit toggle share one row. */
+@media (--below-sm) {
+  .segmented button {
+    padding: 0 var(--space-3);
+  }
+
+  .segmentedIcon {
+    display: none;
+  }
+}
+
+.segmented button:hover {
+  color: var(--color-ink);
+}
+
+.segmented button[aria-pressed='true'] {
+  color: var(--color-accent-ink);
+  background: var(--color-accent);
+}
+
+.search {
+  position: relative;
+  display: flex;
+  flex: 1 1 16rem;
+  align-items: center;
+  max-width: 28rem;
+}
+
+.searchIcon {
+  position: absolute;
+  left: var(--space-3);
+  color: var(--color-ink-muted);
+  pointer-events: none;
+}
+
+.search input {
+  width: 100%;
+  min-height: var(--touch-target);
+  padding: 0 var(--space-3) 0 calc(var(--space-3) + 20px + var(--space-2));
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-pill);
+  font: inherit;
+  color: var(--color-ink);
+  background: var(--glass-bg-strong);
+}
+
+.search input::placeholder {
+  color: var(--color-ink-muted);
+  opacity: 1;
+}
+
+.select > span {
+  white-space: nowrap;
+}
+
+.select {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+}
+
+.select select {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  max-width: 16rem;
+  min-height: var(--touch-target);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-md);
+  font: inherit;
+  color: var(--color-ink);
+  background: var(--glass-bg-strong);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-pill);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-ink);
+  background: var(--glass-bg-strong);
+}
+
+.chip:hover {
+  background: var(--color-accent-soft);
+}
+
+.chip[aria-pressed='true'] {
+  border-color: var(--color-accent);
+  color: var(--color-accent-ink);
+  background: var(--color-accent);
+}
+
+.slider {
+  display: grid;
+  flex: 1 1 14rem;
+  gap: var(--space-1);
+  max-width: 22rem;
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+}
+
+.slider input {
+  width: 100%;
+  min-height: var(--touch-target);
+  margin: 0;
+  accent-color: var(--color-accent);
+}
+
+.sliderValue {
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink);
+}
+
+.count {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink-muted);
+}
+
+.clear {
+  min-height: var(--touch-target);
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-ink);
+  background: transparent;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.notice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: var(--color-ink);
+  background: var(--color-accent-soft);
+}
+
+/* See CountriesPage.module.css: `clip` keeps the sticky header working and never widens the page. */
+.results {
+  min-height: 12rem;
+  overflow-x: clip;
+}
+
+.panel {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-lg);
+}
+
+.state {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  padding: var(--space-10) var(--space-4);
+  text-align: center;
+  color: var(--color-ink-muted);
+}
+
+.state p {
+  margin: 0;
+}
+
+.stateTitle {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  color: var(--color-ink);
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target);
+  margin-top: var(--space-2);
+  padding: 0 var(--space-5);
+  border: 0;
+  border-radius: var(--radius-pill);
+  font: inherit;
+  font-weight: var(--weight-semibold);
+  color: var(--color-accent-ink);
+  background: var(--color-accent);
+}

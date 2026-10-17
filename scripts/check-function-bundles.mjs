@@ -31,7 +31,7 @@ for (const zip of zips) {
       pathToFileURL(join(directory, 'netlify', 'functions', `${name}.mjs`)).href
     );
     const response = await module.default(new Request(`https://bundle.test${module.config.path}`), {
-      params: { iso3: 'KEN' },
+      params: { iso3: 'KEN', slug: 'mount-kenya' },
     });
     const body = await response.json();
     if (response.status !== 503 || body?.error?.code !== 'service_unavailable') {

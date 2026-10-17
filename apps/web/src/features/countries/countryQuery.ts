@@ -1,5 +1,7 @@
 import { type CountrySummary, REGION_SLUGS, type RegionSlug, isRegionSlug } from '@bla/shared';
 
+import { searchFold } from '../../lib/searchFold';
+
 /*
  * The countries table's view state lives in the URL (?region=&q=&sort=&country=) so every view
  * is shareable. All 54 countries are loaded once (and shared with the map); filtering and
@@ -85,14 +87,6 @@ export function updateParams(
 export function toggleSort(current: SortState, key: SortKey): SortState {
   if (current.key !== key) return { key, direction: 'asc' };
   return { key, direction: current.direction === 'asc' ? 'desc' : 'asc' };
-}
-
-/**
- * Lower-case and strip combining accents, so "cote" matches "Côte d'Ivoire" and "sao" matches
- * "São Tomé" (the same rule as the database's `search_fold`). Curly apostrophes become straight.
- */
-export function searchFold(value: string): string {
-  return value.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[‘’]/g, "'");
 }
 
 /** The text a search matches: names, ISO codes and every visible column. */

@@ -4,6 +4,11 @@ import type {
   CountryResponse,
   CoverageResponse,
   DatasetKey,
+  HarimStatsResponse,
+  MountainResponse,
+  MountainSummaryResponse,
+  MountainsResponse,
+  RegionSlug,
   RegionsResponse,
 } from '@bla/shared';
 
@@ -94,4 +99,19 @@ export const api = {
     apiGet<CountryResponse>(`/api/countries/${encodeURIComponent(iso3)}`, signal),
   coverage: (datasets: readonly DatasetKey[], signal?: AbortSignal) =>
     apiGet<CoverageResponse>(withQuery('/api/coverage', { datasets: datasets.join(',') }), signal),
+  mountainSummary: (signal?: AbortSignal) =>
+    apiGet<MountainSummaryResponse>('/api/mountains/summary', signal),
+  /** The counted catalogue, or (`territories`) the peaks in territories outside the 54 states. */
+  mountains: (query: { territories?: boolean } = {}, signal?: AbortSignal) =>
+    apiGet<MountainsResponse>(
+      withQuery('/api/mountains', { territories: query.territories ? '1' : undefined }),
+      signal,
+    ),
+  mountain: (slug: string, signal?: AbortSignal) =>
+    apiGet<MountainResponse>(`/api/mountains/${encodeURIComponent(slug)}`, signal),
+  mountainStats: (region: RegionSlug | null = null, signal?: AbortSignal) =>
+    apiGet<HarimStatsResponse>(
+      withQuery('/api/mountains/stats', { region: region ?? undefined }),
+      signal,
+    ),
 };

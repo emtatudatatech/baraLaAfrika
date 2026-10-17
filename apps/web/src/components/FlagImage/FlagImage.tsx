@@ -18,6 +18,8 @@ export interface FlagImageProps {
   width: number;
   className?: string | undefined;
   loading?: 'lazy' | 'eager';
+  /** Decorative when the country is named right beside the flag (alt="", not read twice). */
+  decorative?: boolean;
 }
 
 /**
@@ -30,6 +32,7 @@ export function FlagImage({
   width,
   className,
   loading = 'lazy',
+  decorative = false,
 }: FlagImageProps) {
   const [failed, setFailed] = useState(false);
   const height = Math.round((width * 2) / 3);
@@ -43,7 +46,7 @@ export function FlagImage({
         : { srcSet: `${src(cdnWidth(width, 1))} 1x, ${src(cdnWidth(width, 2))} 2x` })}
       width={width}
       height={height}
-      alt={`Flag of ${countryName}`}
+      alt={decorative ? '' : `Flag of ${countryName}`}
       loading={loading}
       decoding="async"
       onError={() => {

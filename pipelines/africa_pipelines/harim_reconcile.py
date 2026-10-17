@@ -87,6 +87,13 @@ class SourceRegistry:
             f"https://www.geonames.org/{geonames_id}",
         )
 
+    def gvp(self, volcano_number: str, name: str) -> SourceRecord:
+        return self.add(
+            f"gvp-{volcano_number}",
+            f"Smithsonian Global Volcanism Program: {name} ({volcano_number})",
+            f"https://volcano.si.edu/volcano.cfm?vn={volcano_number}",
+        )
+
     def wikipedia(self, url: str) -> SourceRecord:
         from .harim_sources import wikipedia_title
 
@@ -184,6 +191,7 @@ class Inputs:
     country_qids: dict[str, str]  # iso3 → Wikidata QID
     candidates: dict[str, list[WikidataPeak]]  # iso3 → the country's peaks
     items: dict[str, WikidataPeak]  # every fetched item by QID
+    volcano_ids: dict[str, str]  # QID → Global Volcanism Program volcano number (P1886)
     extremes: list[CountryExtreme]
     factbook: FactbookSnapshot
     baseline: list[BaselineEntry]
@@ -269,12 +277,14 @@ def family_of(peak: WikidataPeak) -> str:
     return "geonames" if peak.sitelinks <= 1 and peak.geonames_id else "wikidata"
 
 
-def peak_type_of(classes: list[str], summit_kind: str) -> str:
+def peak_type_of(classes: list[str], summit_kind: str, *, gvp_volcano: bool = False) -> str:
+    """The most specific volcanic class wins; an item the Global Volcanism Program lists is a
+    volcano even when Wikidata types it only as a mountain."""
     if "Q169358" in classes:
         return "stratovolcano"
     if "Q212057" in classes:
         return "shield_volcano"
-    if any(c in VOLCANO_CLASSES for c in classes):
+    if gvp_volcano or any(c in VOLCANO_CLASSES for c in classes):
         return "volcano"
     if summit_kind == "massif" or "Q1061151" in classes:
         return "massif"
@@ -1175,7 +1185,13 @@ class Reconciler:
         for mountain in self.mountains.values():
             peak = self.peak(mountain.key)
             classes = peak.classes if peak else []
-            mountain.peak_type = peak_type_of(classes, mountain.summit_kind)
+            volcano_number = self.inputs.volcano_ids.get(mountain.key)
+            mountain.peak_type = peak_type_of(
+                classes, mountain.summit_kind, gvp_volcano=volcano_number is not None
+            )
+            if volcano_number is not None:
+                source = self.sources.gvp(volcano_number, mountain.name)
+                mountain.sources.add((source.key, "volcanic_status"))
             if mountain.summit_kind == "massif":
                 continue
             if not mountain.elevations:

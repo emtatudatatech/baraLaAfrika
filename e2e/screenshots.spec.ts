@@ -1,6 +1,6 @@
 import { test } from '@playwright/test';
 
-import { ROUTES, useTheme, waitForAnimations, waitForFonts } from './helpers';
+import { ROUTES, useTheme, waitForAnimations, waitForContent, waitForFonts } from './helpers';
 
 /**
  * Captures every page at desktop (1440×900) and mobile (390×844) in light and dark mode into
@@ -11,9 +11,21 @@ const VIEWPORTS = [
   { name: 'mobile', width: 390, height: 844, isMobile: true },
 ] as const;
 
+/** Harim states worth reviewing beyond the default view. */
+const HARIM_STATES = [
+  { path: '/harim?country=TZA', name: 'harim-expanded', ready: 'country-peak' },
+  { path: '/harim?view=peaks&sort=prominence', name: 'harim-peaks', ready: 'peak-name' },
+  { path: '/harim?peak=mount-kilimanjaro', name: 'harim-drawer', ready: 'elevation-source' },
+] as const;
+
+const SHOTS = [
+  ...ROUTES.map((route) => ({ path: route.path, name: route.name, ready: null })),
+  ...HARIM_STATES,
+];
+
 for (const viewport of VIEWPORTS) {
   for (const theme of ['light', 'dark'] as const) {
-    for (const route of ROUTES) {
+    for (const route of SHOTS) {
       test(`${route.name} ${viewport.name} ${theme}`, async ({ browser }) => {
         const context = await browser.newContext({
           viewport: { width: viewport.width, height: viewport.height },
@@ -25,13 +37,9 @@ for (const viewport of VIEWPORTS) {
         await useTheme(page, theme);
         await page.goto(route.path);
         await waitForFonts(page);
-        if (route.path === '/') {
-          await page.locator('[data-testid="africa-map"] [data-iso3]').first().waitFor();
-        }
-        if (route.path === '/countries') {
-          // The loaded list (the skeleton's sheen would never finish animating).
-          await page.getByTestId('flag-button').first().waitFor();
-        }
+        // The loaded page (a skeleton's sheen would never finish animating).
+        if (route.ready === null) await waitForContent(page, route.path);
+        else await page.getByTestId(route.ready).first().waitFor();
         await waitForAnimations(page);
         // A full-page capture does not scroll, so lazy images below the fold would stay blank.
         await page.evaluate(async () => {

@@ -2054,6 +2054,454 @@
       "reliability_tier": "reference"
     },
     {
+      "source_key": "gvp-221030",
+      "title": "Smithsonian Global Volcanism Program: Jalua (221030)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=221030",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-221040",
+      "title": "Smithsonian Global Volcanism Program: Alid Volcano (221040)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=221040",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-221080",
+      "title": "Smithsonian Global Volcanism Program: Erta Ale (221080)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=221080",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-221090",
+      "title": "Smithsonian Global Volcanism Program: Ale Bagu (221090)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=221090",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-221100",
+      "title": "Smithsonian Global Volcanism Program: Dubbi Volcano (221100)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=221100",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-221101",
+      "title": "Smithsonian Global Volcanism Program: Nabro Volcano (221101)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=221101",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-221104",
+      "title": "Smithsonian Global Volcanism Program: Asavyo (221104)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=221104",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-221110",
+      "title": "Smithsonian Global Volcanism Program: Afdera (221110)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=221110",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-221113",
+      "title": "Smithsonian Global Volcanism Program: Dabbahu Volcano (221113)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=221113",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-221123",
+      "title": "Smithsonian Global Volcanism Program: Mousa Ali (221123)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=221123",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-221124",
+      "title": "Smithsonian Global Volcanism Program: Gufa Volcano (221124)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=221124",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-221125",
+      "title": "Smithsonian Global Volcanism Program: Asseb Volcano (221125)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=221125",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-221126",
+      "title": "Smithsonian Global Volcanism Program: Ardoukoba (221126)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=221126",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-221160",
+      "title": "Smithsonian Global Volcanism Program: Mount Ayalu (221160)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=221160",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-221170",
+      "title": "Smithsonian Global Volcanism Program: Adwa (221170)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=221170",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-221817",
+      "title": "Smithsonian Global Volcanism Program: Mount Chilalo (221817)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=221817",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-222021",
+      "title": "Smithsonian Global Volcanism Program: Mount Marsabit (222021)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=222021",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-222060",
+      "title": "Smithsonian Global Volcanism Program: Menengai (222060)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=222060",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-222070",
+      "title": "Smithsonian Global Volcanism Program: Mount Homa (222070)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=222070",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-222080",
+      "title": "Smithsonian Global Volcanism Program: Ol Doinyo Eburru (222080)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=222080",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-222100",
+      "title": "Smithsonian Global Volcanism Program: Mount Longonot (222100)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=222100",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-222110",
+      "title": "Smithsonian Global Volcanism Program: Mount Suswa (222110)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=222110",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-222120",
+      "title": "Smithsonian Global Volcanism Program: Ol Doinyo Lengai (222120)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=222120",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-222150",
+      "title": "Smithsonian Global Volcanism Program: Mount Kilimanjaro (222150)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=222150",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-222160",
+      "title": "Smithsonian Global Volcanism Program: Mount Meru (222160)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=222160",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-222166",
+      "title": "Smithsonian Global Volcanism Program: Mount Rungwe (222166)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=222166",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-222170",
+      "title": "Smithsonian Global Volcanism Program: Kyejo (222170)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=222170",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-222806",
+      "title": "Smithsonian Global Volcanism Program: Gelai Volcano (222806)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=222806",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-222807",
+      "title": "Smithsonian Global Volcanism Program: Kitumbeine Volcano (222807)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=222807",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-222811",
+      "title": "Smithsonian Global Volcanism Program: Ngorongoro Crater (222811)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=222811",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-223001",
+      "title": "Smithsonian Global Volcanism Program: Fort Portal (223001)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=223001",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-223002",
+      "title": "Smithsonian Global Volcanism Program: Kyatwa (223002)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=223002",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-223004",
+      "title": "Smithsonian Global Volcanism Program: Bunyaruguru (223004)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=223004",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-223005",
+      "title": "Smithsonian Global Volcanism Program: Katunga (223005)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=223005",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-223020",
+      "title": "Smithsonian Global Volcanism Program: Nyamuragira (223020)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=223020",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-223030",
+      "title": "Smithsonian Global Volcanism Program: Mount Nyiragongo (223030)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=223030",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-223040",
+      "title": "Smithsonian Global Volcanism Program: Mount Karisimbi (223040)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=223040",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-223050",
+      "title": "Smithsonian Global Volcanism Program: Mount Bisoke (223050)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=223050",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-223055",
+      "title": "Smithsonian Global Volcanism Program: Mount Gahinga (223055)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=223055",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-223060",
+      "title": "Smithsonian Global Volcanism Program: Mount Muhabura (223060)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=223060",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-223070",
+      "title": "Smithsonian Global Volcanism Program: Bufumbira (223070)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=223070",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-223080",
+      "title": "Smithsonian Global Volcanism Program: Tshibinda (223080)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=223080",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-223801",
+      "title": "Smithsonian Global Volcanism Program: Mount Sabyinyo (223801)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=223801",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-224001",
+      "title": "Smithsonian Global Volcanism Program: Pico de São Tomé (224001)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=224001",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-224002",
+      "title": "Smithsonian Global Volcanism Program: San Carlos (224002)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=224002",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-224004",
+      "title": "Smithsonian Global Volcanism Program: Pico Basilé (224004)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=224004",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-224010",
+      "title": "Smithsonian Global Volcanism Program: Mount Cameroon (224010)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=224010",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-224020",
+      "title": "Smithsonian Global Volcanism Program: Mount Manengouba (224020)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=224020",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-225008",
+      "title": "Smithsonian Global Volcanism Program: Waw an Namus (225008)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=225008",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-225009",
+      "title": "Smithsonian Global Volcanism Program: Tarso Toh (225009)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=225009",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-225010",
+      "title": "Smithsonian Global Volcanism Program: Tarso Toussidé (225010)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=225010",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-225020",
+      "title": "Smithsonian Global Volcanism Program: Tarso Voon (225020)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=225020",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-225021",
+      "title": "Smithsonian Global Volcanism Program: Emi Koussi (225021)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=225021",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-228810",
+      "title": "Smithsonian Global Volcanism Program: Sadiman volcano (228810)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=228810",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-233001",
+      "title": "Smithsonian Global Volcanism Program: La Grille (233001)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=233001",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-233010",
+      "title": "Smithsonian Global Volcanism Program: Mount Karthala (233010)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=233010",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-233011",
+      "title": "Smithsonian Global Volcanism Program: Ambre-Bobaomby (233011)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=233011",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-233020",
+      "title": "Smithsonian Global Volcanism Program: Piton de la Fournaise (233020)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=233020",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-233802",
+      "title": "Smithsonian Global Volcanism Program: Piton des Neiges (233802)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=233802",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-383030",
+      "title": "Smithsonian Global Volcanism Program: Teide (383030)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=383030",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-384010",
+      "title": "Smithsonian Global Volcanism Program: Pico do Fogo (384010)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=384010",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-384030",
+      "title": "Smithsonian Global Volcanism Program: Monte Verde, Cape Verde (384030)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=384030",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-385050",
+      "title": "Smithsonian Global Volcanism Program: Green Mountain (385050)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=385050",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "gvp-386010",
+      "title": "Smithsonian Global Volcanism Program: Queen Mary's Peak (386010)",
+      "url": "https://volcano.si.edu/volcano.cfm?vn=386010",
+      "source_type": "database",
+      "reliability_tier": "reference"
+    },
+    {
       "source_key": "harim-prototype",
       "title": "Harim prototype (emtatudatatech/harim@318dee9)",
       "url": "https://github.com/emtatudatatech/harim/blob/318dee97501fae44ef95c8008d4957d9a7526ef0/harim.html",
@@ -5151,6 +5599,10 @@
           "field": "identity"
         },
         {
+          "source": "gvp-222150",
+          "field": "volcanic_status"
+        },
+        {
           "source": "harim-prototype",
           "field": "elevation"
         },
@@ -6347,7 +6799,7 @@
       ],
       "latitude": -3.246781,
       "longitude": 36.76025,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": 3170,
       "isolation_km": 70.0,
@@ -6375,6 +6827,10 @@
         {
           "source": "geonames-154144",
           "field": "identity"
+        },
+        {
+          "source": "gvp-222160",
+          "field": "volcanic_status"
         },
         {
           "source": "harim-prototype",
@@ -6617,6 +7073,10 @@
         {
           "source": "geonames-49526",
           "field": "identity"
+        },
+        {
+          "source": "gvp-223040",
+          "field": "volcanic_status"
         },
         {
           "source": "harim-prototype",
@@ -7664,7 +8124,7 @@
       "elevation_alternatives": [],
       "latitude": -1.383333,
       "longitude": 29.666667,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": 1530,
       "isolation_km": null,
@@ -7685,6 +8145,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-223060",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q543030",
           "field": "coordinates"
@@ -8034,6 +8498,10 @@
           "field": "identity"
         },
         {
+          "source": "gvp-224010",
+          "field": "volcanic_status"
+        },
+        {
           "source": "harim-prototype",
           "field": "elevation"
         },
@@ -8129,7 +8597,7 @@
       ],
       "latitude": 7.916667,
       "longitude": 39.266667,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -8157,6 +8625,10 @@
         {
           "source": "geonames-340780",
           "field": "identity"
+        },
+        {
+          "source": "gvp-221817",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q2963571",
@@ -8646,6 +9118,10 @@
       "review_notes": null,
       "sources": [
         {
+          "source": "gvp-383030",
+          "field": "volcanic_status"
+        },
+        {
           "source": "wikidata-q38954",
           "field": "coordinates"
         },
@@ -8713,6 +9189,10 @@
         {
           "source": "geonames-49519",
           "field": "identity"
+        },
+        {
+          "source": "gvp-223050",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q804039",
@@ -8897,6 +9377,10 @@
         {
           "source": "geonames-49522",
           "field": "identity"
+        },
+        {
+          "source": "gvp-223801",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q511779",
@@ -9294,6 +9778,10 @@
           "field": "identity"
         },
         {
+          "source": "gvp-223055",
+          "field": "volcanic_status"
+        },
+        {
           "source": "wikidata-q932175",
           "field": "coordinates"
         },
@@ -9368,6 +9856,10 @@
         {
           "source": "geonames-206850",
           "field": "identity"
+        },
+        {
+          "source": "gvp-223030",
+          "field": "volcanic_status"
         },
         {
           "source": "harim-prototype",
@@ -9642,6 +10134,10 @@
         {
           "source": "geonames-2429451",
           "field": "identity"
+        },
+        {
+          "source": "gvp-225021",
+          "field": "volcanic_status"
         },
         {
           "source": "harim-prototype",
@@ -10432,6 +10928,10 @@
         {
           "source": "geonames-2424474",
           "field": "identity"
+        },
+        {
+          "source": "gvp-225010",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q788723",
@@ -11588,6 +12088,10 @@
       "review_notes": null,
       "sources": [
         {
+          "source": "gvp-233802",
+          "field": "volcanic_status"
+        },
+        {
           "source": "harim-prototype",
           "field": "elevation"
         },
@@ -11713,6 +12217,10 @@
         {
           "source": "geonames-206875",
           "field": "identity"
+        },
+        {
+          "source": "gvp-223020",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q695846",
@@ -12195,6 +12703,10 @@
           "field": "identity"
         },
         {
+          "source": "gvp-225010",
+          "field": "volcanic_status"
+        },
+        {
           "source": "wikidata-q3528990",
           "field": "coordinates"
         },
@@ -12351,6 +12863,10 @@
         {
           "source": "geonames-2306732",
           "field": "identity"
+        },
+        {
+          "source": "gvp-224004",
+          "field": "volcanic_status"
         },
         {
           "source": "harim-prototype",
@@ -12879,7 +13395,7 @@
       "elevation_alternatives": [],
       "latitude": -2.761667,
       "longitude": 35.913333,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": 1360,
       "isolation_km": 16.68,
@@ -12900,6 +13416,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-222120",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q746787",
           "field": "coordinates"
@@ -12942,7 +13462,7 @@
       "elevation_alternatives": [],
       "latitude": -9.135,
       "longitude": 33.668056,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -12966,6 +13486,10 @@
         {
           "source": "geonames-150410",
           "field": "identity"
+        },
+        {
+          "source": "gvp-222166",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q546537",
@@ -13000,7 +13524,7 @@
       "elevation_alternatives": [],
       "latitude": -2.6,
       "longitude": 36.1017,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -13021,6 +13545,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-222806",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q3321850",
           "field": "coordinates"
@@ -13221,7 +13749,7 @@
       "elevation_alternatives": [],
       "latitude": -3.1938,
       "longitude": 35.413,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -13242,6 +13770,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-228810",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q8557197",
           "field": "coordinates"
@@ -13295,6 +13827,10 @@
       "review_notes": null,
       "sources": [
         {
+          "source": "gvp-222807",
+          "field": "volcanic_status"
+        },
+        {
           "source": "wikidata-q3321902",
           "field": "coordinates"
         },
@@ -13330,7 +13866,7 @@
       ],
       "latitude": 20.916667,
       "longitude": 17.283333,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -13358,6 +13894,10 @@
         {
           "source": "geonames-2424428",
           "field": "identity"
+        },
+        {
+          "source": "gvp-225020",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q1281341",
@@ -13395,7 +13935,7 @@
       ],
       "latitude": -0.648866,
       "longitude": 36.187248,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": 980,
       "isolation_km": null,
@@ -13423,6 +13963,10 @@
         {
           "source": "geonames-181846",
           "field": "identity"
+        },
+        {
+          "source": "gvp-222080",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q4179179",
@@ -13565,6 +14109,10 @@
         {
           "source": "geonames-3374363",
           "field": "identity"
+        },
+        {
+          "source": "gvp-384010",
+          "field": "volcanic_status"
         },
         {
           "source": "harim-prototype",
@@ -13712,6 +14260,10 @@
         {
           "source": "geonames-188943",
           "field": "identity"
+        },
+        {
+          "source": "gvp-222100",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q1520750",
@@ -14221,6 +14773,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-233020",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q1049644",
           "field": "coordinates"
@@ -14995,7 +15551,7 @@
       "elevation_alternatives": [],
       "latitude": -1.3,
       "longitude": 29.716667,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -15016,6 +15572,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-223070",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q2927681",
           "field": "coordinates"
@@ -15304,6 +15864,10 @@
           "field": "identity"
         },
         {
+          "source": "gvp-224020",
+          "field": "volcanic_status"
+        },
+        {
           "source": "wikidata-q3290107",
           "field": "coordinates"
         },
@@ -15450,6 +16014,10 @@
           "field": "identity"
         },
         {
+          "source": "gvp-233010",
+          "field": "volcanic_status"
+        },
+        {
           "source": "harim-prototype",
           "field": "elevation"
         },
@@ -15561,6 +16129,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-222110",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q3622751",
           "field": "coordinates"
@@ -16016,6 +16588,10 @@
           "field": "identity"
         },
         {
+          "source": "gvp-222060",
+          "field": "volcanic_status"
+        },
+        {
           "source": "wikidata-q1672337",
           "field": "coordinates"
         },
@@ -16201,6 +16777,10 @@
           "field": "identity"
         },
         {
+          "source": "gvp-224002",
+          "field": "volcanic_status"
+        },
+        {
           "source": "wikidata-q7413507",
           "field": "coordinates"
         },
@@ -16290,7 +16870,7 @@
       ],
       "latitude": 13.37,
       "longitude": 41.7,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -16318,6 +16898,10 @@
         {
           "source": "geonames-11496429",
           "field": "identity"
+        },
+        {
+          "source": "gvp-221101",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q596806",
@@ -16530,7 +17114,7 @@
       "elevation_alternatives": [],
       "latitude": -9.233333,
       "longitude": 33.783333,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -16551,6 +17135,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-222170",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q3196490",
           "field": "coordinates"
@@ -16755,6 +17343,10 @@
         {
           "source": "geonames-343065",
           "field": "identity"
+        },
+        {
+          "source": "gvp-221160",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q792922",
@@ -17082,7 +17674,7 @@
       "elevation_alternatives": [],
       "latitude": -37.11175,
       "longitude": -12.287806,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": 2062,
       "isolation_km": 2665.0,
@@ -17097,6 +17689,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-386010",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q2062890",
           "field": "coordinates"
@@ -17245,7 +17841,7 @@
       ],
       "latitude": 12.470833,
       "longitude": 42.405,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": 1607,
       "isolation_km": null,
@@ -17287,6 +17883,10 @@
         {
           "source": "geonames-221593",
           "field": "identity"
+        },
+        {
+          "source": "gvp-221123",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q1951029",
@@ -17364,6 +17964,10 @@
         {
           "source": "geonames-2410761",
           "field": "identity"
+        },
+        {
+          "source": "gvp-224001",
+          "field": "volcanic_status"
         },
         {
           "source": "harim-prototype",
@@ -17724,7 +18328,7 @@
       "elevation_alternatives": [],
       "latitude": 21.33,
       "longitude": 16.33,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -17745,6 +18349,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-225009",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q2394632",
           "field": "coordinates"
@@ -18506,7 +19114,7 @@
       ],
       "latitude": -0.38,
       "longitude": 34.5,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -18534,6 +19142,10 @@
         {
           "source": "geonames-196744",
           "field": "identity"
+        },
+        {
+          "source": "gvp-222070",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q958964",
@@ -18585,6 +19197,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-221170",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q380084",
           "field": "coordinates"
@@ -18821,7 +19437,7 @@
       "elevation_alternatives": [],
       "latitude": -0.471,
       "longitude": 30.191,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -18842,6 +19458,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-223005",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q3194269",
           "field": "coordinates"
@@ -18874,7 +19494,7 @@
       ],
       "latitude": 2.316667,
       "longitude": 37.966667,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -18902,6 +19522,10 @@
         {
           "source": "geonames-187584",
           "field": "identity"
+        },
+        {
+          "source": "gvp-222021",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q1106320",
@@ -19013,6 +19637,10 @@
         {
           "source": "geonames-151608",
           "field": "identity"
+        },
+        {
+          "source": "gvp-222811",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q3002224",
@@ -19294,7 +19922,7 @@
       "elevation_alternatives": [],
       "latitude": 13.578889,
       "longitude": 41.809167,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -19315,6 +19943,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-221100",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q1262978",
           "field": "coordinates"
@@ -19564,7 +20196,7 @@
       "elevation_alternatives": [],
       "latitude": 0.25,
       "longitude": 30.116667,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -19585,6 +20217,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-223004",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q389651",
           "field": "coordinates"
@@ -19782,6 +20418,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-223001",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q3077985",
           "field": "coordinates"
@@ -20217,7 +20857,7 @@
       "elevation_alternatives": [],
       "latitude": -12.595,
       "longitude": 49.153333,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -20238,6 +20878,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-233011",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q458606",
           "field": "coordinates"
@@ -20346,6 +20990,10 @@
         {
           "source": "geonames-9884041",
           "field": "identity"
+        },
+        {
+          "source": "gvp-223080",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q2332726",
@@ -20525,7 +21173,7 @@
       ],
       "latitude": 12.595,
       "longitude": 40.48,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -20553,6 +21201,10 @@
         {
           "source": "geonames-9883887",
           "field": "identity"
+        },
+        {
+          "source": "gvp-221113",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q1156519",
@@ -20798,6 +21450,10 @@
         {
           "source": "geonames-230355",
           "field": "identity"
+        },
+        {
+          "source": "gvp-223002",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q3200888",
@@ -21150,7 +21806,7 @@
       ],
       "latitude": 13.088056,
       "longitude": 40.853056,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -21178,6 +21834,10 @@
         {
           "source": "geonames-344708",
           "field": "identity"
+        },
+        {
+          "source": "gvp-221110",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q382139",
@@ -21436,7 +22096,7 @@
       ],
       "latitude": 13.097778,
       "longitude": 41.599444,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -21464,6 +22124,10 @@
         {
           "source": "geonames-340494",
           "field": "identity"
+        },
+        {
+          "source": "gvp-221104",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q507979",
@@ -21570,6 +22234,10 @@
         {
           "source": "geonames-2226061",
           "field": "identity"
+        },
+        {
+          "source": "gvp-224010",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q6651058",
@@ -22247,7 +22915,7 @@
       "elevation_alternatives": [],
       "latitude": -11.466667,
       "longitude": 43.333333,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -22268,6 +22936,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-233001",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q2746954",
           "field": "coordinates"
@@ -22479,7 +23151,7 @@
       "elevation_alternatives": [],
       "latitude": 13.506389,
       "longitude": 40.631667,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -22500,6 +23172,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-221090",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q1189160",
           "field": "coordinates"
@@ -22820,7 +23496,7 @@
       "elevation_alternatives": [],
       "latitude": 12.947222,
       "longitude": 42.438056,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -22841,6 +23517,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-221125",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q738507",
           "field": "coordinates"
@@ -23466,7 +24146,7 @@
       ],
       "latitude": 14.89,
       "longitude": 39.925833,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -23494,6 +24174,10 @@
         {
           "source": "geonames-6661631",
           "field": "identity"
+        },
+        {
+          "source": "gvp-221040",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q1814890",
@@ -23712,7 +24396,7 @@
       "elevation_alternatives": [],
       "latitude": -7.95,
       "longitude": -14.35,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": 859,
       "isolation_km": 1842.0,
@@ -23727,6 +24411,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-385050",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q5602884",
           "field": "coordinates"
@@ -24491,7 +25179,7 @@
       ],
       "latitude": 16.870833,
       "longitude": -24.941667,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": 750,
       "isolation_km": null,
@@ -24519,6 +25207,10 @@
         {
           "source": "geonames-3374130",
           "field": "identity"
+        },
+        {
+          "source": "gvp-384030",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q526591",
@@ -24842,7 +25534,7 @@
       "elevation_alternatives": [],
       "latitude": 15.042,
       "longitude": 39.82,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -24863,6 +25555,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-221030",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q901179",
           "field": "coordinates"
@@ -25038,6 +25734,10 @@
         {
           "source": "geonames-2411206",
           "field": "identity"
+        },
+        {
+          "source": "gvp-224001",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q2082148",
@@ -25541,6 +26241,10 @@
           "field": "identity"
         },
         {
+          "source": "gvp-221080",
+          "field": "volcanic_status"
+        },
+        {
           "source": "wikidata-q903",
           "field": "coordinates"
         },
@@ -25728,7 +26432,7 @@
       "elevation_alternatives": [],
       "latitude": 12.55,
       "longitude": 42.533333,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -25749,6 +26453,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-221124",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q3119265",
           "field": "coordinates"
@@ -26043,7 +26751,7 @@
       "elevation_alternatives": [],
       "latitude": 24.9,
       "longitude": 17.75,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": null,
       "isolation_km": null,
@@ -26064,6 +26772,10 @@
       "needs_review": false,
       "review_notes": null,
       "sources": [
+        {
+          "source": "gvp-225008",
+          "field": "volcanic_status"
+        },
         {
           "source": "wikidata-q171653",
           "field": "coordinates"
@@ -26144,7 +26856,7 @@
       ],
       "latitude": 16.875,
       "longitude": -25.0375,
-      "peak_type": "peak",
+      "peak_type": "volcano",
       "volcanic_status": null,
       "prominence_m": 247,
       "isolation_km": null,
@@ -26172,6 +26884,10 @@
         {
           "source": "geonames-3374765",
           "field": "identity"
+        },
+        {
+          "source": "gvp-384030",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q3321728",
@@ -26599,6 +27315,10 @@
         {
           "source": "geonames-225092",
           "field": "identity"
+        },
+        {
+          "source": "gvp-221126",
+          "field": "volcanic_status"
         },
         {
           "source": "wikidata-q639993",

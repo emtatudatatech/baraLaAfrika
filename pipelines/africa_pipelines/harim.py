@@ -103,6 +103,7 @@ def gather(
     items = {peak.qid: peak for peaks in candidates.values() for peak in peaks}
     wanted = curated_qids(curation, names) | {e.point_qid for e in extremes if e.kind == "high"}
     items.update(harim_wikidata.fetch_items(sorted(wanted - set(items)), refresh=refresh))
+    volcano_ids = harim_wikidata.fetch_volcano_ids(sorted(items), refresh=refresh)
     wikidata_as_of = snapshot_date(wikidata.USED_CACHE_FILES)
 
     print("World Factbook (final edition)…")
@@ -129,6 +130,7 @@ def gather(
         country_qids=country_qids,
         candidates=candidates,
         items=items,
+        volcano_ids=volcano_ids,
         extremes=extremes,
         factbook=factbook,
         baseline=baseline,

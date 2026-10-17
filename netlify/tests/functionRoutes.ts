@@ -1,0 +1,60 @@
+/*
+ * Every API function with its route, read from the function's own `config` (path and
+ * excludedPath), so local servers and tests route exactly as Netlify does. Add new functions here.
+ */
+import type { Config, Context } from '@netlify/functions';
+
+import * as countries from '../functions/countries.ts';
+import * as country from '../functions/country.ts';
+import * as coverage from '../functions/coverage.ts';
+import * as mountain from '../functions/mountain.ts';
+import * as mountains from '../functions/mountains.ts';
+import * as mountainsStats from '../functions/mountains-stats.ts';
+import * as mountainsSummary from '../functions/mountains-summary.ts';
+import * as regions from '../functions/regions.ts';
+
+type Handler = (request: Request, context: Context) => Promise<Response>;
+
+interface FunctionModule {
+  default: Handler;
+  config: Config;
+}
+
+export const FUNCTIONS: Record<string, FunctionModule> = {
+  countries,
+  country,
+  coverage,
+  mountain,
+  mountains,
+  'mountains-stats': mountainsStats,
+  'mountains-summary': mountainsSummary,
+  regions,
+};
+
+const asList = (value: string | string[] | undefined): string[] =>
+  value === undefined ? [] : Array.isArray(value) ? value : [value];
+
+/** The functions whose path matches `pathname` and does not exclude it. */
+export function matchingFunctions(
+  pathname: string,
+): { name: string; handler: Handler; params: Record<string, string> }[] {
+  const matches = [];
+  for (const [name, module] of Object.entries(FUNCTIONS)) {
+    const excluded = asList(module.config.excludedPath).some((path) =>
+      new URLPattern({ pathname: path }).test({ pathname }),
+    );
+    if (excluded) continue;
+    for (const path of asList(module.config.path)) {
+      const match = new URLPattern({ pathname: path }).exec({ pathname });
+      if (match) {
+        matches.push({
+          name,
+          handler: module.default,
+          params: match.pathname.groups as Record<string, string>,
+        });
+        break;
+      }
+    }
+  }
+  return matches;
+}

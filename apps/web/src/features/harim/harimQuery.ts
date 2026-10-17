@@ -1,4 +1,5 @@
 import {
+  type RangeSummary,
   type CountryRef,
   type Mountain,
   type MountainCountrySummary,
@@ -17,20 +18,22 @@ import { searchFold } from '../../lib/searchFold';
  * matches a massif's summit names, so "Kibo" finds Kilimanjaro).
  */
 
-export const VIEWS = ['country', 'peaks'] as const;
+export const VIEWS = ['country', 'peaks', 'ranges'] as const;
 export type View = (typeof VIEWS)[number];
 
 export const COUNTRY_SORTS = ['height', '-height', 'name', 'peaks', 'relief'] as const;
 export type CountrySort = (typeof COUNTRY_SORTS)[number];
 export const PEAK_SORTS = ['height', '-height', 'prominence', 'name'] as const;
 export type PeakSort = (typeof PEAK_SORTS)[number];
+export const RANGE_SORTS = ['height', 'peaks', 'name'] as const;
+export type RangeSort = (typeof RANGE_SORTS)[number];
 
 export interface HarimView {
   view: View;
   region: RegionSlug | null;
   q: string;
   /** Validated for the active view; `height` (highest first) by default. */
-  sort: CountrySort | PeakSort;
+  sort: CountrySort | PeakSort | RangeSort;
   minHeight: number | null;
   volcanic: VolcanicFilter | null;
   range: string | null;
@@ -48,7 +51,8 @@ function oneOf<T extends string>(values: readonly T[], value: string | null): T 
 
 export function parseView(params: URLSearchParams): HarimView {
   const view = oneOf(VIEWS, params.get('view')) ?? 'country';
-  const sorts: readonly string[] = view === 'country' ? COUNTRY_SORTS : PEAK_SORTS;
+  const sorts: readonly string[] =
+    view === 'country' ? COUNTRY_SORTS : view === 'peaks' ? PEAK_SORTS : RANGE_SORTS;
   const sort = params.get('sort');
   const minHeight = Number(params.get('minHeight'));
   const region = params.get('region');
@@ -59,7 +63,7 @@ export function parseView(params: URLSearchParams): HarimView {
     view,
     region: isRegionSlug(region) ? region : null,
     q: (params.get('q') ?? '').trim().slice(0, 80),
-    sort: (sort !== null && sorts.includes(sort) ? sort : 'height') as CountrySort | PeakSort,
+    sort: (sort !== null && sorts.includes(sort) ? sort : 'height') as HarimView['sort'],
     minHeight:
       params.has('minHeight') &&
       Number.isInteger(minHeight) &&
@@ -241,4 +245,34 @@ export function nextCountrySort(
 ): CountrySort {
   if (column === 'height') return current === 'height' ? '-height' : 'height';
   return column;
+}
+
+// ── Ranges ───────────────────────────────────────────────────────────────────
+
+/** Ranges in the region (any of their countries) whose name or mountains match the search. */
+export function filterRanges(
+  ranges: readonly RangeSummary[],
+  { region, q }: Pick<HarimView, 'region' | 'q'>,
+  mountains: readonly Mountain[],
+): RangeSummary[] {
+  const needle = searchFold(q.trim());
+  const names = new Map<string, string>();
+  for (const m of mountains) {
+    if (m.range) names.set(m.range.slug, `${names.get(m.range.slug) ?? ''} ${m.name}`);
+  }
+  return ranges.filter((range) => {
+    if (region !== null && !range.regions.includes(region)) return false;
+    if (needle === '') return true;
+    return searchFold(`${range.name} ${names.get(range.slug) ?? ''}`).includes(needle);
+  });
+}
+
+/** Tallest peak first (default), most mountains first, or by name. */
+export function sortRanges(ranges: readonly RangeSummary[], sort: RangeSort): RangeSummary[] {
+  return [...ranges].sort((a, b) => {
+    const byName = collator.compare(a.name, b.name);
+    if (sort === 'name') return byName;
+    if (sort === 'peaks') return b.peakCount - a.peakCount || byName;
+    return (b.tallest?.elevationM ?? 0) - (a.tallest?.elevationM ?? 0) || byName;
+  });
 }

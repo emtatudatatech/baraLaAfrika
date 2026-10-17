@@ -8,7 +8,10 @@ import * as countries from '../functions/countries.ts';
 import * as country from '../functions/country.ts';
 import * as coverage from '../functions/coverage.ts';
 import * as mountain from '../functions/mountain.ts';
+import * as mountainRange from '../functions/mountain-range.ts';
+import * as mountainRanges from '../functions/mountain-ranges.ts';
 import * as mountains from '../functions/mountains.ts';
+import * as mountainsExport from '../functions/mountains-export.ts';
 import * as mountainsStats from '../functions/mountains-stats.ts';
 import * as mountainsSummary from '../functions/mountains-summary.ts';
 import * as regions from '../functions/regions.ts';
@@ -25,7 +28,10 @@ export const FUNCTIONS: Record<string, FunctionModule> = {
   country,
   coverage,
   mountain,
+  'mountain-range': mountainRange,
+  'mountain-ranges': mountainRanges,
   mountains,
+  'mountains-export': mountainsExport,
   'mountains-stats': mountainsStats,
   'mountains-summary': mountainsSummary,
   regions,

@@ -1,0 +1,127 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: grid;
+  align-content: start;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(160deg, color-mix(in oklch, var(--tint) 18%, transparent), transparent 60%),
+    var(--glass-bg);
+  box-shadow:
+    var(--glass-shadow),
+    var(--glass-highlight),
+    inset 0 3px 0 var(--tint);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+@media (--motion-ok) {
+  .card:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.card:has(.link:focus-visible) {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.icon {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-md);
+  color: var(--color-ink);
+  background: color-mix(in oklch, var(--tint) 25%, transparent);
+}
+
+.name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  line-height: var(--leading-tight);
+}
+
+/* The name is the card's link; its ::after makes the whole card the target. */
+.link {
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+.link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.link:focus-visible {
+  outline: none;
+}
+
+.type,
+.count,
+.tallest,
+.countries {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.type {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+.tallest {
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.count {
+  color: var(--color-ink-muted);
+}
+
+.countries {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+}
+
+.countryNames {
+  margin-left: var(--space-1);
+  color: var(--color-ink-muted);
+}
+
+.bars {
+  margin-top: var(--space-2);
+}
+
+.bars svg {
+  display: block;
+  max-width: 100%;
+}
+
+.bar {
+  fill: var(--bar);
+}

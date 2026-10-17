@@ -20,12 +20,16 @@ import {
   type HarimView,
   PEAK_SORTS,
   type PeakSort,
+  RANGE_SORTS,
+  type RangeSort,
   type View,
   filterPeaks,
+  filterRanges,
   filterSummary,
   nextCountrySort,
   parseView,
   sortPeaks,
+  sortRanges,
   sortSummary,
   updateParams,
 } from './harimQuery';
@@ -33,7 +37,9 @@ import { HighestPeakChart } from './chart/HighestPeakChart';
 import { GeologyCard } from './GeologyCard';
 import { type HarimMapHandle, HarimMap } from './map/HarimMap';
 import { toMapPeak } from './map/mapModel';
+import { ExportMenu } from './ExportMenu';
 import { PeakDrawer } from './PeakDrawer';
+import { RangeCards } from './RangeCards';
 import type { PeakLinks } from './peakLinks';
 import { StatsBand } from './stats/StatsBand';
 import type { StatAction } from './stats/statsLogic';
@@ -56,7 +62,6 @@ export function HarimPage() {
   const page = strings.pages.harim;
   const [params, setParams] = useSearchParams();
   const view = useMemo(() => parseView(params), [params]);
-  const rangesRequested = params.get('view') === 'ranges';
   const [unit, setUnit] = useUnits();
   const isWide = useMediaQuery(minWidthQuery('md'));
   const isLg = useMediaQuery(minWidthQuery('lg'));
@@ -86,6 +91,9 @@ export function HarimPage() {
     api.mountains({ territories: true }),
   );
 
+  const rangesResource = useResource(view.view === 'ranges' ? 'mountains:ranges' : null, () =>
+    api.ranges(),
+  );
   const rows = useMemo(() => summary.data?.countries ?? [], [summary.data]);
   const mountains = useMemo(() => catalogue.data?.mountains ?? [], [catalogue.data]);
   const countries = useMemo(
@@ -117,22 +125,32 @@ export function HarimPage() {
     [mountains, view, countries],
   );
 
-  // The map shows the view's mountains: the filtered list on All peaks; by country, the
-  // mountains of the listed countries (plus territory peaks when nothing is filtered).
+  const allRanges = useMemo(() => rangesResource.data?.ranges ?? [], [rangesResource.data]);
+  const visibleRanges = useMemo(
+    () => sortRanges(filterRanges(allRanges, view, mountains), view.sort as RangeSort),
+    [allRanges, view, mountains],
+  );
+
+  // The map shows the view's mountains: the filtered list on All peaks; by range, the
+  // mountains of the listed ranges; by country, the mountains of the listed countries (plus
+  // territory peaks when nothing is filtered).
   const showTerritories =
     view.view === 'country' && view.region === null && view.country === null && view.q === '';
   const mapPeaks = useMemo(() => {
+    const rangeSlugs = new Set(visibleRanges.map((r) => r.slug));
     const listed =
       view.view === 'peaks'
         ? visiblePeaks
-        : filterPeaks(
-            mountains,
-            { ...view, minHeight: null, volcanic: null, range: null },
-            countries,
-          );
+        : view.view === 'ranges'
+          ? mountains.filter((m) => m.range !== null && rangeSlugs.has(m.range.slug))
+          : filterPeaks(
+              mountains,
+              { ...view, minHeight: null, volcanic: null, range: null },
+              countries,
+            );
     const extra = showTerritories ? (territories.data?.mountains ?? []) : [];
     return [...listed, ...extra].map(toMapPeak);
-  }, [view, visiblePeaks, mountains, countries, showTerritories, territories.data]);
+  }, [view, visiblePeaks, visibleRanges, mountains, countries, showTerritories, territories.data]);
 
   // Linked selection between the tables and the map.
   const mapRef = useRef<HarimMapHandle>(null);
@@ -154,12 +172,14 @@ export function HarimPage() {
         const count =
           view.view === 'country'
             ? rows.filter((row) => row.country.region.slug === slug).length
-            : mountains.filter((m) =>
-                m.countries.some((iso3) => countries.get(iso3)?.region.slug === slug),
-              ).length;
+            : view.view === 'ranges'
+              ? allRanges.filter((r) => r.regions.includes(slug)).length
+              : mountains.filter((m) =>
+                  m.countries.some((iso3) => countries.get(iso3)?.region.slug === slug),
+                ).length;
         return [{ slug, name: first.country.region.name, count }];
       }),
-    [rows, mountains, countries, view.view],
+    [rows, mountains, countries, allRanges, view.view],
   );
 
   // Views are shareable, not history entries: changes replace the current URL.
@@ -172,7 +192,9 @@ export function HarimPage() {
     update(
       next === 'country'
         ? { view: next, minHeight: null, volcanic: null, range: null }
-        : { view: next },
+        : next === 'ranges'
+          ? { view: next, minHeight: null, volcanic: null, range: null, country: null }
+          : { view: next },
     );
   };
   const openPeak = (slug: string) => {
@@ -271,10 +293,12 @@ export function HarimPage() {
   }, [view.q]);
 
   const isPeaks = view.view === 'peaks';
+  const isRanges = view.view === 'ranges';
+  const isCountry = view.view === 'country';
   const hasFilters =
     view.region !== null ||
     view.q !== '' ||
-    view.country !== null ||
+    (!isRanges && view.country !== null) ||
     (isPeaks && (view.minHeight !== null || view.volcanic !== null || view.range !== null));
   const clearFilters = () => {
     update({ region: null, q: '', country: null, minHeight: null, volcanic: null, range: null });
@@ -284,27 +308,42 @@ export function HarimPage() {
     ? `${preview.name} · ${page.title} · ${strings.site.name}`
     : `${page.title} · ${strings.site.name}`;
   const prominentPreset = isPeaks && view.sort === 'prominence';
-  const loading = summary.status === 'loading' || (isPeaks && catalogue.status === 'loading');
+  const loading =
+    summary.status === 'loading' ||
+    (isPeaks && catalogue.status === 'loading') ||
+    (isRanges && rangesResource.status === 'loading');
   const failed =
     summary.status === 'error'
       ? summary
       : isPeaks && catalogue.status === 'error'
         ? catalogue
-        : null;
-  const ready = summary.status === 'success' && (!isPeaks || catalogue.status === 'success');
+        : isRanges && rangesResource.status === 'error'
+          ? rangesResource
+          : null;
+  const ready =
+    summary.status === 'success' &&
+    (!isPeaks || catalogue.status === 'success') &&
+    (!isRanges || rangesResource.status === 'success');
+  // The export's "this view": the filters that shape the current list.
+  const exportParams: Record<string, string | undefined> = {
+    region: view.region ?? undefined,
+    q: view.q || undefined,
+    ...(isRanges ? {} : { country: view.country ?? undefined }),
+    ...(isPeaks
+      ? {
+          range: view.range ?? undefined,
+          minHeight: view.minHeight === null ? undefined : String(view.minHeight),
+          volcanic: view.volcanic ?? undefined,
+          sort: view.sort,
+        }
+      : {}),
+  };
 
   return (
     <>
       <title>{title}</title>
       <meta name="description" content={page.description} />
       <PageHeader icon="landscape" title={page.title} description={page.description} />
-
-      {rangesRequested && (
-        <p className={styles.notice} role="note">
-          <Icon name="info" size={20} />
-          {text.rangesSoon}
-        </p>
-      )}
 
       <StatsBand
         region={view.region}
@@ -317,7 +356,7 @@ export function HarimPage() {
       <section ref={controlsRef} className={styles.controls} aria-label={text.filtersLabel}>
         <div className={styles.topRow}>
           <div role="group" aria-label={text.viewLabel} className={styles.segmented}>
-            {(['country', 'peaks'] as const).map((option) => (
+            {(['country', 'peaks', 'ranges'] as const).map((option) => (
               <button
                 key={option}
                 type="button"
@@ -328,7 +367,9 @@ export function HarimPage() {
                 }}
               >
                 <Icon
-                  name={option === 'country' ? 'flag' : 'landscape'}
+                  name={
+                    option === 'country' ? 'flag' : option === 'peaks' ? 'landscape' : 'landscape_2'
+                  }
                   size={20}
                   className={styles.segmentedIcon}
                 />
@@ -341,7 +382,7 @@ export function HarimPage() {
 
         <RegionFilter
           options={regionOptions}
-          total={isPeaks ? mountains.length : rows.length}
+          total={isPeaks ? mountains.length : isRanges ? allRanges.length : rows.length}
           value={view.region}
           onChange={(region) => {
             update({ region });
@@ -365,38 +406,42 @@ export function HarimPage() {
               }}
             />
           </label>
-          <label className={styles.select}>
-            <span>{text.countryFilter}</span>
-            <select
-              value={view.country ?? ''}
-              data-testid="harim-country-filter"
-              onChange={(event) => {
-                update({ country: event.currentTarget.value || null });
-              }}
-            >
-              <option value="">{text.anyCountry}</option>
-              {countryOptions.map((country) => (
-                <option key={country.iso3} value={country.iso3}>
-                  {country.name}
-                </option>
-              ))}
-            </select>
-          </label>
-          {!isWide && (
+          {!isRanges && (
+            <label className={styles.select}>
+              <span>{text.countryFilter}</span>
+              <select
+                value={view.country ?? ''}
+                data-testid="harim-country-filter"
+                onChange={(event) => {
+                  update({ country: event.currentTarget.value || null });
+                }}
+              >
+                <option value="">{text.anyCountry}</option>
+                {countryOptions.map((country) => (
+                  <option key={country.iso3} value={country.iso3}>
+                    {country.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+          {(!isWide || isRanges) && (
             <label className={styles.select}>
               <span>{text.sortLabel}</span>
               <select
                 value={view.sort}
                 data-testid="harim-sort"
                 onChange={(event) => {
-                  update({ sort: event.currentTarget.value as CountrySort | PeakSort });
+                  update({ sort: event.currentTarget.value as HarimView['sort'] });
                 }}
               >
-                {(isPeaks ? PEAK_SORTS : COUNTRY_SORTS).map((sort) => (
+                {(isPeaks ? PEAK_SORTS : isRanges ? RANGE_SORTS : COUNTRY_SORTS).map((sort) => (
                   <option key={sort} value={sort}>
                     {isPeaks
                       ? text.peakSorts[sort as PeakSort]
-                      : text.countrySorts[sort as CountrySort]}
+                      : isRanges
+                        ? text.rangeSorts[sort as RangeSort]
+                        : text.countrySorts[sort as CountrySort]}
                   </option>
                 ))}
               </select>
@@ -415,7 +460,7 @@ export function HarimPage() {
             <Icon name="trending_up" size={20} />
             {text.mostProminent}
           </button>
-          {!isPeaks && isLg && (
+          {isCountry && isLg && (
             <button
               type="button"
               className={styles.chip}
@@ -489,19 +534,26 @@ export function HarimPage() {
             {ready &&
               (isPeaks
                 ? text.peakCount(visiblePeaks.length, mountains.length)
-                : text.countryCount(visibleRows.length, rows.length))}
+                : isRanges
+                  ? text.rangeCount(visibleRanges.length, allRanges.length)
+                  : text.countryCount(visibleRows.length, rows.length))}
           </p>
           {hasFilters && (
             <button type="button" className={styles.clear} onClick={clearFilters}>
               {text.clearFilters}
             </button>
           )}
+          <ExportMenu viewParams={exportParams} />
         </div>
       </section>
 
       <section
         id="harim-results"
-        className={cx(styles.results, isWide && 'glass glass--strong', isWide && styles.panel)}
+        className={cx(
+          styles.results,
+          isWide && !isRanges && 'glass glass--strong',
+          isWide && !isRanges && styles.panel,
+        )}
         aria-label={text.views[view.view]}
         aria-busy={loading}
       >
@@ -519,21 +571,37 @@ export function HarimPage() {
           </div>
         )}
 
-        {ready && (isPeaks ? visiblePeaks.length === 0 : visibleRows.length === 0) && (
-          <div className={styles.state} data-testid="harim-empty">
-            <Icon name="search" size={32} />
-            <p className={styles.stateTitle}>{isPeaks ? text.empty : text.emptyCountries}</p>
-            <p>{text.emptyHint}</p>
-            {hasFilters && (
-              <button type="button" className={styles.action} onClick={clearFilters}>
-                {text.clearFilters}
-              </button>
-            )}
-          </div>
+        {ready &&
+          (isPeaks
+            ? visiblePeaks.length === 0
+            : isRanges
+              ? visibleRanges.length === 0
+              : visibleRows.length === 0) && (
+            <div className={styles.state} data-testid="harim-empty">
+              <Icon name="search" size={32} />
+              <p className={styles.stateTitle}>
+                {isPeaks ? text.empty : isRanges ? text.ranges.empty : text.emptyCountries}
+              </p>
+              <p>{text.emptyHint}</p>
+              {hasFilters && (
+                <button type="button" className={styles.action} onClick={clearFilters}>
+                  {text.clearFilters}
+                </button>
+              )}
+            </div>
+          )}
+
+        {ready && isRanges && visibleRanges.length > 0 && (
+          <RangeCards
+            ranges={visibleRanges}
+            countries={countries}
+            unit={unit}
+            maxHeight={maxHeight}
+          />
         )}
 
         {ready &&
-          !isPeaks &&
+          isCountry &&
           visibleRows.length > 0 &&
           (isWide ? (
             <SummaryTable
@@ -596,7 +664,7 @@ export function HarimPage() {
         )}
       </section>
 
-      {!isPeaks && summary.status === 'success' && (
+      {isCountry && summary.status === 'success' && (
         <TerritoryPeaks countries={countries} unit={unit} onOpenPeak={openPeak} />
       )}
 

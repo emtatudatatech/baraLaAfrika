@@ -8,6 +8,8 @@ import type {
   MountainResponse,
   MountainSummaryResponse,
   MountainsResponse,
+  RangeResponse,
+  RangesResponse,
   RegionSlug,
   RegionsResponse,
 } from '@bla/shared';
@@ -109,6 +111,12 @@ export const api = {
     ),
   mountain: (slug: string, signal?: AbortSignal) =>
     apiGet<MountainResponse>(`/api/mountains/${encodeURIComponent(slug)}`, signal),
+  ranges: (signal?: AbortSignal) => apiGet<RangesResponse>('/api/mountains/ranges', signal),
+  range: (slug: string, signal?: AbortSignal) =>
+    apiGet<RangeResponse>(`/api/mountains/ranges/${encodeURIComponent(slug)}`, signal),
+  /** The download address for the catalogue (filtered by `params`) as CSV or GeoJSON. */
+  exportUrl: (format: 'csv' | 'geojson', params: Record<string, string | undefined> = {}) =>
+    withQuery('/api/mountains/export', { format, ...params }),
   mountainStats: (region: RegionSlug | null = null, signal?: AbortSignal) =>
     apiGet<HarimStatsResponse>(
       withQuery('/api/mountains/stats', { region: region ?? undefined }),

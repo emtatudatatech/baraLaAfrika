@@ -31,9 +31,9 @@ function describeZodError(error: ZodError): string {
 }
 
 /**
- * Wraps an API handler: GET/HEAD only, JSON + caching on success, and the consistent
- * `{ error: { code, message } }` shape for every failure. Internal errors are logged, never
- * returned to the client.
+ * Wraps an API handler: GET/HEAD only, JSON + caching on success (a handler may instead return
+ * a ready Response, e.g. a file download), and the consistent `{ error: { code, message } }`
+ * shape for every failure. Internal errors are logged, never returned to the client.
  */
 export function defineHandler(
   handle: (request: Request, context: Context) => Promise<unknown>,
@@ -45,7 +45,8 @@ export function defineHandler(
       return response;
     }
     try {
-      const response = jsonResponse(request, await handle(request, context));
+      const result = await handle(request, context);
+      const response = result instanceof Response ? result : jsonResponse(request, result);
       return request.method === 'HEAD'
         ? new Response(null, { status: response.status, headers: response.headers })
         : response;

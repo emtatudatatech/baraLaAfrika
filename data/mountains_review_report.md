@@ -407,38 +407,121 @@ Shown on the map with a neutral marker and in a collapsed group under the summar
 
 ## Ranges
 
-Only curated ranges (with their Wikidata items) are used; a peak joins a range through Wikidata's 'mountain range' statement when it names one of them, so errors such as Mount Kenya in 'Mount Kilimanjaro' are ignored. Range descriptions, types and formation notes arrive with the ranges view (milestone 12), sourced the same way.
+Only curated ranges (with their Wikidata items) are used; a peak joins a range through Wikidata's 'mountain range' statement when it names one of them, so errors such as Mount Kenya in 'Mount Kilimanjaro' are ignored. Descriptions, types, lengths and formation notes are curated with a source and quotes (re-checked every run); a range without them shows its peaks only.
 
 - **Aberdare Range** (3): Mount Satima, Mount Kinangop, Menengai
+  - A 160 km upland range in central Kenya, north of Nairobi, averaging about 3,500 m; its Kikuyu name is Nyandarua.
+  - Formation: Part of the eastern rim of the Great Rift Valley, falling steeply into the rift on its western side.
+  - type: rift shoulder; length: 160 km
+  - Source: Wikipedia: Aberdare Range
 - **Adrar des Ifoghas** (1): Adrar Tigharghar
+  - A massif in Mali’s Kidal Region reaching into Algeria, with wide, shallow valleys strewn with eroded granite blocks.
+  - Source: Wikipedia: Adrar des Ifoghas
 - **Anti-Atlas** (2): Mount Lekst, Jebel Kissane
+  - A range in southern Morocco running about 500 km north-east from the Atlantic towards Ouarzazate and Tafilalt, bordering the Sahara.
+  - length: 500 km
+  - Source: Wikipedia: Anti-Atlas
 - **Auas Mountains** (1): Moltkeblick
+  - Namibia’s highest range, 56 km long near Windhoek; Moltkeblick is its highest peak.
+  - length: 56 km
+  - Source: Wikipedia: Auas Mountains
 - **Aïr Mountains** (4): Mont Idoukal-n-Taghès, Mont Gréboun, Adrar Zelîne, Adrar Bous
+  - A triangular massif in northern Niger, within the Sahara, rising above 1,800 m.
+  - Formation: Its volcanic features include the extinct Arakao caldera, lava flows, volcanic cones and one of the largest ring-dike systems in the world.
+  - Source: Wikipedia: Aïr Mountains
 - **Bale Mountains** (1): Mount Tullu Demtu
+  - Mountains in south-east Ethiopia, part of the Ethiopian Highlands, with Tullu Demtu, the country’s fourth-highest peak, and the Sanetti Plateau, home of the Ethiopian wolf.
+  - Source: Wikipedia: Bale Mountains
 - **Cameroon Line** (9): Mount Cameroon, Mount Oku, Pico Basilé, Mount Manengouba, Batcha, Mount Kupe, Bana, Yaawo…
+  - A 1,600 km chain of volcanoes from islands in the Gulf of Guinea through Mount Cameroon towards Lake Chad.
+  - Formation: Unusual in crossing both ocean and continental crust; geologists have proposed several explanations for it.
+  - type: volcanic; length: 1,600 km
+  - Source: Wikipedia: Cameroon line
 - **Crater Highlands** (4): Ol Doinyo Lengai, Gelai Volcano, Sadiman volcano, Kitumbeine Volcano
+  - Volcanic highlands along the East African Rift in northern Tanzania, named for their many craters and calderas, Ngorongoro among them.
+  - Formation: Several large volcanic complexes, about 2.4 to 1.5 million years old, built where the African and Somali plates spread apart.
+  - type: volcanic
+  - Source: Wikipedia: Crater Highlands
 - **Drakensberg** (11): Mafadi, Njesuthi, Champagne Castle, Popple Peak, Giant's Castle, Mont-Aux-Sources, Namahadi Peak, KwaDuma…
+  - The eastern part of the Great Escarpment around southern Africa’s central plateau, stretching more than 1,000 km and highest on the Lesotho–South Africa border.
+  - Formation: Steep rift walls formed when southern Gondwana broke apart, since eroded inland; the high Drakensberg is capped by basalt that erupted about 180 million years ago.
+  - type: plateau escarpment
+  - Source: Wikipedia: Drakensberg
 - **Ethiopian Highlands** (10): Mount Abuna Yosef, Gughe, Mount Choqa, Mount Gurage, Amba Alagi, Mount Welel, Mount Entoto, Emba Soira…
+  - The largest continuous area of high ground in Africa, sometimes called the “Roof of Africa”; the East African Rift cuts across it.
+  - Formation: A dome of ancient rock lifted by magma from the mantle from about 75 million years ago, then capped by flood basalts from about 30 million years ago.
+  - Source: Wikipedia: Ethiopian Highlands
 - **Fouta Djallon** (2): Mount Loura, Nepen Diakha
+  - A highland region in central Guinea, roughly the area of Middle Guinea.
+  - Source: Wikipedia: Fouta Djallon
 - **High Atlas** (7): Jbel Toubkal, Ouanoukrim, Ighil Igdamn, M'Goun, Jebel Ayachi, Jebel Yagour, Tassemit
+  - The highest part of the Atlas Mountains, running east from the Atlantic across central Morocco to the Algerian border; Jbel Toubkal is its highest peak.
+  - Formation: Folded and uplifted when old rift basins were squeezed as Africa and Eurasia converged during the Cenozoic.
+  - type: fold
+  - Source: Wikipedia: High Atlas
 - **Hoggar Mountains** (1): Mount Tahat
+  - A highland region in the central Sahara in southern Algeria; Mount Tahat is Algeria’s highest peak.
+  - Formation: Mostly metamorphic rock about 2 billion years old, with younger volcanic rock in places.
+  - Source: Wikipedia: Hoggar Mountains
 - **Imatong Mountains** (1): Kinyeti
+  - Mountains in south-eastern South Sudan reaching into Uganda; Mount Kinyeti is the highest point of South Sudan.
+  - Formation: Ancient crystalline basement rock rising through the younger deposits of the surrounding plains.
+  - Source: Wikipedia: Imatong Mountains
 - **Kipengere Range** (1): Mount Rungwe
+  - A plateau-like ridge in south-west Tanzania at the northern end of Lake Nyasa, also called the Livingstone Mountains, known for its flower-rich montane grasslands.
+  - Formation: Ancient Precambrian rock forming part of the eastern escarpment of the East African Rift.
+  - type: rift shoulder
+  - Source: Wikipedia: Kipengere Range
 - **Maloti Mountains** (3): Thabana Ntlenyana, Makheka, Thaba Putsoa
+  - The mountains of Lesotho’s highlands, part of the Drakensberg system: a high alpine basalt plateau rising to Thabana Ntlenyana, southern Africa’s highest peak.
+  - Source: Wikipedia: Maloti Mountains
 - **Marrah Mountains (Jebel Marra)** (1): Deriba Caldera
+  - A massif of volcanic peaks in Darfur, the highest mountains in Sudan; Deriba Caldera is the highest point.
+  - type: volcanic
+  - Source: Wikipedia: Marrah Mountains
 - **Middle Atlas** (3): Jbel Bou Naceur, Jbel Bou Iblane, Jbel Hebri
+  - The northernmost and second-highest of Morocco’s three main Atlas chains, a mass about 350 km long that includes the volcanic cone of Jbel Hebri.
+  - length: 350 km
+  - Source: Wikipedia: Middle Atlas
 - **Mitumba Mountains** (4): Mont Mohi, Kahuzi, Biega, Mount Heha
+  - Mountains along the Western Rift Valley in the eastern DR Congo, west of Lakes Tanganyika and Kivu; the northern part is known as the Itombwe Mountains.
+  - Formation: Its two main peaks, Mount Kahuzi and Mount Biéga, are dormant volcanoes.
+  - Source: Wikipedia: Mitumba Mountains
 - **Moka Range** (2): Pieter Both, Le Pouce
 - **Rif** (3): Tidighin, Zerhoun, Jebel Moussa
+  - A mountain region in northern Morocco between the Mediterranean, the Atlantic and the Ouergha and Moulouya rivers.
+  - Formation: Geologically part of the Gibraltar Arc (the Alborán Sea region).
+  - Source: Wikipedia: Rif
 - **Rwenzori Mountains** (5): Mount Stanley, Mount Speke, Mount Baker, Mount Gessi, Mount Luigi di Savoia
+  - A range on the border of Uganda and the DR Congo whose upper slopes are permanently snow-capped and glaciated; its streams feed one of the sources of the Nile.
+  - Formation: An uplifted block of ancient crystalline rock raised about three million years ago: not volcanic, and not formed by a collision of plates.
+  - length: 120 km
+  - Source: Wikipedia: Rwenzori Mountains
 - **Saharan Atlas** (0): 
+  - A sub-range of the Atlas, mainly in Algeria with its eastern end in Tunisia, parallel to the Tell Atlas nearer the coast; Mount Issa is its highest peak.
+  - Formation: Ancient base rock covered by the sediments of shallow seas and rivers.
+  - Source: Wikipedia: Saharan Atlas
 - **Semien Mountains** (2): Ras Dashen, Mount Bwahit
+  - Plateaus cut by deep valleys and rising to pinnacles in northern Ethiopia, part of the Ethiopian Highlands and a World Heritage Site; Ras Dashen is Ethiopia’s highest mountain.
+  - Formation: Basalt lava some 3,000 m thick laid over ancient crystalline rock, formed in the same way as South Africa’s Drakensberg.
+  - Source: Wikipedia: Semien Mountains
 - **Sinai Mountains** (2): Mount Catherine, Mount Sinai
 - **Tell Atlas** (3): Lalla-Khedidja, Babors, Chenoua
+  - An Atlas chain over 1,500 km long, mainly across northern Algeria, forming a barrier between the Mediterranean and the Sahara; Lalla Khedidja is its highest summit.
+  - Source: Wikipedia: Tell Atlas
 - **Tibesti Mountains** (8): Emi Koussi, Tarso Toussidé, Tarso Yega, Tarso Voon, Tarso Toon, Trou au Natron, Bikku Bitti, Tarso Toh
+  - A range in the central Sahara, mostly in the far north of Chad; Emi Koussi is the highest point of both Chad and the Sahara.
+  - Formation: Lifted over a mantle plume; its central third is volcanic, built by a hotspot active from the Oligocene, in places into the Holocene.
+  - Source: Wikipedia: Tibesti Mountains
 - **Togo Mountains** (2): Mount Agou, Mont Sokbaro
+  - A range across central Togo that continues into Ghana as the Akwapim Hills and into Benin as the Atakora Mountains, averaging about 700 m.
+  - Source: Wikipedia: Togo Mountains
 - **Tunisian Dorsal** (9): Jebel ech Chambi, Djebel Serj, Djebel Zaghouan, Table of Jugurtha, Djebel Bargou, Djebel Orbata, Djebel Bouramli, Djebel Ressas…
 - **Virunga Mountains** (8): Mount Karisimbi, Mount Mikeno, Mount Muhabura, Mount Bisoke, Mount Sabyinyo, Mount Gahinga, Mount Nyiragongo, Nyamuragira
+  - A chain of eight major volcanoes where Rwanda, the DR Congo and Uganda meet; Karisimbi is the highest.
+  - Formation: Volcanoes of the Albertine Rift, beside the western branch of the East African Rift; most are dormant, but Nyiragongo and Nyamuragira are active.
+  - type: volcanic
+  - Source: Wikipedia: Virunga Mountains
 
 ## Local names and name origins
 

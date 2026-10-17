@@ -25,3 +25,7 @@ export type MountainSort = (typeof MOUNTAIN_SORTS)[number];
 /** `volcanic=1` means any volcano; a status narrows it (`unknown` = volcanic, no stated status). */
 export const VOLCANIC_FILTERS = ['1', 'active', 'dormant', 'extinct', 'unknown'] as const;
 export type VolcanicFilter = (typeof VOLCANIC_FILTERS)[number];
+
+/** Export file formats for /api/mountains/export. */
+export const EXPORT_FORMATS = ['csv', 'geojson'] as const;
+export type ExportFormat = (typeof EXPORT_FORMATS)[number];

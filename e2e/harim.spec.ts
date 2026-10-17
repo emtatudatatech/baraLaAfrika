@@ -293,12 +293,6 @@ test('territory peaks are listed apart, collapsed and loaded on demand', async (
   await expect(group.locator('summary')).toContainText('(8)');
 });
 
-test('?view=ranges falls back to By country until the ranges view exists', async ({ page }) => {
-  await page.goto('/harim?view=ranges');
-  await expect(page.getByRole('note')).toContainText('ranges view arrives');
-  await expect(page.getByTestId('harim-view-country')).toHaveAttribute('aria-pressed', 'true');
-});
-
 for (const theme of ['light', 'dark'] as const) {
   test(`expanded rows, All peaks and the drawer pass axe checks (${theme})`, async ({ page }) => {
     await useTheme(page, theme);

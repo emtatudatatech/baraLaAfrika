@@ -15,6 +15,27 @@ function weakEtag(body: string): string {
  * JSON response with CDN caching and a weak ETag; answers 304 when the client's
  * If-None-Match matches.
  */
+/** A file download (export), with the same caching and ETag as JSON responses. */
+export function fileResponse(
+  request: Request,
+  body: string,
+  { contentType, filename }: { contentType: string; filename: string },
+): Response {
+  const etag = weakEtag(body);
+  const headers = {
+    'Content-Type': contentType,
+    'Content-Disposition': `attachment; filename="${filename}"`,
+    'Cache-Control': REFERENCE_CACHE_CONTROL,
+    'X-Content-Type-Options': 'nosniff',
+    ETag: etag,
+  };
+  const ifNoneMatch = request.headers.get('if-none-match');
+  if (ifNoneMatch?.split(',').some((tag) => tag.trim() === etag)) {
+    return new Response(null, { status: 304, headers });
+  }
+  return new Response(body, { status: 200, headers });
+}
+
 export function jsonResponse(
   request: Request,
   payload: unknown,

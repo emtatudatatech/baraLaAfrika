@@ -7,13 +7,18 @@ import {
   MountainSummaryResponseSchema,
   MountainsResponseSchema,
   REGION_SLUGS,
+  RangeResponseSchema,
+  RangesResponseSchema,
 } from '@bla/shared';
 import type { Context } from '@netlify/functions';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { readJson, seededDb } from '../../db/tests/seededDb.ts';
 import mountain from '../functions/mountain.ts';
+import mountainRange from '../functions/mountain-range.ts';
+import mountainRanges from '../functions/mountain-ranges.ts';
 import mountains from '../functions/mountains.ts';
+import mountainsExport from '../functions/mountains-export.ts';
 import mountainsStats from '../functions/mountains-stats.ts';
 import mountainsSummary from '../functions/mountains-summary.ts';
 import { setDbForTesting } from '../functions/_shared/db.ts';
@@ -225,6 +230,139 @@ describe('GET /api/mountains/stats', () => {
   });
 });
 
+describe('GET /api/mountains/ranges', () => {
+  it('lists the ranges with catalogued mountains, tallest first', async () => {
+    const body = RangesResponseSchema.parse(
+      await (await call(mountainRanges, '/api/mountains/ranges')).json(),
+    );
+    expect(body.count).toBeGreaterThan(20);
+    const tops = body.ranges.map((r) => r.tallest?.elevationM ?? 0);
+    expect(tops).toEqual([...tops].sort((a, b) => b - a));
+    for (const range of body.ranges) {
+      expect(range.heights).toHaveLength(range.peakCount);
+      expect(range.heights).toEqual([...range.heights].sort((a, b) => b - a));
+      if (range.tintRegion !== null) expect(range.regions).toContain(range.tintRegion);
+    }
+    const rwenzori = body.ranges.find((r) => r.slug === 'rwenzori');
+    expect(rwenzori?.tallest).toEqual({
+      slug: 'mount-stanley',
+      name: 'Mount Stanley',
+      elevationM: 5109,
+    });
+    expect(rwenzori?.countries.sort()).toEqual(['COD', 'UGA']);
+    expect(rwenzori?.hasDescription).toBe(true);
+  });
+
+  it('filters by region and searches range and mountain names', async () => {
+    const north = RangesResponseSchema.parse(
+      await (await call(mountainRanges, '/api/mountains/ranges?region=north')).json(),
+    );
+    expect(north.ranges.every((r) => r.regions.includes('north'))).toBe(true);
+    expect(north.ranges.map((r) => r.slug)).toContain('high-atlas');
+    const toubkal = RangesResponseSchema.parse(
+      await (await call(mountainRanges, '/api/mountains/ranges?q=toubkal')).json(),
+    );
+    expect(toubkal.ranges.map((r) => r.slug)).toEqual(['high-atlas']);
+  });
+});
+
+describe('GET /api/mountains/ranges/:slug', () => {
+  it("returns the sourced text and the range's mountains", async () => {
+    const response = await call(mountainRange, '/api/mountains/ranges/high-atlas', {
+      slug: 'high-atlas',
+    });
+    const { range } = RangeResponseSchema.parse(await response.json());
+    expect(range.description).toContain('Atlas');
+    expect(range.rangeType).toBe('fold');
+    expect(range.source?.url).toBe('https://en.wikipedia.org/wiki/High_Atlas');
+    expect(range.mountains).toHaveLength(range.peakCount);
+    expect(range.mountains.every((m) => m.range?.slug === 'high-atlas')).toBe(true);
+    expect(range.mountains[0]?.slug).toBe('jbel-toubkal');
+  });
+
+  it('404s unknown and malformed slugs', async () => {
+    for (const slug of ['no-such-range', 'Bad Slug!']) {
+      const response = await call(
+        mountainRange,
+        `/api/mountains/ranges/${encodeURIComponent(slug)}`,
+        {
+          slug,
+        },
+      );
+      expect(response.status).toBe(404);
+    }
+  });
+});
+
+describe('GET /api/mountains/export', () => {
+  function csvRows(body: string): string[] {
+    return body.split('\r\n').filter((line) => line !== '' && !line.startsWith('#'));
+  }
+
+  it('exports the whole catalogue as CSV with an attribution block', async () => {
+    const response = await call(mountainsExport, '/api/mountains/export');
+    expect(response.headers.get('Content-Type')).toBe('text/csv; charset=utf-8');
+    expect(response.headers.get('Content-Disposition')).toMatch(
+      /^attachment; filename="harim-mountains-\d{4}-\d{2}-\d{2}\.csv"$/,
+    );
+    const body = await response.text();
+    expect(body.startsWith('# Bara La Afrika · Harim: mountains of Africa')).toBe(true);
+    expect(body).toMatch(/^# As of: \d{4}-\d{2}-\d{2}/m);
+    expect(body).toContain('# Filters: none (the whole catalogue)');
+    expect(body).toContain('Contains data from GeoNames (geonames.org), CC BY 4.0');
+    expect(body).toMatch(/licence: CC0 1\.0/);
+    expect(body).toMatch(/licence: CC BY 4\.0/);
+    const [header, ...rows] = csvRows(body);
+    expect(header?.split(',').slice(0, 4)).toEqual(['slug', 'name', 'elevation_m', 'elevation_ft']);
+    expect(rows).toHaveLength(counted.length);
+    expect(rows[0]).toMatch(/^mount-kilimanjaro,Mount Kilimanjaro,5895,19341,/);
+  });
+
+  it('respects the filters and quotes fields that need it', async () => {
+    const body = await (
+      await call(mountainsExport, '/api/mountains/export?minHeight=4001&region=east')
+    ).text();
+    expect(body).toContain('# Filters: region=east, minHeight=4001');
+    const rows = csvRows(body).slice(1);
+    const expected = await list('?minHeight=4001&region=east');
+    expect(rows).toHaveLength(expected.total);
+    // Names with commas or quotes are quoted (RFC 4180).
+    const all = await (await call(mountainsExport, '/api/mountains/export')).text();
+    for (const line of csvRows(all).slice(1)) {
+      expect(line.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/)).toHaveLength(25);
+    }
+  });
+
+  it('exports GeoJSON points with the metadata', async () => {
+    const response = await call(
+      mountainsExport,
+      '/api/mountains/export?format=geojson&country=KEN',
+    );
+    expect(response.headers.get('Content-Type')).toBe('application/geo+json; charset=utf-8');
+    expect(response.headers.get('Content-Disposition')).toMatch(
+      /harim-mountains-filtered-.*\.geojson"$/,
+    );
+    const body = (await response.json()) as {
+      type: string;
+      metadata: { datasets: unknown[]; attribution: string; filters: Record<string, string> };
+      features: { geometry: { coordinates: number[] }; properties: Record<string, unknown> }[];
+    };
+    expect(body.type).toBe('FeatureCollection');
+    expect(body.metadata.datasets).toHaveLength(3);
+    expect(body.metadata.attribution).toContain('GeoNames');
+    expect(body.metadata.filters).toEqual({ country: 'KEN' });
+    const kenya = body.features.find((f) => f.properties.slug === 'mount-kenya');
+    expect(kenya?.geometry.coordinates).toEqual([37.2, -0.1]);
+    expect(kenya?.properties.page).toBe('https://bla.test/harim/peaks/mount-kenya');
+    expect(kenya?.properties.volcanic_status).toBe('extinct');
+  });
+
+  it('rejects an unknown format', async () => {
+    const response = await call(mountainsExport, '/api/mountains/export?format=xlsx');
+    expect(response.status).toBe(400);
+  });
+});
+
 describe('routes', () => {
   it('send every API path to exactly one function', () => {
     const expected: Record<string, string> = {
@@ -236,6 +374,9 @@ describe('routes', () => {
       '/api/mountains/summary': 'mountains-summary',
       '/api/mountains/stats': 'mountains-stats',
       '/api/mountains/mount-kenya': 'mountain',
+      '/api/mountains/ranges': 'mountain-ranges',
+      '/api/mountains/ranges/rwenzori': 'mountain-range',
+      '/api/mountains/export': 'mountains-export',
     };
     for (const [path, name] of Object.entries(expected)) {
       expect(

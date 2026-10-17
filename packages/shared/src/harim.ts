@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { MOUNTAIN_SORTS, VOLCANIC_FILTERS } from './harimConstants.ts';
+import { EXPORT_FORMATS, MOUNTAIN_SORTS, VOLCANIC_FILTERS } from './harimConstants.ts';
 import { REGION_SLUGS } from './regions.ts';
 import { FlagSchema, ReliabilityTierSchema, RegionSlugSchema } from './schemas.ts';
 
@@ -214,6 +214,76 @@ export type MountainDetail = z.infer<typeof MountainDetailSchema>;
 
 export const MountainResponseSchema = z.object({ mountain: MountainDetailSchema });
 export type MountainResponse = z.infer<typeof MountainResponseSchema>;
+
+// ── Ranges ───────────────────────────────────────────────────────────────────
+
+export const RangeTypeSchema = z.enum([
+  'volcanic',
+  'fold',
+  'rift_shoulder',
+  'massif',
+  'plateau_escarpment',
+  'other',
+]);
+export type RangeType = z.infer<typeof RangeTypeSchema>;
+
+export const RangesQuerySchema = z.object({
+  region: RegionSlugSchema.optional(),
+  q: searchText,
+});
+export type RangesQuery = z.infer<typeof RangesQuerySchema>;
+
+export const RangeSummarySchema = z.object({
+  slug: z.string(),
+  name: z.string(),
+  rangeType: RangeTypeSchema.nullable(),
+  lengthKm: z.number().nullable(),
+  /** Counted mountains (a massif once, a border peak once). */
+  peakCount: z.number().int().nonnegative(),
+  tallest: z
+    .object({ slug: z.string(), name: z.string(), elevationM: z.number().int() })
+    .nullable(),
+  /** Its mountains' heights in metres, highest first (the mini bar). */
+  heights: z.array(z.number().int()),
+  /** Countries it spans, those with the most of its peaks first. */
+  countries: z.array(z.string().length(3)),
+  regions: z.array(RegionSlugSchema),
+  /** The card's tint: the region of the country with the most of its peaks; null when split. */
+  tintRegion: RegionSlugSchema.nullable(),
+  /** True when its text is unsourced or uncertain. */
+  needsReview: z.boolean(),
+  /** True when a sourced description is available (shown on the range page). */
+  hasDescription: z.boolean(),
+});
+export type RangeSummary = z.infer<typeof RangeSummarySchema>;
+
+export const RangesResponseSchema = z.object({
+  ranges: z.array(RangeSummarySchema),
+  count: z.number().int().nonnegative(),
+});
+export type RangesResponse = z.infer<typeof RangesResponseSchema>;
+
+export const RangeDetailSchema = RangeSummarySchema.extend({
+  description: z.string().nullable(),
+  formationNote: z.string().nullable(),
+  source: SourceRefSchema.nullable(),
+  reviewNotes: z.string().nullable(),
+  wikidataQid: z.string().nullable(),
+  /** Its counted mountains, highest first (a massif's summits nested). */
+  mountains: z.array(MountainSchema),
+});
+export type RangeDetail = z.infer<typeof RangeDetailSchema>;
+
+export const RangeResponseSchema = z.object({ range: RangeDetailSchema });
+export type RangeResponse = z.infer<typeof RangeResponseSchema>;
+
+// ── Export ───────────────────────────────────────────────────────────────────
+
+/** The catalogue as a file: the same filters as /api/mountains, never capped. */
+export const MountainsExportQuerySchema = MountainsQuerySchema.extend({
+  format: z.enum(EXPORT_FORMATS).default('csv'),
+});
+export type MountainsExportQuery = z.infer<typeof MountainsExportQuerySchema>;
 
 export const HARIM_STAT_KEYS = [
   'mountains_catalogued',

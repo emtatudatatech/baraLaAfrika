@@ -251,6 +251,50 @@ describe('v_harim_stats', () => {
   });
 });
 
+describe('v_range_summary', () => {
+  it('counts each range once per mountain and tints it by the country with most peaks', async () => {
+    const db = await fixture();
+    const { rows } = await db.query<{
+      slug: string;
+      peak_count: number;
+      tallest_slug: string;
+      heights: number[];
+      country_iso3s: string[];
+      region_slugs: string[];
+      tint_region: string | null;
+    }>(
+      `SELECT slug, peak_count, tallest_slug, heights, country_iso3s, region_slugs, tint_region
+       FROM v_range_summary ORDER BY slug`,
+    );
+    const big = rows.find((r) => r.slug === 'big');
+    // The massif counts once (not its summits); the border peak once.
+    expect(big).toMatchObject({
+      peak_count: 3,
+      tallest_slug: 'kili',
+      heights: [5000, 4500, 3200],
+      country_iso3s: ['AAA', 'BBB'],
+      tint_region: 'east',
+    });
+    const small = rows.find((r) => r.slug === 'small');
+    expect(small?.country_iso3s).toEqual(['BBB', 'CCC']);
+    expect([...(small?.region_slugs ?? [])].sort()).toEqual(['east', 'north']);
+    expect(small?.tint_region).toBe('east');
+    // A tie between countries in different regions is "split": no tint.
+    await db.exec(`
+      INSERT INTO mountains (slug, name, elevation_m, elevation_source_id, elevation_confidence,
+        latitude, longitude, summit_kind, range_id)
+      VALUES ('gamma-two', 'Gamma Two', 950, (SELECT id FROM sources), 'high', 30, 5,
+        'standalone', (SELECT id FROM mountain_ranges WHERE slug = 'small'));
+      INSERT INTO mountain_countries (mountain_id, country_id, is_country_high_point, is_shared)
+      SELECT m.id, c.id, false, false FROM mountains m, countries c
+      WHERE m.slug = 'gamma-two' AND c.iso3 = 'CCC';`);
+    const split = await db.query<{ tint_region: string | null }>(
+      "SELECT tint_region FROM v_range_summary WHERE slug = 'small'",
+    );
+    expect(split.rows[0]?.tint_region).toBeNull();
+  });
+});
+
 describe('v_country_mountain_summary', () => {
   it('gives one row per country with the counting rule applied', async () => {
     const db = await fixture();

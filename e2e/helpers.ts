@@ -76,7 +76,9 @@ export async function waitForStats(page: Page): Promise<void> {
 
 /** Waits until the Harim map shows its peaks and any camera move has finished. */
 export async function waitForMap(page: Page): Promise<void> {
-  await expect(page.getByTestId('harim-map-peak').first()).toBeAttached();
+  await expect(
+    page.getByTestId('harim-map-peak').or(page.getByTestId('harim-map-group')).first(),
+  ).toBeAttached();
   let last = '';
   await expect
     .poll(

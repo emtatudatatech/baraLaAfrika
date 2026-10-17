@@ -346,8 +346,9 @@ def write(
         "",
         "Only curated ranges (with their Wikidata items) are used; a peak joins a range through "
         "Wikidata's 'mountain range' statement when it names one of them, so errors such as "
-        "Mount Kenya in 'Mount Kilimanjaro' are ignored. Range descriptions, types and "
-        "formation notes arrive with the ranges view (milestone 12), sourced the same way.",
+        "Mount Kenya in 'Mount Kilimanjaro' are ignored. Descriptions, types, lengths and "
+        "formation notes are curated with a source and quotes (re-checked every run); a range "
+        "without them shows its peaks only.",
         "",
     ]
     for r in sorted(result.ranges, key=lambda r: r.name):
@@ -356,6 +357,20 @@ def write(
             f"- **{r.name}** ({len(members)}): {', '.join(m.name for m in members[:8])}"
             f"{'\u2026' if len(members) > 8 else ''}"
         )
+        facts = [
+            f"type: {r.range_type.replace('_', ' ')}" if r.range_type else None,
+            f"length: {r.length_km:,.0f} km" if r.length_km else None,
+        ]
+        if r.description:
+            lines.append(f"  - {r.description}")
+        if r.formation_note:
+            lines.append(f"  - Formation: {r.formation_note}")
+        if any(facts):
+            lines.append(f"  - {'; '.join(f for f in facts if f)}")
+        if r.source:
+            lines.append(f"  - Source: {sources[r.source].title}")
+        if r.review:
+            lines.append(f"  - ⚑ {' '.join(r.review)}")
 
     lines += ["", "## Local names and name origins", ""]
     for m in sorted(

@@ -25,6 +25,9 @@ const HARIM_STATES = [
   { path: '/harim?country=TZA', name: 'harim-expanded', ready: 'country-peak' },
   { path: '/harim?view=peaks&sort=prominence', name: 'harim-peaks', ready: 'peak-name' },
   { path: '/harim?peak=mount-kilimanjaro', name: 'harim-drawer', ready: 'elevation-source' },
+  { path: '/harim?view=ranges', name: 'harim-ranges', ready: 'harim-range-cards' },
+  { path: '/harim/ranges/rwenzori', name: 'harim-range-page', ready: 'range-description' },
+  { path: '/harim/peaks/mount-kenya', name: 'harim-peak-page', ready: 'peak-alternatives' },
 ] as const;
 
 const SHOTS = [
@@ -49,10 +52,11 @@ for (const viewport of VIEWPORTS) {
         // The loaded page (a skeleton's sheen would never finish animating).
         if (route.ready === null) await waitForContent(page, route.path);
         else await page.getByTestId(route.ready).first().waitFor();
-        if (route.path.startsWith('/harim')) {
+        if (route.path.startsWith('/harim?') || route.path === '/harim') {
           await waitForStats(page);
           await waitForMap(page);
         }
+        if (route.path.startsWith('/harim/ranges/')) await waitForMap(page);
         await waitForAnimations(page);
         // A full-page capture does not scroll, so lazy images below the fold would stay blank.
         await page.evaluate(async () => {

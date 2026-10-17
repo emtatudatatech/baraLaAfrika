@@ -26,5 +26,10 @@ export default defineHandler(async (_request, context): Promise<MountainResponse
 // The other /api/mountains/* routes are separate functions.
 export const config: Config = {
   path: '/api/mountains/:slug',
-  excludedPath: ['/api/mountains/summary', '/api/mountains/stats', '/api/mountains/export'],
+  excludedPath: [
+    '/api/mountains/summary',
+    '/api/mountains/stats',
+    '/api/mountains/export',
+    '/api/mountains/ranges',
+  ],
 };

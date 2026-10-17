@@ -43,6 +43,16 @@ describe('api client', () => {
     expect(fetchMock).toHaveBeenLastCalledWith('/api/mountains?territories=1', expect.anything());
     await api.mountain('mount-kenya');
     expect(fetchMock).toHaveBeenLastCalledWith('/api/mountains/mount-kenya', expect.anything());
+    await api.ranges();
+    expect(fetchMock).toHaveBeenLastCalledWith('/api/mountains/ranges', expect.anything());
+    await api.range('high-atlas');
+    expect(fetchMock).toHaveBeenLastCalledWith(
+      '/api/mountains/ranges/high-atlas',
+      expect.anything(),
+    );
+    expect(api.exportUrl('geojson', { region: 'east', q: undefined })).toBe(
+      '/api/mountains/export?format=geojson&region=east',
+    );
     await api.mountainStats('east');
     expect(fetchMock).toHaveBeenLastCalledWith(
       '/api/mountains/stats?region=east',

@@ -11,7 +11,7 @@
 
 History and Contemporary Africa appear in the navigation as "Coming soon".
 
-> **Status:** milestones 1–11 of 17 are complete: scaffold, data foundation, flags with approved region colours, the API (connected to Neon), the **interactive map**, the **countries table**, the **data ribbon**, the **Harim mountain data**, the **Harim API and tables**, the **Harim statistics band** and the **Harim map and chart**. Next: Harim ranges, peak pages and export (milestone 12). See [Roadmap](#roadmap).
+> **Status:** milestones 1–12 of 17 are complete: scaffold, data foundation, flags with approved region colours, the API (connected to Neon), the **interactive map**, the **countries table**, the **data ribbon**, and **Harim** in full (data, API and tables, statistics band, map and chart, ranges, peak pages and export). Next: the Dhahabu source and licence check (milestone 13). See [Roadmap](#roadmap).
 
 ---
 
@@ -75,7 +75,7 @@ db/roles.sql              one-time read/write role setup (run in the Neon SQL ed
 db/tests/                 schema and seed tests against PGlite
 db/seeds/                 generated, reviewable JSON seeds (committed)
 pipelines/                Python package: `python -m pipelines <command>`
-scripts/                  build helpers (Material Symbols subsetting)
+scripts/                  build helpers (Material Symbols subsetting, favicon, social images)
 config/constants.json     single source of truth for unit constants
 e2e/                      Playwright suites (desktop 1440×900, mobile 390×844)
 data/source/              the research PDF (raw downloads go to data/raw/, gitignored)
@@ -155,7 +155,8 @@ The pipelines run from the repo root (`uv run python -m pipelines --help`); see 
 - **Elevation:** the value most of the most reliable sources agree on (within 10 m); every other value is kept in `elevation_alternatives`. Confidence is high when they agree within 10 m, medium within 50 m (or with one reliable source), low otherwise; any disagreement above 10 m, including the prototype's, sets `needs_review`. Values that bulk-imported Wikidata items copied from GeoNames count as GeoNames.
 - **Selection:** every country high point, every peak of 3,000 m or more, every prototype peak, and up to 8 notable peaks per country. Little-known points within 1.5 km of a mountain, or within a massif's radius, are parts of it, not separate mountains. Territory peaks (Réunion, the Canary Islands, Madeira…) are kept separate.
 - **Hierarchy:** massif → summit, two levels, only where a cited source names the summits (Kilimanjaro → Kibo, Mawenzi, Shira; Mount Kenya → Batian, Nelion, Point Lenana; and others). A massif counts as one mountain and stands exactly as high as its highest summit.
-- **Curation:** `pipelines/africa_pipelines/reference/harim_curation.json` holds the pinned commits, thresholds, prototype matches, massifs, sourced elevations, curated volcanoes, ranges, territories and the decisions where Wikidata and the Factbook disagree on a country's high or low point. `db/seeds/mountain_names.json` holds local names and name origins. Every text claim has a source URL and the exact quote; the run re-checks each quote against the cached source and fails if it is missing, so nothing is invented.
+- **Range descriptions:** 27 of the 30 ranges have a short description (and a formation note, type and length where the source states them), each sourced to its Wikipedia article with exact quotes re-checked every run; the review report lists them. Sinai, the Tunisian Dorsal and Moka have none yet, and their pages say so.
+- **Curation:** `pipelines/africa_pipelines/reference/harim_curation.json` holds the pinned commits, thresholds, prototype matches, massifs, sourced elevations, curated volcanoes, ranges (with their descriptions), territories and the decisions where Wikidata and the Factbook disagree on a country's high or low point. `db/seeds/mountain_names.json` holds local names and name origins. Every text claim has a source URL and the exact quote; the run re-checks each quote against the cached source and fails if it is missing, so nothing is invented.
 - **Validation** (the run fails otherwise):
   - every country has one high point and a low point below it;
   - the hierarchy is valid and massif heights match their summits;
@@ -209,12 +210,16 @@ Netlify Functions in `netlify/functions/`, one file per route, each declaring it
 | `GET /api/mountains/summary?region=&q=` | One row per country (54), highest peak first: the highest peak (with a massif's top summit and the countries it is shared with), number of mountains, mean height, ranges, lowest point and relief |
 | `GET /api/mountains?region=&country=&range=&q=&minHeight=&volcanic=&sort=` | The catalogue (counted mountains: standalone and massifs, each once; summits are nested in their massif). `country` lists a shared peak under each of its countries; `volcanic=1` any volcano, or `active`/`dormant`/`extinct`/`unknown`; `sort=height` (default), `-height`, `prominence` (unknown last) or `name`. `territories=1` lists the territory peaks instead; `summits=1` adds summits as rows. Returns `count`, `total` and `capped` (the list is capped at 600) |
 | `GET /api/mountains/:slug` | One mountain: height with its source and every other sourced height, prominence, isolation, coordinates, range, type, volcanic status, massif and summits, local names and name origin (each with its source), notes, review notes and sources by field. Unknown or malformed slugs are 404 |
+| `GET /api/mountains/ranges?region=&q=` | The ranges with catalogued mountains, tallest first: type, length, mountain count, tallest peak, their heights, the countries spanned (most peaks first), regions and the card tint (`v_range_summary`, migration 0006) |
+| `GET /api/mountains/ranges/:slug` | One range: its sourced description and formation note, source, review notes and its mountains. Unknown, malformed or empty ranges are 404 |
+| `GET /api/mountains/export?format=csv\|geojson&<filters>` | A download of the catalogue, filtered like `/api/mountains` (never capped). CSV starts with a `#` block, GeoJSON carries a `metadata` member: as-of date, filters, each dataset's version, licence and attribution, and the other sources. Rows include the height's source and a link to the peak's page |
 | `GET /api/mountains/stats?region=` | The statistics band's figures from `v_harim_stats()` (for All Africa, or one region), each with its definition; ties are listed, never resolved at random. Each card's details and entities have their own schema in the shared contract. 503 until the mountain data is loaded |
 
 - **Errors** always have the shape `{ "error": { "code", "message" } }`: `bad_request` (400, invalid query parameters), `not_found` (404), `method_not_allowed` (405; only GET and HEAD), `service_unavailable` (503, database not configured) and `internal_error` (500; details are logged, never returned).
 - **Caching:** `Cache-Control: public, s-maxage=3600, stale-while-revalidate=86400` with a weak `ETag` (304 on `If-None-Match`). Errors are `no-store`.
 - **Database:** the Neon HTTP driver with the read-only `bla_reader` role (`DATABASE_URL_READ`); every query is parameterised (`netlify/functions/_shared/queries.ts` and `harimQueries.ts`). Search uses the `search_fold()` SQL function and the `v_country_summary` view (migration 0002). The Harim routes read `v_mountains`, `v_country_mountain_summary` and `v_harim_stats()` (migration 0004; 0005 adds each height's confidence and other sourced heights to the statistics, and names the region in the lowest point's label). Every statistic's definition and tie rule is in [`docs/harim-stats.md`](docs/harim-stats.md), word for word as the SQL returns it (a test keeps them identical).
-- **Routing:** `/api/mountains/:slug` excludes the fixed paths (`summary`, `stats`, `export`), and a test checks every API path reaches exactly one function.
+- **Routing:** `/api/mountains/:slug` excludes the fixed paths (`summary`, `stats`, `export`, `ranges`), and a test checks every API path reaches exactly one function.
+- **Files:** a handler may return a ready `Response` (the export), with the same caching and ETag as JSON.
 - **Bundling:** functions import the shared contract by relative path (`_shared/contract.ts`), so Netlify's bundler inlines it. `npm run check:functions` builds the functions exactly as a deploy does and checks every bundle loads and answers.
 - **Web client:** `apps/web/src/lib/api.ts` (typed by the same contract).
 
@@ -279,6 +284,11 @@ The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth**
 - **Chart: "Highest peak by country"** (`features/harim/chart/`): a horizontal bar per country in its region colour, highest first or A to Z, following the region filter, with a dashed line at Kilimanjaro. Hover or tap a bar for its peak and height; "Show the data as a table" is the accessible equivalent.
 - **Geology card:** "Why are Africa's highest mountains where they are?", adapted from the prototype's notes and checked against eight Wikipedia articles (linked). The prototype called the High Atlas a remnant of ancient events; it rose mainly in the last 66 million years, so the card says so. Open on larger screens, collapsed on phones.
 - **Cross-links:** the Countries drawer shows "Highest peak: …", linking to `/harim?country=<ISO3>` (that country's row, expanded, and the map fitted to it); each Harim row links back to the country's profile.
+- **By range** (`?view=ranges`): a card per range, tinted with the region colour of the country holding most of its peaks (neutral when split), with its type, tallest peak, mountain count, countries and a mini bar of its peaks' heights. Region chips and search apply (search also matches the ranges' mountains); sort by tallest peak (default), most mountains or name. The map shows the listed ranges' mountains.
+- **Range pages** (`/harim/ranges/:slug`): the sourced description and formation note with its source ("needs verification" where unsourced; "no sourced description yet" where there is none), type, length, mountain count and tallest peak, the countries it spans (their mountains and profiles), the map fitted to the range, and its peaks (each opening its page).
+- **Peak pages** (`/harim/peaks/:slug`, and "Open full page" in the drawer): name, height in both units, flags, range and volcanic status; the height's confidence, source and every other sourced height; prominence, isolation, coordinates (with a copy button), type, massif and summits; local names and name origin with sources ("Unsourced" otherwise); a locator map; nearby peaks (same range or country, nearest first); sources; and a copy-link button.
+- **Export:** "Export" by the result count downloads the current view or the whole catalogue as CSV or GeoJSON from `/api/mountains/export`; a message confirms the download or reports a failure.
+- **Link previews:** the build writes a page shell for `/harim` and every mountain and range page (`apps/web/build/pageShells.ts`, from the committed seeds) with that page's title, description and Open Graph tags, so shared links show the right text; Netlify serves them before the single-page fallback (as does `vite preview`). The preview image is the generic Harim card, `public/og/harim.png`; the site's is `og/site.png` (both from `node scripts/build-og-images.mjs`).
 - **Peak drawer:** a click on any mountain or summit opens it: height in both units with its confidence, the source of the height and every other sourced height, prominence, isolation, coordinates, range, type, massif and summits (each opens in the same drawer), local names and name origin with their sources ("Unsourced" otherwise), notes, the "Needs verification" reasons and all sources by field.
 - **URL state:** `?view=country|peaks`, `region`, `q`, `sort`, `country`, `minHeight`, `volcanic`, `range` and `peak` (the open drawer). Invalid values are ignored; `view=ranges` shows the by-country view with a note until the ranges view arrives (milestone 12). Switching to By country drops the peak-only filters. A `country` in the URL filters to that country and opens its row (the link from other pages).
 - **Units:** a metres/feet toggle, remembered in this browser (`bla-units`) and applied everywhere on the page. Below sea level uses a true minus sign (`−155 m`).
@@ -401,6 +411,9 @@ Decisions taken where the specification left room, or where the current ecosyste
 - **Close groups stay grouped:** peaks a few kilometres apart (the Rwenzori summits, parts of the Virunga) can still touch at the closest zoom, so they remain a group whose list opens on click.
 - **Map before chart, below the table:** the page keeps the specification's order (statistics, table, map, chart). The table is too wide to sit beside the map without clipping, so the two are linked by the actions above instead.
 - **Heights never wrap from their unit:** heights use a no-break space (`5,895 m`).
+- **Social images:** link previews use one generic Harim image rather than one per peak. Rendering about 90 images (every national high point and peak above 4,000 m) needs a headless browser during the build, which the deploy build does not provide, and committing them would add several megabytes. Each page still gets its own title and description in the preview.
+- **Ranges the data does not support:** the specification lists the Eastern Arc and Mulanje among ranges to cover. The catalogue includes none of the Eastern Arc's main peaks (such as Kimhandu, Shengena or Mtorwi), so there is no Eastern Arc page; Mulanje is catalogued as a massif with Sapitwa as its summit, not as a range.
+- **Export metadata in CSV:** a block of `#` lines before the header, since CSV has no metadata field; spreadsheet apps show it as the first rows.
 - **Harim tables:** the region chip sits under the country name (one column fewer), so the By country table fits from 720px. All peaks uses the compact list below 1024px, because its six columns cannot fit a narrower panel without clipping.
 - **Low-point types** add `river` and `salt_flat` to the specification's examples (many landlocked countries' lowest points are rivers; several North African ones are salt flats).
 - **Dev-tool advisories:** `npm audit` reports advisories in dev-only tooling (`netlify-cli`'s local server dependencies and Stylelint's glob dependencies). None of it ships to the browser or the deployed functions.
@@ -420,7 +433,7 @@ v1 milestones (stop points for review are marked ⏸):
 9. ✅ Harim API and table
 10. ✅ Harim statistics band ⏸
 11. ✅ Harim map and chart
-12. Harim ranges, peak pages and export
+12. ✅ Harim ranges, peak pages and export
 13. Dhahabu source and licence check ⏸
 14. Dhahabu data ⏸
 15. Dhahabu API, table, band and live ribbon ⏸

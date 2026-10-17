@@ -63,6 +63,20 @@ export const router = createBrowserRouter([
             },
           },
           {
+            path: 'harim/ranges/:slug',
+            handle: ROUTE_DATA.harim,
+            lazy: {
+              Component: async () => (await import('../features/harim/RangePage')).RangePage,
+            },
+          },
+          {
+            path: 'harim/peaks/:slug',
+            handle: ROUTE_DATA.harim,
+            lazy: {
+              Component: async () => (await import('../features/harim/PeakPage')).PeakPage,
+            },
+          },
+          {
             path: 'dhahabu',
             handle: ROUTE_DATA.dhahabu,
             lazy: {

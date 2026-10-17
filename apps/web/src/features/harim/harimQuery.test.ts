@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 
 import {
   filterPeaks,
+  filterRanges,
+  sortRanges,
   filterSummary,
   mountainsOf,
   nextCountrySort,
@@ -101,6 +103,14 @@ describe('parseView', () => {
     });
   });
 
+  it('accepts the ranges view with its own sorts', () => {
+    expect(parseView(new URLSearchParams('view=ranges&sort=peaks'))).toMatchObject({
+      view: 'ranges',
+      sort: 'peaks',
+    });
+    expect(parseView(new URLSearchParams('view=ranges&sort=prominence')).sort).toBe('height');
+  });
+
   it('reads valid values and drops invalid ones', () => {
     const view = parseView(
       new URLSearchParams(
@@ -120,11 +130,10 @@ describe('parseView', () => {
     });
     const bad = parseView(
       new URLSearchParams(
-        'view=ranges&region=asia&sort=prominence&minHeight=9000&volcanic=maybe&range=Bad!&country=KE&peak=x y',
+        'view=mountains&region=asia&sort=prominence&minHeight=9000&volcanic=maybe&range=Bad!&country=KE&peak=x y',
       ),
     );
-    // Ranges arrive in milestone 12; until then the view falls back to By country, where
-    // prominence is not a sort.
+    // An unknown view falls back to By country, where prominence is not a sort.
     expect(bad).toMatchObject({
       view: 'country',
       region: null,
@@ -304,5 +313,45 @@ describe('all peaks', () => {
     const a = peak('b-peak', 3000);
     const b = peak('a-peak', 3000);
     expect(slugs(sortPeaks([a, b], 'height'))).toEqual(['a-peak', 'b-peak']);
+  });
+});
+
+describe('ranges', () => {
+  const range = (slug: string, top: number, peakCount: number, regions: RegionSlug[]) => ({
+    slug,
+    name: slug,
+    rangeType: null,
+    lengthKm: null,
+    peakCount,
+    tallest: { slug: `${slug}-top`, name: `${slug} top`, elevationM: top },
+    heights: [top],
+    countries: [],
+    regions,
+    tintRegion: regions[0] ?? null,
+    needsReview: false,
+    hasDescription: false,
+  });
+  const ranges = [
+    range('small', 2000, 9, ['west']),
+    range('tall', 5109, 6, ['east', 'central']),
+    range('mid', 4000, 3, ['east']),
+  ];
+
+  it('filters by region and by range or mountain name', () => {
+    expect(filterRanges(ranges, { region: 'central', q: '' }, []).map((r) => r.slug)).toEqual([
+      'tall',
+    ]);
+    const mountains = [
+      peak('kibo-like', 4000, { name: 'Margherita', range: { slug: 'tall', name: 'tall' } }),
+    ];
+    expect(
+      filterRanges(ranges, { region: null, q: 'margherita' }, mountains).map((r) => r.slug),
+    ).toEqual(['tall']);
+  });
+
+  it('sorts by tallest peak, mountain count or name', () => {
+    expect(sortRanges(ranges, 'height').map((r) => r.slug)).toEqual(['tall', 'mid', 'small']);
+    expect(sortRanges(ranges, 'peaks').map((r) => r.slug)).toEqual(['small', 'tall', 'mid']);
+    expect(sortRanges(ranges, 'name').map((r) => r.slug)).toEqual(['mid', 'small', 'tall']);
   });
 });

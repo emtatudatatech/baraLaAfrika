@@ -7,6 +7,9 @@ import type {
   MountainsQuery,
   MountainSource,
   MountainSummaryQuery,
+  RangeDetail,
+  RangeSummary,
+  RangesQuery,
   RegionSlug,
 } from './contract.ts';
 
@@ -182,9 +185,11 @@ const ORDER_BY: Record<MountainsQuery['sort'], string> = {
   name: 'search_fold(v.name), v.slug',
 };
 
+/** The filtered catalogue; `limit` null returns every match (exports). */
 export async function listMountains(
   db: Db,
   query: MountainsQuery,
+  limit: number | null = MOUNTAIN_LIST_CAP,
 ): Promise<{ mountains: Mountain[]; total: number }> {
   const where = `
     WHERE (CASE WHEN $1::boolean THEN v.territory_name IS NOT NULL
@@ -213,7 +218,7 @@ export async function listMountains(
     `SELECT ${MOUNTAIN_COLUMNS}, count(*) OVER ()::int AS total
      FROM v_mountains v ${where}
      ORDER BY ${ORDER_BY[query.sort]}
-     LIMIT ${String(MOUNTAIN_LIST_CAP)}`,
+     ${limit === null ? '' : `LIMIT ${String(limit)}`}`,
     params,
   );
   return { mountains: rows.map(toMountain), total: rows[0]?.total ?? 0 };
@@ -370,4 +375,146 @@ export async function getHarimStats(
         asOf: date,
       }) as HarimStat,
   );
+}
+
+// ── Ranges ───────────────────────────────────────────────────────────────────
+
+interface RangeRow {
+  slug: string;
+  name: string;
+  range_type: RangeSummary['rangeType'];
+  length_km: string | number | null;
+  peak_count: number;
+  tallest_slug: string | null;
+  tallest_name: string | null;
+  tallest_m: number | null;
+  heights: number[];
+  country_iso3s: string[];
+  region_slugs: RegionSlug[];
+  tint_region: RegionSlug | null;
+  needs_review: boolean;
+  has_description: boolean;
+}
+
+const RANGE_COLUMNS = `r.slug, r.name, r.range_type::text AS range_type, r.length_km, r.peak_count,
+  r.tallest_slug, r.tallest_name, r.tallest_m, r.heights, r.country_iso3s, r.region_slugs,
+  r.tint_region, r.needs_review,
+  (r.description IS NOT NULL OR r.formation_note IS NOT NULL) AS has_description`;
+
+function toRange(row: RangeRow): RangeSummary {
+  return {
+    slug: row.slug,
+    name: row.name,
+    rangeType: row.range_type,
+    lengthKm: row.length_km === null ? null : Number(row.length_km),
+    peakCount: row.peak_count,
+    tallest:
+      row.tallest_slug && row.tallest_name && row.tallest_m !== null
+        ? { slug: row.tallest_slug, name: row.tallest_name, elevationM: row.tallest_m }
+        : null,
+    heights: row.heights,
+    countries: row.country_iso3s,
+    regions: row.region_slugs,
+    tintRegion: row.tint_region,
+    needsReview: row.needs_review,
+    hasDescription: row.has_description,
+  };
+}
+
+/** Ranges with at least one catalogued mountain, tallest first. */
+export async function listRanges(db: Db, query: RangesQuery): Promise<RangeSummary[]> {
+  const rows = await db.query<RangeRow>(
+    `SELECT ${RANGE_COLUMNS}
+     FROM v_range_summary r
+     WHERE r.peak_count > 0
+       AND ($1::text IS NULL OR $1 = ANY (r.region_slugs))
+       AND ($2::text IS NULL OR strpos(r.search_text, search_fold($2)) > 0)
+     ORDER BY r.tallest_m DESC NULLS LAST, search_fold(r.name)`,
+    [query.region ?? null, query.q ?? null],
+  );
+  return rows.map(toRange);
+}
+
+/** One range with its text, source and mountains; null when unknown or empty. */
+export async function getRange(db: Db, slug: string): Promise<RangeDetail | null> {
+  const [row] = await db.query<
+    RangeRow & {
+      description: string | null;
+      formation_note: string | null;
+      review_notes: string | null;
+      wikidata_qid: string | null;
+      source_key: string | null;
+      source_title: string | null;
+      source_url: string | null;
+    }
+  >(
+    `SELECT ${RANGE_COLUMNS}, r.description, r.formation_note, r.review_notes, r.wikidata_qid,
+            s.source_key, s.title AS source_title, s.url AS source_url
+     FROM v_range_summary r LEFT JOIN sources s ON s.id = r.source_id
+     WHERE r.slug = $1 AND r.peak_count > 0`,
+    [slug],
+  );
+  if (!row) return null;
+  const { mountains } = await listMountains(db, { range: slug, sort: 'height' }, null);
+  return {
+    ...toRange(row),
+    description: row.description,
+    formationNote: row.formation_note,
+    reviewNotes: row.review_notes,
+    wikidataQid: row.wikidata_qid,
+    source:
+      row.source_key && row.source_title && row.source_url
+        ? { key: row.source_key, title: row.source_title, url: row.source_url }
+        : null,
+    mountains,
+  };
+}
+
+// ── Export ───────────────────────────────────────────────────────────────────
+
+export interface DatasetMeta {
+  key: string;
+  name: string;
+  provider: string;
+  license: string;
+  attribution: string;
+  asOf: string;
+}
+
+/** The mountain datasets behind an export (versions, licences and attributions). */
+export async function mountainDatasets(db: Db): Promise<DatasetMeta[]> {
+  const rows = await db.query<{
+    key: string;
+    name: string;
+    provider: string;
+    license: string;
+    attribution: string;
+    as_of: string;
+  }>(
+    `SELECT key, name, provider, license, attribution, as_of::text AS as_of
+     FROM datasets WHERE key = ANY ($1::text[]) ORDER BY key`,
+    [MOUNTAIN_DATASETS],
+  );
+  return rows.map((row) => ({
+    key: row.key,
+    name: row.name,
+    provider: row.provider,
+    license: row.license,
+    attribution: row.attribution,
+    asOf: row.as_of,
+  }));
+}
+
+/** Each mountain's height source (title and URL), for provenance in exports. */
+export async function elevationSources(
+  db: Db,
+  slugs: readonly string[],
+): Promise<Map<string, { title: string; url: string }>> {
+  if (slugs.length === 0) return new Map();
+  const rows = await db.query<{ slug: string; title: string; url: string }>(
+    `SELECT m.slug, s.title, s.url FROM mountains m JOIN sources s ON s.id = m.elevation_source_id
+     WHERE m.slug = ANY ($1::text[])`,
+    [slugs],
+  );
+  return new Map(rows.map((row) => [row.slug, { title: row.title, url: row.url }]));
 }

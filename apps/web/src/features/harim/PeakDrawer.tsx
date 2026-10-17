@@ -1,4 +1,5 @@
 import type { CountryRef, Mountain } from '@bla/shared';
+import { Link } from 'react-router';
 
 import {
   Drawer,
@@ -74,6 +75,11 @@ export function PeakDrawer({
       testId="peak-drawer"
       onClose={onClose}
     >
+      <Link to={`/harim/peaks/${slug}`} className={styles.fullPage} data-testid="peak-full-page">
+        <Icon name="open_in_new" size={18} />
+        {text.peakPage.openFull}
+      </Link>
+
       {mountain?.needsReview && <DrawerReview notes={full?.reviewNotes ?? null} />}
 
       {detail.status === 'error' && <DrawerError error={detail.error} onRetry={detail.retry} />}

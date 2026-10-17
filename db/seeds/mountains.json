@@ -5232,6 +5232,48 @@
       "reliability_tier": "reference"
     },
     {
+      "source_key": "wikipedia-aberdare-range",
+      "title": "Wikipedia: Aberdare Range",
+      "url": "https://en.wikipedia.org/wiki/Aberdare_Range",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-adrar-des-ifoghas",
+      "title": "Wikipedia: Adrar des Ifoghas",
+      "url": "https://en.wikipedia.org/wiki/Adrar_des_Ifoghas",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-air-mountains",
+      "title": "Wikipedia: Aïr Mountains",
+      "url": "https://en.wikipedia.org/wiki/Aïr_Mountains",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-anti-atlas",
+      "title": "Wikipedia: Anti-Atlas",
+      "url": "https://en.wikipedia.org/wiki/Anti-Atlas",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-auas-mountains",
+      "title": "Wikipedia: Auas Mountains",
+      "url": "https://en.wikipedia.org/wiki/Auas_Mountains",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-bale-mountains",
+      "title": "Wikipedia: Bale Mountains",
+      "url": "https://en.wikipedia.org/wiki/Bale_Mountains",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
       "source_key": "wikipedia-bodele-depression",
       "title": "Wikipedia: Bodélé Depression",
       "url": "https://en.wikipedia.org/wiki/Bod%C3%A9l%C3%A9_Depression",
@@ -5246,9 +5288,65 @@
       "reliability_tier": "reference"
     },
     {
+      "source_key": "wikipedia-cameroon-line",
+      "title": "Wikipedia: Cameroon line",
+      "url": "https://en.wikipedia.org/wiki/Cameroon_line",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-crater-highlands",
+      "title": "Wikipedia: Crater Highlands",
+      "url": "https://en.wikipedia.org/wiki/Crater_Highlands",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-drakensberg",
+      "title": "Wikipedia: Drakensberg",
+      "url": "https://en.wikipedia.org/wiki/Drakensberg",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
       "source_key": "wikipedia-emi-koussi",
       "title": "Wikipedia: Emi Koussi",
       "url": "https://en.wikipedia.org/wiki/Emi_Koussi",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-ethiopian-highlands",
+      "title": "Wikipedia: Ethiopian Highlands",
+      "url": "https://en.wikipedia.org/wiki/Ethiopian_Highlands",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-fouta-djallon",
+      "title": "Wikipedia: Fouta Djallon",
+      "url": "https://en.wikipedia.org/wiki/Fouta_Djallon",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-high-atlas",
+      "title": "Wikipedia: High Atlas",
+      "url": "https://en.wikipedia.org/wiki/High_Atlas",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-hoggar-mountains",
+      "title": "Wikipedia: Hoggar Mountains",
+      "url": "https://en.wikipedia.org/wiki/Hoggar_Mountains",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-imatong-mountains",
+      "title": "Wikipedia: Imatong Mountains",
+      "url": "https://en.wikipedia.org/wiki/Imatong_Mountains",
       "source_type": "encyclopedia",
       "reliability_tier": "reference"
     },
@@ -5260,9 +5358,44 @@
       "reliability_tier": "reference"
     },
     {
+      "source_key": "wikipedia-kipengere-range",
+      "title": "Wikipedia: Kipengere Range",
+      "url": "https://en.wikipedia.org/wiki/Kipengere_Range",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
       "source_key": "wikipedia-mafadi",
       "title": "Wikipedia: Mafadi",
       "url": "https://en.wikipedia.org/wiki/Mafadi",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-maloti-mountains",
+      "title": "Wikipedia: Maloti Mountains",
+      "url": "https://en.wikipedia.org/wiki/Maloti_Mountains",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-marrah-mountains",
+      "title": "Wikipedia: Marrah Mountains",
+      "url": "https://en.wikipedia.org/wiki/Marrah_Mountains",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-middle-atlas",
+      "title": "Wikipedia: Middle Atlas",
+      "url": "https://en.wikipedia.org/wiki/Middle_Atlas",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-mitumba-mountains",
+      "title": "Wikipedia: Mitumba Mountains",
+      "url": "https://en.wikipedia.org/wiki/Mitumba_Mountains",
       "source_type": "encyclopedia",
       "reliability_tier": "reference"
     },
@@ -5435,6 +5568,13 @@
       "reliability_tier": "reference"
     },
     {
+      "source_key": "wikipedia-rif",
+      "title": "Wikipedia: Rif",
+      "url": "https://en.wikipedia.org/wiki/Rif",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
       "source_key": "wikipedia-rwenzori-mountains",
       "title": "Wikipedia: Rwenzori Mountains",
       "url": "https://en.wikipedia.org/wiki/Rwenzori_Mountains",
@@ -5442,9 +5582,51 @@
       "reliability_tier": "reference"
     },
     {
+      "source_key": "wikipedia-saharan-atlas",
+      "title": "Wikipedia: Saharan Atlas",
+      "url": "https://en.wikipedia.org/wiki/Saharan_Atlas",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-semien-mountains",
+      "title": "Wikipedia: Semien Mountains",
+      "url": "https://en.wikipedia.org/wiki/Semien_Mountains",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-tell-atlas",
+      "title": "Wikipedia: Tell Atlas",
+      "url": "https://en.wikipedia.org/wiki/Tell_Atlas",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
       "source_key": "wikipedia-thabana-ntlenyana",
       "title": "Wikipedia: Thabana Ntlenyana",
       "url": "https://en.wikipedia.org/wiki/Thabana_Ntlenyana",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-tibesti-mountains",
+      "title": "Wikipedia: Tibesti Mountains",
+      "url": "https://en.wikipedia.org/wiki/Tibesti_Mountains",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-togo-mountains",
+      "title": "Wikipedia: Togo Mountains",
+      "url": "https://en.wikipedia.org/wiki/Togo_Mountains",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-virunga-mountains",
+      "title": "Wikipedia: Virunga Mountains",
+      "url": "https://en.wikipedia.org/wiki/Virunga_Mountains",
       "source_type": "encyclopedia",
       "reliability_tier": "reference"
     }

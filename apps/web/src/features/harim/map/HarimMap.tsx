@@ -50,6 +50,8 @@ export interface HarimMapProps {
   onOpenPeak: (slug: string) => void;
   onShowInTable: (slug: string) => void;
   onReady: () => void;
+  /** The id of the table the map is the visual of (its accessible equivalent). */
+  tableId?: string;
 }
 
 /**
@@ -70,6 +72,7 @@ export function HarimMap({
   onOpenPeak,
   onShowInTable,
   onReady,
+  tableId = 'harim-results',
 }: HarimMapProps) {
   const controllerRef = useRef<MapController | null>(null);
   const [overlay, setOverlay] = useState<HTMLDivElement | null>(null);
@@ -287,7 +290,7 @@ export function HarimMap({
           {text.keyboardHint} {strings.map.zoomHint}
         </p>
         <p className={styles.note}>
-          <a href="#harim-results">{text.tableLink}</a>
+          <a href={`#${tableId}`}>{text.tableLink}</a>
         </p>
       </div>
     </section>

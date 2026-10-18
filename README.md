@@ -11,7 +11,7 @@
 
 History and Contemporary Africa appear in the navigation as "Coming soon".
 
-> **Status:** milestones 1–12 of 17 are complete: scaffold, data foundation, flags with approved region colours, the API (connected to Neon), the **interactive map**, the **countries table**, the **data ribbon**, and **Harim** in full (data, API and tables, statistics band, map and chart, ranges, peak pages and export). Next: the Dhahabu source and licence check (milestone 13). See [Roadmap](#roadmap).
+> **Status:** milestones 1–12 of 17 are complete: scaffold, data foundation, flags with approved region colours, the API (connected to Neon), the **interactive map**, the **countries table**, the **data ribbon**, and **Harim** in full (data, API and tables, statistics band, map and chart, ranges, peak pages and export). The Dhahabu source and licence check (milestone 13) is written and awaiting review: [docs/dhahabu-sources.md](docs/dhahabu-sources.md). See [Roadmap](#roadmap).
 
 ---
 
@@ -434,7 +434,7 @@ v1 milestones (stop points for review are marked ⏸):
 10. ✅ Harim statistics band ⏸
 11. ✅ Harim map and chart
 12. ✅ Harim ranges, peak pages and export
-13. Dhahabu source and licence check ⏸
+13. ✅ Dhahabu source and licence check ⏸ ([docs/dhahabu-sources.md](docs/dhahabu-sources.md), awaiting review)
 14. Dhahabu data ⏸
 15. Dhahabu API, table, band and live ribbon ⏸
 16. Dhahabu map, charts and drawer

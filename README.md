@@ -11,7 +11,7 @@
 
 History and Contemporary Africa appear in the navigation as "Coming soon".
 
-> **Status:** milestones 1–12 of 17 are complete: scaffold, data foundation, flags with approved region colours, the API (connected to Neon), the **interactive map**, the **countries table**, the **data ribbon**, and **Harim** in full (data, API and tables, statistics band, map and chart, ranges, peak pages and export). The Dhahabu source and licence check (milestone 13) is written and awaiting review: [docs/dhahabu-sources.md](docs/dhahabu-sources.md). See [Roadmap](#roadmap).
+> **Status:** milestones 1–13 of 17 are complete: scaffold, data foundation, flags with approved region colours, the API (connected to Neon), the **interactive map**, the **countries table**, the **data ribbon**, **Harim** in full (data, API and tables, statistics band, map and chart, ranges, peak pages and export) and the Dhahabu source and licence check ([docs/dhahabu-sources.md](docs/dhahabu-sources.md)). The Dhahabu data (milestone 14) is built and awaiting review: [data/gold_coverage_matrix.md](data/gold_coverage_matrix.md) and [data/gold_review_report.md](data/gold_review_report.md). See [Roadmap](#roadmap).
 
 ---
 
@@ -79,7 +79,7 @@ scripts/                  build helpers (Material Symbols subsetting, favicon, s
 config/constants.json     single source of truth for unit constants
 e2e/                      Playwright suites (desktop 1440×900, mobile 390×844)
 data/source/              the research PDF (raw downloads go to data/raw/, gitignored)
-docs/                     statistic definitions (harim-stats.md)
+docs/                     statistic definitions (harim-stats.md), gold sources and licences (dhahabu-sources.md)
 ```
 
 ## Prerequisites
@@ -134,7 +134,8 @@ The pipelines run from the repo root (`uv run python -m pipelines --help`); see 
 | 3 | `uv run python -m pipelines flags` | Downloads the 54 flag SVGs from flagcdn.com (cached in `data/raw/flags/`, copied to `apps/web/public/flags/` as the offline fallback), computes each flag's palette and each region's colour, and writes `db/seeds/flags.json` and `data/region_colors_report.md` | ✅ |
 | 4 | `uv run python -m pipelines boundaries` | Natural Earth 4.1.0 (1:50m, via world-atlas 2.0.2) → `apps/web/public/geo/africa.topo.json` (the 54 countries, Somaliland tagged as Somalia, Western Sahara as disputed) and `africa-context.topo.json` (neighbouring land, loaded after the countries); computes each country's area on the equal-area Equal Earth projection, a map anchor and whether it needs a circle marker; writes `db/seeds/boundaries.json` and `data/boundaries_report.md` | ✅ |
 | 5 | `uv run python -m pipelines mountains` | Builds the Harim catalogue (see [Mountain data](#mountain-data-harim)) → `db/seeds/{mountains,mountain_ranges,country_low_points}.json` and `data/mountains_review_report.md` | ✅ (awaiting review) |
-| 6 | `uv run python -m pipelines load` | Upserts the seeds into Neon (regions with the **approved** colours, countries, profiles, sources, citations, flag palettes, the mountain catalogue, datasets). Only rows whose values changed are written, so re-runs report 0 changes; each run is logged in `ingestion_runs` and refuses to start while migrations are pending | ✅ |
+| 6 | `uv run python -m pipelines gold` | Builds the Dhahabu data (see [Gold data](#gold-data-dhahabu)) → `db/seeds/gold_*.json`, `data/gold_coverage_matrix.md` and `data/gold_review_report.md` (needs `COMTRADE_API_KEY`) | ✅ (awaiting review) |
+| 7 | `uv run python -m pipelines load` | Upserts the seeds into Neon (regions with the **approved** colours, countries, profiles, sources, citations, flag palettes, the mountain catalogue, the gold tables, datasets). Only rows whose values changed are written, so re-runs report 0 changes; each run is logged in `ingestion_runs` and refuses to start while migrations are pending | ✅ |
 
 `uv run python -m pipelines status` prints every dataset's "as of" date, last refresh, cadence and last run (flagging overdue datasets).
 
@@ -166,6 +167,27 @@ The pipelines run from the repo root (`uv run python -m pipelines --help`); see 
 - **Report:** `data/mountains_review_report.md` lists the per-country high points, every decision and conflict, each prototype entry, elevations to review, the hierarchy, exclusions, territories, low points, ranges and names.
 - **Database:** migration `0003_harim.sql` enforces the same rules: 0–6,000 m, Africa's bounding box, summits under massifs, massif height checked at commit, one high point per country (never a summit), no territory peak in a country, sea-level coasts at 0 m, and sourced name origins.
 
+### Gold data (Dhahabu)
+
+`python -m pipelines gold` runs seven steps (`pipelines/africa_pipelines/gold_*.py`), each also a command of its own. Every download is cached under `data/raw/gold/`; `--refresh` fetches again. Sources, licences and the owner's decisions are in [docs/dhahabu-sources.md](docs/dhahabu-sources.md): only sources usable without asking permission (the British Geological Survey and the World Gold Council are left out).
+
+| Step | Source | Output |
+|---|---|---|
+| `gold-price` | World Bank Pink Sheet, monthly average (IMF PCPS as cross-check and fallback) | `gold_price.json`: 801 months from 1960 |
+| `gold-production` | USGS Mineral Commodity Summaries 2022–2026 and the Minerals Yearbook country chapters (about 200 workbooks) | `gold_production.json`: every edition's figures, "included in other" rows, in-ground reserves, and the evidence each chapter gives (notes, artisanal splits, operations) |
+| `gold-official-reserves` | IMF International Liquidity, one call for the 54 countries | `gold_reserves.json`: monthly holdings since 2000, valued at each month's price, and who reports late |
+| `gold-trade` | UN Comtrade (HS 7108 without 7108.20), reported and mirror, 111 calls | `gold_trade.json`: flows, top 10 partners, total exports |
+| `gold-mines` | Wikidata | `gold_mines.json`: candidate mines and the quality-bar verdict (the layer is off: it fails all three checks) |
+| `gold-presence` | the above, plus `db/seeds/gold_presence_overrides.json` | `gold_presence.json`: each country's tier, evidence, confidence and source |
+| `gold-profiles` | the above, plus `db/seeds/gold_profile_notes.json` | `gold_profiles.json`, then validation and the two reports |
+
+- **Null, zero, "included in other":** never coerced into each other. "NA" in a source is no row; "--" is a reported zero; a country inside a source's "Other countries" is `included_in_other` with no tonnes (and only where the yearbook shows it producing).
+- **One figure per country-year:** `v_gold_production` prefers a figure over "included in other", a reported figure over an estimate, then the newer edition (`gold_production_source_priority`), and values it at that year's mean monthly price (empty until all twelve months exist).
+- **Presence tiers:** major producer (≥ 20 t in the latest year with a figure), producer (> 0 t), occurrences known (a cited source documents gold without a current figure), none identified (the USGS chapters consulted show none), unknown (no USGS production table). Trade is never evidence of deposits. Curated overrides and profile notes need a source and the exact quote, which every run re-checks against the source's text (a missing quote stops the run). Seven overrides (Togo, Somalia, Guinea-Bissau, Cabo Verde, The Gambia, São Tomé and Príncipe, Comoros) leave no country "unknown"; 53 curated notes cover 31 countries.
+- **Validation** (the run fails otherwise): every country has a tier; no negative quantities; producers have production evidence; every US dollar value uses the price of its own year or month (never filled); every cited source exists; "none identified" uses the agreed wording.
+- **Reports:** `data/gold_coverage_matrix.md` (country × metric, with the years available) and `data/gold_review_report.md` (tiers with their evidence, source conflicts, lumped countries, late reporters, trade gaps, the mines verdict, figures left out, what needs review).
+- **Database:** migration `0007_dhahabu.sql` (tables, `v_gold_price_annual`, `v_gold_production`, and `troy_oz_per_tonne()`, which a test checks against `config/constants.json`).
+
 ### Region colours
 
 Each region's identity colour is the **mode colour across its flags**: flags are rasterised, clustered into at most 8 colours in CIELAB, merged across flags (CIEDE2000 < 10) and summed per region; white, black and grey are excluded by default, and near-identical picks are resolved by giving the colour to the region where it has the larger share. Anti-aliasing blends at stripe edges are folded back into the real flag colours first. Every parameter is a command-line option (`python -m pipelines flags --help`), and `--include-neutrals` switches which result is selected (both are always reported).
@@ -191,7 +213,7 @@ How the extraction works and where its judgement calls live:
 
 ### Scheduled refresh
 
-`.github/workflows/data-refresh.yml` runs weekly (and on demand): `migrate` → `flags --refresh` → `mountains --refresh` (first Monday of the month, or on a manual run) → `load` → `status`, then calls the Netlify build hook if `load` changed any rows. If upstream data changed the generated seeds, the run warns and uploads them (with the colour and mountain reports) as the `refreshed-data` artifact for you to review and commit; the approved region colours are never replaced automatically. Repository secrets: `DATABASE_URL_WRITE` (required) and `NETLIFY_BUILD_HOOK` (optional).
+`.github/workflows/data-refresh.yml` runs weekly (and on demand): `migrate` → `flags --refresh` → `mountains --refresh` and the gold steps (first Monday of the month, or on a manual run; gold production only on a manual run) → `load` → `status`, then calls the Netlify build hook if `load` changed any rows. If upstream data changed the generated seeds, the run warns and uploads them (with the colour and mountain reports) as the `refreshed-data` artifact for you to review and commit; the approved region colours are never replaced automatically. Repository secrets: `DATABASE_URL_WRITE` (required), `COMTRADE_API_KEY` (for gold trade; without it the step is skipped with a warning) and `NETLIFY_BUILD_HOOK` (optional).
 
 ### Local database for tests
 
@@ -343,7 +365,7 @@ Copy `.env.example` to `.env` for local work. **Each variable belongs in exactly
 | `DATABASE_URL_READ` | Netlify site environment variables (and local `.env` for `npm run dev:netlify`) | Netlify Functions (read-only DB role) |
 | `DATABASE_URL_WRITE` | local `.env`, GitHub Actions secret | Python pipelines only |
 | `COMTRADE_API_KEY` | local `.env`, GitHub Actions secret | `gold-trade` pipeline only |
-| `ENABLE_WGC_IMPORT` | local `.env` (default `false`) | optional manual WGC import |
+| `ENABLE_WGC_IMPORT` | local `.env` (default `false`) | reserved for an optional manual WGC import, not built while the WGC is not used |
 | `NETLIFY_BUILD_HOOK` | GitHub Actions secret (optional) | data-refresh workflow |
 
 Functions never hold write credentials, and no secret is ever exposed to the client bundle.
@@ -416,6 +438,12 @@ Decisions taken where the specification left room, or where the current ecosyste
 - **Export metadata in CSV:** a block of `#` lines before the header, since CSV has no metadata field; spreadsheet apps show it as the first rows.
 - **Harim tables:** the region chip sits under the country name (one column fewer), so the By country table fits from 720px. All peaks uses the compact list below 1024px, because its six columns cannot fit a narrower panel without clipping.
 - **Low-point types** add `river` and `salt_flat` to the specification's examples (many landlocked countries' lowest points are rivers; several North African ones are salt flats).
+- **Dhahabu sources:** only sources usable without permission (owner's decision, 2026-10-18). The British Geological Survey's history is replaced by the USGS Minerals Yearbook country chapters, so production runs to 2021–2023 for most countries (the MCS adds 2024–2025 for the producers it names). The World Gold Council is neither used nor linked, the `wgc_import` adapter is not built, and figures the USGS itself attributes to the WGC (Sudan 2017–2021 in one edition) are left out.
+- **Non-monetary gold** is HS 7108 minus 7108.20 (`hs_code = '7108.1'`); the specification's "7108 (non-monetary gold)" includes monetary gold.
+- **Central bank holdings** are valued at each month's World Bank average price (`valuation = computed`); gold's share of reserves uses the IMF's own SDR values, so it needs no price. The eight BCEAO members have no national holding (reserves are pooled at the regional central bank).
+- **Togo is a producer, not a major producer:** the USGS figure (about 20 t a year) is, in the USGS's words, exports that mostly include gold transiting Togo, so a cited override downgrades it (owner's decision, 2026-10-18).
+- **Notes avoid allegations:** profile notes leave out claims about smuggling or armed groups even where a cited source makes them; they cover artisanal mining, policy, mines and discoveries.
+- **No mines layer yet:** Wikidata's gold mines fail the quality bar (coverage, operating status, South Africa's share), so the table stays empty and the report lists why.
 - **Dev-tool advisories:** `npm audit` reports advisories in dev-only tooling (`netlify-cli`'s local server dependencies and Stylelint's glob dependencies). None of it ships to the browser or the deployed functions.
 
 ## Roadmap
@@ -434,8 +462,8 @@ v1 milestones (stop points for review are marked ⏸):
 10. ✅ Harim statistics band ⏸
 11. ✅ Harim map and chart
 12. ✅ Harim ranges, peak pages and export
-13. ✅ Dhahabu source and licence check ⏸ ([docs/dhahabu-sources.md](docs/dhahabu-sources.md), awaiting review)
-14. Dhahabu data ⏸
+13. ✅ Dhahabu source and licence check ⏸ ([docs/dhahabu-sources.md](docs/dhahabu-sources.md); decided 2026-10-18)
+14. ✅ Dhahabu data ⏸ (awaiting review: [coverage matrix](data/gold_coverage_matrix.md), [review report](data/gold_review_report.md))
 15. Dhahabu API, table, band and live ribbon ⏸
 16. Dhahabu map, charts and drawer
 17. Polish, Lighthouse and deployment

@@ -38,8 +38,12 @@ def fetch_bytes(
     min_interval: float = MIN_INTERVAL_SECONDS,
     timeout: float = 30.0,
     client: httpx.Client | None = None,
+    headers: dict[str, str] | None = None,
 ) -> bytes:
-    """Return the body of `url`, reading from `cache_path` when present (unless refresh)."""
+    """Return the body of `url`, reading from `cache_path` when present (unless refresh).
+
+    `headers` are sent with the request only (an API key, say); they are never cached or logged.
+    """
     if cache_path.exists() and not refresh:
         return cache_path.read_bytes()
     host = urlparse(url).hostname or ""
@@ -51,7 +55,7 @@ def fetch_bytes(
         for attempt in range(1, MAX_ATTEMPTS + 1):
             _wait_for_slot(host, min_interval)
             try:
-                response = http.get(url)
+                response = http.get(url, headers=headers)
             except httpx.TransportError as error:
                 if attempt == MAX_ATTEMPTS:
                     raise FetchError(f"{url}: {error}") from error

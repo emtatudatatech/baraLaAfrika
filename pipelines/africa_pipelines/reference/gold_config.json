@@ -1,0 +1,82 @@
+{
+  "$comment": "Dhahabu (gold) pipeline settings: sources, codes, rules and thresholds. Sources and licences are documented in docs/dhahabu-sources.md; change a rule here, not in code.",
+  "price": {
+    "page_url": "https://www.worldbank.org/en/research/commodity-markets",
+    "file_name": "CMO-Historical-Data-Monthly.xlsx",
+    "sheet": "Monthly Prices",
+    "column": "Gold",
+    "unit": "($/troy oz)",
+    "pcps_url": "https://api.imf.org/external/sdmx/3.0/data/dataflow/IMF.RES/PCPS/+/G001.PGOLD.USD.M",
+    "cross_check_tolerance_pct": 2.0
+  },
+  "official_reserves": {
+    "url": "https://api.imf.org/external/sdmx/3.0/data/dataflow/IMF.STA/IL/+/{countries}.RGV_REVS+RGOLDMV_REVS+TRGMV_REVS.*.M?c%5BTIME_PERIOD%5D=ge:{start}",
+    "start": "2000-M01",
+    "volume": ["RGV_REVS", "FTO"],
+    "gold_value": ["RGOLDMV_REVS", "XDR"],
+    "total_reserves": ["TRGMV_REVS", "XDR"],
+    "late_after_months": 4,
+    "irregular_window_months": 24,
+    "pooled_reserves": {
+      "members": ["BEN", "BFA", "CIV", "GNB", "MLI", "NER", "SEN", "TGO"],
+      "note": "Reserves, including gold, are pooled at the Central Bank of West African States (BCEAO), so the IMF publishes no national gold holding."
+    }
+  },
+  "production": {
+    "mcs_editions": [2022, 2023, 2024, 2025, 2026],
+    "mcs_url": "https://pubs.usgs.gov/periodicals/mcs{edition}/mcs{edition}-gold.pdf",
+    "mcs_doi": { "2026": "10.5066/P1WKQ63T" },
+    "yearbook_page_url": "https://www.usgs.gov/centers/national-minerals-information-center/{slug}",
+    "yearbook_first_edition": 2016,
+    "included_in_other_lookback_years": 5,
+    "name_aliases": {
+      "Congo (Kinshasa)": "COD",
+      "Congo (Brazzaville)": "COG",
+      "Cote d'Ivoire": "CIV",
+      "Côte d'Ivoire": "CIV",
+      "Tanzania": "TZA",
+      "Burkina Faso": "BFA"
+    },
+    "usgs_slugs": {
+      "DZA": "algeria", "EGY": "egypt", "LBY": "libya", "MRT": "mauritania", "MAR": "morocco",
+      "TUN": "tunisia", "BEN": "benin", "BFA": "burkina-faso", "CPV": "cabo-verde-cape-verde",
+      "CIV": "cote-divoire", "GMB": "gambia", "GHA": "ghana", "GIN": "guinea",
+      "GNB": "guinea-bissau", "LBR": "liberia", "MLI": "mali", "NER": "niger", "NGA": "nigeria",
+      "SEN": "senegal", "SLE": "sierra-leone", "TGO": "togo", "AGO": "angola", "CMR": "cameroon",
+      "CAF": "central-african-republic", "TCD": "chad", "COG": "congo-brazzaville",
+      "COD": "congo-kinshasa", "GNQ": "equatorial-guinea", "GAB": "gabon",
+      "STP": "sao-tome-e-principe", "BDI": "burundi", "COM": "comoros", "DJI": "djibouti",
+      "ERI": "eritrea", "ETH": "ethiopia", "KEN": "kenya", "MDG": "madagascar", "MWI": "malawi",
+      "MUS": "mauritius", "RWA": "rwanda", "SYC": "seychelles", "SOM": "somalia",
+      "SSD": "south-sudan", "SDN": "sudan", "TZA": "tanzania", "UGA": "uganda",
+      "BWA": "botswana", "SWZ": "eswatini", "LSO": "lesotho", "MOZ": "mozambique",
+      "NAM": "namibia", "ZAF": "south-africa", "ZMB": "zambia", "ZWE": "zimbabwe"
+    }
+  },
+  "trade": {
+    "url": "https://comtradeapi.un.org/data/v1/get/C/A/HS",
+    "first_year": 2015,
+    "commodity": "7108",
+    "monetary": "710820",
+    "fixed_params": { "customsCode": "C00", "motCode": "0", "partner2Code": "0", "includeDesc": "true" },
+    "excluded_reporters": [0, 97],
+    "min_interval_seconds": 1.2,
+    "daily_call_budget": 450,
+    "total_exports_batch": 18,
+    "top_partners": 10
+  },
+  "presence": {
+    "major_producer_min_tonnes": 20,
+    "recent_years": 3,
+    "stale_after_years": 6
+  },
+  "mines": {
+    "gold_items": ["Q897", "Q12528662"],
+    "mine_classes": { "Q820477": "mine", "Q16659538": "gold mine", "Q756944": "surface mining", "Q1746365": "artisanal mining" },
+    "quality_bar": {
+      "min_producer_coverage_pct": 60,
+      "min_status_known_pct": 50,
+      "max_single_country_share_pct": 40
+    }
+  }
+}

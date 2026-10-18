@@ -9,7 +9,7 @@ from typing import LiteralString
 import psycopg
 import pytest
 
-from pipelines.africa_pipelines import load, migrate, status
+from pipelines.africa_pipelines import gold_load, load, migrate, status
 from pipelines.africa_pipelines.settings import SEEDS_DIR
 
 APPROVED = json.loads(load.APPROVAL_PATH.read_text(encoding="utf-8"))["colors"]
@@ -38,9 +38,13 @@ def test_first_load_populates_everything_with_approved_colours(pglite_url: str) 
         assert scalar(conn, "SELECT count(*) FROM countries WHERE centroid_lon IS NULL") == 0
         symbology_sources = json.loads((SEEDS_DIR / "sources.json").read_text())["sources"]
         harim = json.loads((SEEDS_DIR / "mountains.json").read_text())
-        expected_sources = {s["source_key"] for s in symbology_sources} | {
-            s["source_key"] for s in harim["sources"]
-        }
+        gold = gold_load.read(SEEDS_DIR)
+        assert gold is not None
+        expected_sources = (
+            {s["source_key"] for s in symbology_sources}
+            | {s["source_key"] for s in harim["sources"]}
+            | {s["source_key"] for s in gold["sources"]}
+        )
         assert scalar(conn, "SELECT count(*) FROM sources") == len(expected_sources)
         palette_rows = scalar(conn, "SELECT count(*) FROM flag_palette")
         assert isinstance(palette_rows, int) and palette_rows > 54
@@ -57,14 +61,18 @@ def test_first_load_populates_everything_with_approved_colours(pglite_url: str) 
             "SELECT d.key, r.status::text FROM ingestion_runs r "
             "JOIN datasets d ON d.id = r.dataset_id"
         ).fetchall()
-        assert sorted(runs) == [
-            ("boundaries-natural-earth", "succeeded"),
-            ("flags-flagpedia", "succeeded"),
-            ("mountains-baseline", "succeeded"),
-            ("mountains-geonames", "succeeded"),
-            ("mountains-wikidata", "succeeded"),
-            ("symbology-pdf", "succeeded"),
-        ]
+        gold_runs = [(d["key"], "succeeded") for d in gold["datasets"]]
+        assert sorted(runs) == sorted(
+            [
+                ("boundaries-natural-earth", "succeeded"),
+                ("flags-flagpedia", "succeeded"),
+                ("mountains-baseline", "succeeded"),
+                ("mountains-geonames", "succeeded"),
+                ("mountains-wikidata", "succeeded"),
+                ("symbology-pdf", "succeeded"),
+                *gold_runs,
+            ]
+        )
         assert scalar(conn, "SELECT count(*) FROM datasets WHERE last_refreshed_at IS NULL") == 0
 
 

@@ -6,9 +6,9 @@ This document records, for every source behind the Dhahabu (gold) tab:
 - its licence and the attribution it requires;
 - its rate limits and update cadence.
 
-Every terms page was re-read on **17 October 2026**, and every endpoint below was tested live that day with targeted calls. Quotes are verbatim. This is a practical reading of the terms, not legal advice. Anything unclear is listed under [Decisions needed](#decisions-needed) rather than resolved here.
+Every terms page was re-read on **17 October 2026**, and every endpoint below was tested live that day with targeted calls. Quotes are verbatim. This is a practical reading of the terms, not legal advice. The owner's decisions of 18 October 2026 are recorded under [Decisions](#decisions): the site uses only sources that are freely available and usable without asking for permission, so the British Geological Survey and the World Gold Council are left out.
 
-The licence and attribution of each source are also recorded in the `datasets` table (proposed rows in [Recording in `datasets`](#recording-in-datasets)). The CSV export repeats them.
+The licence and attribution of each source are also recorded in the `datasets` table (rows in [Recording in `datasets`](#recording-in-datasets)). The CSV export repeats them.
 
 ## At a glance
 
@@ -17,26 +17,26 @@ The licence and attribution of each source are also recorded in the `datasets` t
 | [World Bank Commodity Price Data (Pink Sheet)](#1-world-bank-commodity-price-data-pink-sheet) | Monthly gold price | XLSX download | CC BY 4.0 (World Bank default for datasets) | ✅ Primary price |
 | [IMF Primary Commodity Prices (PCPS)](#2-imf-primary-commodity-prices-pcps) | Price fallback and cross-check | SDMX 3.0 API, no key | IMF data terms | ✅ Fallback |
 | [IMF International Liquidity (IL)](#3-imf-international-liquidity-il) | Central bank gold holdings, total reserves | SDMX 3.0 API, no key | IMF data terms | ✅ Primary; 17 of 54 countries have no gold series |
-| [USGS Mineral Commodity Summaries 2026](#4-usgs-mineral-commodity-summaries-mcs) | Latest production and in-ground reserves | Data release (CC0) or the chapter PDF | CC0 / US public domain | ✅ Only Ghana and South Africa are listed for Africa |
-| [USGS Minerals Yearbook, Africa](#5-usgs-minerals-yearbook-volume-iii-africa) | Country production cross-check | XLSX download | US public domain | ✅ Latest Africa tables are the 2020–21 edition |
-| [BGS World Mineral Statistics](#6-bgs-world-mineral-statistics) | Production history by country (1970–2024) | OGC API, no key | Non-commercial academic and research use; republishing needs permission | ⚠️ Decision needed |
-| [UN Comtrade](#7-un-comtrade) | Gold trade (reported and mirror), partners, total exports | REST API with key | Internal use; limited publication allowed | ✅ Key works; ⚠️ confirm the publication allowance |
-| [Wikidata](#8-wikidata) | Gold mines layer (optional) | SPARQL | CC0 | ✅ |
-| [Geological surveys and literature](#9-national-geological-surveys-and-literature) | Presence evidence, profile notes | Manual citations | Per item | ✅ Facts and short quotes only |
-| [World Gold Council (Goldhub)](#10-world-gold-council-goldhub) | Methodology reference; optional manual import | None automated | Personal non-commercial use only | ⛔ Not scraped or republished; ⚠️ linking needs a decision |
+| [USGS Mineral Commodity Summaries](#4-usgs-mineral-commodity-summaries-mcs) | Latest production and in-ground reserves | Gold chapter PDFs, editions 2022–2026 | CC0 / US public domain | ✅ Lists 2 to 6 African producers per edition |
+| [USGS Minerals Yearbook, Africa](#5-usgs-minerals-yearbook-volume-iii-africa) | Production history by country (2012 on) | Country chapter XLSX files | US public domain | ✅ Main history; latest chapters 2020–21 to 2023 |
+| [BGS World Mineral Statistics](#6-bgs-world-mineral-statistics) | — | OGC API, no key | Non-commercial academic and research use; republishing needs permission | ⛔ Not used (owner's decision) |
+| [UN Comtrade](#7-un-comtrade) | Gold trade (reported and mirror), partners, total exports | REST API with key | Internal use; limited publication allowed | ✅ Used within the limited-publication allowance |
+| [Wikidata](#8-wikidata) | Gold mines layer (optional) | SPARQL | CC0 | ✅ Evaluated; below the quality bar, so the layer is off |
+| [Curated citations](#9-curated-citations-presence-overrides-and-profile-notes) | Presence evidence, profile notes | Manual citations | Per item | ✅ Facts and short quotes only |
+| [World Gold Council (Goldhub)](#10-world-gold-council-goldhub) | — | — | Personal non-commercial use only | ⛔ Not used, not linked (owner's decision) |
 | [LBMA Gold Price (IBA)](#11-lbma-gold-price) | Not used | — | Licence from IBA required | ⛔ Not used |
 
 ---
 
 ## 1. World Bank Commodity Price Data (Pink Sheet)
 
-**Provides.** The monthly gold price in nominal US$ per troy ounce from 1960, in the "Monthly Prices" sheet (column "Gold", unit "($/troy oz)"). The October 2026 file runs to **2026-M09 = 4,319** and is marked "Updated on October 02, 2026". It also includes an annual file, which we do not need: `v_gold_price_annual` computes the annual mean and year-end value from the monthly series.
+**Provides.** The monthly gold price in nominal US$ per troy ounce from 1960 (the file stores whole dollars), in the "Monthly Prices" sheet (column "Gold", unit "($/troy oz)"). The October 2026 file runs to **2026-M09 = 4,319** and is marked "Updated on October 02, 2026". It also includes an annual file, which we do not need: `v_gold_price_annual` computes the annual mean and year-end value from the monthly series.
 
 **What the price is.** The workbook's Description sheet defines the series as:
 
 > "Gold, spot average of daily rates, from June 2025; previously (UK), 99.5% fine, London afternoon fixing, average of daily rates"
 
-It is a **monthly average**, not a spot price, and the UI labels it that way. Before June 2025 it is an average of the London afternoon fixing, which is the LBMA price; see [decision 5](#decisions-needed).
+It is a **monthly average**, not a spot price, and the UI labels it that way. Before June 2025 it is an average of the London afternoon fixing, which is the LBMA price. The World Bank's published monthly averages are used under its CC BY 4.0 dataset terms, not LBMA daily prices ([Decisions](#decisions)).
 
 **Access.**
 - Monthly: `https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx`
@@ -130,45 +130,80 @@ Our calls are targeted (one key list per run) and cached, which is not a bulk do
 
 ## 4. USGS Mineral Commodity Summaries (MCS)
 
-**Provides.** World mine production (2024 and 2025e) and reserves by country, from the gold chapter of MCS 2026.
-- **Only Ghana and South Africa** are listed individually for Africa:
-  - Ghana: 149 t (2024), 150 t (2025e), reserves 1,000 t;
-  - South Africa: 90 t and 90 t, reserves 5,000 t.
-- Every other African producer is inside "Other countries" (1,020 t in 2024; 1,000 t in 2025e). Those countries are stored as `included_in_other` with null tonnes, never 0.
-- MCS is therefore the latest-year source for two countries and the **only source of in-ground reserves** (`gold_inground_reserves`, defined in MCS Appendix C). In-ground reserves exist only for Ghana and South Africa.
+**Provides.** The world table of each edition's gold chapter: mine production for two years (the second always an estimate) and reserves, for the countries it lists by name. The pipeline reads the editions 2022 to 2026. Between them they list six African producers:
+
+| Edition | Years | African countries listed |
+|---|---|---|
+| 2022 | 2020, 2021e | Burkina Faso, Ghana, South Africa, Sudan, Tanzania |
+| 2023 | 2021, 2022e | Burkina Faso, Ghana, Mali, South Africa, Sudan, Tanzania |
+| 2024 | 2022, 2023e | Burkina Faso, Ghana, Mali, South Africa, Tanzania |
+| 2025 | 2023, 2024e | Burkina Faso, Ghana, Mali, South Africa, Tanzania |
+| 2026 | 2024, 2025e | Ghana, South Africa |
+
+- **"Other countries."** Every other producer is inside the "Other countries" row. It is stored as `included_in_other` with null tonnes, never 0, and only where the yearbook (§5) shows the country producing gold in the five years before. A country with no gold output is not "included in other".
+- **In-ground reserves.** MCS is the only source of in-ground reserves (`gold_inground_reserves`; definitions in MCS Appendix C). "NA" means no data, not zero.
+
+  | Country | Reserves | Note |
+  |---|---|---|
+  | Ghana | 1,000 t | |
+  | Mali | 800 t | |
+  | Tanzania | 400 t | until the 2025 edition |
+  | South Africa | 5,000 t | |
 
 **Access.**
-- Data release: "Mineral Commodity Summaries 2026 Data Release", DOI `10.5066/P1WKQ63T`, CSV `MCS2026_Commodities_Data.csv`. ScienceBase sits behind a Cloudflare challenge, so scripts get HTTP 403.
-- The pipeline therefore parses the gold chapter PDF, `https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-gold.pdf`. It is accessible, and the spec allows this route.
-- If you download the CSV by hand into `data/source/usgs/`, the pipeline prefers it.
+- **Gold chapter PDF.** `https://pubs.usgs.gov/periodicals/mcs<edition>/mcs<edition>-gold.pdf`, one PDF per edition, cached. The pipeline parses the world table from the text and refuses any value with a footnote number glued to it.
+- **Data release (not used).** The 2026 data release (DOI `10.5066/P1WKQ63T`) sits on ScienceBase behind a Cloudflare challenge, which returns HTTP 403 to scripts.
 
 **Licence.**
-- The data release is **CC0 1.0** (DataCite metadata for the DOI).
-- USGS policy: "USGS-authored or produced data and information are considered to be in the U.S. Public Domain."
+- **Data release:** CC0 1.0 (DataCite metadata for the DOI).
+- **USGS policy:** "USGS-authored or produced data and information are considered to be in the U.S. Public Domain."
 
-**Attribution.** USGS asks that "proper credit be given". We will use:
+**Attribution.** USGS asks that "proper credit be given". We use:
 
-> U.S. Geological Survey, Mineral Commodity Summaries 2026: Gold (doi:10.5066/P1WKQ63T).
+> U.S. Geological Survey, Mineral Commodity Summaries 2022–2026: Gold, and Minerals Yearbook, volume III (Africa).
 
 **Rate limits.** None; one PDF per edition.
 
-**Cadence.** Annual, each January or February. The pipeline is run by hand when a new edition is out.
+**Cadence.** Annual, each January or February. When a new edition is out:
+1. Add the edition to `gold_config.json`.
+2. Run `gold-production` by hand, or as a manual workflow run.
 
 ## 5. USGS Minerals Yearbook, volume III (Africa)
 
-**Provides.** Gold mine production by African country, five years per edition. Public domain.
-- The latest Africa summary workbook is the **2020–21 edition** (`myb3-2021-Africa_Summary-ERT.xlsx`, data through 23 June 2021), so it is several years behind BGS.
-- Its notes are informative. For example: "Data reported by the Government of Togo as gold exports that predominantly include artisanal gold mine production transiting Togo from neighboring countries".
+**Provides.** Gold mine production by country, five years per edition. The figures come from each country chapter's production table (Table 1).
 
-**Access.** XLSX links on `https://www.usgs.gov/centers/national-minerals-information-center/africa-and-middle-east`. No key.
+This is the main production history. The editions published as .xlsx since 2016 give figures from 2012 to between 2021 and 2023, depending on the country. Public domain.
 
-**Use.** A cross-check for BGS in overlapping years, and a fallback production history if BGS cannot be used ([decision 2](#decisions-needed)).
+- **Coverage.**
+  - 37 countries have figures.
+  - The latest chapters are the 2020–21 edition for most countries, 2022 for 23 countries and 2023 for a few.
+  - Six countries have no production table in these editions: Cabo Verde, Comoros, The Gambia, Guinea-Bissau, São Tomé and Príncipe and Somalia.
+- **Units and symbols.**
+  - Figures are in kilograms, or in the table's default unit, and are converted to tonnes. "do." means ditto (the unit of the row above).
+  - "--" is a reported zero.
+  - "NA" is no data and is never stored as zero.
+  - "e", as a flag or a trailing e on the row label, marks an estimate.
+- **Splits.** Where a chapter gives artisanal and large-scale rows (Ghana, Liberia), the figure is their sum and the artisanal share is kept.
+- **Notes kept as evidence.** Each figure's footnotes are kept verbatim. For example:
+  - Mali: "Does not include artisanal gold production, which was estimated to be more than 6,000 kilograms."
+  - Togo: "Data reported by the Government of Togo as exports predominately include artisanal gold mine production transiting Togo from neighboring countries…"
+  - Some figures are reported exports or sales (Ethiopia, Madagascar, Eritrea).
+- **Other evidence.** Two kinds of entry support the "occurrences known" tier:
+  - a table note listing gold among commodities that "may have been produced", without an estimate;
+  - gold operations in the structure-of-industry table (Table 2).
+- **Left out.** Figures the USGS attributes to the World Gold Council are excluded, following the owner's decision to leave WGC data out. This affects Sudan 2017–2021 in the 2020–21 edition; Sudan's figures come from the other editions instead.
 
-**Licence and attribution.** US public domain. Credit: "U.S. Geological Survey, Minerals Yearbook, volume III, Area Reports: International—Africa".
+**Access.** Each country's page, `https://www.usgs.gov/centers/national-minerals-information-center/<country>`, links its chapters.
+- The pipeline reads the .xlsx links. It prefers a final release to an advance release of the same edition.
+- That is about 200 workbooks, each fetched once at one request a second and cached.
 
-**Cadence.** Irregular, a few years behind.
+**Licence and attribution.** US public domain. Credit: "U.S. Geological Survey, Minerals Yearbook <edition>, volume III: <country>".
+
+**Cadence.** Irregular, two to four years behind.
 
 ## 6. BGS World Mineral Statistics
+
+**Not used.** On 18 October 2026 the owner decided to use only sources that need no permission. The notes below are kept for the record, in case permission is sought later.
 
 **Provides.** Gold mine production by country and year, with notes. It is the longest and most complete series for Africa.
 - The API holds records to **2024**. Its own description still says "1970 to 2022", but Mali has 2024 data.
@@ -200,7 +235,7 @@ The "Estimates." note maps to `basis = estimate`.
 
 > "You may adapt and use these tables for non-commercial academic and research purposes, however should you wish to use them for any commercial purpose or provide them to a third party, you need to satisfy yourself that you have permission from the original copyright owner (where NERC is providing tables with permission and is not the copyright holder) or seek NERC's permission where the copyright is held by NERC."
 
-Publishing figures on a public website, and in a CSV export, arguably "provides them to a third party". See [decision 2](#decisions-needed). Contact: ipr@bgs.ac.uk.
+Publishing figures on a public website, and in a CSV export, arguably "provides them to a third party", which needs permission (ipr@bgs.ac.uk).
 
 **Attribution (required wording).** "World Mineral Statistics contributed by permission of the British Geological Survey".
 
@@ -224,14 +259,16 @@ Publishing figures on a public website, and in a CSV export, arguably "provides 
 |---|---|
 | Reported totals | `reporterCode=<country>&partnerCode=0&flowCode=X,M` |
 | Top partners | `reporterCode=<country>&flowCode=X,M` (all partners; rank in the pipeline) |
-| Mirror exports | `partnerCode=<country>&flowCode=M` (all reporters) |
-| Mirror imports | `partnerCode=<country>&flowCode=X` (all reporters) |
-| Total exports | `cmdCode=TOTAL&reporterCode=<country>&partnerCode=0&flowCode=X` |
+| Mirror (both flows) | `partnerCode=<country>&flowCode=X,M` (all reporters; their imports are the country's exports) |
+| Total exports | `cmdCode=TOTAL&reporterCode=<list of 18>&partnerCode=0&flowCode=X` |
+
+Every call asks for heading 7108 and subheading 7108.20 together, for the years 2015 to last year.
 
 **Pitfalls found while testing** (each becomes a pipeline rule and test):
 - **Breakdown rows.** Without filters, the API returns one row per customs procedure and transport mode. Ghana 2023 came back as 4 rows with the same value, which would be counted 4 times. Every call pins `customsCode=C00&motCode=0&partner2Code=0`.
-- **Net weight, not quantity.** Ghana 2023 exports report `netWgt` = 161,094 kg (161 t, plausible) but `qty` = 3,489,205 "kg" (impossible). We use `netWgt` only, and flag rows where it is missing or zero.
-- **HS 7108 also contains monetary gold.** 7108.11, .12 and .13 are non-monetary; 7108.20 is monetary gold. The spec calls 7108 "non-monetary gold". See [decision 6](#decisions-needed).
+- **Net weight, not quantity.** Ghana 2023 exports report `netWgt` = 161,094 kg (161 t, plausible) but `qty` = 3,489,205 "kg" (impossible). We use `netWgt` only, and flag rows where it is missing or zero. When the World row has no weight but every partner row has one, the partners are summed, and the row says so. A mirror total needs every partner's weight; otherwise it has none.
+- **Aggregate reporters.** The European Union (97) reports alongside its members, so it is excluded from mirror sums to avoid double counting.
+- **HS 7108 also contains monetary gold.** 7108.11, .12 and .13 are non-monetary; 7108.20 is monetary gold. The spec calls 7108 "non-monetary gold", so we store 7108 minus 7108.20 as `hs_code = '7108.1'` (non-monetary gold).
 - **Subheadings differ by country.** Ghana files 99.7% of its exports under 7108.13 (semi-manufactured) rather than 7108.12 (unwrought). Reported and mirror figures are compared at the 4-digit level only.
 
 **Licence.**
@@ -248,64 +285,87 @@ Publishing figures on a public website, and in a CSV export, arguably "provides 
 
   However, rounding, pivoting, filtering and format conversion do not count as transformation.
 
-Our use is about 54 countries × about 10 years × 2 flows, plus the top 10 partners and the mirror aggregates. That is an estimated 15,000 to 25,000 records, well under 100,000. It looks like the "limited amounts" case. See [decision 3](#decisions-needed).
+Our use is 6,930 records in the first build: 1,468 country-year flows, 5,000 partner rows and 462 total-export rows. That is well under 100,000, the "limited amounts" case, which needs no permission.
 
 **Attribution.** The policy says "refer to the data source as 'UN Comtrade'". We will use:
 
 > UN Comtrade, United Nations Statistics Division (HS 7108, annual).
 
 **Rate limits.** Free tier: 500 calls a day, 1 call a second, up to 100,000 records per call.
-- A full refresh is about 250 calls:
-  - 54 for reported totals and partners;
-  - 54 for mirror exports and 54 for mirror imports;
-  - a few for total exports with reporter lists;
-  - all with a list of periods per call.
-- The pipeline paces calls at 1.2 seconds, caches every response, stops at 450 calls a day and resumes from the cache on the next run.
+- A full refresh is 111 calls, each with the list of years:
+  - 54 for each country's own reports (World and partners);
+  - 54 for the mirror;
+  - 3 for total exports (18 reporters per call).
+- The pipeline paces calls at 1.2 seconds and caches every response (never an error response). It stops at 450 calls a day and resumes from the cache on the next run.
 
-**Cadence.** Annual data arrives country by country, often one to two years late. The pipeline runs monthly and fetches only years not yet cached or recently revised.
+**Cadence.** Annual data arrives country by country, often one to two years late, and is revised. The scheduled refresh re-fetches everything monthly: 111 calls, within the free tier.
 
 ## 8. Wikidata
 
-**Provides.** Candidate gold mines and deposits with coordinates for the optional map layer: items whose "instance of" is a mine (Q820477) or a subclass, with gold among their products, in an African country. Curated additions cover the largest operating mines. The layer ships only if coverage and quality are acceptable (spec 5.6.6), and every dropped item is listed with the reason.
+**Provides.** Candidate gold mines with coordinates for the optional map layer.
+- **Selection:** items in the 54 countries whose "product or material produced" (P1056) is gold (Q897) or gold ore (Q12528662).
+- **Kept:** items that are a mine, gold mine, surface mining or artisanal mining site, with coordinates.
+- **Shipping rule:** the layer ships only if it passes the quality bar in `gold_config.json` (spec 5.6.6). Every dropped item is listed with the reason.
+
+**Result of the first build: not enabled.** Of 189 items, 155 were kept and 34 dropped. The layer fails all three checks:
+
+| Check | Result | Bar |
+|---|---|---|
+| Producing countries covered | 54% | 60% |
+| Operating status known | 0% | 50% |
+| Largest single-country share (South Africa) | 59% | 40% at most |
+
+No curated additions were made. The largest mines would each need a cited source, and the layer would still lack operating status.
 
 **Access.** The Wikidata Query Service (SPARQL), with a descriptive User-Agent and cached results, as in the Harim pipeline. Query budget: a 60-second limit per query; two or three queries per run.
 
 **Licence and attribution.** CC0 for structured data, so no attribution is required. We credit "Wikidata" anyway, with each item's QID linked.
 
-**Cadence.** On demand, with production.
+**Cadence.** On demand (`gold-mines`).
 
-## 9. National geological surveys and literature
+## 9. Curated citations (presence overrides and profile notes)
 
-**Provides.** Evidence for `presence_tier` where there is no reported production: documented occurrences, artisanal mining or exploration. It also supports the short `gold-profiles` notes: national purchase programmes, export bans and major discoveries.
+**Provides.** Evidence for `presence_tier` where the USGS tables are silent or misleading, and the short `gold-profiles` notes (artisanal mining, national gold purchase and trading policies, major mines and discoveries).
 
-**Access.** Manual curation into `db/seeds/gold_presence_overrides.json` and the profile seed. Each entry carries:
-- a citation (title, publisher, date, URL);
-- the exact quote it relies on;
-- the date it was checked.
+**Access.** Manual curation in `db/seeds/gold_presence_overrides.json` and `db/seeds/gold_profile_notes.json`. Each entry carries a citation (title, URL, type and reliability tier), the exact quote it relies on, the date the quote refers to and the date it was checked.
 
-As in Harim, quotes are checked against the cached source text, and anything unsourced is `needs_review`.
+**Quote checks.** Every run fetches each cited source (cached under `data/raw/gold/citations/`), reads it as text (HTML page, PDF report or .xlsx table) and checks that the quote is there word for word, ignoring only case, punctuation and spacing. A missing quote stops the run; a source that cannot be fetched marks the entry for review. An entry without a full citation is loaded as `needs_review`. Notes avoid allegations about governments, companies or individuals (smuggling, armed groups) even where a source makes them.
+
+**Presence overrides (7, owner's decisions of 18 October 2026):**
+
+| Country | Tier | Evidence |
+|---|---|---|
+| Togo | Producer (low confidence) | USGS Minerals Yearbook 2019: the ~20 t a year are exports that "predominately include artisanal gold mine production transiting Togo from neighboring countries and, to a lesser extent, domestic artisanal mine production". Downgraded from major producer. |
+| Somalia | Occurrences known (medium) | Global Initiative Against Transnational Organized Crime (2026): artisanal gold mining at Milxo, "one of Africa's least-known gold booms". |
+| Guinea-Bissau | Occurrences known (low) | Wikipedia, Geology of Guinea-Bissau: "Some small, low-grade gold anomalies exist in the northeast of Guinea-Bissau." |
+| Cabo Verde, The Gambia, São Tomé and Príncipe | None identified (low) | USGS Minerals Yearbook 2019, "Other Countries of Africa": the minerals that may have been produced are listed, and gold is not among them. |
+| Comoros | None identified (medium) | USGS Minerals Yearbook 2022, Indian Ocean Islands: Comoros "did not produce any minerals". |
+
+No country is left as "unknown".
+
+**Profile notes (53 curated, for 31 countries, plus the USGS footnotes quoted automatically, §5).** Mostly from the USGS Minerals Yearbook chapters' prose (public domain; the 2019 to 2022 editions, so each note carries its date). Recent policy notes come from:
+- Ghana: the Ghana Gold Board's own site (GoldBod as sole buyer and exporter, 2025);
+- Tanzania: FB Attorneys' legal update on the 20% set-aside for local sale (October 2024) and The Chanzo's report of the Bank of Tanzania Governor's statement on gold bought by 13 June 2025;
+- Zimbabwe: FactCheckZW's explainer on the ZiG currency (April 2024).
 
 **Licence.** Varies by publisher. We store facts and short quotations with attribution, never tables or substantial extracts.
 
-**Attribution.** The citation shown with each note and in the drawer.
+**Attribution.** The citation shown with each note and tier, and in the drawer.
 
-**Cadence.** Reviewed when production or trade data change a country's tier.
+**Cadence.** Quotes are re-checked on every run; entries are reviewed when production or trade data change a country's tier.
 
 ## 10. World Gold Council (Goldhub)
 
-**Provides.** Nothing automated. It is used for methodology reference only, plus an optional manual import that is **off by default**.
+**Not used, and not linked** (owner's decision, 18 October 2026).
+- The site has no "Explore on Goldhub" links and no WGC figures.
+- `wgc_import.py` (spec 5.6) is not built for now, and `ENABLE_WGC_IMPORT` stays `false`.
+- Figures the USGS attributes to the WGC are left out too (§5).
+- Central bank holdings come from the IMF directly, which is where the WGC's own figures come from.
 
-**Terms.** `https://www.gold.org/terms-and-conditions`, read 17 October 2026:
+**Terms**, read 17 October 2026 (`https://www.gold.org/terms-and-conditions`), for the record:
 - > "You are permitted to save, display or print out information contained on this Website only for your personal, non-commercial use."
 - > "Except as otherwise permitted by these terms and conditions, you are not permitted to modify, copy, scrape, distribute, transmit, display, reproduce, duplicate, publish, license, frame, link, create derivative works from, transfer or otherwise use in any manner, in whole or in part, this Website or the information and materials on this Website without the prior written authorisation of WGC and with suitable accreditation to WGC."
 - On LBMA prices shown by the WGC: > "LBMA Gold Price information provided by WGC … may not be disclosed by you to anyone else."
-
-**What we do.**
-- No scraping, no automated access, and no WGC figures in the database or UI.
-- `wgc_import.py` reads only XLSX files that you download yourself into `data/source/wgc/`, and only when `ENABLE_WGC_IMPORT=true`. It is currently **false** in `.env`.
-- Central bank holdings come from the IMF directly, which is where the WGC's own figures come from.
-
-**Linking.** The list of prohibited acts includes "link". The spec asks for "Explore on Goldhub" deep links. See [decision 4](#decisions-needed).
 
 ## 11. LBMA Gold Price
 
@@ -316,61 +376,42 @@ ICE Benchmark Administration confirms the prices are "available under licence fr
 
 ---
 
-## Decisions needed
+## Decisions
 
-1. **Comtrade key: ✅ nothing needed.** The key is set and works. Please also add it as the GitHub Actions secret `COMTRADE_API_KEY` before the scheduled refresh runs (milestone 14 sets up the workflow).
+The owner decided on 18 October 2026: "Ignore the BGS and WGC sources for now. Just use what is freely available and allowed without the requirement of seeking approval."
 
-2. **BGS licence: ⚠️ your decision.** BGS allows "non-commercial academic and research purposes". It requires permission to "provide them to a third party", which a public website arguably does. BGS is our only multi-year production series for most African countries: USGS lists only Ghana and South Africa individually, and the USGS Africa yearbook stops at 2020–21. Options:
-   - **(a) Recommended:** email ipr@bgs.ac.uk describing the site (educational, free, with attribution, figures shown per country and in a CSV export) and ask for permission. Meanwhile, build the pipeline and load BGS data, but keep it **unpublished** (the API omits BGS rows) until you confirm. The site then shows USGS figures where they exist and "No data" elsewhere.
-   - **(b)** Treat the site as non-commercial educational use and publish now, with the required acknowledgement.
-   - **(c)** Drop BGS and use the USGS yearbook (public domain, but stops at 2020–21) plus MCS for Ghana and South Africa.
-
-3. **Comtrade publication: ⚠️ please confirm.** Our use looks like the "limited amounts … in a few tables, graphs, visualization" exception, which applies whether or not the site makes money. Our volume (about 15,000 to 25,000 records, including the CSV export) is under the 100,000-record mark. My default is to proceed. Optionally, confirm with subscriptions@un.org.
-
-4. **Goldhub links: ⚠️ your decision.** The WGC terms list "link" among acts that need written authorisation. Options:
-   - **(a) Recommended:** no hyperlinks for now. Name Goldhub as the WGC's portal in text only, with the "Explore on Goldhub" links built behind a setting that stays off.
-   - **(b)** Link anyway as ordinary citations.
-   - **(c)** Ask the WGC, ideally in the same message as a request for permission to import its data (`ENABLE_WGC_IMPORT`).
-
-5. **Price lineage: ⚠️ please confirm.** The World Bank's gold series was, until May 2025, the average of the London afternoon fixing (the LBMA price). We republish the World Bank's published **monthly averages** under its CC BY 4.0 dataset terms, not LBMA daily prices. The gold metadata carries no third-party restriction. My reading is that this is permitted. If you prefer extra caution, the IMF PCPS series is an alternative, but its terms are similar and its sources overlap.
-
-6. **HS code: ℹ️ my default unless you object.** HS 7108 includes 7108.20 (monetary gold). The default:
-   - fetch 7108 and 7108.20 in the same calls;
-   - store "non-monetary gold" as 7108 minus 7108.20;
-   - record `hs_code = '7108.1x'`;
-   - flag any country-year where 7108.20 is non-zero.
-
-   Ghana 2023 had no 7108.20 row, which is common.
-
-7. **USD value of central bank holdings: ℹ️ my default.** Tonnes × the World Bank monthly average price for that month (`valuation = computed`), as the spec says. The alternative is converting the IMF's XDR market value to USD with the IMF exchange rate (`valuation = market`).
-
-8. **WGC permission: ℹ️ for you to request if you wish.** Nothing is imported until you have it and set `ENABLE_WGC_IMPORT=true`.
+1. **BGS:** not used. Production history comes from the USGS Minerals Yearbook country chapters (§5) and the MCS (§4), both public domain.
+2. **WGC:**
+   - not used and not linked;
+   - no import adapter for now;
+   - figures the USGS attributes to the WGC are left out.
+3. **UN Comtrade:** used under the re-dissemination policy's "limited amounts" allowance, which needs no permission (6,930 records). The key is set locally; add it as the GitHub Actions secret `COMTRADE_API_KEY` for the scheduled refresh.
+4. **Gold price:** the World Bank's monthly averages, under its CC BY 4.0 dataset terms (no permission needed). No LBMA prices.
+5. **HS code:** non-monetary gold is 7108 minus 7108.20, stored as `hs_code = '7108.1'`.
+6. **Central bank holdings in US dollars:** tonnes × that month's World Bank average price (`valuation = computed`). Gold's share of reserves uses the IMF's own SDR values.
 
 ## Recording in `datasets`
 
-The `gold-*` pipelines will upsert these rows. Licence and attribution are shown in the ribbon, the drawer and the CSV export.
+The `gold-*` pipelines upsert these rows. Licence and attribution are shown in the ribbon, the drawer and the CSV export.
 
 | `key` | Licence | Attribution text |
 |---|---|---|
-| `gold_price_worldbank` | CC BY 4.0 | The World Bank: Commodity Price Data (The Pink Sheet), monthly prices: World Bank Prospects Group |
-| `gold_price_imf_pcps` | IMF data terms | Source: International Monetary Fund, Primary Commodity Price System (PCPS), https://data.imf.org/ |
-| `gold_reserves_imf_il` | IMF data terms | Source: International Monetary Fund, International Liquidity (IL), https://data.imf.org/ (transformed: tonnes, computed USD, share of reserves) |
-| `gold_production_usgs_mcs` | CC0 / US public domain | U.S. Geological Survey, Mineral Commodity Summaries 2026: Gold (doi:10.5066/P1WKQ63T) |
-| `gold_production_usgs_myb` | US public domain | U.S. Geological Survey, Minerals Yearbook, volume III, Africa |
-| `gold_production_bgs` | BGS terms (permission pending) | World Mineral Statistics contributed by permission of the British Geological Survey |
-| `gold_trade_comtrade` | UN Comtrade terms (limited publication) | UN Comtrade, United Nations Statistics Division |
-| `gold_mines_wikidata` | CC0 | Wikidata |
-| `gold_presence_curated` | Per citation | Cited per country |
+| `gold-price` | CC BY 4.0 | The World Bank: Commodity Price Data (The Pink Sheet), monthly prices: World Bank Prospects Group. CC BY 4.0. (The IMF PCPS attribution if the fallback is ever used.) |
+| `gold-official-reserves` | IMF Copyright and Usage terms | Source: International Monetary Fund, International Liquidity (IL), https://data.imf.org/. Transformed by Bara La Afrika: fine troy ounces converted to tonnes; US dollar values computed from the World Bank monthly average gold price; share of reserves computed. |
+| `gold-production` | US public domain (MCS data release CC0) | U.S. Geological Survey, Mineral Commodity Summaries 2022–2026: Gold, and Minerals Yearbook, volume III (Africa). |
+| `gold-trade` | UN Comtrade terms (limited publication) | UN Comtrade, United Nations Statistics Division (HS 7108, annual). |
+| `gold-presence` | Derived data; each tier cites its source | Presence tiers derived by Bara La Afrika from the cited sources. |
+| `gold-mines` | CC0 | Gold mine locations from Wikidata (CC0). Loaded only when the layer passes its quality bar. |
 
 ## Schedule
 
 | Pipeline | Source | Runs |
 |---|---|---|
-| `gold-price` | World Bank (IMF PCPS fallback) | Monthly, after the 5th |
+| `gold-price` | World Bank (IMF PCPS fallback) | Monthly (first Monday; the World Bank publishes early in the month) |
 | `gold-official-reserves` | IMF IL | Monthly, after `gold-price` (values need that month's price) |
-| `gold-production` | USGS MCS, BGS, USGS yearbook | By hand when a new edition is out (MCS: January or February) |
-| `gold-trade` | UN Comtrade | Monthly; fetches only new or revised years, within the daily call budget |
-| `gold-presence`, `gold-profiles` | Derived plus curated | After production or trade change |
+| `gold-production` | USGS MCS and Minerals Yearbook | By hand, or as a manual workflow run, when a new edition is out (MCS: January or February) |
+| `gold-trade` | UN Comtrade | Monthly, within the daily call budget |
 | `gold-mines` | Wikidata | On demand |
+| `gold-presence`, `gold-profiles` | Derived plus curated | After the others, every monthly run (`gold-profiles` also validates and writes the two reports) |
 
-Every run updates `datasets.as_of`, `coverage_start` and `coverage_end`, so the ribbon shows each source's range.
+`python -m pipelines gold` runs them all in order. Every run updates `datasets.as_of`, `coverage_start` and `coverage_end`, so the ribbon shows each source's range.

@@ -329,9 +329,194 @@ export async function loadHarim(db: PGlite): Promise<void> {
   );
 }
 
+interface SeedTable {
+  columns: string[];
+  rows: unknown[][];
+}
+
+/** A compact gold seed table ({columns, rows}) as objects, for json_to_recordset. */
+function recordsOf(table: SeedTable): Record<string, unknown>[] {
+  return table.rows.map((row) => Object.fromEntries(table.columns.map((c, i) => [c, row[i]])));
+}
+
+const GOLD_SEEDS = [
+  'gold_price',
+  'gold_production',
+  'gold_reserves',
+  'gold_trade',
+  'gold_presence',
+  'gold_profiles',
+] as const;
+
+/**
+ * The Dhahabu tables, as `python -m pipelines load` writes them (gold_load.py), with set-based
+ * inserts. The mines layer is left empty, as when it does not pass its quality bar.
+ */
+export async function loadGold(db: PGlite): Promise<void> {
+  const seeds = Object.fromEntries(
+    GOLD_SEEDS.map((name) => [name, readJson('db', 'seeds', `${name}.json`)]),
+  ) as Record<(typeof GOLD_SEEDS)[number], Record<string, unknown>>;
+  const datasets = GOLD_SEEDS.flatMap(
+    (name) => (seeds[name].datasets as SeedDataset[] | undefined) ?? [],
+  );
+  for (const d of datasets) {
+    await db.query(
+      `INSERT INTO datasets (key, name, provider, license, attribution, coverage_start,
+         coverage_end, as_of, refresh_cadence, last_refreshed_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, '2026-10-18T08:00:00Z')`,
+      [
+        d.key,
+        d.name,
+        d.provider,
+        d.license,
+        d.attribution,
+        d.coverage_start,
+        d.coverage_end,
+        d.as_of,
+        d.refresh_cadence,
+      ],
+    );
+  }
+  const sources = GOLD_SEEDS.flatMap(
+    (name) => (seeds[name].sources as SeedSource[] | undefined) ?? [],
+  );
+  await db.query(
+    `INSERT INTO sources (source_key, title, url, source_type, reliability_tier)
+     SELECT source_key, title, url, source_type, reliability_tier::reliability_tier
+     FROM json_to_recordset($1::json) AS s(source_key text, title text, url text,
+       source_type text, reliability_tier text)
+     ON CONFLICT (source_key) DO NOTHING`,
+    [JSON.stringify(sources)],
+  );
+  const table = (seed: (typeof GOLD_SEEDS)[number], key: string) =>
+    JSON.stringify(recordsOf(seeds[seed][key] as SeedTable));
+  const source = (column = 'source') => `(SELECT id FROM sources WHERE source_key = ${column})`;
+
+  await db.query(
+    `INSERT INTO gold_price_monthly (month, usd_per_troy_oz, source_id)
+     SELECT r.month, r.usd_per_troy_oz, ${source('r.source')}
+     FROM json_to_recordset($1::json) AS r(month date, usd_per_troy_oz numeric, source text)`,
+    [table('gold_price', 'prices')],
+  );
+  const priority = (seeds.gold_production.priority as string[]).map((key, index) => ({
+    source: key,
+    priority: index + 1,
+  }));
+  await db.query(
+    `INSERT INTO gold_production_source_priority (source_id, priority)
+     SELECT ${source()}, priority FROM json_to_recordset($1::json) AS r(source text, priority int)`,
+    [JSON.stringify(priority)],
+  );
+  await db.query(
+    `INSERT INTO gold_production_annual (country_id, year, tonnes, basis, source_id, notes)
+     SELECT c.id, r.year, r.tonnes, r.basis::gold_production_basis, ${source('r.source')}, r.notes
+     FROM json_to_recordset($1::json) AS r(iso3 text, year int, tonnes numeric, basis text,
+       source text, notes text)
+     JOIN countries c ON c.iso3 = r.iso3`,
+    [table('gold_production', 'production')],
+  );
+  await db.query(
+    `INSERT INTO gold_inground_reserves (country_id, year, tonnes_contained, definition, source_id)
+     SELECT c.id, r.year, r.tonnes_contained, r.definition, ${source('r.source')}
+     FROM json_to_recordset($1::json) AS r(iso3 text, year int, tonnes_contained numeric,
+       definition text, source text)
+     JOIN countries c ON c.iso3 = r.iso3`,
+    [table('gold_production', 'inground_reserves')],
+  );
+  await db.query(
+    `INSERT INTO gold_world_production (year, tonnes, basis, source_id)
+     SELECT r.year, r.tonnes, r.basis::gold_production_basis, ${source('r.source')}
+     FROM json_to_recordset($1::json) AS r(year int, tonnes numeric, basis text, source text)`,
+    [table('gold_production', 'world_production')],
+  );
+  await db.query(
+    `INSERT INTO gold_official_reserves (country_id, as_of, tonnes, value_usd,
+       pct_of_total_reserves, valuation, source_id)
+     SELECT c.id, r.as_of, r.tonnes, r.value_usd, r.pct_of_total_reserves,
+       r.valuation::gold_valuation, ${source('r.source')}
+     FROM json_to_recordset($1::json) AS r(iso3 text, as_of date, tonnes numeric,
+       value_usd numeric, pct_of_total_reserves numeric, valuation text, source text)
+     JOIN countries c ON c.iso3 = r.iso3`,
+    [table('gold_reserves', 'reserves')],
+  );
+  await db.query(
+    `INSERT INTO gold_reserves_reporting (country_id, status, first_month, last_month,
+       months_behind, gaps_in_window, note)
+     SELECT c.id, r.status::gold_reporting_status, r.first, r.last, r.months_behind,
+       r.gaps_in_window, r.note
+     FROM json_to_recordset($1::json) AS r(iso3 text, status text, first date, last date,
+       months_behind int, gaps_in_window int, note text)
+     JOIN countries c ON c.iso3 = r.iso3`,
+    [table('gold_reserves', 'reporting')],
+  );
+  await db.query(
+    `INSERT INTO gold_trade_annual (country_id, year, flow, hs_code, net_weight_kg, value_usd,
+       basis, partner_count, source_id, notes)
+     SELECT c.id, r.year, r.flow::gold_trade_flow, r.hs_code, r.net_weight_kg, r.value_usd,
+       r.basis::gold_trade_basis, r.partner_count, ${source('r.source')}, r.notes
+     FROM json_to_recordset($1::json) AS r(iso3 text, year int, flow text, hs_code text,
+       net_weight_kg numeric, value_usd numeric, basis text, partner_count int, source text,
+       notes text)
+     JOIN countries c ON c.iso3 = r.iso3`,
+    [table('gold_trade', 'trade')],
+  );
+  await db.query(
+    `INSERT INTO gold_trade_partners (country_id, year, flow, basis, rank, partner_name,
+       partner_iso3, value_usd, net_weight_kg, source_id)
+     SELECT c.id, r.year, r.flow::gold_trade_flow, r.basis::gold_trade_basis, r.rank,
+       r.partner_name, r.partner_iso3, r.value_usd, r.net_weight_kg, ${source('r.source')}
+     FROM json_to_recordset($1::json) AS r(iso3 text, year int, flow text, basis text,
+       rank int, partner_name text, partner_iso3 text, value_usd numeric,
+       net_weight_kg numeric, source text)
+     JOIN countries c ON c.iso3 = r.iso3`,
+    [table('gold_trade', 'partners')],
+  );
+  await db.query(
+    `INSERT INTO country_total_exports_annual (country_id, year, value_usd, source_id)
+     SELECT c.id, r.year, r.value_usd, ${source('r.source')}
+     FROM json_to_recordset($1::json) AS r(iso3 text, year int, value_usd numeric, source text)
+     JOIN countries c ON c.iso3 = r.iso3`,
+    [table('gold_trade', 'total_exports')],
+  );
+  const summaries = new Map(
+    recordsOf(seeds.gold_profiles.profiles as SeedTable).map((p) => [p.iso3, p.summary]),
+  );
+  const presence = recordsOf(seeds.gold_presence.presence as SeedTable).map((p) => ({
+    ...p,
+    summary: summaries.get(p.iso3),
+  }));
+  await db.query(
+    `INSERT INTO country_gold_profiles (country_id, presence_tier, presence_basis,
+       presence_confidence, presence_as_of_year, presence_source_id, commercial_mining,
+       asm_present, asm_share_pct_estimate, asm_source_id, summary, needs_review, review_notes)
+     SELECT c.id, r.presence_tier::gold_presence_tier, r.presence_basis,
+       r.presence_confidence::confidence_level, r.presence_as_of_year,
+       ${source('r.presence_source')}, r.commercial_mining, r.asm_present,
+       r.asm_share_pct_estimate, ${source('r.asm_source')}, r.summary, r.needs_review,
+       r.review_notes
+     FROM json_to_recordset($1::json) AS r(iso3 text, presence_tier text, presence_basis text,
+       presence_confidence text, presence_as_of_year int, presence_source text,
+       commercial_mining boolean, asm_present boolean, asm_share_pct_estimate numeric,
+       asm_source text, summary text, needs_review boolean, review_notes text)
+     JOIN countries c ON c.iso3 = r.iso3`,
+    [JSON.stringify(presence)],
+  );
+  await db.query(
+    `INSERT INTO gold_profile_notes (country_id, sort_order, note, source_id, as_of,
+       needs_review, review_notes)
+     SELECT c.id, r.sort_order, r.note, ${source('r.source')}, r.as_of, r.needs_review,
+       r.review_notes
+     FROM json_to_recordset($1::json) AS r(iso3 text, sort_order int, note text, source text,
+       as_of date, needs_review boolean, review_notes text)
+     JOIN countries c ON c.iso3 = r.iso3`,
+    [table('gold_profiles', 'notes')],
+  );
+}
+
 export async function seededDb(): Promise<PGlite> {
   const db = await migratedDb();
   await loadSeeds(db);
   await loadHarim(db);
+  await loadGold(db);
   return db;
 }

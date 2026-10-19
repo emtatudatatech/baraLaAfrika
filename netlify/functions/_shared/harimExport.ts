@@ -118,7 +118,7 @@ function metadataLines(context: ExportContext): string[] {
   ];
 }
 
-function csvCell(value: string | number | boolean | null | undefined): string {
+export function csvCell(value: string | number | boolean | null | undefined): string {
   if (value === null || value === undefined) return '';
   const text = String(value);
   return /[",\n\r]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;

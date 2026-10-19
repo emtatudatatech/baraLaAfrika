@@ -169,11 +169,12 @@ describe('GET /api/coverage', () => {
   it('returns requested datasets and reports the ones not loaded yet', async () => {
     const response = await call(
       coverage,
-      '/api/coverage?datasets=symbology-pdf,boundaries-natural-earth,gold-price',
+      '/api/coverage?datasets=symbology-pdf,boundaries-natural-earth,gold-mines',
     );
     const body = CoverageResponseSchema.parse(await response.json());
     expect(body.datasets.map((d) => d.key)).toEqual(['boundaries-natural-earth', 'symbology-pdf']);
-    expect(body.missing).toEqual(['gold-price']);
+    // The mines layer is not loaded while it is below its quality bar.
+    expect(body.missing).toEqual(['gold-mines']);
     expect(body.datasets[0]).toMatchObject({ asOf: '2018-05-23', refreshCadence: 'static' });
     expect(body.datasets[1]).toMatchObject({ asOf: '2026-10-14', refreshCadence: 'manual' });
     expect(body.datasets[1]?.lastRefreshedAt).toBe('2026-10-15T08:00:00Z');
@@ -191,11 +192,31 @@ describe('GET /api/coverage', () => {
     expect(baseline?.name).toContain('emtatudatatech/harim@318dee9');
   });
 
+  it('reports each gold dataset\'s own coverage for the ribbon', async () => {
+    const response = await call(
+      coverage,
+      '/api/coverage?datasets=gold-price,gold-production,gold-official-reserves,gold-trade',
+    );
+    const body = CoverageResponseSchema.parse(await response.json());
+    expect(body.missing).toEqual([]);
+    const price = body.datasets.find((d) => d.key === 'gold-price');
+    expect(price).toMatchObject({ coverageStart: '1960-01-01', refreshCadence: 'monthly' });
+    for (const dataset of body.datasets) {
+      expect(dataset.coverageStart).not.toBeNull();
+      expect(dataset.coverageEnd).not.toBeNull();
+    }
+  });
+
   it('returns every dataset without a filter and rejects unknown keys', async () => {
     const all = CoverageResponseSchema.parse(await (await call(coverage, '/api/coverage')).json());
     expect(all.datasets.map((d) => d.key)).toEqual([
       'boundaries-natural-earth',
       'flags-flagpedia',
+      'gold-official-reserves',
+      'gold-presence',
+      'gold-price',
+      'gold-production',
+      'gold-trade',
       'mountains-baseline',
       'mountains-geonames',
       'mountains-wikidata',

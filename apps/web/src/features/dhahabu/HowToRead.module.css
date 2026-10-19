@@ -1,0 +1,83 @@
+.root {
+  position: relative;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--touch-target);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-pill);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-ink);
+  background: var(--glass-bg-strong);
+}
+
+.button:hover {
+  background: var(--gold-accent-soft);
+}
+
+.panel {
+  position: absolute;
+  inset-inline-end: 0;
+  top: calc(100% + var(--space-2));
+  z-index: var(--z-popover);
+  width: min(28rem, calc(100vw - 2 * var(--gutter)));
+  padding: var(--space-4);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  color: var(--color-ink);
+  background: var(--color-surface-solid);
+  box-shadow: var(--glass-shadow);
+}
+
+.panel:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/*
+ * On phones the header stacks and the button sits inside its padding, so the panel hangs from the
+ * header card itself (the nearest positioned ancestor) and spans it.
+ */
+@media (--below-md) {
+  .root {
+    position: static;
+  }
+
+  .panel {
+    inset-inline: 0;
+    width: auto;
+  }
+}
+
+.title {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+}
+
+.list {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-3);
+  padding-inline-start: 1.25rem;
+  line-height: var(--leading-snug);
+}
+
+.close {
+  min-height: var(--touch-target);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-pill);
+  font: inherit;
+  font-weight: var(--weight-semibold);
+  color: var(--color-ink);
+  background: transparent;
+}

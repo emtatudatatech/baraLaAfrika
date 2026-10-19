@@ -7,6 +7,10 @@ import type { Config, Context } from '@netlify/functions';
 import * as countries from '../functions/countries.ts';
 import * as country from '../functions/country.ts';
 import * as coverage from '../functions/coverage.ts';
+import * as goldCountries from '../functions/gold-countries.ts';
+import * as goldExport from '../functions/gold-export.ts';
+import * as goldPrice from '../functions/gold-price.ts';
+import * as goldStats from '../functions/gold-stats.ts';
 import * as mountain from '../functions/mountain.ts';
 import * as mountainRange from '../functions/mountain-range.ts';
 import * as mountainRanges from '../functions/mountain-ranges.ts';
@@ -27,6 +31,10 @@ export const FUNCTIONS: Record<string, FunctionModule> = {
   countries,
   country,
   coverage,
+  'gold-countries': goldCountries,
+  'gold-export': goldExport,
+  'gold-price': goldPrice,
+  'gold-stats': goldStats,
   mountain,
   'mountain-range': mountainRange,
   'mountain-ranges': mountainRanges,

@@ -61,8 +61,10 @@ export function formatPeriod(iso: string, granularity: Granularity): string {
 export function formatCoverage(
   dataset: Pick<CoverageDataset, 'coverageStart' | 'coverageEnd' | 'refreshCadence'>,
 ): string | null {
-  const granularity = granularityOf(dataset.refreshCadence);
   const { coverageStart: start, coverageEnd: end } = dataset;
+  // Whole years (1 January to 31 December) are annual data, however often they are refreshed.
+  const wholeYears = start?.endsWith('-01-01') === true && end?.endsWith('-12-31') === true;
+  const granularity = wholeYears ? 'year' : granularityOf(dataset.refreshCadence);
   if (start !== null && end !== null) {
     return `${formatPeriod(start, granularity)}–${formatPeriod(end, granularity)}`;
   }

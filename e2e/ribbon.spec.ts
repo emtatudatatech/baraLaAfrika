@@ -58,6 +58,16 @@ async function mockGoldCoverage(page: Page) {
   });
 }
 
+/** Coverage for a deployment whose gold data has not been loaded yet. */
+async function mockNoGoldCoverage(page: Page) {
+  await page.route('**/api/coverage?*', async (route) => {
+    const keys = new URL(route.request().url()).searchParams.get('datasets') ?? '';
+    if (keys.includes('gold-'))
+      await route.fulfill({ json: { datasets: [], missing: keys.split(',') } });
+    else await route.fallback();
+  });
+}
+
 const ribbonOf = (page: Page) => page.getByRole('complementary', { name: 'Data behind this view' });
 
 test.beforeEach(async ({ page }) => {
@@ -103,6 +113,7 @@ test('Harim shows the mountain datasets with their own as-of dates', async ({ pa
 });
 
 test('pages whose data is not loaded yet say so', async ({ page, isMobile }) => {
+  await mockNoGoldCoverage(page);
   await page.goto('/dhahabu');
   const ribbon = ribbonOf(page);
   if (isMobile) {
@@ -111,14 +122,15 @@ test('pages whose data is not loaded yet say so', async ({ page, isMobile }) => 
     await expect(ribbon).toContainText('Gold price (not loaded yet)');
   }
   await ribbon.getByRole('button', { name: 'Show data details' }).click();
-  await expect(ribbon.locator('[data-dataset]')).toHaveCount(4);
-  await expect(ribbon.getByText('not loaded yet', { exact: true })).toHaveCount(4);
+  await expect(ribbon.locator('[data-dataset]')).toHaveCount(5);
+  await expect(ribbon.getByText('not loaded yet', { exact: true })).toHaveCount(5);
 });
 
 test('a time-series page without data shows a "no data" state, never an invented range', async ({
   page,
   isMobile,
 }) => {
+  await mockNoGoldCoverage(page);
   await page.goto('/dhahabu?from=2010&to=2020');
   const control = ribbonOf(page).getByTestId('ribbon-years');
   // (The icon's ligature text is aria-hidden, so the accessible name is the label alone.)

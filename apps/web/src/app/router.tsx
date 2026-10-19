@@ -25,7 +25,13 @@ export const ROUTE_DATA = {
     timeDependent: false,
   },
   dhahabu: {
-    datasets: ['gold-price', 'gold-production', 'gold-trade', 'gold-official-reserves'],
+    datasets: [
+      'gold-price',
+      'gold-production',
+      'gold-official-reserves',
+      'gold-trade',
+      'gold-presence',
+    ],
     timeDependent: true,
   },
 } as const satisfies Record<string, RouteDataHandle>;

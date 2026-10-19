@@ -60,6 +60,12 @@ describe('coverage formatting', () => {
         dataset({ coverageStart: '1990-01-01', coverageEnd: '2024-12-31', refreshCadence: 'annual' }),
       ),
     ).toBe('1990–2024');
+    // Annual data refreshed monthly (UN Comtrade trade) still reads as years.
+    expect(
+      formatCoverage(
+        dataset({ coverageStart: '2015-01-01', coverageEnd: '2025-12-31', refreshCadence: 'monthly' }),
+      ),
+    ).toBe('2015–2025');
     expect(formatCoverage(dataset({ coverageEnd: '2026-06-30', refreshCadence: 'quarterly' }))).toBe(
       'to Q2 2026',
     );

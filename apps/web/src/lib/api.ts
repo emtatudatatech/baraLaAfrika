@@ -4,6 +4,8 @@ import type {
   CountryResponse,
   CoverageResponse,
   DatasetKey,
+  GoldCountriesResponse,
+  GoldStatsResponse,
   HarimStatsResponse,
   MountainResponse,
   MountainSummaryResponse,
@@ -117,6 +119,23 @@ export const api = {
   /** The download address for the catalogue (filtered by `params`) as CSV or GeoJSON. */
   exportUrl: (format: 'csv' | 'geojson', params: Record<string, string | undefined> = {}) =>
     withQuery('/api/mountains/export', { format, ...params }),
+  /** Every country's gold figures, each the latest in or before `year` (latest without it). */
+  goldCountries: (year: number | undefined, signal?: AbortSignal) =>
+    apiGet<GoldCountriesResponse>(
+      withQuery('/api/gold/countries', { year: year === undefined ? undefined : String(year) }),
+      signal,
+    ),
+  goldStats: (region: RegionSlug | null, year: number | undefined, signal?: AbortSignal) =>
+    apiGet<GoldStatsResponse>(
+      withQuery('/api/gold/stats', {
+        region: region ?? undefined,
+        year: year === undefined ? undefined : String(year),
+      }),
+      signal,
+    ),
+  /** The download address for the gold table as CSV (filtered by `params`). */
+  goldExportUrl: (params: Record<string, string | undefined> = {}) =>
+    withQuery('/api/gold/export', { format: 'csv', ...params }),
   mountainStats: (region: RegionSlug | null = null, signal?: AbortSignal) =>
     apiGet<HarimStatsResponse>(
       withQuery('/api/mountains/stats', { region: region ?? undefined }),

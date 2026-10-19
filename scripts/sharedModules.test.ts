@@ -10,14 +10,21 @@ import { describe, expect, it } from 'vitest';
  * 37 kB).
  */
 const SHARED = join(import.meta.dirname, '..', 'packages', 'shared', 'src');
-const ZOD_FREE = ['constants.ts', 'datasets.ts', 'regions.ts', 'harimConstants.ts'];
+const ZOD_FREE = [
+  'constants.ts',
+  'datasets.ts',
+  'regions.ts',
+  'harimConstants.ts',
+  'goldConstants.ts',
+  'goldSort.ts',
+];
 
 describe('@bla/shared modules the web app imports values from', () => {
   for (const file of ZOD_FREE) {
     it(`${file} does not depend on zod`, () => {
       const source = readFileSync(join(SHARED, file), 'utf8');
       expect(source).not.toMatch(/from ['"]zod['"]/);
-      expect(source).not.toMatch(/from ['"]\.\/(schemas|api|harim)\.ts['"]/);
+      expect(source).not.toMatch(/from ['"]\.\/(schemas|api|harim|gold)\.ts['"]/);
     });
   }
 });

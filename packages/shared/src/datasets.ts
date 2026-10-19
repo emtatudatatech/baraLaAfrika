@@ -13,6 +13,8 @@ export const DATASET_KEYS = [
   'gold-production',
   'gold-official-reserves',
   'gold-trade',
+  'gold-presence',
+  'gold-mines',
 ] as const;
 
 export type DatasetKey = (typeof DATASET_KEYS)[number];

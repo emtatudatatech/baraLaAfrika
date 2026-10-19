@@ -19,6 +19,7 @@
     "fit_screen",
     "flag",
     "height",
+    "help",
     "history_edu",
     "home",
     "info",
@@ -37,6 +38,7 @@
     "pets",
     "public",
     "refresh",
+    "remove",
     "savings",
     "schedule",
     "search",
@@ -51,5 +53,5 @@
     "zoom_out"
   ],
   "source": "material-symbols@0.48.0",
-  "sha256": "280b04c1b62c8cffd48a0f71a03c24308019bb71dca80a498f0185e70cce4167"
+  "sha256": "89d8c610f1e7fb1e77f12b0169af1327973232c7bb6abdfcd926ed4d0f63e6f7"
 }

@@ -36,8 +36,9 @@ DATASET_TABLES = {
         "gold_production_annual",
         "gold_production_source_priority",
         "gold_inground_reserves",
+        "gold_world_production",
     ),
-    "gold-official-reserves": ("gold_official_reserves",),
+    "gold-official-reserves": ("gold_official_reserves", "gold_reserves_reporting"),
     "gold-trade": ("gold_trade_annual", "gold_trade_partners", "country_total_exports_annual"),
     "gold-presence": ("country_gold_profiles", "gold_profile_notes"),
     "gold-mines": ("gold_mines",),
@@ -311,6 +312,31 @@ SPECS = {
             "review_notes": "text",
         },
     ),
+    "world": TableSpec(
+        "gold_world_production",
+        ("year", "source_id"),
+        ("tonnes", "basis"),
+        {
+            "year": "int",
+            "source_id": "int",
+            "tonnes": "num:1",
+            "basis": "enum:gold_production_basis",
+        },
+    ),
+    "reporting": TableSpec(
+        "gold_reserves_reporting",
+        ("country_id",),
+        ("status", "first_month", "last_month", "months_behind", "gaps_in_window", "note"),
+        {
+            "country_id": "int",
+            "status": "enum:gold_reporting_status",
+            "first_month": "date",
+            "last_month": "date",
+            "months_behind": "int",
+            "gaps_in_window": "int",
+            "note": "text",
+        },
+    ),
     "mines": TableSpec(
         "gold_mines",
         ("wikidata_qid",),
@@ -451,6 +477,18 @@ def load(cur: psycopg.Cursor[Any], gold: dict[str, Any], add: Callable[[str, int
         ],
     )
     run(
+        "world",
+        [
+            {
+                "year": r["year"],
+                "tonnes": r["tonnes"],
+                "basis": r["basis"],
+                "source_id": source(r["source"]),
+            }
+            for r in rows_of(production.get("world_production", {"columns": [], "rows": []}))
+        ],
+    )
+    run(
         "reserves",
         [
             {
@@ -463,6 +501,21 @@ def load(cur: psycopg.Cursor[Any], gold: dict[str, Any], add: Callable[[str, int
                 "source_id": source(r["source"]),
             }
             for r in rows_of(seeds["reserves"]["reserves"])
+        ],
+    )
+    run(
+        "reporting",
+        [
+            {
+                "country_id": country(r["iso3"]),
+                "status": r["status"],
+                "first_month": r["first"],
+                "last_month": r["last"],
+                "months_behind": r["months_behind"],
+                "gaps_in_window": r["gaps_in_window"],
+                "note": r["note"],
+            }
+            for r in rows_of(seeds["reserves"]["reporting"])
         ],
     )
     trade = seeds["trade"]

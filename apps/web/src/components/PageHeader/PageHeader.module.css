@@ -5,6 +5,11 @@
   align-items: start;
 }
 
+/* The glass card isolates its content: lift it above the cards below while a popover is open. */
+.header:has([aria-expanded='true']) {
+  z-index: var(--z-raised);
+}
+
 .badge {
   display: grid;
   place-items: center;

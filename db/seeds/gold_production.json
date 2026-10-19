@@ -1,7 +1,7 @@
 {
   "$generated": {
     "by": "python -m pipelines gold-production",
-    "generated_on": "2026-10-18",
+    "generated_on": "2026-10-19",
     "warnings": ["myb3-2017-18-nigeria.xlsx: note 3 on the 2014 gold figure is about another commodity; ignored (Considerably more barite was produced but it was considered )", "myb3-2016-zi.xlsx: not downloadable (https://d9-wret.s3.us-west-2.amazonaws.com/palladium/production/atoms/files/myb3-2016-zi.xlsx: HTTP 403)"]
   },
   "datasets": [
@@ -2872,6 +2872,21 @@
       ["ZAF", 2023, 5000.0, "Reserves as reported in the USGS Mineral Commodity Summaries 2024 world table (metric tons of gold content; definitions in its Appendix C).", "usgs-mcs-2024-gold"],
       ["ZAF", 2024, 5000.0, "Reserves as reported in the USGS Mineral Commodity Summaries 2025 world table (metric tons of gold content; definitions in its Appendix C).", "usgs-mcs-2025-gold"],
       ["ZAF", 2025, 5000.0, "Reserves as reported in the USGS Mineral Commodity Summaries 2026 world table (metric tons of gold content; definitions in its Appendix C).", "usgs-mcs-2026-gold"]
+    ]
+  },
+  "world_production": {
+    "columns": ["year", "tonnes", "basis", "source"],
+    "rows": [
+      [2020, 3030.0, "reported", "usgs-mcs-2022-gold"],
+      [2021, 3000.0, "estimate", "usgs-mcs-2022-gold"],
+      [2021, 3090.0, "reported", "usgs-mcs-2023-gold"],
+      [2022, 3100.0, "estimate", "usgs-mcs-2023-gold"],
+      [2022, 3060.0, "reported", "usgs-mcs-2024-gold"],
+      [2023, 3000.0, "estimate", "usgs-mcs-2024-gold"],
+      [2023, 3250.0, "reported", "usgs-mcs-2025-gold"],
+      [2024, 3300.0, "estimate", "usgs-mcs-2025-gold"],
+      [2024, 3280.0, "reported", "usgs-mcs-2026-gold"],
+      [2025, 3300.0, "estimate", "usgs-mcs-2026-gold"]
     ]
   },
   "mcs_other_countries": {

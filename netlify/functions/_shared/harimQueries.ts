@@ -22,7 +22,7 @@ export const MOUNTAIN_LIST_CAP = 600;
 
 const MOUNTAIN_DATASETS = ['mountains-baseline', 'mountains-wikidata', 'mountains-geonames'];
 
-function flagOf(iso2: string, template: string): CountryRef['flag'] {
+export function flagOf(iso2: string, template: string): CountryRef['flag'] {
   const code = iso2.toLowerCase();
   return {
     svgUrl: `https://flagcdn.com/${code}.svg`,

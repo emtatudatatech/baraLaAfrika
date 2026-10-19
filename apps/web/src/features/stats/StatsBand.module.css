@@ -49,18 +49,21 @@
   transition: opacity var(--duration-fast) var(--ease-out);
 }
 
-/* Wide screens: the four hero cards, then the compact cards in one row. */
+/*
+ * Wide screens: the four hero cards, then the compact cards in one row. A band with a different
+ * number of compact cards sets the column count and spans.
+ */
 @media (--bp-xl) {
   .grid {
-    grid-template-columns: repeat(20, minmax(0, 1fr));
+    grid-template-columns: repeat(var(--band-columns, 20), minmax(0, 1fr));
   }
 
   .grid > .hero {
-    grid-column: span 5;
+    grid-column: span var(--band-hero-span, 5);
   }
 
   .grid > .compact {
-    grid-column: span 4;
+    grid-column: span var(--band-compact-span, 4);
   }
 }
 
@@ -185,7 +188,9 @@
 .value {
   margin: 0;
   font-family: var(--font-display);
-  font-size: var(--text-2xl);
+
+  /* --value-fit: an optional cap that keeps a long figure inside its card. */
+  font-size: min(var(--text-2xl), var(--value-fit, 100vw));
   font-weight: var(--weight-semibold);
   font-variant-numeric: tabular-nums lining-nums;
   line-height: var(--leading-tight);
@@ -193,7 +198,7 @@
 }
 
 .hero .value {
-  font-size: var(--text-3xl);
+  font-size: min(var(--text-3xl), var(--value-fit, 100vw));
 }
 
 .unit {

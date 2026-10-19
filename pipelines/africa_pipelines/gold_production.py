@@ -125,6 +125,10 @@ class McsEdition:
     production: dict[str, tuple[McsValue, McsValue]]  # iso3 → (first year, second year)
     reserves: dict[str, float]  # iso3 → tonnes (NA omitted)
     other_countries: tuple[float | None, float | None]
+    world: tuple[float, float] | None = None  # "World total (rounded)" for the two years
+
+
+WORLD_TOTAL_RE = re.compile(r"World total(?: \(rounded\))?\s*\n\s*([\d,]+)\s*\n\s*([\d,]+)")
 
 
 def pdf_text(body: bytes) -> str:
@@ -194,7 +198,10 @@ def parse_mcs(text: str, edition: int, names: dict[str, str]) -> McsEdition:
             reserve = _mcs_number(values[2], strict=True).tonnes
             if reserve is not None:
                 reserves[iso3] = reserve
-    return McsEdition(edition, (years[0], years[1]), production, reserves, other)
+    world = None
+    if (match := WORLD_TOTAL_RE.search(text, end)) is not None:
+        world = (float(match[1].replace(",", "")), float(match[2].replace(",", "")))
+    return McsEdition(edition, (years[0], years[1]), production, reserves, other, world)
 
 
 def name_index() -> dict[str, str]:
@@ -863,6 +870,20 @@ def payload(result: ProductionResult) -> dict[str, Any]:
         "production": table(["iso3", "year", "tonnes", "basis", "source", "notes"], result.rows),
         "inground_reserves": table(
             ["iso3", "year", "tonnes_contained", "definition", "source"], result.inground
+        ),
+        "world_production": table(
+            ["year", "tonnes", "basis", "source"],
+            [
+                [
+                    year,
+                    tonnes,
+                    "estimate" if index == 1 else "reported",
+                    mcs_source(e.edition).source_key,
+                ]
+                for e in result.mcs
+                if e.world is not None
+                for index, (year, tonnes) in enumerate(zip(e.years, e.world, strict=True))
+            ],
         ),
         "mcs_other_countries": {
             str(e.edition): {"years": list(e.years), "tonnes": list(e.other_countries)}

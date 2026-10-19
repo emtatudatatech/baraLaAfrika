@@ -66,6 +66,11 @@ export async function waitForContent(page: Page, path: string): Promise<void> {
     await waitForStats(page);
     await waitForMap(page);
   }
+  if (path.startsWith('/dhahabu')) {
+    // The table rows (or cards) and the gold statistics band's final figures.
+    await expect(page.getByTestId('gold-row').first()).toBeVisible();
+    await waitForStats(page);
+  }
 }
 
 /** Waits until the statistics band shows its cards and has finished counting up. */

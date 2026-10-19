@@ -1,0 +1,57 @@
+/* Dhahabu's cards: the warm gold accent, and the year or month each card describes. */
+
+/* Ten cards. Wide screens: four hero cards, then the six compact cards in one row. */
+.band {
+  --band-columns: 24;
+  --band-hero-span: 6;
+  --band-compact-span: 4;
+}
+
+/* Three columns (720–1279px): the first and last cards span two, so four rows fill evenly. */
+@media (--bp-md) and (width < 1280px) {
+  .card:first-child,
+  .card:last-child {
+    grid-column: span 2;
+  }
+}
+
+/*
+ * A figure as wide as "US$36.8 bn" or "4.79 million oz" scales down to fit its card: the card is a
+ * size container and --value-chars is the figure's length.
+ */
+.card {
+  position: relative;
+  container-type: inline-size;
+
+  --value-fit: calc(100cqi / (var(--value-chars, 6) * 0.6));
+}
+
+.icon {
+  color: var(--gold-accent);
+  background: var(--gold-accent-soft);
+}
+
+.period {
+  align-self: flex-start;
+  padding: 0.0625rem var(--space-2);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink-muted);
+}
+
+.sub {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--color-ink-muted);
+}
+
+.note {
+  display: block;
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-xs);
+  font-style: italic;
+  color: var(--color-ink-muted);
+}

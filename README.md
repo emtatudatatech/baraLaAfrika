@@ -11,7 +11,7 @@
 
 History and Contemporary Africa appear in the navigation as "Coming soon".
 
-> **Status:** milestones 1–13 of 17 are complete: scaffold, data foundation, flags with approved region colours, the API (connected to Neon), the **interactive map**, the **countries table**, the **data ribbon**, **Harim** in full (data, API and tables, statistics band, map and chart, ranges, peak pages and export) and the Dhahabu source and licence check ([docs/dhahabu-sources.md](docs/dhahabu-sources.md)). The Dhahabu data (milestone 14) is built and awaiting review: [data/gold_coverage_matrix.md](data/gold_coverage_matrix.md) and [data/gold_review_report.md](data/gold_review_report.md). See [Roadmap](#roadmap).
+> **Status:** milestones 1–15 of 17 are complete: scaffold, data foundation, flags with approved region colours, the API (connected to Neon), the **interactive map**, the **countries table**, the **data ribbon**, **Harim** in full (data, API and tables, statistics band, map and chart, ranges, peak pages and export), the Dhahabu source and licence check ([docs/dhahabu-sources.md](docs/dhahabu-sources.md)), the Dhahabu data ([coverage matrix](data/gold_coverage_matrix.md), [review report](data/gold_review_report.md)) and the **Dhahabu page's statistics band and country table**, driven by the ribbon's year range. The Dhahabu map, charts and country drawer come next (milestone 16). See [Roadmap](#roadmap).
 
 ---
 
@@ -26,6 +26,7 @@ History and Contemporary Africa appear in the navigation as "Coming soon".
 - [The map](#the-map)
 - [The countries table](#the-countries-table)
 - [Harim: the mountains page](#harim-the-mountains-page)
+- [Dhahabu: the gold page](#dhahabu-the-gold-page)
 - [The data ribbon and time range](#the-data-ribbon-and-time-range)
 - [Quality checks](#quality-checks)
 - [Environment variables](#environment-variables)
@@ -186,7 +187,7 @@ The pipelines run from the repo root (`uv run python -m pipelines --help`); see 
 - **Presence tiers:** major producer (≥ 20 t in the latest year with a figure), producer (> 0 t), occurrences known (a cited source documents gold without a current figure), none identified (the USGS chapters consulted show none), unknown (no USGS production table). Trade is never evidence of deposits. Curated overrides and profile notes need a source and the exact quote, which every run re-checks against the source's text (a missing quote stops the run). Seven overrides (Togo, Somalia, Guinea-Bissau, Cabo Verde, The Gambia, São Tomé and Príncipe, Comoros) leave no country "unknown"; 53 curated notes cover 31 countries.
 - **Validation** (the run fails otherwise): every country has a tier; no negative quantities; producers have production evidence; every US dollar value uses the price of its own year or month (never filled); every cited source exists; "none identified" uses the agreed wording.
 - **Reports:** `data/gold_coverage_matrix.md` (country × metric, with the years available) and `data/gold_review_report.md` (tiers with their evidence, source conflicts, lumped countries, late reporters, trade gaps, the mines verdict, figures left out, what needs review).
-- **Database:** migration `0007_dhahabu.sql` (tables, `v_gold_price_annual`, `v_gold_production`, and `troy_oz_per_tonne()`, which a test checks against `config/constants.json`).
+- **Database:** migration `0007_dhahabu.sql` (tables, `v_gold_price_annual`, `v_gold_production`, and `troy_oz_per_tonne()`, which a test checks against `config/constants.json`). Migration `0008_dhahabu_api.sql` adds world production (the MCS world totals) and each central bank's reporting status (`gold_reserves_reporting`), `gold_country_metrics(year)` with `v_gold_country_latest` (each metric's latest value in or before a year, with its own year or date), and `v_gold_stats(region, year)`, the statistics band (definitions in [docs/dhahabu-stats.md](docs/dhahabu-stats.md), which a test keeps word for word in step with the SQL).
 
 ### Region colours
 
@@ -236,6 +237,10 @@ Netlify Functions in `netlify/functions/`, one file per route, each declaring it
 | `GET /api/mountains/ranges/:slug` | One range: its sourced description and formation note, source, review notes and its mountains. Unknown, malformed or empty ranges are 404 |
 | `GET /api/mountains/export?format=csv\|geojson&<filters>` | A download of the catalogue, filtered like `/api/mountains` (never capped). CSV starts with a `#` block, GeoJSON carries a `metadata` member: as-of date, filters, each dataset's version, licence and attribution, and the other sources. Rows include the height's source and a link to the peak's page |
 | `GET /api/mountains/stats?region=` | The statistics band's figures from `v_harim_stats()` (for All Africa, or one region), each with its definition; ties are listed, never resolved at random. Each card's details and entities have their own schema in the shared contract. 503 until the mountain data is loaded |
+| `GET /api/gold/countries?region=&q=&presence=&sort=&year=` | One row per country (54 without filters): presence tier with its evidence and source; mine production (tonnes or "included in other", basis, year, and the value computed at that year's average price); gold exports and imports as reported and as partners report them (mirror); central bank holdings (tonnes, value, share of reserves, 12-month change, month) and reporting status; gold's share of merchandise exports. Each figure is the latest in or before `year` (default: latest available) and carries its own year or date. `sort=production` (default), `exports`, `holdings`, `share`, `name`, each reversible with `-` (no data last) |
+| `GET /api/gold/stats?region=&year=` | The ten statistics cards from `v_gold_stats()`, in the Harim stats shape: value, unit, as-of date, details, entities (ties listed) and definition. 503 until the gold data is loaded |
+| `GET /api/gold/export?format=csv&<filters>` | The country table as CSV (all 54, or filtered like `/api/gold/countries`): a `#` block with the reference year, filters, notes (nominal US dollars, computed values, null vs zero vs "included in other"), each dataset's licence and the required attributions (IMF wording with the transformation statement, World Bank, UN Comtrade, USGS) |
+| `GET /api/gold/price?from=&to=&granularity=month\|year` | The gold price series (World Bank monthly average, US$ per troy ounce), or annual averages |
 
 - **Errors** always have the shape `{ "error": { "code", "message" } }`: `bad_request` (400, invalid query parameters), `not_found` (404), `method_not_allowed` (405; only GET and HEAD), `service_unavailable` (503, database not configured) and `internal_error` (500; details are logged, never returned).
 - **Caching:** `Cache-Control: public, s-maxage=3600, stale-while-revalidate=86400` with a weak `ETag` (304 on `If-None-Match`). Errors are `no-store`.
@@ -318,7 +323,27 @@ The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth**
 - **Layout:** stacked cards below 720px. The tables are laid out to fit their panel from 720px up (a test checks 720, 900, 1024 and 1280px), so nothing is clipped and the page never scrolls sideways. The lowest point and relief columns show from 1280px, can be switched on from 1024px, and otherwise appear in the expanded row; All peaks is a compact list below 1024px.
 - Loading skeletons, empty states with "Clear filters", and error states with "Retry".
 
-## The data ribbon and time range
+## Dhahabu: the gold page
+
+`/dhahabu` (`apps/web/src/features/dhahabu/`) covers, for each of the 54 countries, whether gold is found, how much is mined and traded, and how much central banks hold. It is the first page driven by the ribbon's year range.
+
+- **Reference year:** the end of the ribbon's year range. Every card and table figure is the latest in or before it, and shows its own year or month (countries report on different schedules). With the full range the page shows the latest available figures, and the API gets no `year`. A note above the table says which applies.
+- **Statistics band** (`GoldStatsBand.tsx`, from `/api/gold/stats`; definitions and tie rules in [docs/dhahabu-stats.md](docs/dhahabu-stats.md)): ten glass cards, each with a year or month chip, the definition behind "How is this calculated?", count-up (none with reduced motion) and an action.
+  - **Hero cards:** gold-producing countries (of 54, with a segmented bar and legend by presence tier), Africa's mine production (tonnes, share of world output, change from the previous year), its value (computed at that year's average price, labelled so) and the largest producer (with its share).
+  - **Compact cards:** central bank gold held (tonnes and value, with how many countries report), the largest holder (value and share of its reserves), the gold price ("monthly average, not live", with the change on a year earlier), the most gold-dependent exporter, the biggest reporting gap (neutral wording: "not evidence of wrongdoing") and the largest net buyer over 12 months ("No net buyer" when no holding grew).
+  - **Production uses the latest complete year:** a year counts for Africa only when the producers missing from it (nearest figure within three years) make up at most 5% of the total, so Africa's total is never a partial sum. With the current data that is 2021: the USGS chapters stop around 2021–2023, and later years cover only the producers the MCS names.
+  - Actions: "Sort by production" or "Sort by holdings" sorts the table and scrolls to it; "Show the country" clears any search or presence filter hiding the country, then highlights its row and moves focus to it.
+  - Layout: from 1280px the four hero cards, then the six compact cards in one row; 720–1279px three columns (the first and last cards span two, so four rows fill evenly); phones a scroll-snap carousel with dots. Long figures ("US$36.8 bn", "4.79 million oz") scale down to fit their card.
+- **Country table** (from 1024px; `GoldTable.tsx`): flag, country with region chip, presence badge, mine production, gold exports, central bank gold and share of exports. The headers sort (production, exports, holdings and share largest first, name A–Z; again to reverse; no data always last).
+  - "—" is no data, "0 t" a reported zero, and "incl. in other" a country the source lumps into "other countries". Estimates say "est."; computed values say "computed" with the price and year on hover or focus.
+  - Exports without the country's own report show what partners report importing (labelled). Where there is no holding, the reporting status shows instead ("Pooled (BCEAO)", "Not reported"); a late or old report's month explains the delay on hover or focus.
+  - The presence badge has an icon, a text label and a gold ramp from major producer to occurrences known, with neutral grey for none identified and hatched grey for unknown. It was checked for colour-blind vision in both themes. Hover, focus or tap shows its evidence, confidence, year and source.
+- **Below 1024px:** one card per country with production and central bank gold first and "More figures" for exports and share, plus a Sort menu.
+- **Filters:** region chips, search (accent-insensitive) and presence tier, with a count, "Clear filters", empty and error states. The region also rescopes the band ("All Africa" or the region chip). `?region=`, `?q=`, `?presence=` and `?sort=` live in the URL with the ribbon's `?from=&to=`, so every view is shareable.
+- **Units:** tonnes, kilograms or troy ounces (1 t = 32,150.7466 troy oz, the shared constant), remembered in this browser (`bla-gold-units`). Money is nominal US dollars throughout.
+- **"How to read this page":** reserves vs in-ground reserves, dates, no data vs zero, computed values, mirror trade, "none identified", and the price as a monthly average (not financial advice).
+- **Export:** this view or all 54 countries as CSV from `/api/gold/export`, with the attribution block.
+
 
 The strip at the top of every page (`apps/web/src/features/coverage/`) shows the data behind the current view.
 
@@ -444,6 +469,13 @@ Decisions taken where the specification left room, or where the current ecosyste
 - **Togo is a producer, not a major producer:** the USGS figure (about 20 t a year) is, in the USGS's words, exports that mostly include gold transiting Togo, so a cited override downgrades it (owner's decision, 2026-10-18).
 - **Notes avoid allegations:** profile notes leave out claims about smuggling or armed groups even where a cited source makes them; they cover artisanal mining, policy, mines and discoveries.
 - **No mines layer yet:** Wikidata's gold mines fail the quality bar (coverage, operating status, South Africa's share), so the table stays empty and the report lists why.
+- **Dhahabu production year:** Africa's production cards use the latest complete year (2021 with the current data), not the newest year with any figure, so the total is never a partial sum. The table still shows each country's newest figure.
+- **Dhahabu below 1024px uses cards:** the table has seven columns of dated figures, which do not fit narrower panels without clipping; cards show the key figures first (production and holdings) and the rest on request.
+- **Dhahabu row details come in milestone 16:** a row click opens the country drawer (charts, notes, sources) once the drawer exists; for now the badge and figure hints carry the evidence.
+- **Price effect card deferred:** the optional 11th card (how much of the 12-month change in holdings' value came from price vs tonnes) arrives with the decomposition chart in milestone 16, so both share one tested calculation.
+- **Central bank gold held** counts countries whose latest report is within 12 months of the newest month, values them all at the newest month's price, and says how many are late, pooled or not reported.
+- **Largest net buyer** is given to 0.001 t (the precision of the IMF series), so the headline and its detail always agree.
+- **Gold series and mines endpoints:** `/api/gold/series` arrives with the charts in milestone 16; `/api/gold/mines` is not built while the mines layer stays off.
 - **Dev-tool advisories:** `npm audit` reports advisories in dev-only tooling (`netlify-cli`'s local server dependencies and Stylelint's glob dependencies). None of it ships to the browser or the deployed functions.
 
 ## Roadmap
@@ -463,8 +495,8 @@ v1 milestones (stop points for review are marked ⏸):
 11. ✅ Harim map and chart
 12. ✅ Harim ranges, peak pages and export
 13. ✅ Dhahabu source and licence check ⏸ ([docs/dhahabu-sources.md](docs/dhahabu-sources.md); decided 2026-10-18)
-14. ✅ Dhahabu data ⏸ (awaiting review: [coverage matrix](data/gold_coverage_matrix.md), [review report](data/gold_review_report.md))
-15. Dhahabu API, table, band and live ribbon ⏸
+14. ✅ Dhahabu data ⏸ ([coverage matrix](data/gold_coverage_matrix.md), [review report](data/gold_review_report.md); reviewed 2026-10-18)
+15. ✅ Dhahabu API, table, band and live ribbon ⏸ (awaiting screenshot review)
 16. Dhahabu map, charts and drawer
 17. Polish, Lighthouse and deployment
 

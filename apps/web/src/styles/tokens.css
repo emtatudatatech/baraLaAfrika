@@ -143,6 +143,20 @@
   --volcanic-dormant: oklch(68% 0.15 65deg);
   --volcanic-extinct: oklch(50% 0.04 60deg);
   --volcanic-unknown: oklch(82% 0.02 70deg);
+
+  /*
+   * Dhahabu: a warm gold accent, and the presence tiers. The three gold tiers are an ordinal ramp
+   * (one hue, lightness steps checked for colour-vision deficiency and against the surface);
+   * "none identified" and "unknown" are neutral (unknown is also hatched), and every badge has an
+   * icon and a text label, so colour is never the only cue.
+   */
+  --gold-accent: oklch(55% 0.13 72deg);
+  --gold-accent-soft: oklch(55% 0.13 72deg / 12%);
+  --presence-major-producer: oklch(40% 0.1 62deg);
+  --presence-producer: oklch(55% 0.13 72deg);
+  --presence-occurrences-known: oklch(70% 0.14 85deg);
+  --presence-none-identified: oklch(60% 0.015 80deg);
+  --presence-unknown: oklch(78% 0.01 80deg);
 }
 
 :root[data-theme='dark'] {
@@ -201,4 +215,11 @@
   --volcanic-dormant: oklch(80% 0.13 70deg);
   --volcanic-extinct: oklch(66% 0.04 60deg);
   --volcanic-unknown: oklch(42% 0.02 260deg);
+  --gold-accent: oklch(78% 0.14 80deg);
+  --gold-accent-soft: oklch(78% 0.14 80deg / 16%);
+  --presence-major-producer: oklch(88% 0.13 88deg);
+  --presence-producer: oklch(75% 0.15 78deg);
+  --presence-occurrences-known: oklch(62% 0.13 68deg);
+  --presence-none-identified: oklch(65% 0.015 260deg);
+  --presence-unknown: oklch(45% 0.01 260deg);
 }

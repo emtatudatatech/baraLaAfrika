@@ -30,9 +30,17 @@ const HARIM_STATES = [
   { path: '/harim/peaks/mount-kenya', name: 'harim-peak-page', ready: 'peak-alternatives' },
 ] as const;
 
+/** Dhahabu states worth reviewing beyond the default view. */
+const DHAHABU_STATES = [
+  { path: '/dhahabu?region=west', name: 'dhahabu-west', ready: 'gold-row' },
+  { path: '/dhahabu?sort=holdings', name: 'dhahabu-holdings', ready: 'gold-row' },
+  { path: '/dhahabu?from=2000&to=2015', name: 'dhahabu-2015', ready: 'gold-row' },
+] as const;
+
 const SHOTS = [
   ...ROUTES.map((route) => ({ path: route.path, name: route.name, ready: null })),
   ...HARIM_STATES,
+  ...DHAHABU_STATES,
 ];
 
 for (const viewport of VIEWPORTS) {
@@ -57,6 +65,7 @@ for (const viewport of VIEWPORTS) {
           await waitForMap(page);
         }
         if (route.path.startsWith('/harim/ranges/')) await waitForMap(page);
+        if (route.path.startsWith('/dhahabu')) await waitForStats(page);
         await waitForAnimations(page);
         // A full-page capture does not scroll, so lazy images below the fold would stay blank.
         await page.evaluate(async () => {
@@ -74,41 +83,47 @@ for (const viewport of VIEWPORTS) {
   }
 }
 
-/** The statistics band alone, for review: desktop, and the phone carousel at several cards. */
+/** The statistics bands alone, for review: desktop, and the phone carousel at several cards. */
+const BANDS = [
+  { name: 'harim-band', path: '/harim', testId: 'stats-band' },
+  { name: 'dhahabu-band', path: '/dhahabu', testId: 'gold-stats-band' },
+] as const;
+
 for (const viewport of VIEWPORTS) {
   for (const theme of ['light', 'dark'] as const) {
-    test(`harim-band ${viewport.name} ${theme}`, async ({ browser }) => {
-      const context = await browser.newContext({
-        viewport: { width: viewport.width, height: viewport.height },
-        deviceScaleFactor: viewport.isMobile ? 3 : 1,
-        isMobile: viewport.isMobile,
-        hasTouch: viewport.isMobile,
-      });
-      const page = await context.newPage();
-      await useTheme(page, theme);
-      await page.goto('/harim');
-      await waitForFonts(page);
-      await waitForStats(page);
-      const band = page.getByTestId('stats-band');
-      // Flags in cards outside the carousel's view are lazy: load them before capturing.
-      await band.evaluate(async (element) => {
-        const images = [...element.querySelectorAll('img')];
-        for (const image of images) image.loading = 'eager';
-        await Promise.all(images.map((image) => image.decode().catch(() => undefined)));
-      });
-      if (!viewport.isMobile) {
-        await band.screenshot({ path: `screenshots/harim-band-${viewport.name}-${theme}.png` });
-      } else {
-        const dots = page.getByRole('group', { name: 'Choose a card' }).getByRole('button');
-        for (const index of [0, 2, 4, 7]) {
-          await dots.nth(index).click();
-          await page.waitForTimeout(600);
-          await band.screenshot({
-            path: `screenshots/harim-band-${viewport.name}-${theme}-card${String(index + 1)}.png`,
-          });
+    for (const shot of BANDS) {
+      test(`${shot.name} ${viewport.name} ${theme}`, async ({ browser }) => {
+        const context = await browser.newContext({
+          viewport: { width: viewport.width, height: viewport.height },
+          deviceScaleFactor: viewport.isMobile ? 3 : 1,
+          isMobile: viewport.isMobile,
+          hasTouch: viewport.isMobile,
+        });
+        const page = await context.newPage();
+        await useTheme(page, theme);
+        await page.goto(shot.path);
+        await waitForFonts(page);
+        await waitForStats(page);
+        const band = page.getByTestId(shot.testId);
+        // Flags in cards outside the carousel's view are lazy: load them before capturing.
+        await band.evaluate(async (element) => {
+          const images = [...element.querySelectorAll('img')];
+          for (const image of images) image.loading = 'eager';
+          await Promise.all(images.map((image) => image.decode().catch(() => undefined)));
+        });
+        const file = `screenshots/${shot.name}-${viewport.name}-${theme}`;
+        if (!viewport.isMobile) {
+          await band.screenshot({ path: `${file}.png` });
+        } else {
+          const dots = page.getByRole('group', { name: 'Choose a card' }).getByRole('button');
+          for (const index of [0, 2, 4, 7]) {
+            await dots.nth(index).click();
+            await page.waitForTimeout(600);
+            await band.screenshot({ path: `${file}-card${String(index + 1)}.png` });
+          }
         }
-      }
-      await context.close();
-    });
+        await context.close();
+      });
+    }
   }
 }

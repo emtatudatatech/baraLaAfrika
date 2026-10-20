@@ -62,7 +62,10 @@
   background: var(--glass-bg-strong);
 }
 
+/* Room for "54 countries" before it loads, so the toolbar wraps the same way (no layout shift). */
 .count {
+  min-width: 12ch;
+  min-height: 1lh;
   margin: 0 0 0 auto;
   font-size: var(--text-sm);
   font-variant-numeric: tabular-nums;

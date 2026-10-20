@@ -11,7 +11,7 @@
 
 History and Contemporary Africa appear in the navigation as "Coming soon".
 
-> **Status:** milestones 1–16 of 17 are complete: scaffold, data foundation, flags with approved region colours, the API (connected to Neon), the **interactive map**, the **countries table**, the **data ribbon**, **Harim** in full (data, API and tables, statistics band, map and chart, ranges, peak pages and export), and **Dhahabu** in full: the source and licence check ([docs/dhahabu-sources.md](docs/dhahabu-sources.md)), the data ([coverage matrix](data/gold_coverage_matrix.md), [review report](data/gold_review_report.md)), the statistics band, country table, metric map, charts and country drawer, all driven by the ribbon's year range. Polish and deployment (milestone 17) come next. See [Roadmap](#roadmap).
+> **Status:** milestones 1–16 of 17 are complete: scaffold, data foundation, flags with approved region colours, the API (connected to Neon), the **interactive map**, the **countries table**, the **data ribbon**, **Harim** in full (data, API and tables, statistics band, map and chart, ranges, peak pages and export), and **Dhahabu** in full: the source and licence check ([docs/dhahabu-sources.md](docs/dhahabu-sources.md)), the data ([coverage matrix](data/gold_coverage_matrix.md), [review report](data/gold_review_report.md)), the statistics band, country table, metric map, charts and country drawer, all driven by the ribbon's year range. Milestone 17 (polish and hardening) is done: prerendered and hydrated main pages, Lighthouse 97 / 100 / 100 / 100 on mobile for all four, a sitemap and per-page social cards, and the full deployment guide ([Deployment](#deployment-netlify)). The first production deploy needs the project owner's Netlify login. See [Roadmap](#roadmap).
 
 ---
 
@@ -49,7 +49,7 @@ Netlify Functions (Node, TypeScript) ── read-only role ──▶ Neon Postgr
 Python pipelines (uv, GitHub Actions cron) ── write role ────┘
 ```
 
-- **Frontend:** React 19, Vite 8, React Router 8 (data router, code-split routes), TypeScript (strict). Plain CSS with design tokens and CSS Modules; no Tailwind or CSS-in-JS.
+- **Frontend:** React 19, Vite 8, React Router 8 (data router, code-split routes), TypeScript (strict). Plain CSS with design tokens and CSS Modules; no Tailwind or CSS-in-JS. The four main pages are prerendered at build time and hydrated in the browser (see [Performance](#performance)).
 - **API:** Netlify Functions in TypeScript. Input is validated with `zod`; every error uses the shape `{ error: { code, message } }`. Responses send `Cache-Control: public, s-maxage=3600, stale-while-revalidate=86400` plus an `ETag`.
 - **Database:** Postgres on Neon. Plain numbered SQL migrations. Statistics are defined in SQL views, not in the browser.
 - **Pipelines:** Python 3.15, managed with `uv`. Every pipeline is idempotent, logs its runs and records dataset coverage.
@@ -60,8 +60,9 @@ Python pipelines (uv, GitHub Actions cron) ── write role ────┘
 ```
 apps/web/                 React + Vite app
   index.html              Real HTML entry, incl. the no-flash theme bootstrap
-  build/                  Vite plugin that generates the CSP (_headers)
-  public/                 favicon (Africa silhouette), robots.txt, map topojson, flag fallbacks
+  build/                  build steps: the CSP (_headers), page shells with route preloads,
+                          sitemap.xml and robots.txt, and the prerender of the main pages
+  public/                 favicon (Africa silhouette), boot.js, social images, map topojson, flags
   src/
     app/                  router, layout shell, theme provider, error boundaries
     features/             map, countries, harim, dhahabu, coverage (data ribbon)
@@ -318,7 +319,7 @@ The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth**
 - **Range pages** (`/harim/ranges/:slug`): the sourced description and formation note with its source ("needs verification" where unsourced; "no sourced description yet" where there is none), type, length, mountain count and tallest peak, the countries it spans (their mountains and profiles), the map fitted to the range, and its peaks (each opening its page).
 - **Peak pages** (`/harim/peaks/:slug`, and "Open full page" in the drawer): name, height in both units, flags, range and volcanic status; the height's confidence, source and every other sourced height; prominence, isolation, coordinates (with a copy button), type, massif and summits; local names and name origin with sources ("Unsourced" otherwise); a locator map; nearby peaks (same range or country, nearest first); sources; and a copy-link button.
 - **Export:** "Export" by the result count downloads the current view or the whole catalogue as CSV or GeoJSON from `/api/mountains/export`; a message confirms the download or reports a failure.
-- **Link previews:** the build writes a page shell for `/harim` and every mountain and range page (`apps/web/build/pageShells.ts`, from the committed seeds) with that page's title, description and Open Graph tags, so shared links show the right text; Netlify serves them before the single-page fallback (as does `vite preview`). The preview image is the generic Harim card, `public/og/harim.png`; the site's is `og/site.png` (both from `node scripts/build-og-images.mjs`).
+- **Link previews:** the build writes a page shell for `/countries`, `/harim`, `/dhahabu` and every mountain and range page (`apps/web/build/pageShells.ts`, from the committed seeds) with that page's title, description and Open Graph tags, so shared links show the right text; Netlify serves them before the single-page fallback (as does `vite preview`). The preview images are `public/og/harim.png` (Harim and its pages), `og/dhahabu.png` and `og/site.png` (the site and `/countries`), all from `node scripts/build-og-images.mjs`.
 - **Peak drawer:** a click on any mountain or summit opens it: height in both units with its confidence, the source of the height and every other sourced height, prominence, isolation, coordinates, range, type, massif and summits (each opens in the same drawer), local names and name origin with their sources ("Unsourced" otherwise), notes, the "Needs verification" reasons and all sources by field.
 - **URL state:** `?view=country|peaks`, `region`, `q`, `sort`, `country`, `minHeight`, `volcanic`, `range` and `peak` (the open drawer). Invalid values are ignored; `view=ranges` shows the by-country view with a note until the ranges view arrives (milestone 12). Switching to By country drops the peak-only filters. A `country` in the URL filters to that country and opens its row (the link from other pages).
 - **Units:** a metres/feet toggle, remembered in this browser (`bla-units`) and applied everywhere on the page. Below sea level uses a true minus sign (`−155 m`).
@@ -376,6 +377,17 @@ const { interactive, bounds, range, referenceYear, setRange } = useTimeRange();
 
 To add a dataset, add its key to `DATASET_KEYS` (`packages/shared/src/datasets.ts`), give it a short label in `strings.datasets`, and list it in the route's `handle`. Its coverage then appears in the ribbon and, for series, extends the range's bounds.
 
+## Performance
+
+The target is Lighthouse ≥ 90 on mobile for Performance, Accessibility, Best Practices and SEO on `/`, `/countries`, `/harim` and `/dhahabu` (`npm run lighthouse`).
+
+- **Prerendered first views:** the build renders each main page's first view (the layout, header, controls and loading skeletons, before any data) into its HTML file: `npm run build` runs the client build, a server build of `src/entry-server.tsx` and `build/prerender.ts`. The page paints as soon as its CSS arrives instead of after the app's script has run.
+- **Hydration, not a second render:** on a bare URL the app hydrates that markup (`hydrateRoot`, after loading the matched route's code-split module, `app/hydration.ts`), so the painted page is kept. The first browser render must therefore equal the prerendered one: anything the server cannot know (the screen, the theme, `<body>` portals) uses `useSyncExternalStore` with a server snapshot or `useIsClient`, and settles straight after hydration. A URL with a query (filters, an open drawer) renders afresh instead, since its first view differs. An e2e test fails on any hydration error.
+- **The app starts after the first paint:** a prerendered page loads `/boot.js`, which imports the app's entry once the page has painted, so the styles and fonts get the connection first; each page links its route's stylesheets directly. Pages without prerendered markup (peak and range pages, any other path via `app.html`) load the app's module and preload their route's chunk in the usual way.
+- **No layout shift:** the skeletons reserve the loaded cards' heights and choose carousel or grid in CSS; region chips show their names (`REGION_NAMES`, checked against the seed) with counts pending until the data arrives.
+- **Payload:** routes are code-split; the map's context land loads after the countries; Material Symbols is subset to the icons used (≈24 KiB); fonts are self-hosted Latin subsets; API time series are capped and pre-aggregated in SQL; images have explicit dimensions; `flagcdn.com` is preconnected.
+- **Measured** (`npm run lighthouse`, mobile, local production build, 2026-10-20): Performance 97 on all four pages, and 100 for Accessibility, Best Practices and SEO. LCP is 2.0–2.1 s, TBT under 100 ms and CLS under 0.04. Deployed figures should be at least as good: Netlify's CDN adds Brotli and HTTP/2.
+
 ## Quality checks
 
 | Command | What it runs |
@@ -386,6 +398,7 @@ To add a dataset, add its key to `DATASET_KEYS` (`packages/shared/src/datasets.t
 | `npm run check:functions` | Builds the Netlify Functions as a deploy does and checks each bundle loads and answers |
 | `npm run e2e` | Playwright: desktop (1440×900) and mobile (390×844) projects; includes axe accessibility checks in light and dark mode and no-horizontal-scroll checks at 320px. It runs the **real API handlers** (`e2e/api-server.ts`) on an in-memory Postgres loaded with the committed seeds, proxied behind `vite preview`, so no Neon connection is needed |
 | `npm run screenshots` | Captures every page at desktop and mobile, light and dark, into `screenshots/` (gitignored) for visual review |
+| `npm run lighthouse` | Lighthouse (mobile) on `/`, `/countries`, `/harim` and `/dhahabu` against the production build (run `npm run build` first) and the local API; fails below 90 in any category; HTML and JSON reports in `lighthouse/` (gitignored) |
 | `uv run ruff check . && uv run ruff format --check .` | Python lint and format |
 | `uv run mypy` | Python type-check (strict) |
 | `uv run pytest` | Python tests (needs `npm install` for the PGlite-backed database tests) |
@@ -414,13 +427,29 @@ Functions never hold write credentials, and no secret is ever exposed to the cli
 
 - the build: `npm run build`, publishing `apps/web/dist`
 - functions from `netlify/functions`
-- the `/api/*` → `/.netlify/functions/:splat` redirect and the SPA fallback
+- the `/api/*` → `/.netlify/functions/:splat` redirect and the SPA fallback (`/*` → `/app.html`, the plain app; `index.html` is the prerendered home page, and each page with a shell is served from its own `index.html` first)
 - security headers: HSTS, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, COOP
 - cache headers: one-year immutable for hashed assets, revalidate for HTML
 
 The **Content-Security-Policy** is generated at build time into `dist/_headers` by `apps/web/build/securityHeaders.ts`. It allows exactly the inline theme-bootstrap script, by SHA-256 hash, and blocks every other inline script. A unit test keeps the hash in sync with `index.html`.
 
-Full deployment steps (Neon setup, Netlify site creation, env vars, preview branches) are added at the deployment milestone.
+The build also writes `sitemap.xml` (every page with a shell) and a `robots.txt` that points to it, using the deploy's address (`URL`, or `DEPLOY_PRIME_URL` for previews); local builds have no address and skip the sitemap.
+
+### From clone to deployed site
+
+1. **Database (once):** create the Neon project, run `db/roles.sql` and set the connection strings as in [One-time Neon setup](#one-time-neon-setup).
+2. **Data (once, then on schedule):** from your machine, with `DATABASE_URL_WRITE` and `COMTRADE_API_KEY` in `.env`, run `uv run python -m pipelines migrate`, then `uv run python -m pipelines load` (it loads the committed seeds; regenerate them first with the pipeline commands in [First run](#first-run) if you want fresh data). `uv run python -m pipelines status` shows each dataset's freshness.
+3. **Netlify site (once):** `npx netlify login`, then `npx netlify init` in the repository (or create the site in the Netlify UI from the GitHub repository). The build settings come from `netlify.toml`, so leave the UI fields empty.
+4. **Environment variables:** in **Site configuration → Environment variables**, add `DATABASE_URL_READ` (the `bla_reader` connection string), scoped to Functions. Nothing else belongs on Netlify: `DATABASE_URL_WRITE` and `COMTRADE_API_KEY` are pipeline secrets (local `.env`, GitHub Actions).
+5. **Deploy:** push to the production branch (Netlify builds every push), or from your machine run `npx netlify deploy --build` for a draft URL and `npx netlify deploy --build --prod` for production.
+6. **Check:** open the site and `/api/regions` (it should list five regions). Run Lighthouse on the deployed pages (PageSpeed Insights, or Chrome DevTools in mobile mode).
+7. **Scheduled refresh:** in GitHub → Settings → Secrets and variables → Actions, add `DATABASE_URL_WRITE`, `COMTRADE_API_KEY` and (optional) `NETLIFY_BUILD_HOOK`. `.github/workflows/data-refresh.yml` then refreshes the data weekly and monthly, and triggers a rebuild when something changed.
+
+**Deploy previews** work out of the box: every pull request gets its own URL, and its functions read `DATABASE_URL_READ`. To keep previews off production data, create a Neon branch for previews and set a different `DATABASE_URL_READ` for the **Deploy previews** context in the Netlify UI.
+
+**Refreshing data by hand:** run the pipeline for a dataset (e.g. `uv run python -m pipelines gold-price`), review the seed diff, commit it, then `uv run python -m pipelines load`. The site reads the database at request time (cached for an hour at the CDN), so no rebuild is needed for data. Rebuild only when page shells or the prerender should change (new peaks or ranges).
+
+**Adding a dataset or tab:** add the dataset's key to `DATASET_KEYS` and a label in `strings.datasets`, a migration for its tables, a pipeline command that writes a committed seed, and a `TableSpec` in the loader. For a new tab, add its route (lazy module) and `handle` in `app/router.tsx`, its navigation entry, a function per API route (registered in `netlify/tests/functionRoutes.ts`), and, to prerender it, an entry in `PRERENDERED` (`build/prerender.ts`) and `ROUTE_MODULES` (`build/pageShells.ts`).
 
 ## Design system
 
@@ -445,7 +474,10 @@ Decisions taken where the specification left room, or where the current ecosyste
 - **jsdom 29:** jsdom 30 requires Node ≥ 24.15.
 - **npm workspaces**, since pnpm is not assumed.
 - **`packages/shared`** is a small addition to the specified layout, so the web app and functions share one set of types and schemas.
-- **Charts:** hand-written React SVG on `d3-scale`/`d3-shape` rather than visx. This keeps the bundle smaller, themes charts directly from CSS tokens, and gives full control of focus, ARIA and data-table fallbacks.
+- **Charts:** hand-written React SVG with small, tested scale and path helpers (no charting library, not even d3-scale). This keeps the bundle smaller, themes charts directly from CSS tokens, and gives full control of focus, ARIA and data-table fallbacks. The map uses d3-geo and d3-zoom.
+- **Prerendered pages hydrate only on a bare URL:** a URL with a query (filters, an open drawer, a map metric) renders afresh over the prerendered markup, since its first view differs; the page still paints early. Peak and range pages are not prerendered (about 380 pages of mostly data): they keep their link-preview shells and render in the browser.
+- **The app starts after the first paint** on prerendered pages (`public/boot.js`). On a slow connection the page is readable a little before it is interactive, in exchange for an early, stable first paint (and LCP).
+- **Lighthouse locally:** `npm run lighthouse` serves the production build with `vite preview` and the seed-backed local API, so its figures are a floor for the deployed site rather than a measurement of it.
 - **Icon substitutions:** `terrain` is now only a legacy alias of `landscape`, and `filter_hdr` is not in the current canonical set. They are replaced by `landscape_2` and `mountain_flag` where the specification suggested them.
 - **Nav includes Dhahabu:** the nav order follows §1 of the specification (Home · Countries · Harim · Dhahabu · History · Contemporary Africa).
 - **Local database:** tests run SQL against **PGlite** (Postgres in WebAssembly), so neither local work nor CI needs a database server. Real data is loaded into Neon.
@@ -515,7 +547,7 @@ v1 milestones (stop points for review are marked ⏸):
 14. ✅ Dhahabu data ⏸ ([coverage matrix](data/gold_coverage_matrix.md), [review report](data/gold_review_report.md); reviewed 2026-10-18)
 15. ✅ Dhahabu API, table, band and live ribbon ⏸
 16. ✅ Dhahabu map, charts and drawer
-17. Polish, Lighthouse and deployment
+17. ✅ Polish, Lighthouse and deployment (prerender, Lighthouse ≥ 90, deployment guide; the first deploy waits for the owner's Netlify login)
 
 **Not in v1:**
 

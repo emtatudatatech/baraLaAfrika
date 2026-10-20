@@ -136,7 +136,11 @@ export function GoldStatsBand({
       )}
 
       {stats === null && resource.status === 'loading' && (
-        <BandSkeleton isPhone={isPhone} count={10} hero={4} />
+        <BandSkeleton
+          count={11}
+          hero={4}
+          heights={{ phone: '18.25rem', hero: '19.75rem', compact: '16.5rem' }}
+        />
       )}
 
       {stats !== null && stats.length > 0 && (

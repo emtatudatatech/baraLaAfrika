@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router';
+import type { RouteObject } from 'react-router';
 
 import type { RouteDataHandle } from '../features/coverage/routeData';
 import { InitialLoad } from './InitialLoad';
@@ -36,7 +36,11 @@ export const ROUTE_DATA = {
   },
 } as const satisfies Record<string, RouteDataHandle>;
 
-export const router = createBrowserRouter([
+/**
+ * The route table, shared by the browser router (main.tsx) and the build's prerender
+ * (entry-server.tsx).
+ */
+export const routes: RouteObject[] = [
   {
     path: '/',
     Component: Layout,
@@ -94,4 +98,4 @@ export const router = createBrowserRouter([
       },
     ],
   },
-]);
+];

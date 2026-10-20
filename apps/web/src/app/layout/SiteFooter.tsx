@@ -32,7 +32,8 @@ export function SiteFooter() {
       </div>
       <div className={styles.bottomBar} data-testid="footer-brand">
         {/* The visitor's current year, so the notice never goes stale. */}
-        <p>{strings.footer.copyright(new Date().getFullYear())}</p>
+        {/* The build's year in a prerendered page may be last year's: the browser's wins. */}
+        <p suppressHydrationWarning>{strings.footer.copyright(new Date().getFullYear())}</p>
         <p className={styles.builtIn}>
           {strings.footer.builtIn}
           <img

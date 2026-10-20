@@ -1,4 +1,4 @@
-import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import { type ReactNode, useCallback, useEffect, useMemo, useSyncExternalStore } from 'react';
 
 import {
   type Theme,
@@ -10,23 +10,34 @@ import {
 } from '../../lib/theme';
 import { ThemeContext } from './themeContext';
 
-function initialTheme(): Theme {
-  // index.html has already set data-theme before first paint; start from it.
+/** The theme on the page: index.html's bootstrap sets data-theme before the first paint. */
+function currentTheme(): Theme {
   const fromDom = document.documentElement.dataset.theme;
   return isTheme(fromDom) ? fromDom : (storedTheme() ?? systemTheme());
 }
 
+function subscribe(onChange: () => void): () => void {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  return () => {
+    observer.disconnect();
+  };
+}
+
+/**
+ * The theme follows <html data-theme>. Prerendered pages are built in light and hydrate as
+ * light (the server snapshot); the page's CSS already follows data-theme, so only the toggle's
+ * label catches up, right after hydration.
+ */
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(initialTheme);
+  const theme = useSyncExternalStore(subscribe, currentTheme, () => 'light' as const);
 
   // Follow the system setting until the user makes an explicit choice.
   useEffect(() => {
     const query = window.matchMedia('(prefers-color-scheme: dark)');
     const onChange = () => {
       if (storedTheme() !== null) return;
-      const next = systemTheme();
-      applyTheme(next, { animate: true });
-      setTheme(next);
+      applyTheme(systemTheme(), { animate: true });
     };
     query.addEventListener('change', onChange);
     return () => {
@@ -38,7 +49,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const next: Theme = theme === 'dark' ? 'light' : 'dark';
     persistTheme(next);
     applyTheme(next, { animate: true });
-    setTheme(next);
   }, [theme]);
 
   const value = useMemo(() => ({ theme, toggleTheme }), [theme, toggleTheme]);

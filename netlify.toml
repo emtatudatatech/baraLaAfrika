@@ -34,10 +34,11 @@
   to = "/.netlify/functions/:splat"
   status = 200
 
-# SPA fallback (after real files and the API).
+# SPA fallback (after real files and the API). index.html is the prerendered home page, so
+# every other path without a page of its own gets the plain app (app.html, written by the build).
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/app.html"
   status = 200
 
 [[headers]]
@@ -53,6 +54,11 @@
 # HTML: always revalidate so new deploys are picked up immediately.
 [[headers]]
   for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/app.html"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 

@@ -4,6 +4,7 @@ import { Icon } from '../../components/Icon/Icon';
 import { minWidthQuery } from '../../lib/breakpoints';
 import { cx } from '../../lib/cx';
 import { strings } from '../../lib/strings';
+import { useMediaQuery } from '../../lib/useMediaQuery';
 import styles from './GeologyCard.module.css';
 
 const text = strings.harim.geology;
@@ -13,13 +14,17 @@ const text = strings.harim.geology;
  * corrected and checked against the cited articles. Open on larger screens, collapsed on phones.
  */
 export function GeologyCard() {
-  const [open, setOpen] = useState(() => window.matchMedia(minWidthQuery('md')).matches);
+  // Open on larger screens unless the reader closes it. The prerendered page has no screen, so
+  // it hydrates closed and opens straight after.
+  const wide = useMediaQuery(minWidthQuery('md'));
+  const [chosen, setChosen] = useState<boolean | null>(null);
+  const open = chosen ?? wide;
   return (
     <details
       className={cx('glass', styles.card)}
       open={open}
       onToggle={(event) => {
-        setOpen(event.currentTarget.open);
+        if (event.currentTarget.open !== open) setChosen(event.currentTarget.open);
       }}
       data-testid="harim-geology"
     >

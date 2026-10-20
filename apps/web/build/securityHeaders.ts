@@ -38,7 +38,8 @@ export function contentSecurityPolicy(scriptHashes: readonly string[]): string {
 export function securityHeadersPlugin(): Plugin {
   return {
     name: 'bla-security-headers',
-    apply: 'build',
+    // Client builds only (not the prerender's server build).
+    apply: (_config, env) => env.command === 'build' && env.isSsrBuild !== true,
     enforce: 'post',
     generateBundle: {
       // Vite's HTML plugin emits index.html during generateBundle; run after it.

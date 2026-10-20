@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 import {
   ROUTES,
@@ -61,11 +61,12 @@ test('theme toggle persists and is applied before any app script runs', async ({
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
 
   // The inline bootstrap alone (no app JavaScript at all) must apply the stored theme, so there
-  // is no flash of the wrong theme before the bundle loads.
+  // is no flash of the wrong theme before the bundle loads: the prerendered page shows dark.
   await page.route('**/*.js', (route) => route.abort());
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-  await expect(page.locator('#root')).toBeEmpty();
+  await expect(page.locator('html')).not.toHaveAttribute('data-app', 'ready');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Bara La Afrika');
 });
 
 test('follows the system colour scheme when no choice is stored', async ({ page }) => {

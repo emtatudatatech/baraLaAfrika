@@ -12,6 +12,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 
+import { useIsClient } from '../../lib/useIsClient';
 import { placeTooltip } from './placeTooltip';
 import styles from './Tooltip.module.css';
 
@@ -51,6 +52,7 @@ export function useTooltip({ content, placement = 'top' }: UseTooltipOptions): {
   open: boolean;
 } {
   const id = useId();
+  const isClient = useIsClient();
   const [open, setOpen] = useState(false);
   const [trigger, setTrigger] = useState<HTMLElement | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
@@ -147,22 +149,26 @@ export function useTooltip({ content, placement = 'top' }: UseTooltipOptions): {
     },
   };
 
-  const tooltip = createPortal(
-    <div
-      ref={tooltipRef}
-      id={id}
-      role="tooltip"
-      hidden={!open}
-      className={`glass glass--strong ${styles.tooltip}`}
-      onPointerEnter={cancelScheduled}
-      onPointerLeave={() => {
-        schedule(false, CLOSE_DELAY_MS);
-      }}
-    >
-      {content}
-    </div>,
-    document.body,
-  );
+  // The prerendered page has no <body> portal, so the tooltip (hidden until used) mounts once
+  // the page has hydrated; the trigger's aria-describedby points at it from then on.
+  const tooltip = !isClient
+    ? null
+    : createPortal(
+        <div
+          ref={tooltipRef}
+          id={id}
+          role="tooltip"
+          hidden={!open}
+          className={`glass glass--strong ${styles.tooltip}`}
+          onPointerEnter={cancelScheduled}
+          onPointerLeave={() => {
+            schedule(false, CLOSE_DELAY_MS);
+          }}
+        >
+          {content}
+        </div>,
+        document.body,
+      );
 
   return { triggerProps, tooltip, open };
 }

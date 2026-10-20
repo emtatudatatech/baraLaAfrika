@@ -510,3 +510,43 @@
   width: 40%;
   height: 2rem;
 }
+
+/*
+ * The prerendered skeleton (build/prerender.ts) cannot know the screen: a carousel on phones and
+ * the band's grid from 720px, chosen here instead of in script.
+ */
+.responsive > * {
+  min-height: var(--skeleton-phone);
+}
+
+@media (--bp-md) {
+  .responsive {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-inline: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .responsive > * {
+    min-height: var(--skeleton-wide);
+  }
+
+  .responsiveDots {
+    display: none;
+  }
+}
+
+@media (--bp-xl) {
+  .responsive {
+    grid-template-columns: repeat(var(--band-columns, 20), minmax(0, 1fr));
+  }
+
+  .responsive > .hero {
+    grid-column: span var(--band-hero-span, 5);
+  }
+
+  .responsive > .compact {
+    grid-column: span var(--band-compact-span, 4);
+  }
+}

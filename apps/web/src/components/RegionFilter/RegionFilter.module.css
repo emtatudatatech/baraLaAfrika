@@ -46,3 +46,11 @@
   font-variant-numeric: tabular-nums;
   color: var(--color-ink-muted);
 }
+
+/* A count still loading: about two digits wide. */
+.countPending {
+  display: inline-block;
+  width: 1.1em;
+  height: 0.75em;
+  border-radius: var(--radius-xs);
+}

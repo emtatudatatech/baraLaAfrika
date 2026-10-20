@@ -119,7 +119,7 @@ export function StatsBand({ region, regionName, countries, unit, onAction }: Sta
         </div>
       )}
 
-      {stats === null && resource.status === 'loading' && <BandSkeleton isPhone={isPhone} />}
+      {stats === null && resource.status === 'loading' && <BandSkeleton />}
 
       {cards.length > 0 && (
         <Cards

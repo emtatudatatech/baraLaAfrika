@@ -15,6 +15,7 @@ export default tseslint.config(
       '.pytest_cache/**',
       '.ruff_cache/**',
       'apps/web/dist/**',
+      'apps/web/dist-server/**',
       '**/.netlify/**',
       'coverage/**',
       'playwright-report/**',

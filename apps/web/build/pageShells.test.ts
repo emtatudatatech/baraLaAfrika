@@ -1,6 +1,18 @@
 import { describe, expect, it } from 'vitest';
 
-import { harimShells, renderShell, siteOrigin } from './pageShells';
+import type { Rolldown } from 'vite';
+
+import {
+  harimShells,
+  renderShell,
+  robotsTxt,
+  routeAssets,
+  routeModuleOf,
+  siteOrigin,
+  siteShells,
+  sitemapXml,
+  withPreloads,
+} from './pageShells';
 
 const HTML = `<!doctype html><html><head>
     <title>Bara La Afrika</title>
@@ -120,5 +132,65 @@ describe('page shells', () => {
       }),
     ).toBe('https://p.bla.app');
     expect(siteOrigin({})).toBe('');
+  });
+});
+
+describe('route preloads, site shells and the sitemap', () => {
+  const chunk = (fileName: string, facade: string | null, imports: string[], css: string[] = []) =>
+    ({
+      type: 'chunk',
+      fileName,
+      facadeModuleId: facade,
+      isEntry: facade === '/app/src/main.tsx',
+      imports,
+      viteMetadata: { importedCss: new Set(css), importedAssets: new Set() },
+    }) as unknown as Rolldown.OutputChunk;
+  const bundle = {
+    'index.js': chunk('assets/index.js', '/app/src/main.tsx', ['assets/shared.js']),
+    'shared.js': chunk('assets/shared.js', null, []),
+    'home.js': chunk(
+      'assets/HomePage.js',
+      '/app/src/features/map/HomePage.tsx',
+      ['assets/shared.js', 'assets/map.js'],
+      ['assets/HomePage.css'],
+    ),
+    'map.js': chunk('assets/map.js', null, [], ['assets/map.css']),
+    'style.css': { type: 'asset', fileName: 'assets/index.css' },
+  } as unknown as Rolldown.OutputBundle;
+
+  it('preloads a route’s chunks and styles that the entry does not already load', () => {
+    const home = routeAssets(bundle).get('features/map/HomePage.tsx');
+    expect(home).toEqual({
+      js: ['assets/HomePage.js', 'assets/map.js'],
+      css: ['assets/HomePage.css', 'assets/map.css'],
+    });
+    const html = withPreloads('<head></head>', home);
+    expect(html).toContain('<link rel="stylesheet" crossorigin href="/assets/HomePage.css" />');
+    expect(html).toContain('<link rel="modulepreload" crossorigin href="/assets/map.js" />');
+    expect(html).not.toContain('shared.js');
+    expect(withPreloads('<head></head>', undefined)).toBe('<head></head>');
+    // Styles only, for a page that paints without its scripts.
+    const stylesOnly = withPreloads('<head></head>', home, '/', false);
+    expect(stylesOnly).toContain('HomePage.css');
+    expect(stylesOnly).not.toContain('modulepreload');
+  });
+
+  it('maps each shell to its route', () => {
+    expect(routeModuleOf('')).toBe('features/map/HomePage.tsx');
+    expect(routeModuleOf('harim/peaks/mount-kenya')).toBe('features/harim/PeakPage.tsx');
+    expect(routeModuleOf('dhahabu')).toBe('features/dhahabu/DhahabuPage.tsx');
+    expect(routeModuleOf('history')).toBeUndefined();
+    expect(siteShells().map((shell) => [shell.path, shell.image])).toEqual([
+      ['countries', '/og/site.png'],
+      ['dhahabu', '/og/dhahabu.png'],
+    ]);
+  });
+
+  it('writes a sitemap with absolute URLs and points robots.txt at it', () => {
+    const xml = sitemapXml('https://bla.app', ['', 'harim', 'harim/peaks/a&b']);
+    expect(xml).toContain('<loc>https://bla.app/</loc>');
+    expect(xml).toContain('<loc>https://bla.app/harim/peaks/a&amp;b</loc>');
+    expect(robotsTxt('https://bla.app')).toContain('Sitemap: https://bla.app/sitemap.xml');
+    expect(robotsTxt('')).toBe('User-agent: *\nAllow: /\n');
   });
 });

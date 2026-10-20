@@ -240,31 +240,56 @@ export function Definition({ label, definition }: { label: string; definition: s
 }
 
 /** Placeholder cards while the figures load (`hero` large cards, then compact ones). */
+/** The loaded cards' usual heights, so the skeleton holds their place (no layout shift). */
+export interface SkeletonHeights {
+  /** A phone carousel card. */
+  phone: string;
+  /** Wider screens: a hero card and a compact card. */
+  hero: string;
+  compact: string;
+}
+
+const HARIM_HEIGHTS: SkeletonHeights = { phone: '15.75rem', hero: '15.75rem', compact: '16.5rem' };
+
 export function BandSkeleton({
-  isPhone,
   count = 9,
   hero = 4,
+  heights = HARIM_HEIGHTS,
 }: {
-  isPhone: boolean;
   count?: number;
   hero?: number;
+  heights?: SkeletonHeights;
 }) {
+  // The skeleton picks carousel or grid in CSS, not from the screen in script, so the
+  // prerendered page (no screen at build time) and the app render it the same way.
   return (
-    <div
-      className={isPhone ? styles.carousel : styles.grid}
-      aria-hidden="true"
-      data-testid="stats-skeleton"
-    >
-      {Array.from({ length: count }, (_, index) => (
-        <div
-          key={index}
-          className={cx('glass', styles.card, index < hero ? styles.hero : styles.compact)}
-        >
-          <span className={cx('skeleton', styles.skeletonLabel)} />
-          <span className={cx('skeleton', styles.skeletonValue)} />
-          <span className={cx('skeleton', styles.skeletonLabel)} />
-        </div>
-      ))}
-    </div>
+    <>
+      <div
+        className={cx(styles.carousel, styles.responsive)}
+        aria-hidden="true"
+        data-testid="stats-skeleton"
+      >
+        {Array.from({ length: count }, (_, index) => (
+          <div
+            key={index}
+            className={cx('glass', styles.card, index < hero ? styles.hero : styles.compact)}
+            style={{
+              '--skeleton-phone': heights.phone,
+              '--skeleton-wide': index < hero ? heights.hero : heights.compact,
+            }}
+          >
+            <span className={cx('skeleton', styles.skeletonLabel)} />
+            <span className={cx('skeleton', styles.skeletonValue)} />
+            <span className={cx('skeleton', styles.skeletonLabel)} />
+          </div>
+        ))}
+      </div>
+      {/* The carousel's dots take a row on phones; keep it so nothing below moves. */}
+      <div className={cx(styles.dots, styles.responsiveDots)} aria-hidden="true">
+        {Array.from({ length: count }, (_, index) => (
+          <span key={index} className={styles.dot} />
+        ))}
+      </div>
+    </>
   );
 }

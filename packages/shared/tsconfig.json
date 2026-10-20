@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../node_modules/.tsbuild/shared",
+    "rootDir": "../..",
+    "lib": ["ES2023"],
+    "types": [],
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true
+  },
+  "include": ["src", "../../config/*.json"]
+}

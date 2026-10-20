@@ -1,0 +1,222 @@
+.ribbon {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-ribbon);
+  border-radius: 0;
+  font-size: var(--text-sm);
+  padding-top: env(safe-area-inset-top);
+}
+
+.ribbon::before {
+  border-radius: 0;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  max-width: var(--content-max);
+  min-height: var(--touch-target);
+  margin-inline: auto;
+  padding-inline: max(var(--gutter), env(safe-area-inset-left)) max(var(--gutter), env(safe-area-inset-right));
+}
+
+.summary {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.leadIcon {
+  color: var(--color-accent);
+}
+
+.kind {
+  flex: none;
+  font-weight: var(--weight-semibold);
+}
+
+/* Phones show the "as of" date (or a dataset count) on one line; the rest is in the details. */
+.asOf,
+.count {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--color-ink-muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.asOf::before,
+.count::before {
+  content: '·';
+  margin-inline-end: var(--space-2);
+  color: var(--color-ink-subtle);
+}
+
+.asOf {
+  flex: none;
+}
+
+/* Phones on time-series pages: the year control takes the room; the date is in the details. */
+.asOfSeries {
+  display: none;
+}
+
+.datasets {
+  display: none;
+  gap: var(--space-2);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+  color: var(--color-ink-muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.datasets li {
+  flex: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The last dataset absorbs the squeeze, so the refresh time stays readable. */
+.datasets li:nth-last-child(2) {
+  flex: 0 1 auto;
+}
+
+.refreshed {
+  color: var(--color-ink-subtle);
+}
+
+.datasets li::before {
+  content: '·';
+  margin-inline-end: var(--space-2);
+  color: var(--color-ink-subtle);
+}
+
+.expand {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--touch-target);
+  height: var(--touch-target);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+}
+
+.expand:hover {
+  background: var(--color-accent-soft);
+}
+
+.rotated {
+  transform: rotate(180deg);
+}
+
+.details {
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding: 0 var(--gutter) var(--space-4);
+  color: var(--color-ink-muted);
+}
+
+.details p {
+  margin: var(--space-2) 0;
+}
+
+.detailsKind {
+  font-weight: var(--weight-semibold);
+  color: var(--color-ink);
+}
+
+.detailList {
+  display: grid;
+  gap: var(--space-4);
+  margin: var(--space-3) 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dataset {
+  display: grid;
+  align-content: start;
+  gap: var(--space-1);
+}
+
+.datasetName {
+  font-weight: var(--weight-semibold);
+  color: var(--color-ink);
+}
+
+.notLoaded {
+  justify-self: start;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  color: var(--color-warning-ink);
+  background: var(--color-warning-soft);
+}
+
+.fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-5);
+  margin: 0;
+  font-size: var(--text-xs);
+}
+
+.fields div {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.fields dt {
+  font-weight: var(--weight-semibold);
+}
+
+.fields dt::after {
+  content: ':';
+}
+
+.fields dd {
+  margin: 0;
+}
+
+.error {
+  color: var(--color-warning-ink);
+}
+
+.retry {
+  min-height: var(--touch-target);
+  padding: 0 var(--space-3);
+  border: 1px solid currentColor;
+  border-radius: var(--radius-pill);
+  font: inherit;
+  color: inherit;
+  background: transparent;
+}
+
+@media (--bp-md) {
+  .detailList {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+  }
+}
+
+@media (--bp-md) {
+  .count {
+    display: none;
+  }
+
+  .asOfSeries {
+    display: inline;
+  }
+
+  .datasets {
+    display: flex;
+  }
+}

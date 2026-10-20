@@ -1,0 +1,13 @@
+{
+  "name": "@bla/netlify",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "dependencies": {
+    "@neondatabase/serverless": "1.2.0",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@netlify/functions": "6.0.2"
+  }
+}

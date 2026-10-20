@@ -1,0 +1,17 @@
+.tooltip {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-popover);
+  max-width: min(22rem, calc(100vw - 16px));
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+  color: var(--color-ink);
+  overflow-wrap: anywhere;
+}
+
+.tooltip[hidden] {
+  display: none;
+}

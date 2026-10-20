@@ -1,0 +1,119 @@
+name: Data refresh
+
+# Weekly refresh of the pipelines' data into Neon (Netlify scheduled functions are Node-only, so
+# the Python pipelines run here). Flags refresh weekly; the mountain catalogue (Wikidata, GeoNames,
+# the Factbook's final edition) and the gold price, central bank holdings and trade monthly, on
+# the first Monday, or on any manual run. Gold mine production (annual USGS editions) refreshes
+# only on manual runs.
+on:
+  schedule:
+    - cron: '17 3 * * 1' # Mondays 03:17 UTC
+  workflow_dispatch:
+
+concurrency:
+  group: data-refresh
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  refresh:
+    runs-on: ubuntu-24.04
+    env:
+      DATABASE_URL_WRITE: ${{ secrets.DATABASE_URL_WRITE }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0 (no floating major tag is published)
+      - run: sudo apt-get update && sudo apt-get install -y libcairo2
+      - run: uv sync --locked
+
+      - name: Check the write credentials are configured
+        run: |
+          if [ -z "$DATABASE_URL_WRITE" ]; then
+            echo "::error::Set the DATABASE_URL_WRITE repository secret (Settings → Secrets and variables → Actions)."
+            exit 1
+          fi
+
+      - name: Apply migrations
+        run: uv run python -m pipelines migrate
+
+      - name: Refresh flags (Flagpedia)
+        run: uv run python -m pipelines flags --refresh
+
+      # Fails loudly (and stops the load) when upstream changes need a curated decision; the
+      # problems are listed in the log. Fix them in harim_curation.json and commit.
+      - name: Refresh mountains (monthly, or when run by hand)
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "$(date -u +%d)" -le 7 ]; then
+            uv run python -m pipelines mountains --refresh
+          else
+            echo "Not the first Monday of the month; the committed mountain seeds are loaded as they are."
+          fi
+
+      # The gold seeds are regenerated from fresh downloads; validation failures stop the run with a
+      # list of problems (see data/gold_review_report.md for what needs a decision).
+      - name: Refresh gold data (monthly, or when run by hand)
+        env:
+          COMTRADE_API_KEY: ${{ secrets.COMTRADE_API_KEY }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "$(date -u +%d)" -le 7 ]; then
+            uv run python -m pipelines gold-price --refresh
+            uv run python -m pipelines gold-official-reserves --refresh
+            if [ -n "$COMTRADE_API_KEY" ]; then
+              uv run python -m pipelines gold-trade --refresh
+            else
+              echo "::warning::Set the COMTRADE_API_KEY repository secret to refresh gold trade."
+            fi
+            if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+              uv run python -m pipelines gold-production --refresh
+            fi
+            uv run python -m pipelines gold-presence
+            uv run python -m pipelines gold-profiles
+          else
+            echo "Not the first Monday of the month; the committed gold seeds are loaded as they are."
+          fi
+
+      - name: Flag changes to committed seeds for review
+        id: seeds
+        run: |
+          if git diff --quiet -- db/seeds data/region_colors_report.md data/mountains_review_report.md data/gold_coverage_matrix.md data/gold_review_report.md; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "::warning::Upstream data changed the generated seeds; download the 'refreshed-data' artifact, review data/region_colors_report.md, data/mountains_review_report.md and data/gold_review_report.md, and commit the changes."
+            git diff --stat -- db/seeds data
+          fi
+
+      - name: Upload refreshed seeds and reports
+        if: steps.seeds.outputs.changed == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: refreshed-data
+          path: |
+            db/seeds
+            data/region_colors_report.md
+            data/region_colors
+            data/mountains_review_report.md
+            data/gold_coverage_matrix.md
+            data/gold_review_report.md
+          retention-days: 30
+
+      - name: Load into Neon
+        id: load
+        run: uv run python -m pipelines load
+
+      - name: Dataset freshness
+        run: uv run python -m pipelines status
+
+      - name: Trigger a Netlify rebuild when data changed
+        if: steps.load.outputs.changed == 'true'
+        env:
+          NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+        run: |
+          if [ -n "$NETLIFY_BUILD_HOOK" ]; then
+            curl --fail --silent --show-error -X POST -d '{}' "$NETLIFY_BUILD_HOOK"
+            echo "Triggered a Netlify build."
+          else
+            echo "Data changed; NETLIFY_BUILD_HOOK is not set, so no rebuild was triggered."
+          fi

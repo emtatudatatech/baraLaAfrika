@@ -1,0 +1,2075 @@
+{
+  "$comment": "Human curation layered on top of the PDF extraction. Every entry here is a reviewed judgement, listed in data/review_report.md. 'segments' maps each country's prose sentences (0-based, as split by text.split_sentences) to profile fields; a sentence may serve several fields. 'sentence_count' pins the split so a changed PDF fails loudly instead of drifting.",
+  "animal_status_rules": [
+    "inferred: the document says the animal is inferred or that no national animal is codified.",
+    "de_facto: the document says 'de facto', or presents the animal as the national animal without tying it to a state emblem, a legal act or an official statement.",
+    "sports_nickname: the document's only stated or cited basis is a national football team nickname (including when its sole citation is the CAF nicknames list, ref 19).",
+    "official: the document ties the animal to a state emblem (coat of arms, seal or flag) or calls it official.",
+    "contested: the record lists two or more animals with different bases, or the document's stated basis looks wrong."
+  ],
+  "countries": {
+    "DZA": {
+      "sentence_count": 8,
+      "segments": {
+        "etymology": [
+          0,
+          1
+        ],
+        "flag_design": [
+          2,
+          3,
+          4
+        ],
+        "national_symbol": [
+          5
+        ],
+        "national_animal": [
+          5,
+          6,
+          7
+        ]
+      },
+      "animal_status": "de_facto",
+      "animal_status_reason": "Called the national animal and the football team's nickname; no state emblem or legal act is cited."
+    },
+    "EGY": {
+      "sentence_count": 6,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2,
+          3
+        ],
+        "national_symbol": [
+          3,
+          4
+        ],
+        "national_animal": [
+          5
+        ]
+      },
+      "animal_status": "de_facto",
+      "animal_status_reason": "The Steppe Eagle 'is considered' the national animal as the species behind the Eagle of Saladin emblem."
+    },
+    "LBY": {
+      "sentence_count": 6,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2,
+          3
+        ],
+        "national_symbol": [
+          4
+        ],
+        "national_animal": [
+          5
+        ]
+      },
+      "animal_status": "de_facto",
+      "animal_status_reason": "The document says 'de facto national animal'."
+    },
+    "MRT": {
+      "sentence_count": 6,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2
+        ],
+        "national_symbol": [
+          3
+        ],
+        "national_animal": [
+          4,
+          5
+        ]
+      },
+      "animal_status": "inferred",
+      "animal_status_reason": "The document says Mauritania has no legally codified national animal and infers the camel."
+    },
+    "MAR": {
+      "sentence_count": 6,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2
+        ],
+        "national_symbol": [
+          3
+        ],
+        "national_animal": [
+          4,
+          5
+        ]
+      },
+      "animal_status": "de_facto",
+      "animal_status_reason": "Grounded in royal iconography and folklore; the only citation is the football nicknames list."
+    },
+    "TUN": {
+      "sentence_count": 7,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2,
+          3
+        ],
+        "national_symbol": [
+          4
+        ],
+        "national_animal": [
+          5,
+          6
+        ]
+      },
+      "animal_status": "de_facto",
+      "animal_status_reason": "The Barbary Horse is called the national animal without an emblem basis; the eagle is a cultural and football symbol."
+    },
+    "BEN": {
+      "sentence_count": 6,
+      "segments": {
+        "etymology": [
+          0,
+          1
+        ],
+        "flag_design": [
+          2
+        ],
+        "national_symbol": [
+          4,
+          5
+        ],
+        "national_animal": [
+          3,
+          4,
+          5
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "Two leopards support the current national coat of arms (reviewed 2026-10-15)."
+    },
+    "BFA": {
+      "sentence_count": 7,
+      "segments": {
+        "etymology": [
+          0,
+          1
+        ],
+        "flag_design": [
+          2,
+          3
+        ],
+        "national_symbol": [
+          4,
+          6
+        ],
+        "national_animal": [
+          4,
+          5,
+          6
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "Two white stallions support the state coat of arms."
+    },
+    "CPV": {
+      "sentence_count": 8,
+      "segments": {
+        "etymology": [
+          0,
+          1
+        ],
+        "flag_design": [
+          2,
+          3,
+          4
+        ],
+        "national_symbol": [
+          5
+        ],
+        "national_animal": [
+          6,
+          7
+        ]
+      },
+      "animal_status": "sports_nickname",
+      "animal_status_reason": "Derived from the national football team's nickname, Tubarões Azuis (Blue Sharks)."
+    },
+    "CIV": {
+      "sentence_count": 5,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2
+        ],
+        "national_symbol": [
+          3,
+          4
+        ],
+        "national_animal": [
+          3,
+          4
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "The elephant head is the central feature of the state coat of arms."
+    },
+    "GMB": {
+      "sentence_count": 8,
+      "segments": {
+        "etymology": [
+          0,
+          1
+        ],
+        "flag_design": [
+          2,
+          3,
+          4
+        ],
+        "national_symbol": [
+          5
+        ],
+        "national_animal": [
+          6,
+          7
+        ]
+      },
+      "animal_status": "contested",
+      "animal_status_reason": "Two animals with different bases: the hyena from folklore, the scorpion from the football team's nickname."
+    },
+    "GHA": {
+      "sentence_count": 7,
+      "segments": {
+        "etymology": [
+          0,
+          1
+        ],
+        "flag_design": [
+          2,
+          3
+        ],
+        "national_symbol": [
+          3,
+          4
+        ],
+        "national_animal": [
+          5,
+          6
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "Two tawny eagles support the national coat of arms."
+    },
+    "GIN": {
+      "sentence_count": 5,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1
+        ],
+        "national_symbol": [
+          3
+        ],
+        "national_animal": [
+          2,
+          3,
+          4
+        ]
+      },
+      "animal_status": "de_facto",
+      "animal_status_reason": "Featured on the 1960 (historical) coat of arms and in the football team's name, Syli National."
+    },
+    "GNB": {
+      "sentence_count": 6,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2
+        ],
+        "national_symbol": [
+          3
+        ],
+        "national_animal": [
+          4,
+          5
+        ]
+      },
+      "animal_status": "sports_nickname",
+      "animal_status_reason": "The only citation is the CAF football nicknames list (the team is known as the Djurtus, wild dogs); no other basis is given."
+    },
+    "LBR": {
+      "sentence_count": 5,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1
+        ],
+        "national_symbol": [
+          2
+        ],
+        "national_animal": [
+          3,
+          4
+        ]
+      },
+      "animal_status": "de_facto",
+      "animal_status_reason": "Called the national animal without an emblem or legal basis."
+    },
+    "MLI": {
+      "sentence_count": 6,
+      "segments": {
+        "etymology": [
+          0,
+          1
+        ],
+        "flag_design": [
+          2
+        ],
+        "national_symbol": [
+          3
+        ],
+        "national_animal": [
+          4,
+          5
+        ]
+      },
+      "animal_status": "sports_nickname",
+      "animal_status_reason": "The document says the symbol 'defaults to' the eagle, the namesake of the football team, The Eagles."
+    },
+    "NER": {
+      "sentence_count": 7,
+      "segments": {
+        "etymology": [
+          0,
+          1
+        ],
+        "flag_design": [
+          2,
+          3
+        ],
+        "national_symbol": [
+          4
+        ],
+        "national_animal": [
+          5,
+          6
+        ]
+      },
+      "animal_status": "de_facto",
+      "animal_status_reason": "Called the national animal on conservation grounds; no emblem or legal basis given."
+    },
+    "NGA": {
+      "sentence_count": 6,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2
+        ],
+        "national_symbol": [
+          3,
+          4
+        ],
+        "national_animal": [
+          4,
+          5
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "A red eagle sits atop the national coat of arms."
+    },
+    "SEN": {
+      "sentence_count": 6,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1
+        ],
+        "national_symbol": [
+          2
+        ],
+        "national_animal": [
+          3,
+          4,
+          5
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "The lion is part of the national emblem."
+    },
+    "SLE": {
+      "sentence_count": 4,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1
+        ],
+        "national_symbol": [
+          2
+        ],
+        "national_animal": [
+          3
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "The lion is part of the national symbol (coat of arms)."
+    },
+    "TGO": {
+      "sentence_count": 5,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2
+        ],
+        "national_symbol": [
+          4
+        ],
+        "national_animal": [
+          3,
+          4
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "Two red lions are supporters on the national coat of arms."
+    },
+    "AGO": {
+      "sentence_count": 8,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "national_symbol": [
+          3,
+          4
+        ],
+        "national_animal": [
+          5,
+          6,
+          7
+        ]
+      },
+      "animal_status": "de_facto",
+      "animal_status_reason": "Widely used on currency, stamps and passports; no legal designation is cited."
+    },
+    "CMR": {
+      "sentence_count": 6,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2
+        ],
+        "national_symbol": [
+          2
+        ],
+        "national_animal": [
+          3,
+          4,
+          5
+        ]
+      },
+      "animal_status": "sports_nickname",
+      "animal_status_reason": "The lion is not on the coat of arms (the document's stated basis was wrong); the remaining basis is the football team's nickname, the Indomitable Lions (reviewed 2026-10-15)."
+    },
+    "CAF": {
+      "sentence_count": 6,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2,
+          3
+        ],
+        "national_symbol": [],
+        "national_animal": [
+          4,
+          5
+        ]
+      },
+      "animal_status": "contested",
+      "animal_status_reason": "Two animals with different bases: the forest elephant (ecological), the big cats (the football team's nickname, Les Fauves)."
+    },
+    "TCD": {
+      "sentence_count": 7,
+      "segments": {
+        "etymology": [
+          0,
+          1
+        ],
+        "flag_design": [
+          2,
+          3,
+          4
+        ],
+        "national_symbol": [
+          5
+        ],
+        "national_animal": [
+          5,
+          6
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "A goat supports the shield on the national coat of arms."
+    },
+    "COG": {
+      "sentence_count": 6,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2
+        ],
+        "national_symbol": [
+          3
+        ],
+        "national_animal": [
+          4,
+          5
+        ]
+      },
+      "animal_status": "inferred",
+      "animal_status_reason": "The table marks the leopard '(Inferred)' and the prose says there is no formal statutory animal."
+    },
+    "COD": {
+      "sentence_count": 7,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2
+        ],
+        "national_symbol": [
+          3,
+          4,
+          5
+        ],
+        "national_animal": [
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "A leopard head appears on the current coat of arms; the okapi is described as an additional natural symbol."
+    },
+    "GNQ": {
+      "sentence_count": 5,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2,
+          3
+        ],
+        "national_symbol": [
+          3
+        ],
+        "national_animal": [
+          4
+        ]
+      },
+      "animal_status": "contested",
+      "animal_status_reason": "No established national animal was found; the document's giraffe and hornbill claims are doubtful (reviewed 2026-10-15)."
+    },
+    "GAB": {
+      "sentence_count": 8,
+      "segments": {
+        "etymology": [
+          0,
+          1
+        ],
+        "flag_design": [
+          2,
+          3
+        ],
+        "national_symbol": [
+          4
+        ],
+        "national_animal": [
+          5,
+          6,
+          7
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "Two black panthers support the national coat of arms (reviewed 2026-10-15)."
+    },
+    "STP": {
+      "sentence_count": 4,
+      "segments": {
+        "etymology": [
+          0,
+          1
+        ],
+        "flag_design": [
+          2
+        ],
+        "national_symbol": [
+          3
+        ],
+        "national_animal": [
+          3
+        ]
+      },
+      "animal_status": "inferred",
+      "animal_status_reason": "The table marks the falcon '(Inferred)'; the prose only says a falcon and a parrot support the coat of arms."
+    },
+    "BDI": {
+      "sentence_count": 5,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1
+        ],
+        "national_symbol": [
+          1
+        ],
+        "national_animal": [
+          2,
+          3,
+          4
+        ]
+      },
+      "animal_status": "contested",
+      "animal_status_reason": "Two animals with different bases: the lion is on the coat of arms; the hyena rests on low-reliability sources."
+    },
+    "COM": {
+      "sentence_count": 5,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1
+        ],
+        "national_symbol": [
+          1
+        ],
+        "national_animal": [
+          2,
+          3,
+          4
+        ]
+      },
+      "animal_status": "sports_nickname",
+      "animal_status_reason": "The only citation is the CAF football nicknames list (Les Cœlacanthes); no other basis is given."
+    },
+    "DJI": {
+      "sentence_count": 4,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2
+        ],
+        "national_symbol": [
+          2
+        ],
+        "national_animal": [
+          3
+        ]
+      },
+      "animal_status": "inferred",
+      "animal_status_reason": "The document says no official animal is codified and infers the camel."
+    },
+    "ERI": {
+      "sentence_count": 5,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2
+        ],
+        "national_symbol": [
+          3
+        ],
+        "national_animal": [
+          3,
+          4
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "The camel is the national emblem."
+    },
+    "ETH": {
+      "sentence_count": 6,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2,
+          3
+        ],
+        "national_symbol": [
+          3
+        ],
+        "national_animal": [
+          4,
+          5
+        ]
+      },
+      "animal_status": "contested",
+      "animal_status_reason": "Two animals with different bases: the lion (traditional and imperial), the Walia ibex (a modern symbol)."
+    },
+    "KEN": {
+      "sentence_count": 6,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2,
+          3
+        ],
+        "national_symbol": [
+          3
+        ],
+        "national_animal": [
+          4,
+          5
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "Two lions support the national coat of arms (reviewed 2026-10-15)."
+    },
+    "MDG": {
+      "sentence_count": 5,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2
+        ],
+        "national_symbol": [
+          3
+        ],
+        "national_animal": [
+          4
+        ]
+      },
+      "animal_status": "inferred",
+      "animal_status_reason": "The table marks the zebu and lemur '(Inferred)' and the prose says there is no formal declaration."
+    },
+    "MWI": {
+      "sentence_count": 5,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2
+        ],
+        "national_symbol": [
+          2,
+          3
+        ],
+        "national_animal": [
+          4
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "Both animals are described as part of the national coat of arms (but see known issues on its supporters)."
+    },
+    "MUS": {
+      "sentence_count": 5,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1
+        ],
+        "national_symbol": [
+          2
+        ],
+        "national_animal": [
+          3,
+          4
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "The dodo is a supporter on the national coat of arms (reviewed 2026-10-15)."
+    },
+    "RWA": {
+      "sentence_count": 5,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2
+        ],
+        "national_symbol": [],
+        "national_animal": [
+          3,
+          4
+        ]
+      },
+      "animal_status": "contested",
+      "animal_status_reason": "Two animals with different bases: the leopard (heraldic), the mountain gorilla (a conservation symbol)."
+    },
+    "SYC": {
+      "sentence_count": 5,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2,
+          3
+        ],
+        "national_symbol": [],
+        "national_animal": [
+          4
+        ]
+      },
+      "animal_status": "inferred",
+      "animal_status_reason": "The table marks the giant tortoise '(Inferred)'."
+    },
+    "SOM": {
+      "sentence_count": 5,
+      "segments": {
+        "etymology": [
+          0,
+          1
+        ],
+        "flag_design": [
+          2,
+          3
+        ],
+        "national_symbol": [
+          3
+        ],
+        "national_animal": [
+          4
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "Two leopards support the national coat of arms."
+    },
+    "SSD": {
+      "sentence_count": 4,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2
+        ],
+        "national_symbol": [
+          3
+        ],
+        "national_animal": [
+          3
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "The fish eagle adorns the national seal."
+    },
+    "SDN": {
+      "sentence_count": 5,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2
+        ],
+        "national_symbol": [
+          3
+        ],
+        "national_animal": [
+          3,
+          4
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "A secretary bird bearing a shield forms the national emblem; the table's order was corrected to match the prose (reviewed 2026-10-15)."
+    },
+    "TZA": {
+      "sentence_count": 6,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2
+        ],
+        "national_symbol": [
+          3
+        ],
+        "national_animal": [
+          4,
+          5
+        ]
+      },
+      "animal_status": "de_facto",
+      "animal_status_reason": "Called the national animal; cited only to social-media posts."
+    },
+    "UGA": {
+      "sentence_count": 4,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2
+        ],
+        "national_symbol": [
+          2
+        ],
+        "national_animal": [
+          2,
+          3
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "The grey crowned crane is on the national flag and described as the supreme national symbol."
+    },
+    "BWA": {
+      "sentence_count": 7,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2,
+          3
+        ],
+        "national_symbol": [
+          6
+        ],
+        "national_animal": [
+          4,
+          5,
+          6
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "Two zebras support the national coat of arms."
+    },
+    "SWZ": {
+      "sentence_count": 4,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2
+        ],
+        "national_symbol": [
+          2
+        ],
+        "national_animal": [
+          3
+        ]
+      },
+      "animal_status": "inferred",
+      "animal_status_reason": "The table marks the lion and elephant '(Inferred)'."
+    },
+    "LSO": {
+      "sentence_count": 6,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2,
+          3
+        ],
+        "national_symbol": [
+          2
+        ],
+        "national_animal": [
+          4,
+          5
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "A crocodile is the charge on the shield of the national coat of arms (reviewed 2026-10-15)."
+    },
+    "MOZ": {
+      "sentence_count": 5,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2,
+          3
+        ],
+        "national_symbol": [
+          2,
+          3
+        ],
+        "national_animal": [
+          4
+        ]
+      },
+      "animal_status": "contested",
+      "animal_status_reason": "Two animals with different bases: the elephant (a natural symbol), the mamba (the football team's nickname, Os Mambas)."
+    },
+    "NAM": {
+      "sentence_count": 5,
+      "segments": {
+        "etymology": [
+          0,
+          1
+        ],
+        "flag_design": [
+          2,
+          3
+        ],
+        "national_symbol": [
+          2
+        ],
+        "national_animal": [
+          4
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "Two oryx (gemsbok) support the national coat of arms (reviewed 2026-10-15)."
+    },
+    "ZAF": {
+      "sentence_count": 9,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "national_symbol": [
+          5,
+          8
+        ],
+        "national_animal": [
+          6,
+          7
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "Listed as the national animal among South Africa's official national symbols (reviewed 2026-10-15)."
+    },
+    "ZMB": {
+      "sentence_count": 5,
+      "segments": {
+        "etymology": [
+          0
+        ],
+        "flag_design": [
+          1,
+          2
+        ],
+        "national_symbol": [
+          1
+        ],
+        "national_animal": [
+          3,
+          4
+        ]
+      },
+      "animal_status": "official",
+      "animal_status_reason": "The document calls it the 'official national animal'; it also appears on the flag."
+    },
+    "ZWE": {
+      "sentence_count": 5,
+      "segments": {
+        "etymology": [
+          0,
+          1
+        ],
+        "flag_design": [
+          2
+        ],
+        "national_symbol": [
+          3
+        ],
+        "national_animal": [
+          4
+        ]
+      },
+      "animal_status": "de_facto",
+      "animal_status_reason": "Called the national animal without an emblem or legal basis."
+    }
+  },
+  "known_issues": [
+    {
+      "iso3": "COD",
+      "field": "etymology",
+      "severity": "high",
+      "source": "spec",
+      "note": "The table gives 'Republic of the Mountain/River' but the prose says the name means 'River swallowing rivers'. The two glosses disagree, and neither is sourced beyond an aggregator (ref 4).",
+      "resolution": "corrected"
+    },
+    {
+      "iso3": "BEN",
+      "field": "etymology",
+      "severity": "medium",
+      "source": "spec",
+      "note": "The table mixes two unrelated explanations ('Bight of Benin / Vexation'). The Yoruba 'Ile-ibinu' ('Land of Vexation') gloss is shaky folk etymology, cited to an aggregator.",
+      "resolution": "corrected"
+    },
+    {
+      "iso3": "MLI",
+      "field": "etymology",
+      "severity": "medium",
+      "source": "spec",
+      "note": "'Mali' meaning 'hippopotamus' is stated as fact but is contested; other proposed meanings include 'where the king resides'.",
+      "resolution": "corrected"
+    },
+    {
+      "iso3": "RWA",
+      "field": "flag_design",
+      "severity": "high",
+      "source": "spec",
+      "note": "The prose says the pre-2001 flag was red-black-green. It was a red, yellow and green tricolour with a black 'R'.",
+      "resolution": "corrected"
+    },
+    {
+      "iso3": "GNQ",
+      "field": "national_animal",
+      "severity": "high",
+      "source": "spec",
+      "note": "The Silvery-cheeked Hornbill is not typical of Equatorial Guinea. Separately (found during extraction), giraffes are not native to Equatorial Guinea, so the claim that it 'reveres the Giraffe as a national animal' (ref 31) is implausible.",
+      "resolution": "corrected"
+    },
+    {
+      "iso3": "ZAF",
+      "field": "flag_design",
+      "severity": "medium",
+      "source": "spec",
+      "note": "The flag colour 'meanings' are presented as official, but the South African government gives no official symbolism for the colours. The source is a fan wiki (ref 38).",
+      "resolution": "corrected"
+    },
+    {
+      "iso3": "LBY",
+      "field": "flag_design",
+      "severity": "medium",
+      "source": "spec",
+      "note": "The flag colour meanings are presented as official but are informal readings, and no source is cited.",
+      "resolution": "corrected"
+    },
+    {
+      "iso3": "TGO",
+      "field": "flag_design",
+      "severity": "low",
+      "source": "spec",
+      "note": "The claim that the Togolese layout 'deliberately mimics the Liberian flag' is a stretch and has no source.",
+      "resolution": "corrected"
+    },
+    {
+      "iso3": "CMR",
+      "field": "national_animal",
+      "severity": "high",
+      "source": "found",
+      "note": "The document says Cameroon's coat of arms 'features the lion'. The coat of arms (a shield with a map of Cameroon, the scales of justice and crossed fasces) has no lion.",
+      "resolution": "corrected"
+    },
+    {
+      "iso3": "DZA",
+      "field": "etymology",
+      "severity": "low",
+      "source": "found",
+      "note": "The document says the islands off Algiers were joined to the mainland in 1525, but Spain held the Peñón of Algiers until Hayreddin Barbarossa captured it in 1529.",
+      "resolution": "corrected"
+    },
+    {
+      "iso3": "SEN",
+      "field": "etymology",
+      "severity": "low",
+      "source": "found",
+      "note": "The Wolof phrase is printed 'Il sunu gaol' and given as the origin. The phrase is 'sunuu gaal' ('our canoe'), one of several proposed origins for the Senegal River's name (others: the Zenaga/Sanhaja people, Serer words).",
+      "resolution": "corrected"
+    },
+    {
+      "iso3": "COM",
+      "field": "national_animal",
+      "severity": "low",
+      "source": "found",
+      "note": "The first modern coelacanth was caught off South Africa (1938); a Comoros specimen followed in 1952. The prose implies the rediscovery happened off the Comoros.",
+      "resolution": "corrected"
+    },
+    {
+      "iso3": "MWI",
+      "field": "national_animal",
+      "severity": "medium",
+      "source": "found",
+      "note": "The prose says the coat of arms is 'supported by a Fish Eagle and a Leopard'. Its supporters are a lion and a leopard, with a fish eagle as the crest.",
+      "resolution": "corrected"
+    },
+    {
+      "iso3": "ETH",
+      "field": "flag_design",
+      "severity": "low",
+      "source": "found",
+      "note": "'The only African nation to avoid full European colonization' omits Liberia, the other African country never fully colonised, and Italy's rule of Ethiopia in 1936-1941.",
+      "resolution": "corrected"
+    },
+    {
+      "iso3": "SDN",
+      "field": "national_animal",
+      "severity": "medium",
+      "source": "found",
+      "note": "The table lists 'Nile Crocodile / Sec. Bird' (crocodile first), but the prose names the Secretary Bird as the national animal.",
+      "resolution": "corrected"
+    },
+    {
+      "iso3": "STP",
+      "field": "national_animal",
+      "severity": "medium",
+      "source": "found",
+      "note": "The prose has no national-animal sentence; the falcon comes only from the table ('Falcon (Inferred)') and the coat-of-arms sentence.",
+      "resolution": "open"
+    },
+    {
+      "iso3": "CAF",
+      "field": "national_symbol",
+      "severity": "low",
+      "source": "found",
+      "note": "The table's national symbol 'Star and Hand' is not described anywhere in the prose.",
+      "resolution": "open"
+    },
+    {
+      "iso3": "RWA",
+      "field": "national_symbol",
+      "severity": "low",
+      "source": "found",
+      "note": "The table's national symbol 'Sun and Sorghum' is not described anywhere in the prose.",
+      "resolution": "open"
+    },
+    {
+      "iso3": "SYC",
+      "field": "national_symbol",
+      "severity": "low",
+      "source": "found",
+      "note": "The table's national symbol 'Giant Tortoise Shield' is not described anywhere in the prose.",
+      "resolution": "open"
+    },
+    {
+      "iso3": "ZAF",
+      "field": "national_symbol",
+      "severity": "low",
+      "source": "found",
+      "note": "The motto was printed '!ke e:/xarra //ke', with slashes and a colon in place of the ǀXam click letters and length mark; the official form is 'ǃke e꞉ ǀxarra ǁke'.",
+      "resolution": "corrected"
+    },
+    {
+      "iso3": "ZAF",
+      "field": "national_animal",
+      "severity": "low",
+      "source": "found",
+      "note": "The springbok is listed as the national animal among South Africa's official national symbols (not stated in the document), so the status is official.",
+      "resolution": "status_changed"
+    },
+    {
+      "iso3": "MUS",
+      "field": "national_animal",
+      "severity": "low",
+      "source": "found",
+      "note": "The dodo is a supporter on the coat of arms of Mauritius (not stated in the document), so the status is official.",
+      "resolution": "status_changed"
+    },
+    {
+      "iso3": "LSO",
+      "field": "national_animal",
+      "severity": "low",
+      "source": "found",
+      "note": "A crocodile (koena) is the charge on the shield of Lesotho's coat of arms (not stated in the document), so the status is official.",
+      "resolution": "status_changed"
+    },
+    {
+      "iso3": "NAM",
+      "field": "national_animal",
+      "severity": "low",
+      "source": "found",
+      "note": "Two oryx (gemsbok) support Namibia's coat of arms (not stated in the document), so the status is official.",
+      "resolution": "status_changed"
+    },
+    {
+      "iso3": "KEN",
+      "field": "national_animal",
+      "severity": "low",
+      "source": "found",
+      "note": "Two lions support Kenya's coat of arms (not stated in the document), so the status is official.",
+      "resolution": "status_changed"
+    },
+    {
+      "iso3": "GAB",
+      "field": "national_animal",
+      "severity": "low",
+      "source": "found",
+      "note": "Two black panthers support Gabon's coat of arms (not stated in the document), so the status is official.",
+      "resolution": "status_changed"
+    },
+    {
+      "iso3": "BEN",
+      "field": "national_animal",
+      "severity": "low",
+      "source": "found",
+      "note": "Two leopards support Benin's current coat of arms (not stated in the document), so the status is official.",
+      "resolution": "status_changed"
+    },
+    {
+      "iso3": "LBR",
+      "field": "national_animal",
+      "severity": "low",
+      "source": "found",
+      "note": "The document says Liberia holds 'the largest remaining wild chimpanzee population in West Africa'. Liberia is one of three countries (with Guinea and Sierra Leone) with the largest remaining populations, not the single largest.",
+      "resolution": "corrected"
+    },
+    {
+      "iso3": "GMB",
+      "field": "etymology",
+      "severity": "low",
+      "source": "found",
+      "note": "The Portuguese 'Exchange' derivation and the 'Kambra = river' gloss are unsupported; early sources record only the name forms Gambra and Cambra.",
+      "resolution": "corrected"
+    }
+  ],
+  "correction_sources": [
+    {
+      "source_key": "wikipedia-coat-of-arms-of-cameroon",
+      "title": "Coat of arms of Cameroon - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Coat_of_arms_of_Cameroon"
+    },
+    {
+      "source_key": "wikipedia-coat-of-arms-of-malawi",
+      "title": "Coat of arms of Malawi - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Coat_of_arms_of_Malawi"
+    },
+    {
+      "source_key": "wikipedia-flag-of-rwanda",
+      "title": "Flag of Rwanda - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Flag_of_Rwanda"
+    },
+    {
+      "source_key": "wikipedia-penon-of-algiers",
+      "title": "Peñón of Algiers - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Pe%C3%B1%C3%B3n_of_Algiers"
+    },
+    {
+      "source_key": "wikipedia-coelacanth",
+      "title": "Coelacanth - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Coelacanth"
+    },
+    {
+      "source_key": "wikipedia-zaire",
+      "title": "Zaire - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Zaire"
+    },
+    {
+      "source_key": "wikipedia-coat-of-arms-of-mauritius",
+      "title": "Coat of arms of Mauritius - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Coat_of_arms_of_Mauritius"
+    },
+    {
+      "source_key": "wikipedia-coat-of-arms-of-lesotho",
+      "title": "Coat of arms of Lesotho - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Coat_of_arms_of_Lesotho"
+    },
+    {
+      "source_key": "wikipedia-coat-of-arms-of-namibia",
+      "title": "Coat of arms of Namibia - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Coat_of_arms_of_Namibia"
+    },
+    {
+      "source_key": "wikipedia-coat-of-arms-of-kenya",
+      "title": "Coat of arms of Kenya - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Coat_of_arms_of_Kenya"
+    },
+    {
+      "source_key": "wikipedia-coat-of-arms-of-gabon",
+      "title": "Coat of arms of Gabon - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Coat_of_arms_of_Gabon"
+    },
+    {
+      "source_key": "wikipedia-coat-of-arms-of-benin",
+      "title": "Coat of arms of Benin - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Coat_of_arms_of_Benin"
+    },
+    {
+      "source_key": "wikipedia-flag-of-south-africa",
+      "title": "Flag of South Africa - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Flag_of_South_Africa"
+    },
+    {
+      "source_key": "wikipedia-coat-of-arms-of-south-africa",
+      "title": "Coat of arms of South Africa - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Coat_of_arms_of_South_Africa"
+    },
+    {
+      "source_key": "wikipedia-national-symbols-of-south-africa",
+      "title": "National symbols of South Africa - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/National_symbols_of_South_Africa"
+    },
+    {
+      "source_key": "wikipedia-emblem-of-sudan",
+      "title": "Emblem of Sudan - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Emblem_of_Sudan"
+    },
+    {
+      "source_key": "wikipedia-senegal",
+      "title": "Senegal - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Senegal"
+    },
+    {
+      "source_key": "wikipedia-mali",
+      "title": "Mali - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Mali"
+    },
+    {
+      "source_key": "wikipedia-benin",
+      "title": "Benin - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Benin"
+    },
+    {
+      "source_key": "wikipedia-gambia-river",
+      "title": "Gambia River - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Gambia_River"
+    },
+    {
+      "source_key": "wikipedia-flag-of-libya",
+      "title": "Flag of Libya - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Flag_of_Libya"
+    },
+    {
+      "source_key": "wikipedia-ethiopia",
+      "title": "Ethiopia - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Ethiopia"
+    },
+    {
+      "source_key": "wikipedia-western-chimpanzee",
+      "title": "Western chimpanzee - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Western_chimpanzee"
+    },
+    {
+      "source_key": "wikipedia-giraffe",
+      "title": "Giraffe - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Giraffe"
+    },
+    {
+      "source_key": "wikipedia-list-of-national-animals",
+      "title": "List of national animals - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/List_of_national_animals"
+    },
+    {
+      "source_key": "wikipedia-flag-of-morocco",
+      "title": "Flag of Morocco - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Flag_of_Morocco"
+    }
+  ],
+  "$comment_corrections": "Corrections to the document's text, each verified against the listed reference source on 2026-10-15. 'replace' must match the extracted text exactly (extraction fails otherwise); 'append' adds a sentence. The source is linked to the field as a citation.",
+  "corrections": {
+    "DZA": [
+      {
+        "field": "etymology_detail",
+        "replace": "before being joined to the mainland in 1525.",
+        "with": "before being joined to the mainland after Hayreddin Barbarossa captured the Peñón of Algiers in 1529.",
+        "reason": "The Peñón was held by Spain until Barbarossa captured it in 1529, so the islands cannot have been joined to the mainland in 1525.",
+        "source_key": "wikipedia-penon-of-algiers"
+      }
+    ],
+    "BEN": [
+      {
+        "field": "etymology_summary",
+        "replace": "Bight of Benin / Vexation",
+        "with": "Bight of Benin",
+        "reason": "The 'vexation' gloss is unsupported; the 1975 name comes from the Bight of Benin.",
+        "source_key": "wikipedia-benin"
+      },
+      {
+        "field": "etymology_detail",
+        "replace": "The Yoruba root Ile-ibinu roughly translates to \"Land of Vexation\".",
+        "with": "The change also replaced \"Dahomey\", a name associated only with the Fon people of the south.",
+        "reason": "The Yoruba 'Ile-ibinu' ('land of vexation') gloss has no support in reference sources; replaced with the documented reason for the renaming.",
+        "source_key": "wikipedia-benin"
+      },
+      {
+        "field": "national_animal_detail",
+        "append": "Two leopards support the current national coat of arms.",
+        "reason": "Adds the emblem basis.",
+        "source_key": "wikipedia-coat-of-arms-of-benin"
+      }
+    ],
+    "GMB": [
+      {
+        "field": "etymology_summary",
+        "replace": "Exchange / River Gambia",
+        "with": "River Gambia",
+        "reason": "The Portuguese 'exchange' derivation is unsupported.",
+        "source_key": "wikipedia-gambia-river"
+      },
+      {
+        "field": "etymology_detail",
+        "replace": "The river's name is believed to originate from the Mandinka word Kambra (river) or a Portuguese translation for \"Exchange,\" reflecting the area's early trade dynamics.",
+        "with": "Early European visitors recorded the river's name as Gambra or Cambra (Alvise Cadamosto, 1455); its origin is uncertain.",
+        "reason": "Neither the 'Kambra = river' nor the 'exchange' derivation is supported; the reference source records only the early name forms.",
+        "source_key": "wikipedia-gambia-river"
+      }
+    ],
+    "MLI": [
+      {
+        "field": "etymology_detail",
+        "append": "The hippopotamus was the clan symbol of the Keita dynasty, and the name later came to mean \"the place where the king lives\"; another theory derives it from a Fulani pronunciation of the name of the Mande peoples.",
+        "reason": "The 'hippopotamus' meaning is supported as the original sense, but the alternatives were missing.",
+        "source_key": "wikipedia-mali"
+      }
+    ],
+    "SEN": [
+      {
+        "field": "etymology_summary",
+        "replace": "Our Boat",
+        "with": "Senegal River (origin debated)",
+        "reason": "The 'our boat' gloss is one of several proposals for the river's name.",
+        "source_key": "wikipedia-senegal"
+      },
+      {
+        "field": "etymology_detail",
+        "replace": "Senegal derives its name from the Wolof phrase Il sunu gaol, meaning \"Our Boat,\" reflecting the importance of riverine navigation, though it is also linked directly to the Senegal River.",
+        "with": "Senegal takes its name from the Senegal River, whose name has several proposed origins: the Wolof phrase sunuu gaal (\"our canoe\"), suggested by David Boilat; a Portuguese rendering of the name of the Zenaga (Sanhaja) people; or Serer words.",
+        "reason": "The Wolof phrase was misspelled ('Il sunu gaol') and presented as the established origin; it is one of several proposals.",
+        "source_key": "wikipedia-senegal"
+      }
+    ],
+    "TGO": [
+      {
+        "field": "flag_design_detail",
+        "replace": "The layout deliberately mimics the Liberian flag, while utilizing",
+        "with": "The layout resembles the Liberian flag, while utilizing",
+        "reason": "No source supports a deliberate imitation; the resemblance is kept as an observation.",
+        "source_key": null
+      }
+    ],
+    "LBR": [
+      {
+        "field": "national_animal_detail",
+        "replace": "hold the largest remaining wild chimpanzee population in West Africa",
+        "with": "hold one of the largest remaining wild chimpanzee populations in West Africa, alongside Guinea and Sierra Leone",
+        "reason": "Liberia is one of three countries with the largest remaining western chimpanzee populations, not the single largest.",
+        "source_key": "wikipedia-western-chimpanzee"
+      }
+    ],
+    "LBY": [
+      {
+        "field": "flag_design_detail",
+        "replace": "The red represents the blood of those who died under fascist rule in the 1920s and 1930s, the black represents the dark days of Italian occupation, and the green represents agriculture, wealth, and the future.",
+        "with": "According to its designer, Omar Faiek Shennib, the red stands for the blood sacrificed for Libya's freedom, the black for the dark days of Italian occupation, and the green for agricultural wealth and future prosperity; these meanings are not defined in law.",
+        "reason": "The colour meanings were presented as official; they are the designer's account.",
+        "source_key": "wikipedia-flag-of-libya"
+      }
+    ],
+    "CMR": [
+      {
+        "field": "national_animal_detail",
+        "replace": "The coat of arms features the lion, and the world-renowned football team is famously dubbed the \"Indomitable Lions\" because a lion represents strength that cannot be defeated or subjugated.",
+        "with": "The lion does not appear on the national coat of arms; the association comes from the world-renowned football team, famously dubbed the \"Indomitable Lions\" because a lion represents strength that cannot be defeated or subjugated.",
+        "reason": "The coat of arms of Cameroon (a shield with a map of Cameroon, scales of justice and crossed fasces) has no lion.",
+        "source_key": "wikipedia-coat-of-arms-of-cameroon"
+      }
+    ],
+    "COD": [
+      {
+        "field": "etymology_summary",
+        "replace": "Republic of the Mountain/River",
+        "with": "Congo River (Kongo Kingdom)",
+        "reason": "The table's gloss is unsupported and contradicted the prose.",
+        "source_key": "wikipedia-zaire"
+      },
+      {
+        "field": "etymology_detail",
+        "replace": "Democratic Republic of the Congo (DRC) shares the same etymological root as its neighbor, deriving from the Kongo River, which translates roughly to \"River swallowing rivers\".",
+        "with": "Democratic Republic of the Congo (DRC) shares the same etymological root as its neighbor: the Congo River, named after the Kongo Kingdom. The gloss \"river that swallows rivers\" (Kikongo nzere) belongs to the river's other name, which gave the country its former name, Zaire.",
+        "reason": "'River swallowing rivers' is the etymology of 'Zaire', not of 'Congo'.",
+        "source_key": "wikipedia-zaire"
+      }
+    ],
+    "GNQ": [
+      {
+        "field": "national_animal_name",
+        "replace": "Giraffe / Hornbill",
+        "with": "Not established",
+        "reason": "No established national animal was found; the document's two claims are doubtful.",
+        "source_key": "wikipedia-list-of-national-animals"
+      },
+      {
+        "field": "national_animal_detail",
+        "replace": "Biologically, the country identifies with the Silvery-cheeked Hornbill due to its distinctive presence in the canopy, but uniquely reveres the Giraffe as a national animal, acting as a cultural symbol of nobility, grace, and economic prestige.",
+        "with": "No established national animal was found in the sources checked. The research document's claims are doubtful: it says the country identifies with the Silvery-cheeked Hornbill, a species not typical of Equatorial Guinea, and reveres the Giraffe as a national animal, but giraffes do not occur in Equatorial Guinea.",
+        "reason": "Giraffes are not found in Equatorial Guinea, and the country has no listed national animal.",
+        "source_key": "wikipedia-giraffe"
+      }
+    ],
+    "RWA": [
+      {
+        "field": "flag_design_detail",
+        "replace": "the previous red-black-green flag",
+        "with": "the previous flag (a red, yellow and green tricolour with a black \"R\")",
+        "reason": "The 1961-2001 flag was red, yellow and green with a black 'R', not red-black-green.",
+        "source_key": "wikipedia-flag-of-rwanda"
+      }
+    ],
+    "COM": [
+      {
+        "field": "national_animal_detail",
+        "replace": "until it was spectacularly rediscovered in the deep waters off the Comorian coast.",
+        "with": "until a living specimen was caught off South Africa in 1938; a specimen from Comorian waters followed in 1952.",
+        "reason": "The first modern coelacanth was found off South Africa (1938); the Comoros specimen came in 1952.",
+        "source_key": "wikipedia-coelacanth"
+      }
+    ],
+    "ETH": [
+      {
+        "field": "flag_design_detail",
+        "replace": "As the only African nation to avoid full European colonization, its flag",
+        "with": "As one of only two African nations, with Liberia, never fully colonised (despite Italian rule in 1936–1941), its flag",
+        "reason": "Liberia was also never colonised, and Italy ruled Ethiopia from 1936 to 1941.",
+        "source_key": "wikipedia-ethiopia"
+      }
+    ],
+    "MWI": [
+      {
+        "field": "national_animal_detail",
+        "replace": "The national coat of arms is supported by a Fish Eagle and a Leopard, representing the dominant predators of both the aquatic lake ecosystem and the terrestrial highlands.",
+        "with": "The national coat of arms is supported by a lion and a leopard and crested by a fish eagle; the fish eagle and leopard represent the dominant predators of the aquatic lake ecosystem and the terrestrial highlands.",
+        "reason": "The supporters are a lion and a leopard; the fish eagle is the crest.",
+        "source_key": "wikipedia-coat-of-arms-of-malawi"
+      }
+    ],
+    "SDN": [
+      {
+        "field": "national_animal_name",
+        "replace": "Nile Crocodile / Sec. Bird",
+        "with": "Secretary Bird / Nile Crocodile",
+        "reason": "The prose names the secretary bird as the national animal; the table listed the crocodile first.",
+        "source_key": "wikipedia-emblem-of-sudan"
+      },
+      {
+        "field": "national_animal_detail",
+        "append": "A secretary bird bearing a shield forms the national emblem.",
+        "reason": "Adds the emblem basis for the secretary bird.",
+        "source_key": "wikipedia-emblem-of-sudan"
+      }
+    ],
+    "ZAF": [
+      {
+        "field": "flag_design_detail",
+        "replace": "The colors themselves amalgamate the banners of the ANC and the old Boer republics: red (bloodshed), white (Europeans/peace), green (fertility), yellow (mineral wealth), black (native people), and blue (opportunities/sky).",
+        "with": "Popular readings link the colours to the banners of the ANC and the old Boer republics, but the government states that no universal symbolism should be attached to any of the colours.",
+        "reason": "The colour meanings were presented as official; the government attaches no symbolism to the colours.",
+        "source_key": "wikipedia-flag-of-south-africa"
+      },
+      {
+        "field": "national_symbol_detail",
+        "replace": "the motto !ke e:/xarra //ke in the extinct Khoisan language",
+        "with": "the motto ǃke e꞉ ǀxarra ǁke in the extinct ǀXam language",
+        "reason": "The motto was printed with slashes in place of the ǀXam click letters.",
+        "source_key": "wikipedia-coat-of-arms-of-south-africa"
+      },
+      {
+        "field": "national_animal_detail",
+        "append": "The springbok is listed as the national animal among South Africa's official national symbols.",
+        "reason": "Adds the official basis.",
+        "source_key": "wikipedia-national-symbols-of-south-africa"
+      }
+    ],
+    "MUS": [
+      {
+        "field": "national_animal_detail",
+        "append": "The dodo is a supporter on the national coat of arms.",
+        "reason": "Adds the emblem basis.",
+        "source_key": "wikipedia-coat-of-arms-of-mauritius"
+      }
+    ],
+    "LSO": [
+      {
+        "field": "national_animal_detail",
+        "append": "A crocodile (koena) is the charge on the shield of the national coat of arms.",
+        "reason": "Adds the emblem basis.",
+        "source_key": "wikipedia-coat-of-arms-of-lesotho"
+      }
+    ],
+    "NAM": [
+      {
+        "field": "national_animal_detail",
+        "append": "Two oryx (gemsbok) support the national coat of arms.",
+        "reason": "Adds the emblem basis.",
+        "source_key": "wikipedia-coat-of-arms-of-namibia"
+      }
+    ],
+    "KEN": [
+      {
+        "field": "national_animal_detail",
+        "append": "Two lions support the national coat of arms.",
+        "reason": "Adds the emblem basis.",
+        "source_key": "wikipedia-coat-of-arms-of-kenya"
+      }
+    ],
+    "GAB": [
+      {
+        "field": "national_animal_detail",
+        "append": "Two black panthers support the national coat of arms.",
+        "reason": "Adds the emblem basis.",
+        "source_key": "wikipedia-coat-of-arms-of-gabon"
+      }
+    ]
+  },
+  "etymology_categories": {
+    "DZA": [
+      "geographic_feature",
+      "high",
+      "Named for islands off Algiers."
+    ],
+    "EGY": [
+      "colonial_or_translation",
+      "medium",
+      "A Greek rendering of an Egyptian temple name (Hwt-ka-Ptah)."
+    ],
+    "LBY": [
+      "ethnic_group",
+      "high",
+      "From the Libu people."
+    ],
+    "MRT": [
+      "ethnic_group",
+      "high",
+      "From the Mauri (Moors)."
+    ],
+    "MAR": [
+      "colonial_or_translation",
+      "medium",
+      "A Portuguese corruption of Marrakesh; the Arabic name is geographic ('the farthest west')."
+    ],
+    "TUN": [
+      "colonial_or_translation",
+      "medium",
+      "Named after the capital, Tunis; the name took its Latinate form ('Tunisia') in the French protectorate era. No category covers a city name exactly."
+    ],
+    "BEN": [
+      "geographic_feature",
+      "high",
+      "Named after the Bight of Benin (1975), itself named after the Kingdom of Benin."
+    ],
+    "BFA": [
+      null,
+      "high",
+      "An ideological name ('land of upright people'); none of the four categories fits."
+    ],
+    "CPV": [
+      "colonial_or_translation",
+      "high",
+      "The document's introduction gives Cabo Verde as an example of this category."
+    ],
+    "CIV": [
+      "colonial_or_translation",
+      "high",
+      "The French colonial trade name ('Ivory Coast')."
+    ],
+    "GMB": [
+      "geographic_feature",
+      "high",
+      "Named after the Gambia River."
+    ],
+    "GHA": [
+      "kingdom_or_ruler",
+      "high",
+      "The document's introduction gives Ghana as an example (the Ghana Empire)."
+    ],
+    "GIN": [
+      "colonial_or_translation",
+      "medium",
+      "A Portuguese term for the region ('land of the Black people')."
+    ],
+    "GNB": [
+      "colonial_or_translation",
+      "medium",
+      "'Guinea' (colonial regional name) plus the capital, Bissau."
+    ],
+    "LBR": [
+      "colonial_or_translation",
+      "medium",
+      "Latin liber ('free'), coined by the American colonisation society."
+    ],
+    "MLI": [
+      "kingdom_or_ruler",
+      "high",
+      "The Mali Empire (the document's introduction gives Mali as an example)."
+    ],
+    "NER": [
+      "geographic_feature",
+      "high",
+      "The document's introduction gives Niger as an example (the river)."
+    ],
+    "NGA": [
+      "colonial_or_translation",
+      "medium",
+      "Coined by the British journalist Flora Shaw from the Niger River."
+    ],
+    "SEN": [
+      "geographic_feature",
+      "high",
+      "Named after the Senegal River (the river's own name has several proposed origins)."
+    ],
+    "SLE": [
+      "colonial_or_translation",
+      "high",
+      "Portuguese Serra Leoa ('lion mountains')."
+    ],
+    "TGO": [
+      "geographic_feature",
+      "high",
+      "Named for Lake Togo / Togoville ('water', 'lake')."
+    ],
+    "AGO": [
+      "kingdom_or_ruler",
+      "high",
+      "The document's introduction gives Angola as an example (the Ngola title)."
+    ],
+    "CMR": [
+      "colonial_or_translation",
+      "high",
+      "The document's introduction gives Cameroon as an example (Rio dos Camarões)."
+    ],
+    "CAF": [
+      "geographic_feature",
+      "high",
+      "Self-descriptive geographic name."
+    ],
+    "TCD": [
+      "geographic_feature",
+      "high",
+      "The document's introduction gives Chad as an example (the lake)."
+    ],
+    "COG": [
+      "geographic_feature",
+      "high",
+      "The Congo River, itself named after the Kongo Kingdom."
+    ],
+    "COD": [
+      "geographic_feature",
+      "high",
+      "The Congo River, itself named after the Kongo Kingdom."
+    ],
+    "GNQ": [
+      "geographic_feature",
+      "high",
+      "The Equator plus the Guinea region."
+    ],
+    "GAB": [
+      "colonial_or_translation",
+      "high",
+      "Portuguese Gabão ('cloak')."
+    ],
+    "STP": [
+      "colonial_or_translation",
+      "high",
+      "Portuguese names after Saint Thomas and the Prince of Portugal."
+    ],
+    "BDI": [
+      "ethnic_group",
+      "high",
+      "'Land of the Rundi'."
+    ],
+    "COM": [
+      "geographic_feature",
+      "medium",
+      "Arabic for 'islands of the moon'."
+    ],
+    "DJI": [
+      null,
+      "high",
+      "The etymology is debated (Afar 'plate', 'doormat'); no category can be assigned with confidence."
+    ],
+    "ERI": [
+      "geographic_feature",
+      "high",
+      "Greek for the Red Sea."
+    ],
+    "ETH": [
+      "colonial_or_translation",
+      "medium",
+      "A Greek exonym (Aithiopia)."
+    ],
+    "KEN": [
+      "geographic_feature",
+      "high",
+      "The document's introduction gives Kenya as an example (Mount Kenya)."
+    ],
+    "MDG": [
+      "colonial_or_translation",
+      "high",
+      "The document's introduction gives Madagascar as an example (Marco Polo's error)."
+    ],
+    "MWI": [
+      "geographic_feature",
+      "high",
+      "Lake Malawi ('flaming water')."
+    ],
+    "MUS": [
+      "colonial_or_translation",
+      "high",
+      "Named by Dutch sailors after Prince Maurice of Nassau."
+    ],
+    "RWA": [
+      "kingdom_or_ruler",
+      "medium",
+      "Continues the name of the pre-colonial Kingdom of Rwanda ('land' or 'domain' in Kinyarwanda)."
+    ],
+    "SYC": [
+      "colonial_or_translation",
+      "high",
+      "Named by the French after a minister, Moreau de Séchelles."
+    ],
+    "SOM": [
+      "ethnic_group",
+      "high",
+      "Named after the Somali people."
+    ],
+    "SSD": [
+      "geographic_feature",
+      "high",
+      "A geographic descriptor (south of Sudan)."
+    ],
+    "SDN": [
+      "ethnic_group",
+      "medium",
+      "Arabic Bilad as-Sudan ('land of the Black people')."
+    ],
+    "TZA": [
+      "geographic_feature",
+      "low",
+      "A portmanteau of Tanganyika (the lake and territory) and Zanzibar."
+    ],
+    "UGA": [
+      "ethnic_group",
+      "high",
+      "The document's introduction gives Uganda as an example (the Ganda)."
+    ],
+    "BWA": [
+      "ethnic_group",
+      "high",
+      "The document's introduction gives Botswana as an example (the Tswana)."
+    ],
+    "SWZ": [
+      "ethnic_group",
+      "high",
+      "'Place of the Swazi'."
+    ],
+    "LSO": [
+      "ethnic_group",
+      "high",
+      "The document's introduction gives Lesotho as an example (the Sotho)."
+    ],
+    "MOZ": [
+      "kingdom_or_ruler",
+      "high",
+      "Named after the ruler Musa Ben Mbiki."
+    ],
+    "NAM": [
+      "geographic_feature",
+      "high",
+      "The Namib Desert."
+    ],
+    "ZAF": [
+      "geographic_feature",
+      "high",
+      "A geographic descriptor."
+    ],
+    "ZMB": [
+      "geographic_feature",
+      "high",
+      "The Zambezi River."
+    ],
+    "ZWE": [
+      "kingdom_or_ruler",
+      "medium",
+      "Great Zimbabwe ('houses of stone'), capital of a historic kingdom."
+    ]
+  },
+  "$comment_etymology": "Etymology categories reviewed on 2026-10-15 and applied to the data: [category or null, confidence, reasoning]. Null means none of the four categories fits.",
+  "retracted_issues": [
+    {
+      "iso3": "MAR",
+      "field": "flag_design",
+      "note": "I had flagged 'the Seal of Solomon' as a popular reading not in the 1915 flag decree. That was wrong: Sultan Yusef's 1915 dahir itself calls the star 'the five-pointed seal of Solomon'. The document's text is kept unchanged.",
+      "source_key": "wikipedia-flag-of-morocco"
+    }
+  ],
+  "$comment_issues": "Each known issue has a resolution: corrected (text fixed, see 'corrections'), status_changed (animal_status changed), or open (still needs your review)."
+}

@@ -1,0 +1,869 @@
+{
+  "$comment": "Curation for `python -m pipelines mountains` (see harim_reconcile.py for the rules). Every text claim has a `source` URL and a `quote`; the run re-checks each quote against the cached source and fails if it is missing. Edit, re-run, review data/mountains_review_report.md.",
+  "baseline": {
+    "ref": "318dee97501fae44ef95c8008d4957d9a7526ef0"
+  },
+  "factbook": {
+    "ref": "783ed27f7a1116663c10e7b39d162d0c4500505d"
+  },
+  "selection": {
+    "candidate_limit": 80,
+    "always_include_m": 3000,
+    "notable_per_country": 8,
+    "notable_min_sitelinks": 3,
+    "notable_min_prominence_m": 500,
+    "subsidiary_km": 1.5,
+    "match_km": 10,
+    "border_tolerance_km": 5,
+    "island_tolerance_km": 15,
+    "agree_m": 10,
+    "review_m": 10,
+    "low_m": 50,
+    "priority": [
+      "wikidata",
+      "factbook",
+      "wikipedia",
+      "geonames",
+      "harim-prototype"
+    ]
+  },
+  "island_states": [
+    "CPV",
+    "STP",
+    "COM",
+    "MUS",
+    "SYC",
+    "MDG",
+    "GNQ"
+  ],
+  "exclude_classes": {
+    "Q46831": "mountain range",
+    "Q1437459": "non-geologically related mountain range",
+    "Q2624046": "mountain chain",
+    "Q75520": "plateau",
+    "Q878223": "highland",
+    "Q519105": "volcanic field",
+    "Q1174791": "escarpment",
+    "Q1970725": "natural region",
+    "Q3502482": "cultural region",
+    "Q184358": "reef",
+    "Q34763": "peninsula",
+    "Q23397": "lake",
+    "Q532": "village",
+    "Q3957": "town",
+    "Q486972": "human settlement",
+    "Q34442": "road",
+    "Q22698": "park",
+    "Q130003": "ski resort",
+    "Q182676": "mountain hut",
+    "Q17362920": "Wikimedia duplicated page"
+  },
+  "exclude_label_pattern": "\\b(mountains|mounts|monts|range|hills|highlands|plateau|escarpment|falaise|badlands|field|craters|bank|reef|massif|atlas|ridge)\\b",
+  "exclude": {},
+  "include": {},
+  "labels": {
+    "Q31396286": {
+      "name": "Vittorio Emanuele",
+      "reason": "The cited source's spelling (Wikidata's label is \"Victorio Emanuele\")."
+    },
+    "Q31396294": {
+      "name": "Edward Peak",
+      "reason": "The name in the cited source (Wikidata's label is \"Edward\")."
+    }
+  },
+  "baseline_matches": {
+    "harim.html|Mount Kilimanjaro (Kibo Peak)": "Q7296",
+    "harim.html|Mount Kenya (Batian Peak)": "Q172070",
+    "harim.html|Margherita Peak (Rwenzori Mountains)": "Q1895254",
+    "harim.html|Mount Meru": "Q309098",
+    "harim.html|Ras Dashen (Simien Mountains)": "Q275435",
+    "harim.html|Mount Karisimbi (Virunga Mountains)": "Q737859",
+    "harim.html|Mount Elgon": "Q732838",
+    "harim.html|Jebel Toubkal (Atlas Mountains)": "Q503433",
+    "harim.html|Mount Guna": "Q3779780",
+    "harim.html|Mount Cameroon": "Q190562",
+    "harim.html|M'Goun (Atlas Mountains)": "Q3050555",
+    "harim.html|Thabana Ntlenyana (Drakensberg)": "Q733132",
+    "harim.html|Mount Nyiragongo": "Q214696",
+    "harim.html|Emi Koussi (Tibesti Mountains)": "Q257441",
+    "harim.html|Mount Kinyeti": "Q948298",
+    "harim.html|Piton des Neiges": "Q1545452",
+    "harim.html|Jebel Marra (Deriba Caldera)": "Q2520348",
+    "harim.html|Mount Oku": "Q3322001",
+    "harim.html|Cathedral Peak (Drakensberg)": "Q1050879",
+    "harim.html|Sapitwa Peak (Mount Mulanje)": "Q3044073",
+    "harim.html|Tahat (Hoggar Mountains)": "Q822326",
+    "harim.html|Maromokotro (Tsaratanana Massif)": "Q1147144",
+    "harim.html|Pico do Fogo": "Q499108",
+    "harim.html|Mount Catherine": "Q1140642",
+    "harim.html|Mount Heha": "Q1649074",
+    "harim.html|Morro de Moco": "Q1348116",
+    "harim.html|Mount Nyangani": "Q152294",
+    "harim.html|Emba Soira": "Q1753730",
+    "harim.html|Mount Brandberg (Königstein)": "Q897834",
+    "harim.html|Bikku Bitti": "Q860146",
+    "harim.html|Chappal Waddi": "Q976055",
+    "harim.html|Pico de São Tomé": "Q1471391",
+    "harim.html|Lalla Khedidja": "Q3216533",
+    "harim.html|Mount Karthala": "Q527548",
+    "harim.html|Mount Bintumani (Loma Mansa)": "Q769525",
+    "harim.html|Monte Binga": "Q1353678",
+    "harim.html|Mont Nimba": "Q849129",
+    "harim.html|Pico Basile": "Q1518286",
+    "harim.html|Jebel Chambi": "Q1232136",
+    "harim.html|Mafinga Central": "Q18351462",
+    "README.md|Mount Kilimanjaro": "Q7296",
+    "README.md|Mount Kenya": "Q172070",
+    "README.md|Mount Stanley (Margherita Peak)": "Q221666",
+    "README.md|Mount Speke": "Q838875",
+    "README.md|Mount Baker": "Q253593",
+    "README.md|Mount Emin": "Q31567866",
+    "README.md|Mount Gessi": "Q10589781",
+    "README.md|Mount Luigi di Savoia": "Q1564286",
+    "README.md|Mount Meru": "Q309098",
+    "README.md|Ras Dashen": "Q275435",
+    "README.md|Mount Karisimbi": "Q737859",
+    "README.md|Mount Elgon (Wagagai Peak)": "Q732838",
+    "README.md|Toubkal": "Q503433",
+    "README.md|Mount Guna": "Q3779780",
+    "README.md|Mount Cameroon": "Q190562"
+  },
+  "merges": [
+    {
+      "qid": "Q20727403",
+      "into": "Q1394606",
+      "reason": "Uhuru Peak is the highest point of Kibo's crater rim; the catalogue has two levels (massif and summit), so it is recorded as Kibo's summit point.",
+      "source": "https://en.wikipedia.org/wiki/Mount_Kilimanjaro",
+      "quote": "Uhuru Peak is the highest summit on Kibo's crater rim"
+    }
+  ],
+  "massifs": [
+    {
+      "qid": "Q7296",
+      "radius_km": 12,
+      "top": "Q1394606",
+      "summits": [
+        "Q1394606",
+        "Q1283494",
+        "Q1516876"
+      ],
+      "source": "https://en.wikipedia.org/wiki/Mount_Kilimanjaro",
+      "quote": "composed of three distinct volcanic cones: Kibo, the highest"
+    },
+    {
+      "qid": "Q172070",
+      "radius_km": 3,
+      "top": "Q810817",
+      "summits": [
+        "Q810817",
+        "Q27193041",
+        "Q27195323"
+      ],
+      "source": "https://en.wikipedia.org/wiki/Mount_Kenya",
+      "quote": "the mountain's highest peaks are Batian (5,199 m), Nelion (5,188 m), and Point Lenana (4,985 m)"
+    },
+    {
+      "qid": "Q221666",
+      "radius_km": 1.5,
+      "top": "Q1895254",
+      "summits": [
+        "Q1895254"
+      ],
+      "source": "https://en.wikipedia.org/wiki/Rwenzori_Mountains",
+      "quote": "Mount Stanley has several subsidiary summits, with Margherita Peak being the highest point."
+    },
+    {
+      "qid": "Q838875",
+      "radius_km": 1.5,
+      "top": "Q31396286",
+      "summits": [
+        "Q31396286"
+      ],
+      "source": "https://en.wikipedia.org/wiki/Mount_Speke",
+      "quote": "Mount Speke's summits are Vittorio Emanuele 4,890 m",
+      "notes": [
+        "Its other summits in the cited source (Ensonga 4,865 m, Johnston 4,834 m, Trident 4,572 m) have no mapped coordinates, so they are not listed separately."
+      ]
+    },
+    {
+      "qid": "Q253593",
+      "radius_km": 1.5,
+      "top": "Q31396294",
+      "summits": [
+        "Q31396294"
+      ],
+      "source": "https://en.wikipedia.org/wiki/Mount_Baker_(Uganda)",
+      "quote": "Like all peaks in the Ruwenzori Range, Mount Baker has multiple jagged peaks along a ridge. The highest is Edward Peak."
+    },
+    {
+      "qid": "Q732838",
+      "radius_km": 8,
+      "top": "Q31525942",
+      "summits": [
+        "Q31525942"
+      ],
+      "source": "https://en.wikipedia.org/wiki/Mount_Elgon",
+      "quote": "The mountain's highest point, named \"Wagagai\", is located entirely within Uganda.",
+      "notes": [
+        "Its other major peaks in the cited source (Sudek 4,302 m, Koitobos 4,222 m, Mubiyi 4,211 m, Masaba 4,161 m) have no mapped coordinates, so they are not listed separately."
+      ]
+    },
+    {
+      "qid": "Q1510436",
+      "radius_km": 8,
+      "top": "Q3044073",
+      "summits": [
+        "Q3044073"
+      ],
+      "source": "https://en.wikipedia.org/wiki/Mount_Mulanje",
+      "quote": "Sapitwa Peak, the highest point on the massif at 3,002 m, is the highest point in Malawi."
+    },
+    {
+      "qid": "Q897834",
+      "radius_km": 6,
+      "top": "Q1796472",
+      "summits": [
+        "Q1796472"
+      ],
+      "source": "https://en.wikipedia.org/wiki/Brandberg_Mountain",
+      "quote": "With its highest point, the Königstein (German for 'King's Stone'), standing at 2,573 m"
+    }
+  ],
+  "elevations": [
+    {
+      "qid": "Q27193041",
+      "metres": 5188,
+      "source": "https://en.wikipedia.org/wiki/Mount_Kenya",
+      "quote": "Nelion (5,188 m)"
+    },
+    {
+      "qid": "Q27195323",
+      "metres": 4985,
+      "source": "https://en.wikipedia.org/wiki/Mount_Kenya",
+      "quote": "Point Lenana (4,985 m)"
+    },
+    {
+      "qid": "Q1283494",
+      "metres": 5149,
+      "source": "https://en.wikipedia.org/wiki/Mount_Kilimanjaro",
+      "quote": "Mawenzi at 5,149 m"
+    },
+    {
+      "qid": "Q1516876",
+      "metres": 4005,
+      "source": "https://en.wikipedia.org/wiki/Mount_Kilimanjaro",
+      "quote": "Shira, the lowest at 4,005 m"
+    },
+    {
+      "qid": "Q31396286",
+      "metres": 4890,
+      "source": "https://en.wikipedia.org/wiki/Mount_Speke",
+      "quote": "Vittorio Emanuele 4,890 m"
+    },
+    {
+      "qid": "Q31396294",
+      "metres": 4844,
+      "source": "https://en.wikipedia.org/wiki/Mount_Baker_(Uganda)",
+      "quote": "With a height of 4,844 metres"
+    },
+    {
+      "qid": "Q31525942",
+      "metres": 4321,
+      "source": "https://en.wikipedia.org/wiki/Mount_Elgon",
+      "quote": "Wagagai (4,321 metres"
+    },
+    {
+      "qid": "Q31567866",
+      "metres": 4798,
+      "source": "https://en.wikipedia.org/wiki/Rwenzori_Mountains",
+      "quote": "Mount Emin (4,798 metres"
+    },
+    {
+      "qid": "Q10589781",
+      "metres": 4715,
+      "source": "https://en.wikipedia.org/wiki/Rwenzori_Mountains",
+      "quote": "Mount Gessi (4,715 metres"
+    },
+    {
+      "qid": "Q1564286",
+      "metres": 4627,
+      "source": "https://en.wikipedia.org/wiki/Rwenzori_Mountains",
+      "quote": "Mount Luigi di Savoia (4,627 metres"
+    },
+    {
+      "qid": "Q111170430",
+      "metres": 266,
+      "source": "https://en.wikipedia.org/wiki/Monte_Torin",
+      "quote": "with an elevation of 266 metres"
+    }
+  ],
+  "$comment_volcanoes": "Volcanoes Wikidata types only as \"mountain\" and the Global Volcanism Program does not list (it covers recent volcanism), each with a quoted source. `volcanic_status` only where the source states it.",
+  "volcanoes": [
+    {
+      "qid": "Q172070",
+      "name": "Mount Kenya",
+      "peak_type": "stratovolcano",
+      "volcanic_status": "extinct",
+      "source": "https://en.wikipedia.org/wiki/Mount_Kenya",
+      "quote": [
+        "Mount Kenya is a stratovolcano that was active in the Plio-Pleistocene",
+        "Since it became extinct"
+      ]
+    }
+  ],
+  "high_points": {
+    "BDI": {
+      "qid": "Q1649074",
+      "factbook": "same",
+      "reason": "The Factbook's \"unnamed elevation on Mukike Range 2,685 m\" is Mount Heha (2,684 m in Wikidata), which Wikipedia names as Burundi's highest mountain.",
+      "source": "https://en.wikipedia.org/wiki/Mount_Heha",
+      "quote": "Mount Heha is the highest mountain in Burundi"
+    },
+    "BEN": {
+      "qid": "Q923330",
+      "factbook": "different",
+      "reason": "Mont Sokbaro (658 m) is Wikidata's high point and is mostly cited as Benin's highest point.",
+      "review": "Contested: satellite (SRTM) data puts an unnamed point near Kotopounga higher (672 m per Wikipedia; 675 m per the Factbook).",
+      "source": "https://en.wikipedia.org/wiki/Mont_Sokbaro",
+      "quote": "This designation is contested, as SRTM readings"
+    },
+    "BWA": {
+      "qid": "Q6897936",
+      "factbook": "same",
+      "reason": "Wikidata's P610 names Otse Hill (1,491 m), but its own elevations, the Factbook (\"Manyelanong Hill 1,495 m\") and Wikipedia put Monalanong Hill (1,494 m) highest.",
+      "review": "Otse Hill (1,491 m, a surveyed trigonometrical station) is also often cited as Botswana's highest point.",
+      "source": "https://en.wikipedia.org/wiki/Monalanong_Hill",
+      "quote": "Monalanong Hill is a mountain often considered the highest point of Botswana"
+    },
+    "CMR": {
+      "qid": "Q190562",
+      "factbook": "same",
+      "reason": "The Factbook's \"Fako on Mont Cameroun\" is the higher of Mount Cameroon's two peaks.",
+      "source": "https://en.wikipedia.org/wiki/Mount_Cameroon",
+      "quote": "Fako (the name of the higher of its two peaks)"
+    },
+    "GMB": {
+      "qid": "Q130316616",
+      "factbook": "different",
+      "reason": "Wikidata has no P610 high point for The Gambia; Sare Firasu Hill (51 m) is the highest mapped feature.",
+      "review": "The Factbook gives an unnamed 63 m elevation 3 km southeast of Sabi instead; The Gambia's true high point needs verification."
+    },
+    "GNB": {
+      "qid": "Q111170430",
+      "factbook": "different",
+      "reason": "Wikidata's P610 points to a \"Monte Torin\" item on the northern border; the Monte Torin that Wikipedia describes (266 m, near the southern border with Guinea) is a separate item, used here.",
+      "review": "The Factbook gives Dongol Ronde (277 m) as Guinea-Bissau's highest point instead.",
+      "source": "https://en.wikipedia.org/wiki/Monte_Torin",
+      "quote": "Monte Torin is the highest point of Guinea-Bissau"
+    },
+    "MUS": {
+      "qid": "Q1760978",
+      "factbook": "same",
+      "reason": "The Factbook's \"Mont Piton 828 m\" is Piton de la Petite Rivière Noire (828 m)."
+    },
+    "SDN": {
+      "qid": "Q2520348",
+      "factbook": "same",
+      "reason": "The Factbook's \"Jabal Marrah 3,042 m\" is the Jebel Marra massif, whose highest point is Deriba Caldera.",
+      "source": "https://en.wikipedia.org/wiki/Jebel_Marra",
+      "quote": "The highest point is Deriba Caldera."
+    },
+    "SEN": {
+      "qid": "Q135618139",
+      "factbook": "same",
+      "reason": "Wikidata's P610 (Népin Cliff, 531 m) has no coordinates; the Factbook's \"unnamed elevation 2.8 km southeast of Nepen Diaka 648 m\" matches Wikidata's 648 m Nepen Diakha.",
+      "review": "Named after the nearby village of Nepen Diakha; the point itself is unnamed."
+    }
+  },
+  "low_points": {
+    "CPV": {
+      "factbook": "different",
+      "reason": "Wikidata gives the Pedra de Lume salt ponds (30 m below sea level); the Factbook gives the Atlantic Ocean (sea level).",
+      "review": "The cited Wikipedia article on Pedra de Lume does not state its elevation; the below-sea-level value needs verification."
+    },
+    "ERI": {
+      "factbook": "same",
+      "reason": "The Factbook's \"near Kulul within the Danakil Depression\" (−75 m) is Lake Kulul (−75 m in Wikidata)."
+    },
+    "MRT": {
+      "factbook": "same",
+      "reason": "Sebkha de Ndrhamcha (Wikidata) and Sebkhet Te-n-Dghamcha (Factbook) are spellings of the same salt flat."
+    },
+    "TCD": {
+      "factbook": "same",
+      "metres": 155,
+      "reason": "The Factbook's \"Djourab\" is the desert containing the Bodélé Depression, Chad's lowest point.",
+      "source": "https://en.wikipedia.org/wiki/Bod%C3%A9l%C3%A9_Depression",
+      "quote": "Its bottom lies about 155 meters above sea level."
+    },
+    "UGA": {
+      "factbook": "different",
+      "reason": "Wikidata gives Lake Albert; the Factbook gives the Albert Nile (614 m), the river leaving the lake.",
+      "review": "The Factbook's Albert Nile (614 m) may be lower than Lake Albert; Uganda's lowest point needs verification."
+    }
+  },
+  "ranges": [
+    {
+      "slug": "high-atlas",
+      "name": "High Atlas",
+      "qid": "Q584279",
+      "source": "https://en.wikipedia.org/wiki/High_Atlas",
+      "range_type": "fold",
+      "description": "The highest part of the Atlas Mountains, running east from the Atlantic across central Morocco to the Algerian border; Jbel Toubkal is its highest peak.",
+      "formation_note": "Folded and uplifted when old rift basins were squeezed as Africa and Eurasia converged during the Cenozoic.",
+      "quote": [
+        "the highest part of the Atlas Mountains",
+        "stretches in an eastern direction to the Moroccan-Algerian border",
+        "The range includes Jbel Toubkal",
+        "characterized by a folded domain",
+        "resulting from the tectonic inversion of the Late Triassic to Middle Jurassic rift basin during the Cenozoic convergence between the African and Eurasian Plates"
+      ]
+    },
+    {
+      "slug": "middle-atlas",
+      "name": "Middle Atlas",
+      "qid": "Q1433137",
+      "source": "https://en.wikipedia.org/wiki/Middle_Atlas",
+      "length_km": 350,
+      "description": "The northernmost and second-highest of Morocco’s three main Atlas chains, a mass about 350 km long that includes the volcanic cone of Jbel Hebri.",
+      "quote": [
+        "is the northernmost and second highest of three main Atlas Mountains chains of Morocco",
+        "a solid mountainous mass of 350 km in length",
+        "Jbel Hebri, a cone volcano"
+      ]
+    },
+    {
+      "slug": "anti-atlas",
+      "name": "Anti-Atlas",
+      "qid": "Q574853",
+      "source": "https://en.wikipedia.org/wiki/Anti-Atlas",
+      "length_km": 500,
+      "description": "A range in southern Morocco running about 500 km north-east from the Atlantic towards Ouarzazate and Tafilalt, bordering the Sahara.",
+      "quote": [
+        "extends from the Atlantic Ocean in the southwest toward the northeast",
+        "altogether a distance of approximately 500 km",
+        "The range borders on the Sahara to the south"
+      ]
+    },
+    {
+      "slug": "tell-atlas",
+      "name": "Tell Atlas",
+      "qid": "Q1478180",
+      "source": "https://en.wikipedia.org/wiki/Tell_Atlas",
+      "description": "An Atlas chain over 1,500 km long, mainly across northern Algeria, forming a barrier between the Mediterranean and the Sahara; Lalla Khedidja is its highest summit.",
+      "quote": [
+        "is a mountain chain over 1,500 km",
+        "stretching mainly across northern Algeria",
+        "form a natural barrier between the Mediterranean and the Sahara",
+        "Its highest summit is the 2,308 m (7,572 ft) high Lalla Khedidja"
+      ]
+    },
+    {
+      "slug": "saharan-atlas",
+      "name": "Saharan Atlas",
+      "qid": "Q1898305",
+      "source": "https://en.wikipedia.org/wiki/Saharan_Atlas",
+      "description": "A sub-range of the Atlas, mainly in Algeria with its eastern end in Tunisia, parallel to the Tell Atlas nearer the coast; Mount Issa is its highest peak.",
+      "formation_note": "Ancient base rock covered by the sediments of shallow seas and rivers.",
+      "quote": [
+        "is a sub-range of the Atlas Mountains, located primarily in Algeria with its eastern end in Tunisia",
+        "the Tell Atlas range that runs parallel and closer to the coast",
+        "The tallest peak in the range is the 2,236 m",
+        "formed of ancient base rock covered by the sediment of shallow seas and alluvial deposits"
+      ]
+    },
+    {
+      "slug": "rif",
+      "name": "Rif",
+      "qid": "Q275491",
+      "source": "https://en.wikipedia.org/wiki/Rif",
+      "description": "A mountain region in northern Morocco between the Mediterranean, the Atlantic and the Ouergha and Moulouya rivers.",
+      "formation_note": "Geologically part of the Gibraltar Arc (the Alborán Sea region).",
+      "quote": [
+        "is a geographic region in northern Morocco",
+        "bounded to the north by the Mediterranean Sea",
+        "belong to the Gibraltar Arc or Alborán Sea geological region"
+      ]
+    },
+    {
+      "slug": "tunisian-dorsal",
+      "name": "Tunisian Dorsal",
+      "qid": "Q1250468"
+    },
+    {
+      "slug": "hoggar",
+      "name": "Hoggar Mountains",
+      "qid": "Q26399",
+      "source": "https://en.wikipedia.org/wiki/Hoggar_Mountains",
+      "description": "A highland region in the central Sahara in southern Algeria; Mount Tahat is Algeria’s highest peak.",
+      "formation_note": "Mostly metamorphic rock about 2 billion years old, with younger volcanic rock in places.",
+      "quote": [
+        "are a highland region in the central Sahara in southern Algeria",
+        "The tallest peak in the range and Algeria, Mount Tahat",
+        "primarily composed of metamorphic rock approximately 2 billion years old",
+        "more recent volcanic activity has laid down much newer rock"
+      ]
+    },
+    {
+      "slug": "tibesti",
+      "name": "Tibesti Mountains",
+      "qid": "Q309104",
+      "source": "https://en.wikipedia.org/wiki/Tibesti_Mountains",
+      "description": "A range in the central Sahara, mostly in the far north of Chad; Emi Koussi is the highest point of both Chad and the Sahara.",
+      "formation_note": "Lifted over a mantle plume; its central third is volcanic, built by a hotspot active from the Oligocene, in places into the Holocene.",
+      "quote": [
+        "are a mountain range in the central Sahara, primarily located in the extreme north of Chad",
+        "is the highest point in both Chad and the Sahara",
+        "resulted from a mantle plume",
+        "The central third of the Tibesti is of volcanic origin",
+        "The volcanic activity was the result of a continental hotspot that arose during the Oligocene and continued in some places until the Holocene"
+      ]
+    },
+    {
+      "slug": "air",
+      "name": "Aïr Mountains",
+      "qid": "Q170383",
+      "source": "https://en.wikipedia.org/wiki/Aïr_Mountains",
+      "description": "A triangular massif in northern Niger, within the Sahara, rising above 1,800 m.",
+      "formation_note": "Its volcanic features include the extinct Arakao caldera, lava flows, volcanic cones and one of the largest ring-dike systems in the world.",
+      "quote": [
+        "is a triangular massif, located in northern Niger, within the Sahara",
+        "they rise to more than 1,800 m",
+        "The massif contains volcanic features including the extinct caldera of Arakao",
+        "one of the largest ring dike systems in the world"
+      ]
+    },
+    {
+      "slug": "marrah",
+      "name": "Marrah Mountains (Jebel Marra)",
+      "qid": "Q886772",
+      "source": "https://en.wikipedia.org/wiki/Marrah_Mountains",
+      "range_type": "volcanic",
+      "description": "A massif of volcanic peaks in Darfur, the highest mountains in Sudan; Deriba Caldera is the highest point.",
+      "quote": [
+        "are a range of volcanic peaks in a massif",
+        "They are the highest mountains in Sudan",
+        "The highest point is Deriba Caldera"
+      ]
+    },
+    {
+      "slug": "sinai",
+      "name": "Sinai Mountains",
+      "qid": "Q2204331"
+    },
+    {
+      "slug": "cameroon-line",
+      "name": "Cameroon Line",
+      "qid": "Q945773",
+      "source": "https://en.wikipedia.org/wiki/Cameroon_line",
+      "range_type": "volcanic",
+      "length_km": 1600,
+      "description": "A 1,600 km chain of volcanoes from islands in the Gulf of Guinea through Mount Cameroon towards Lake Chad.",
+      "formation_note": "Unusual in crossing both ocean and continental crust; geologists have proposed several explanations for it.",
+      "quote": [
+        "is a 1,600 km (1,000 mi) long chain of volcanoes",
+        "from Mount Cameroon on the coast towards Lake Chad",
+        "geologically unusual in extending through both the ocean and the continental crust",
+        "Various hypotheses have been advanced"
+      ]
+    },
+    {
+      "slug": "fouta-djallon",
+      "name": "Fouta Djallon",
+      "qid": "Q850245",
+      "source": "https://en.wikipedia.org/wiki/Fouta_Djallon",
+      "description": "A highland region in central Guinea, roughly the area of Middle Guinea.",
+      "quote": [
+        "is a highland region in the center of Guinea, roughly corresponding with Middle Guinea"
+      ]
+    },
+    {
+      "slug": "togo-mountains",
+      "name": "Togo Mountains",
+      "qid": "Q581452",
+      "source": "https://en.wikipedia.org/wiki/Togo_Mountains",
+      "description": "A range across central Togo that continues into Ghana as the Akwapim Hills and into Benin as the Atakora Mountains, averaging about 700 m.",
+      "quote": [
+        "stretches across the central region of the West African country of Togo",
+        "the Akwapim Hills",
+        "Atakora Mountains",
+        "The average elevation of these mountains is 700 metres"
+      ]
+    },
+    {
+      "slug": "adrar-des-ifoghas",
+      "name": "Adrar des Ifoghas",
+      "qid": "Q366665",
+      "source": "https://en.wikipedia.org/wiki/Adrar_des_Ifoghas",
+      "description": "A massif in Mali’s Kidal Region reaching into Algeria, with wide, shallow valleys strewn with eroded granite blocks.",
+      "quote": [
+        "is a massif located in the Kidal Region of Mali, reaching into Algeria",
+        "characterized by wide, shallow valleys and is strewn with piles of eroded granite blocks"
+      ]
+    },
+    {
+      "slug": "ethiopian-highlands",
+      "name": "Ethiopian Highlands",
+      "qid": "Q319288",
+      "source": "https://en.wikipedia.org/wiki/Ethiopian_Highlands",
+      "description": "The largest continuous area of high ground in Africa, sometimes called the “Roof of Africa”; the East African Rift cuts across it.",
+      "formation_note": "A dome of ancient rock lifted by magma from the mantle from about 75 million years ago, then capped by flood basalts from about 30 million years ago.",
+      "quote": [
+        "It forms the largest continuous area of its elevation in the continent",
+        "sometimes called the \"Roof of Africa\"",
+        "This elevated surface is bisected diagonally by the Great East African Rift System",
+        "The Ethiopian Highlands began to rise 75 million years ago, as magma from the Earth's mantle uplifted a broad dome",
+        "Around 30 million years ago, a flood basalt plateau began to form"
+      ]
+    },
+    {
+      "slug": "semien",
+      "name": "Semien Mountains",
+      "qid": "Q1982017",
+      "source": "https://en.wikipedia.org/wiki/Semien_Mountains",
+      "description": "Plateaus cut by deep valleys and rising to pinnacles in northern Ethiopia, part of the Ethiopian Highlands and a World Heritage Site; Ras Dashen is Ethiopia’s highest mountain.",
+      "formation_note": "Basalt lava some 3,000 m thick laid over ancient crystalline rock, formed in the same way as South Africa’s Drakensberg.",
+      "quote": [
+        "are part of the Ethiopian Highlands",
+        "They are a World Heritage Site",
+        "The mountains consist of plateaus separated by valleys and rising to pinnacles",
+        "The highest Ethiopian mountain is Ras Dejen",
+        "a thick sequence of basaltic lava some 3,000-3,500 m thick that was deposited on Precambrian crystalline basement",
+        "only South Africa's Drakensberg range having been formed in the same manner"
+      ]
+    },
+    {
+      "slug": "bale",
+      "name": "Bale Mountains",
+      "qid": "Q2554147",
+      "source": "https://en.wikipedia.org/wiki/Bale_Mountains",
+      "description": "Mountains in south-east Ethiopia, part of the Ethiopian Highlands, with Tullu Demtu, the country’s fourth-highest peak, and the Sanetti Plateau, home of the Ethiopian wolf.",
+      "quote": [
+        "are mountain ranges in the Oromia Region of southeast Ethiopia",
+        "part of the Ethiopian Highlands",
+        "They include Tullu Demtu, the fourth-highest mountain in Ethiopia",
+        "found on the Sanetti Plateau"
+      ]
+    },
+    {
+      "slug": "rwenzori",
+      "name": "Rwenzori Mountains",
+      "qid": "Q106540",
+      "source": "https://en.wikipedia.org/wiki/Rwenzori_Mountains",
+      "length_km": 120,
+      "description": "A range on the border of Uganda and the DR Congo whose upper slopes are permanently snow-capped and glaciated; its streams feed one of the sources of the Nile.",
+      "formation_note": "An uplifted block of ancient crystalline rock raised about three million years ago: not volcanic, and not formed by a collision of plates.",
+      "quote": [
+        "located on the border between Uganda and the Democratic Republic of the Congo",
+        "permanently snow-capped and glaciated",
+        "form one of the sources of the Nile",
+        "The mountains formed about three million years ago",
+        "an uplifted block of crystalline rocks",
+        "the highest non-volcanic, non-orogenic mountains in the world",
+        "The range is about 120 kilometres (75 mi) long"
+      ]
+    },
+    {
+      "slug": "virunga",
+      "name": "Virunga Mountains",
+      "qid": "Q751607",
+      "source": "https://en.wikipedia.org/wiki/Virunga_Mountains",
+      "range_type": "volcanic",
+      "description": "A chain of eight major volcanoes where Rwanda, the DR Congo and Uganda meet; Karisimbi is the highest.",
+      "formation_note": "Volcanoes of the Albertine Rift, beside the western branch of the East African Rift; most are dormant, but Nyiragongo and Nyamuragira are active.",
+      "quote": [
+        "are a chain of volcanoes in East Africa, in the area where Rwanda, the Democratic Republic of the Congo (DRC), and Uganda meet",
+        "consists of eight major volcanoes",
+        "Mount Karisimbi is the highest volcano",
+        "a branch of the Albertine Rift Mountains, which border the western branch of the East African Rift",
+        "Most of them are dormant, except Mount Nyiragongo"
+      ]
+    },
+    {
+      "slug": "mitumba",
+      "name": "Mitumba Mountains",
+      "qid": "Q182061",
+      "source": "https://en.wikipedia.org/wiki/Mitumba_Mountains",
+      "description": "Mountains along the Western Rift Valley in the eastern DR Congo, west of Lakes Tanganyika and Kivu; the northern part is known as the Itombwe Mountains.",
+      "formation_note": "Its two main peaks, Mount Kahuzi and Mount Biéga, are dormant volcanoes.",
+      "quote": [
+        "stretch along the Western Rift Valley in Eastern Congo (DRC), west of Lake Tanganyika and Lake Kivu",
+        "also known as the Itombwe Mountains",
+        "are dormant volcanoes"
+      ]
+    },
+    {
+      "slug": "aberdare",
+      "name": "Aberdare Range",
+      "qid": "Q319371",
+      "source": "https://en.wikipedia.org/wiki/Aberdare_Range",
+      "range_type": "rift_shoulder",
+      "length_km": 160,
+      "description": "A 160 km upland range in central Kenya, north of Nairobi, averaging about 3,500 m; its Kikuyu name is Nyandarua.",
+      "formation_note": "Part of the eastern rim of the Great Rift Valley, falling steeply into the rift on its western side.",
+      "quote": [
+        "is a 160 km (99 mi) long mountain range of upland, north of Kenya's capital Nairobi with an average elevation of 3,500 metres",
+        "Kikuyu: Nyandarua",
+        "forms a section of the eastern rim of the Great Rift Valley",
+        "the range falls off steeply into the Kinangop Plateau and then into the Great Rift Valley"
+      ]
+    },
+    {
+      "slug": "crater-highlands",
+      "name": "Crater Highlands",
+      "qid": "Q576079",
+      "source": "https://en.wikipedia.org/wiki/Crater_Highlands",
+      "range_type": "volcanic",
+      "description": "Volcanic highlands along the East African Rift in northern Tanzania, named for their many craters and calderas, Ngorongoro among them.",
+      "formation_note": "Several large volcanic complexes, about 2.4 to 1.5 million years old, built where the African and Somali plates spread apart.",
+      "quote": [
+        "are a geological region along the East African Rift",
+        "in north Tanzania",
+        "named for the many craters and calderas present",
+        "Ngorongoro",
+        "made up of several large volcanic complexes",
+        "2.4-2.2 Ma Lemagarut",
+        "1.6-1.5 Ma Oldeani",
+        "located in a spreading zone at the intersection of branches of two tectonic plates, the African Plate and Somali Plate"
+      ]
+    },
+    {
+      "slug": "kipengere",
+      "name": "Kipengere Range",
+      "qid": "Q1296892",
+      "source": "https://en.wikipedia.org/wiki/Kipengere_Range",
+      "range_type": "rift_shoulder",
+      "description": "A plateau-like ridge in south-west Tanzania at the northern end of Lake Nyasa, also called the Livingstone Mountains, known for its flower-rich montane grasslands.",
+      "formation_note": "Ancient Precambrian rock forming part of the eastern escarpment of the East African Rift.",
+      "quote": [
+        "also known as the Livingstone Mountains",
+        "at the northern end of Lake Nyasa",
+        "It is a plateau-like ridge of mountains",
+        "renowned for their botanical diversity",
+        "Geologically the range is formed of ancient Precambrian rocks",
+        "forms part of the eastern escarpment of the East African Rift"
+      ]
+    },
+    {
+      "slug": "imatong",
+      "name": "Imatong Mountains",
+      "qid": "Q1659738",
+      "source": "https://en.wikipedia.org/wiki/Imatong_Mountains",
+      "description": "Mountains in south-eastern South Sudan reaching into Uganda; Mount Kinyeti is the highest point of South Sudan.",
+      "formation_note": "Ancient crystalline basement rock rising through the younger deposits of the surrounding plains.",
+      "quote": [
+        "are mainly located in Eastern Equatoria in southeastern South Sudan, and extend into the Northern Region of Uganda",
+        "the highest point of South Sudan",
+        "formed of crystalline basement rock that rises through the Tertiary and Quaternary unconsolidated deposits"
+      ]
+    },
+    {
+      "slug": "drakensberg",
+      "name": "Drakensberg",
+      "qid": "Q183295",
+      "source": "https://en.wikipedia.org/wiki/Drakensberg",
+      "range_type": "plateau_escarpment",
+      "description": "The eastern part of the Great Escarpment around southern Africa’s central plateau, stretching more than 1,000 km and highest on the Lesotho–South Africa border.",
+      "formation_note": "Steep rift walls formed when southern Gondwana broke apart, since eroded inland; the high Drakensberg is capped by basalt that erupted about 180 million years ago.",
+      "quote": [
+        "is the eastern portion of the Great Escarpment",
+        "stretches for more than 1,000 kilometres",
+        "within the border region of South Africa and Lesotho",
+        "steep rift valley walls formed around a bulging of continental crust during the breakup of southern Gondwana",
+        "eroded inland from their original positions",
+        "composed of a thick layer of basalt (lava) that erupted 180 million years ago"
+      ]
+    },
+    {
+      "slug": "maloti",
+      "name": "Maloti Mountains",
+      "qid": "Q3430420",
+      "source": "https://en.wikipedia.org/wiki/Maloti_Mountains",
+      "description": "The mountains of Lesotho’s highlands, part of the Drakensberg system: a high alpine basalt plateau rising to Thabana Ntlenyana, southern Africa’s highest peak.",
+      "quote": [
+        "are a mountain range of the highlands of the Kingdom of Lesotho",
+        "part of the Drakensberg system",
+        "The range forms a high alpine basalt plateau",
+        "It is the highest peak of Southern Africa"
+      ]
+    },
+    {
+      "slug": "auas",
+      "name": "Auas Mountains",
+      "qid": "Q758396",
+      "source": "https://en.wikipedia.org/wiki/Auas_Mountains",
+      "length_km": 56,
+      "description": "Namibia’s highest range, 56 km long near Windhoek; Moltkeblick is its highest peak.",
+      "quote": [
+        "is the highest mountain range in Namibia",
+        "the range is 56 kilometers long",
+        "Moltkeblick"
+      ]
+    },
+    {
+      "slug": "moka",
+      "name": "Moka Range",
+      "qid": "Q268180"
+    }
+  ],
+  "range_aliases": {
+    "Q753212": "hoggar"
+  },
+  "range_assignments": {
+    "Q1883683": "drakensberg",
+    "Q7229539": "drakensberg"
+  },
+  "territories": [
+    {
+      "name": "Réunion",
+      "qid": "Q17070",
+      "peaks": [
+        "Q1545452",
+        "Q1049644"
+      ]
+    },
+    {
+      "name": "Mayotte",
+      "qid": "Q17063",
+      "peaks": [
+        "Q210180"
+      ]
+    },
+    {
+      "name": "Canary Islands",
+      "qid": "Q5813",
+      "peaks": [
+        "Q38954"
+      ]
+    },
+    {
+      "name": "Madeira",
+      "qid": "Q26253",
+      "peaks": [
+        "Q473169"
+      ]
+    },
+    {
+      "name": "Saint Helena",
+      "qid": "Q34497",
+      "peaks": [
+        "Q3376351"
+      ]
+    },
+    {
+      "name": "Ascension Island",
+      "qid": "Q46197",
+      "peaks": [
+        "Q5602884"
+      ]
+    },
+    {
+      "name": "Tristan da Cunha",
+      "qid": "Q220982",
+      "peaks": [
+        "Q2062890"
+      ]
+    }
+  ],
+  "$comment_range_assignments": "Mafadi and Popple Peak are tagged with both the Drakensberg and the Maloti in Wikidata; they stand on the Drakensberg escarpment (the Lesotho–South Africa border)."
+}

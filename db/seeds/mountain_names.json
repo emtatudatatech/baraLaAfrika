@@ -1,0 +1,198 @@
+{
+  "$comment": "Curated local names and name origins (spec 5.5.7). Every entry needs a source and the exact quote(s) supporting it; `python -m pipelines mountains` re-checks each quote against the cached source and fails if one is missing. Never invent an etymology. `needs_review` (a reason) marks entries whose source is itself hedged or disputed.",
+  "entries": [
+    {
+      "qid": "Q7296",
+      "name_origin": "Disputed. It may come from the Kichagga for “unclimbable” (kilemanjaare or kilemajyaro), which early explorers took to be the mountain's name.",
+      "needs_review": "The source says the origin of the name is disputed.",
+      "source": "https://en.wikipedia.org/wiki/Mount_Kilimanjaro",
+      "quote": [
+        "The origin and meaning of the name Kilimanjaro is disputed.",
+        "\"Kilimanjaro\" may originate from the Chagga calling the mountain unclimbable—kilemanjaare or kilemajyaro—and explorers misinterpreting this as its name."
+      ]
+    },
+    {
+      "qid": "Q1394606",
+      "name_origin": "“Spotted”, for its snow.",
+      "local_names": [{ "name": "Kipoo", "language": "Chagga" }],
+      "source": "https://en.wikipedia.org/wiki/Mount_Kilimanjaro",
+      "quote": [
+        "they call its two peaks Kipoo and Kimawenze",
+        "mean \"spotted\" in reference to Kibo's snow"
+      ]
+    },
+    {
+      "qid": "Q1283494",
+      "name_origin": "“Broken top”, for its jagged peak.",
+      "local_names": [{ "name": "Kimawenze", "language": "Chagga" }],
+      "source": "https://en.wikipedia.org/wiki/Mount_Kilimanjaro",
+      "quote": [
+        "they call its two peaks Kipoo and Kimawenze",
+        "\"broken top\" due to Mawenzi's jagged peak"
+      ]
+    },
+    {
+      "qid": "Q172070",
+      "local_names": [
+        { "name": "Kĩrĩmanyaga (Kīrī-nyaga)", "language": "Kikuyu" },
+        { "name": "Kĩrĩmaara", "language": "Meru" },
+        { "name": "Ki nyaa", "language": "Kamba" },
+        { "name": "Kĩ nyaga (Kirinyaga)", "language": "Embu" }
+      ],
+      "source": "https://en.wikipedia.org/wiki/Mount_Kenya",
+      "quote": "(Meru: Kĩrĩmaara, Kikuyu: Kĩrĩmanyaga, or \"Kīrī-nyaga\", Kamba: Ki nyaa, Embu: Kĩ nyaga, or \"Kirinyaga\")"
+    },
+    {
+      "qid": "Q221666",
+      "name_origin": "Named after the explorer Henry Morton Stanley.",
+      "source": "https://en.wikipedia.org/wiki/Mount_Stanley",
+      "quote": "Mount Stanley is named for the explorer, journalist, and colonist Sir Henry Morton Stanley."
+    },
+    {
+      "qid": "Q1895254",
+      "name_origin": "Named after Queen Margherita of Italy.",
+      "source": "https://en.wikipedia.org/wiki/Mount_Stanley",
+      "quote": "Margherita Peak is named after Queen Margherita of Italy."
+    },
+    {
+      "qid": "Q838875",
+      "name_origin": "Named after the explorer John Speke.",
+      "source": "https://en.wikipedia.org/wiki/Mount_Speke",
+      "quote": "This mountain was named after John Speke."
+    },
+    {
+      "qid": "Q253593",
+      "local_names": [{ "name": "Kiyanja", "language": "Bakonjo" }],
+      "needs_review": "The source says the Bakonjo name \"seems to have been\" Kiyanja.",
+      "source": "https://en.wikipedia.org/wiki/Mount_Baker_(Uganda)",
+      "quote": "The Bakonjo name for the mountain seems to have been (and currently is) \"Kiyanja\"."
+    },
+    {
+      "qid": "Q275435",
+      "name_origin": "An English corruption of the Amharic “Ras Dejen”, which alludes to the traditional head or general who fights in front of the Emperor.",
+      "local_names": [{ "name": "Ras Dejen", "language": "Amharic" }],
+      "source": "https://en.wikipedia.org/wiki/Ras_Dashen",
+      "quote": "The English form \"Ras Dashen\" is a corruption of its Amharic name, \"Ras Dejen\", the term used by the Ethiopian Mapping Authority (EMA) that alludes to the traditional head or general who fights in front of the Emperor."
+    },
+    {
+      "qid": "Q737859",
+      "name_origin": "From amasimbi, “snow” in Kinyarwanda.",
+      "source": "https://en.wikipedia.org/wiki/Mount_Karisimbi",
+      "quote": "The name Karisimbi comes from the word 'amasimbi', which means snow in the local Kinyarwanda language."
+    },
+    {
+      "qid": "Q1639195",
+      "name_origin": "“Poor”, for its harsh slopes, where no one can live.",
+      "source": "https://en.wikipedia.org/wiki/Mount_Mikeno",
+      "quote": "Mikeno means \"poor\" and is so named for its harsh slopes which preclude human habitation."
+    },
+    {
+      "qid": "Q732838",
+      "name_origin": "From its Maasai name, Ol Doinyo Ilgoon (“Breast Mountain”).",
+      "local_names": [{ "name": "Ol Doinyo Ilgoon", "language": "Maasai", "meaning": "Breast Mountain" }],
+      "source": "https://en.wikipedia.org/wiki/Mount_Elgon",
+      "quote": "The mountain's name originates from its Maasai name, \"Ol Doinyo Ilgoon\" (Breast Mountain)."
+    },
+    {
+      "qid": "Q543030",
+      "name_origin": "“The Guide” in Kinyarwanda.",
+      "source": "https://en.wikipedia.org/wiki/Mount_Muhabura",
+      "quote": "The name Muhabura means \"The Guide\" in the local language, Kinyarwanda."
+    },
+    {
+      "qid": "Q6923490",
+      "name_origin": "From the Maasai Oldoinyo Lesatima, “mountain of the bull calf”.",
+      "local_names": [{ "name": "Oldoinyo Lesatima", "language": "Maasai", "meaning": "mountain of the bull calf" }],
+      "source": "https://en.wikipedia.org/wiki/Mount_Satima",
+      "quote": "The Maasai name is Oldoinyo Lesatima, which has a variety of alternative spellings, such as Ol Donyo Le Satima, and means \"mountain of the bull calf\"."
+    },
+    {
+      "qid": "Q733132",
+      "name_origin": "“Beautiful little mountain” in Sesotho: thaba (mountain), the diminutive -na, ntle (beautiful) and yana (little one).",
+      "source": "https://en.wikipedia.org/wiki/Thabana_Ntlenyana",
+      "quote": "The peak's name means \"beautiful little mountain\" in the Sesotho language, from thaba (mountain), the diminutive -na, ntle (beautiful), and yana (little one)."
+    },
+    {
+      "qid": "Q1883683",
+      "name_origin": "Disputed: Maifadi literally means “the Mother of Fadi”; some consider its original Sotho name, Ntheledi (“makes me slip”, after a nearby stream), more correct.",
+      "local_names": [{ "name": "Ntheledi", "language": "Sesotho", "meaning": "makes me slip" }],
+      "needs_review": "The source says the name is under dispute.",
+      "source": "https://en.wikipedia.org/wiki/Mafadi",
+      "quote": "The name of Maifadi (which literally means the Mother of Fadi) is currently under dispute, its original Sotho name Ntheledi (which means \"Makes me slip\", referring to the nearby stream) being considered by some to be more relevant and correct."
+    },
+    {
+      "qid": "Q257441",
+      "name_origin": "In the Tedaga language, emi means “mountains” or “massif”.",
+      "source": "https://en.wikipedia.org/wiki/Emi_Koussi",
+      "quote": "In the Tedaga language, Emi means \"mountains\", \"massif\"."
+    },
+    {
+      "qid": "Q499108",
+      "name_origin": "The peak of Fogo island; fogo means “fire” in Portuguese.",
+      "source": "https://en.wikipedia.org/wiki/Pico_do_Fogo",
+      "quote": "Fogo, which means \"fire\" in Portuguese, is a hotspot volcanic island."
+    },
+    {
+      "qid": "Q1140642",
+      "name_origin": "From the Christian tradition that angels carried the body of the martyred Saint Catherine of Alexandria to this mountain.",
+      "source": "https://en.wikipedia.org/wiki/Mount_Catherine",
+      "quote": "The name is derived from the Christian tradition that angels transported to this mountain the body of the martyred Saint Catherine of Alexandria."
+    },
+    {
+      "qid": "Q897834",
+      "name_origin": "Afrikaans, Dutch and German for “burning mountain”.",
+      "local_names": [
+        { "name": "Dâures", "language": "Damara", "meaning": "burning mountain" },
+        { "name": "Omukuruvaro", "language": "Herero", "meaning": "mountain of the Gods" }
+      ],
+      "source": "https://en.wikipedia.org/wiki/Brandberg_Mountain",
+      "quote": [
+        "The name Brandberg is Afrikaans, Dutch, and German for Burning Mountain.",
+        "The Damara name for the mountain is Dâures, which means 'burning mountain', while the Herero name, Omukuruvaro, means 'mountain of the Gods'."
+      ]
+    },
+    {
+      "qid": "Q116675",
+      "name_origin": "“The hill of Tena” in Dyula; Tena is the village at its foot.",
+      "source": "https://en.wikipedia.org/wiki/Mount_Tenakourou",
+      "quote": [
+        "The name Tenakourou signifies \"the hill of Tena\" in Dyula language.",
+        "Tena is the name of the village of around 600 inhabitants that lies at the foot of the peak"
+      ]
+    },
+    {
+      "qid": "Q849129",
+      "name_origin": "Named after the French geographer Jacques Richard-Molard, who died in an accident there in 1951; it was previously called Mount Nouon.",
+      "source": "https://en.wikipedia.org/wiki/Mount_Richard-Molard",
+      "quote": [
+        "The mountain is named after the French geographer Jacques Richard-Molard, who died in an accident at the mountain site in 1951.",
+        "Before that it was called Mount Nouon."
+      ]
+    },
+    {
+      "qid": "Q635179",
+      "name_origin": "From the Ewe “Avadzeto”, said to mean “at war with the bush”; the suffix -to means “mountain” in Ewe.",
+      "local_names": [{ "name": "Afadjato", "language": "Ewe" }],
+      "needs_review": "The source gives more than one explanation of the name.",
+      "source": "https://en.wikipedia.org/wiki/Mount_Afadja",
+      "quote": [
+        "Mount Afadja derives its name from the Ewe Word \"Avadzeto\" which means at war with the bush.",
+        "known as Afadjato to the Ewe people of Ghana and Togo",
+        "the suffix \"-to\" in the Ewe language means mountain"
+      ]
+    },
+    {
+      "qid": "Q746787",
+      "name_origin": "The Maasai and Sonjo call it “The Mountain of God”, after a myth that the god Engai withdrew there.",
+      "source": "https://en.wikipedia.org/wiki/Ol_Doinyo_Lengai",
+      "quote": "The Maasai and Sonjo people refer to the volcano as \"The Mountain of God\", associated with a myth of the abode of the god Engai, who withdrew there after being hit with an arrow by a hunter."
+    },
+    {
+      "qid": "Q1520750",
+      "name_origin": "From the Maasai Olongongot, “mountains of many spurs” or “steep ridges”.",
+      "local_names": [{ "name": "Olongongot", "language": "Maasai", "meaning": "mountains of many spurs" }],
+      "source": "https://en.wikipedia.org/wiki/Mount_Longonot",
+      "quote": "Its name is derived from the Maasai word Olongongot, meaning \"mountains of many spurs\" or \"steep ridges\"."
+    }
+  ]
+}

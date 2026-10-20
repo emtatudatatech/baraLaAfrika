@@ -1,0 +1,195 @@
+.section {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+  scroll-margin-top: calc(var(--ribbon-height, 0px) + var(--space-4));
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+}
+
+.title > span {
+  color: var(--gold-accent);
+}
+
+/* The metric switch: a row of pressed/unpressed buttons (wraps when narrow). */
+.metrics {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-lg);
+  background: var(--glass-bg-strong);
+}
+
+.metrics button {
+  min-height: calc(var(--touch-target) - 8px);
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-pill);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-ink-muted);
+  background: transparent;
+}
+
+.metrics button:hover {
+  color: var(--color-ink);
+}
+
+.metrics button[aria-pressed='true'] {
+  color: var(--color-accent-ink);
+  background: var(--color-accent);
+}
+
+.metricSelect {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+}
+
+.metricSelect select {
+  flex: 1;
+  min-height: var(--touch-target);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-md);
+  font: inherit;
+  color: var(--color-ink);
+  background: var(--glass-bg-strong);
+}
+
+.stage {
+  position: relative;
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.frame {
+  aspect-ratio: 0.95;
+}
+
+@media (--bp-md) {
+  .frame {
+    aspect-ratio: auto;
+    height: clamp(26rem, calc(100dvh - 15rem), 48rem);
+  }
+
+  .legend {
+    position: absolute;
+    bottom: var(--space-3);
+    left: var(--space-3);
+  }
+}
+
+.country,
+.marker {
+  fill: var(--fill);
+  cursor: pointer;
+  transition:
+    opacity var(--duration-med) var(--ease-out),
+    fill var(--duration-med) var(--ease-out);
+}
+
+.country:focus,
+.marker:focus {
+  outline: none; /* the highlight outline is the focus indicator */
+}
+
+.dimmed {
+  opacity: var(--map-dimmed-opacity);
+}
+
+.markerDot {
+  fill: var(--fill);
+  stroke: var(--map-marker-ring);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+/* "No data": a pale neutral with a dot grid; "included in other": neutral with stripes. */
+.noDataFill {
+  fill: var(--map-context-land);
+}
+
+.noDataDot {
+  fill: var(--color-ink-subtle);
+}
+
+.includedFill {
+  fill: color-mix(in oklch, var(--map-context-land) 70%, var(--color-ink-subtle));
+}
+
+.includedLine {
+  stroke: var(--color-ink-muted);
+  stroke-width: 1.5;
+}
+
+.legend {
+  display: grid;
+  gap: var(--space-2);
+  justify-self: start;
+  max-width: 100%;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+}
+
+.legendTitle {
+  margin: 0;
+  font-weight: var(--weight-semibold);
+  color: var(--color-ink);
+}
+
+.legend ul {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legend li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.swatch {
+  stroke: var(--color-line-strong);
+  stroke-width: 1;
+}
+
+.legendCount {
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink-muted);
+}
+
+.figure {
+  font-variant-numeric: tabular-nums;
+}
+
+.period {
+  color: var(--color-ink-muted);
+}

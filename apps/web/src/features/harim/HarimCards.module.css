@@ -1,0 +1,157 @@
+.list {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--accent);
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: var(--touch-target);
+  padding: var(--space-2) var(--space-1);
+  border: 0;
+  border-radius: var(--radius-sm);
+  font: inherit;
+  text-align: start;
+  color: var(--color-ink);
+  background: transparent;
+}
+
+.titles {
+  display: grid;
+  flex: 1;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.titleLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+}
+
+.name {
+  font-weight: var(--weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.subline {
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+  overflow-wrap: anywhere;
+}
+
+.figure {
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--color-ink);
+}
+
+.chevron {
+  flex: none;
+  color: var(--color-ink-muted);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+/* All peaks on phones: one panel with a divided list (hundreds of separate glass cards would
+   cost a backdrop blur each). */
+.peakList {
+  margin: 0;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-lg);
+  list-style: none;
+}
+
+.peakItem {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.peakItem:last-child {
+  border-bottom: 0;
+}
+
+.peakHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-3);
+}
+
+.peakButton {
+  min-height: var(--touch-target);
+  margin-inline: calc(-1 * var(--space-1));
+  padding: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-xs);
+  font: inherit;
+  font-weight: var(--weight-semibold);
+  text-align: start;
+  color: var(--color-ink);
+  background: transparent;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--color-accent) 70%, transparent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+}
+
+.skeletonCard {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 4rem;
+}
+
+.skeletonFlag {
+  flex: none;
+  width: 40px;
+  height: 27px;
+}
+
+.skeletonText {
+  width: 40%;
+  height: 1rem;
+}
+
+.selectedItem {
+  margin-inline: calc(-1 * var(--space-2));
+  padding-inline: var(--space-2);
+  border-radius: var(--radius-sm);
+  background: color-mix(in oklch, var(--color-focus) 14%, transparent);
+}
+
+.headEnd {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-block: calc(-1 * var(--space-2));
+}

@@ -1,0 +1,67 @@
+{
+  "name": "bara-la-afrika",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Bara La Afrika: uncovering, learning and understanding Africa from historical and contemporary perspectives.",
+  "type": "module",
+  "workspaces": [
+    "packages/shared",
+    "apps/web",
+    "netlify"
+  ],
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "npm run dev -w apps/web",
+    "dev:netlify": "netlify dev --filter @bla/web",
+    "dev:local": "node scripts/dev-local.mjs",
+    "build": "npm run build -w apps/web",
+    "preview": "npm run preview -w apps/web",
+    "lint": "eslint . && stylelint \"apps/web/src/**/*.css\"",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc -b",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "e2e": "playwright test",
+    "e2e:install": "playwright install --with-deps chromium",
+    "screenshots": "playwright test e2e/screenshots.spec.ts --project=screenshots",
+    "check": "npm run lint && npm run format:check && npm run typecheck && npm run test && npm run build",
+    "check:functions": "node scripts/check-function-bundles.mjs",
+    "lighthouse": "node scripts/lighthouse.mjs"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@electric-sql/pglite": "0.5.10",
+    "@electric-sql/pglite-socket": "^0.2.13",
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.64.1",
+    "@testing-library/dom": "10.4.2",
+    "@testing-library/jest-dom": "7.0.1",
+    "@testing-library/react": "16.3.3",
+    "@testing-library/user-event": "14.6.8",
+    "@types/node": "26.6.5",
+    "@vitejs/plugin-react": "6.1.2",
+    "eslint": "10.12.0",
+    "eslint-plugin-jsx-a11y": "6.10.2",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-react-refresh": "0.5.7",
+    "globals": "17.13.0",
+    "jsdom": "29.1.1",
+    "lighthouse": "13.5.0",
+    "netlify-cli": "27.12.1",
+    "prettier": "3.9.10",
+    "stylelint": "17.16.0",
+    "stylelint-config-standard": "40.0.0",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.71.2",
+    "vite": "8.3.4",
+    "vitest": "5.0.4"
+  },
+  "overrides": {
+    "eslint-plugin-jsx-a11y": {
+      "eslint": "$eslint"
+    }
+  }
+}

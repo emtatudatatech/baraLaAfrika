@@ -1,0 +1,39 @@
+.skipLink {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: var(--z-toast);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-weight: var(--weight-semibold);
+  color: var(--color-accent-ink);
+  background: var(--color-accent);
+  transform: translateY(-200%);
+}
+
+.skipLink:focus-visible {
+  transform: none;
+}
+
+.main {
+  display: grid;
+  gap: var(--space-6);
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding: var(--space-6) max(var(--gutter), env(safe-area-inset-left)) 0
+    max(var(--gutter), env(safe-area-inset-right));
+}
+
+/*
+ * Grid items default to `min-width: auto` (their content's minimum width), so one wide child
+ * (e.g. the countries table, for the frame before phones switch to cards) would widen the whole
+ * column and every block in it. Sections size to the column instead.
+ */
+.main > * {
+  min-width: 0;
+}
+
+.main:focus {
+  outline: none;
+}

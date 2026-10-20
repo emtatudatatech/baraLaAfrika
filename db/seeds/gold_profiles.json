@@ -1,0 +1,421 @@
+{
+  "$generated": {
+    "by": "python -m pipelines gold-profiles",
+    "generated_on": "2026-10-18"
+  },
+  "sources": [
+    {
+      "source_key": "cite-9b8ed68530ed",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Algeria",
+      "url": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-algeria.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-f694a507cb4b",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Angola",
+      "url": "https://pubs.usgs.gov/myb/vol3/2020-21/myb3-2020-21-angola.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-8850e31d4c99",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Botswana",
+      "url": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-botswana.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-02dd2f673d90",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Burundi",
+      "url": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-burundi.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-f28c997cc968",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Cameroon",
+      "url": "https://pubs.usgs.gov/myb/vol3/2020-21/myb3-2020-21-cameroon.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-deaf37130c62",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Central African Republic",
+      "url": "https://pubs.usgs.gov/myb/vol3/2020-21/myb3-2020-21-central-african-republic.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-21482ebf365a",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Chad",
+      "url": "https://pubs.usgs.gov/myb/vol3/2020-21/myb3-2020-21-chad.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-ba80d5b14a05",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2022, volume III: Congo (Brazzaville)",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/myb3-2022-congo-brazzaville.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-308b9f4ab176",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2022, volume III: Congo (Kinshasa)",
+      "url": "https://pubs.usgs.gov/myb/vol3/2022/myb3-2022-congo-kinshasa.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-83dbcc9a0b19",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Egypt",
+      "url": "https://pubs.usgs.gov/myb/vol3/2020-21/myb3-2020-21-egypt.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-e5897af2239a",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Gabon",
+      "url": "https://pubs.usgs.gov/myb/vol3/2020-21/myb3-2020-21-gabon.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-fea29dd3501a",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Ghana",
+      "url": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-ghana.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-7155aa3d2a34",
+      "ref_no": null,
+      "title": "Ghana Gold Board (GoldBod): About GoldBod",
+      "url": "https://goldbod.gov.gh/",
+      "source_type": "government",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-1ff8c3e92c6c",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Guinea",
+      "url": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-guinea.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-0ca01d80f71f",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Kenya",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/myb3-2019-kenya.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-1ef432b19da5",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Liberia",
+      "url": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-liberia.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-41b0b50477d4",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Libya",
+      "url": "https://pubs.usgs.gov/myb/vol3/2020-21/myb3-2020-21-libya.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-bb01c0485e2a",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Madagascar",
+      "url": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-madagascar.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-dcc7ac34d663",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Malawi",
+      "url": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-malawi.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-423c695b6c03",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Mauritania",
+      "url": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-mauritania.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-c3db93a54a95",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Mozambique",
+      "url": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-mozambique.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-7c153375af97",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Namibia",
+      "url": "https://pubs.usgs.gov/myb/vol3/2020-21/myb3-2020-21-namibia.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-91c2a748abf7",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Nigeria",
+      "url": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-nigeria.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-e3cb6436297a",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Senegal",
+      "url": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-senegal.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-6ed57ef03288",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Sierra Leone",
+      "url": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-sierra-leone.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-ba339357a4f1",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Sudan",
+      "url": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-sudan.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-ba2824baae2c",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Tanzania",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/myb3-2019-tanzania.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-8708cbd8e434",
+      "ref_no": null,
+      "title": "FB Attorneys: Legal update, 4 October 2024 (Bank of Tanzania gold purchase program)",
+      "url": "https://fbattorneys.co.tz/wp-content/uploads/2024/10/FB-LEGAL-UPDATE-41024.pdf",
+      "source_type": "legal",
+      "reliability_tier": "secondary"
+    },
+    {
+      "source_key": "cite-125d4cb94985",
+      "ref_no": null,
+      "title": "The Chanzo: Bank of Tanzania boosts gold reserves with new agreements to strengthen gold purchase programme (17 June 2025)",
+      "url": "https://thechanzo.com/2025/06/17/bank-of-tanzania-boosts-gold-reserves-with-new-agreements-to-strengthen-gold-purchase-programme/",
+      "source_type": "news",
+      "reliability_tier": "secondary"
+    },
+    {
+      "source_key": "cite-b9ed6af53cc8",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Uganda",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/myb3-2019-uganda.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-ffa08a660608",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Zambia",
+      "url": "https://pubs.usgs.gov/myb/vol3/2020-21/myb3-2020-21-zambia.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-8fc0803e670a",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Zimbabwe",
+      "url": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-zimbabwe.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-a301b7755273",
+      "ref_no": null,
+      "title": "FactCheckZW: Explainer: Zimbabwe Gold (ZiG) currency (April 2024)",
+      "url": "https://factcheck.cite.org.zw/explainer-zimbabwe-gold-zig-currency/",
+      "source_type": "news",
+      "reliability_tier": "secondary"
+    },
+    {
+      "source_key": "cite-f730dc42f916",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2022, volume III: South Africa",
+      "url": "https://pubs.usgs.gov/myb/vol3/2022/myb3-2022-south-africa.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-78d47d992659",
+      "ref_no": null,
+      "title": "Global Initiative Against Transnational Organized Crime: The Somali gold rush: Milxo and the ungoverned mining frontier (2 February 2026)",
+      "url": "https://globalinitiative.net/analysis/somali-gold-rush-milxo-mining/",
+      "source_type": "report",
+      "reliability_tier": "secondary"
+    }
+  ],
+  "profiles": {
+    "columns": ["iso3", "summary"],
+    "rows": [
+      ["DZA", "Algeria produces gold. Mine production 0.1 t in 2022 (estimated; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Algeria)."],
+      ["EGY", "Egypt produces gold. Mine production 13.7 t in 2022 (reported; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Egypt)."],
+      ["LBY", "Artisanal gold mining is reported in Libya, but the sources consulted give no current production figure. A USGS production table note lists gold among commodities that may have been produced, without a reliable output estimate (U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Libya)."],
+      ["MRT", "Mauritania produces gold. Mine production 8.1 t in 2021 (reported; U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Mauritania). The USGS also reports artisanal gold mining."],
+      ["MAR", "Morocco produces gold. Mine production 0.167 t in 2022 (reported; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Morocco)."],
+      ["TUN", "No significant gold deposits identified in the sources consulted."],
+      ["BEN", "Gold occurrences are documented in Benin, but the sources consulted give no current production figure. A USGS production table note lists gold among commodities that may have been produced, without a reliable output estimate (U.S. Geological Survey, Minerals Yearbook 2022, volume III: Benin)."],
+      ["BFA", "Burkina Faso produces gold. Mine production 60.0 t in 2024 (estimated; U.S. Geological Survey, Mineral Commodity Summaries 2025: Gold). The USGS also reports artisanal gold mining."],
+      ["CPV", "No significant gold deposits identified in the sources consulted."],
+      ["CIV", "Côte d'Ivoire produces gold. Mine production 21.0 t in 2021 (estimated; U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Côte d'Ivoire). The USGS notes: Does not include production from artisanal mining. The USGS also reports artisanal gold mining."],
+      ["GMB", "No significant gold deposits identified in the sources consulted."],
+      ["GHA", "Ghana produces gold. Mine production 150.0 t in 2025 (estimated; U.S. Geological Survey, Mineral Commodity Summaries 2026: Gold (data release doi:10.5066/P1WKQ63T)). Artisanal and small-scale mining accounted for about 17.6% of recorded output in the latest year the USGS splits it."],
+      ["GIN", "Guinea produces gold. Mine production 17.9 t in 2021 (reported; U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Guinea). The USGS notes: Does not include artisanal production. Guinea produced artisanal gold but information was inadequate to make reliable estimates of output. The USGS also reports artisanal gold mining."],
+      ["GNB", "Gold occurrences are documented in Guinea-Bissau, but the sources consulted give no current production figure. Small, low-grade gold anomalies are documented in the northeast of Guinea-Bissau (Wikipedia, Geology of Guinea-Bissau). No production is reported."],
+      ["LBR", "Liberia produces gold. Mine production 11.7 t in 2022 (estimated; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Liberia). Artisanal and small-scale mining accounted for about 74.4% of recorded output in the latest year the USGS splits it."],
+      ["MLI", "Mali produces gold. Mine production 70.0 t in 2024 (estimated; U.S. Geological Survey, Mineral Commodity Summaries 2025: Gold). The USGS also reports artisanal gold mining."],
+      ["NER", "Niger produces gold. Mine production 2.0 t in 2021 (estimated; U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Niger). The USGS notes: Includes artisanal and small-scale production of gold. The USGS also reports artisanal gold mining."],
+      ["NGA", "Nigeria produces gold. Mine production 0.349 t in 2021 (reported; U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Nigeria). The USGS also reports artisanal gold mining."],
+      ["SEN", "Senegal produces gold. Mine production 15.9 t in 2021 (reported; U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Senegal)."],
+      ["SLE", "Sierra Leone produces gold. Mine production 0.06 t in 2021 (estimated; U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Sierra Leone). The USGS also reports artisanal gold mining."],
+      ["TGO", "Togo produces gold. The USGS reports about 20 t of gold a year for Togo, but says these figures are export data that mostly include artisanal gold transiting Togo from neighbouring countries and, to a lesser extent, domestic artisanal production. Domestic output is not quantified, so Togo is not counted as a major producer. The USGS also reports artisanal gold mining."],
+      ["AGO", "Gold occurrences are documented in Angola, but the sources consulted give no current production figure. A USGS production table note lists gold among commodities that may have been produced, without a reliable output estimate (U.S. Geological Survey, Minerals Yearbook 2022, volume III: Angola)."],
+      ["CMR", "Cameroon produces gold. Mine production 0.3 t in 2022 (estimated; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Cameroon)."],
+      ["CAF", "Central African Republic produces gold. Mine production 1.8 t in 2023 (reported; U.S. Geological Survey, Minerals Yearbook 2023, volume III: Central African Republic). The USGS notes: Exported production reported by the Banque des États de l'Afrique Centrale. Exported production may not reflect the totality of the country's artisanal output. The USGS also reports artisanal gold mining."],
+      ["TCD", "Artisanal gold mining is reported in Chad, but the sources consulted give no current production figure. A USGS production table note lists gold among commodities that may have been produced, without a reliable output estimate (U.S. Geological Survey, Minerals Yearbook 2022, volume III: Chad)."],
+      ["COG", "Gold occurrences are documented in Republic of the Congo, but the sources consulted give no current production figure. A USGS production table note lists gold among commodities that may have been produced, without a reliable output estimate (U.S. Geological Survey, Minerals Yearbook 2022, volume III: Republic of the Congo)."],
+      ["COD", "Democratic Republic of the Congo produces gold. Mine production 43.0 t in 2022 (estimated; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Democratic Republic of the Congo). The USGS also reports artisanal gold mining."],
+      ["GNQ", "Artisanal gold mining is reported in Equatorial Guinea, but the sources consulted give no current production figure. A USGS production table note lists gold among commodities that may have been produced, without a reliable output estimate (U.S. Geological Survey, Minerals Yearbook 2023, volume III: Equatorial Guinea)."],
+      ["GAB", "Gabon produces gold. Mine production 0.1 t in 2021 (estimated; U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Gabon). The USGS also reports artisanal gold mining."],
+      ["STP", "No significant gold deposits identified in the sources consulted."],
+      ["BDI", "Burundi produces gold. Mine production 0.042 t in 2022 (estimated; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Burundi). The USGS also reports artisanal gold mining."],
+      ["COM", "No significant gold deposits identified in the sources consulted."],
+      ["DJI", "No significant gold deposits identified in the sources consulted."],
+      ["ERI", "Eritrea produces gold. Mine production 4.1 t in 2023 (estimated; U.S. Geological Survey, Minerals Yearbook 2023, volume III: Eritrea). The USGS notes: Reported sales."],
+      ["ETH", "Ethiopia produces gold. Mine production 8.7 t in 2022 (reported; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Ethiopia). The USGS notes: Reported exports. The USGS also reports artisanal gold mining."],
+      ["KEN", "Kenya produces gold. Mine production 0.565 t in 2022 (reported; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Kenya)."],
+      ["MDG", "Artisanal gold mining is reported in Madagascar, but the sources consulted give no current production figure. The USGS lists gold operations in its structure-of-industry table, without a production figure (U.S. Geological Survey, Minerals Yearbook 2019, volume III: Madagascar)."],
+      ["MWI", "Artisanal gold mining is reported in Malawi, but the sources consulted give no current production figure. A USGS production table note lists gold among commodities that may have been produced, without a reliable output estimate (U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Malawi)."],
+      ["MUS", "No significant gold deposits identified in the sources consulted."],
+      ["RWA", "Rwanda produces gold. Mine production 0.35 t in 2022 (estimated; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Rwanda)."],
+      ["SYC", "No significant gold deposits identified in the sources consulted."],
+      ["SOM", "Artisanal gold mining is reported in Somalia, but the sources consulted give no current production figure. The Global Initiative Against Transnational Organized Crime reports artisanal gold mining at Milxo in north-eastern Somalia, which it describes as one of Africa's least-known gold booms. No production figure is published."],
+      ["SSD", "Artisanal gold mining is reported in South Sudan, but the sources consulted give no current production figure. A USGS production table note lists gold among commodities that may have been produced, without a reliable output estimate (U.S. Geological Survey, Minerals Yearbook 2022, volume III: South Sudan)."],
+      ["SDN", "Sudan produces gold. Mine production 50.0 t in 2022 (estimated; U.S. Geological Survey, Mineral Commodity Summaries 2023: Gold). The USGS also reports artisanal gold mining."],
+      ["TZA", "Tanzania produces gold. Mine production 60.0 t in 2024 (estimated; U.S. Geological Survey, Mineral Commodity Summaries 2025: Gold). The USGS also reports artisanal gold mining."],
+      ["UGA", "Uganda produces gold. Mine production 3.6 t in 2021 (estimated; U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Uganda). The USGS also reports artisanal gold mining."],
+      ["BWA", "Botswana produces gold. Mine production 0.427 t in 2022 (reported; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Botswana)."],
+      ["SWZ", "Artisanal gold mining is reported in Eswatini, but the sources consulted give no current production figure. The USGS lists gold operations in its structure-of-industry table, without a production figure (U.S. Geological Survey, Minerals Yearbook 2019, volume III: Eswatini)."],
+      ["LSO", "No significant gold deposits identified in the sources consulted."],
+      ["MOZ", "Mozambique produces gold. Mine production 0.764 t in 2021 (reported; U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Mozambique). The USGS also reports artisanal gold mining."],
+      ["NAM", "Namibia produces gold. Mine production 7.4 t in 2022 (reported; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Namibia)."],
+      ["ZAF", "South Africa produces gold. Mine production 90.0 t in 2025 (estimated; U.S. Geological Survey, Mineral Commodity Summaries 2026: Gold (data release doi:10.5066/P1WKQ63T))."],
+      ["ZMB", "Zambia produces gold. Mine production 3.5 t in 2022 (reported; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Zambia). The USGS notes: Does not include artisanal and small-scale production. The USGS also reports artisanal gold mining."],
+      ["ZWE", "Zimbabwe produces gold. Mine production 37.4 t in 2022 (reported; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Zimbabwe). The USGS also reports artisanal gold mining."]
+    ]
+  },
+  "notes": {
+    "columns": ["iso3", "sort_order", "note", "source", "as_of", "needs_review", "review_notes"],
+    "rows": [
+      ["AGO", 1, "As of 2021, Angola had 28 licensed gold projects: 20 in the prospecting phase and 8 with production titles (Ministry of Mineral Resources, Oil and Gas, via the USGS).", "cite-f694a507cb4b", "2021-12-31", false, null],
+      ["BDI", 1, "A 2016 World Bank report estimated that between 14,000 and 27,000 miners were involved in producing gold in Burundi (cited by the USGS).", "cite-02dd2f673d90", "2016-12-31", false, null],
+      ["BDI", 2, "In November 2019 the Government banned mining cooperatives and companies from selling gold to private buyers, and the Central Bank became the sole buyer of gold (USGS).", "cite-02dd2f673d90", "2019-11-30", false, null],
+      ["BFA", 1, "USGS gold production figures (Minerals Yearbook 2022): Does not include artisanal or byproduct production.", "usgs-myb-2022-bfa", "2023-10-10", false, null],
+      ["BWA", 1, "Gold in Botswana is produced by large-scale mines (USGS, 2019).", "cite-8850e31d4c99", "2019-12-31", false, null],
+      ["CAF", 1, "USGS gold production figures (Minerals Yearbook 2023): Exported production reported by the Banque des États de l'Afrique Centrale. Exported production may not reflect the totality of the country's artisanal output.", "usgs-myb-2023-caf", "2024-07-15", false, null],
+      ["CAF", 2, "All mineral production in the Central African Republic was by artisanal miners; an estimated 150,000 to 200,000 artisanal miners worked in diamond and gold mining in 2019 (USGS).", "cite-deaf37130c62", "2019-12-31", false, null],
+      ["CIV", 1, "USGS gold production figures (Minerals Yearbook 2016): Does not include production from artisanal mining.", "usgs-myb-2016-civ", "2017-11-29", false, null],
+      ["CMR", 1, "Exploration: Oriole Resources drilled the Bibemi gold project in the North Region in 2021 (USGS).", "cite-f28c997cc968", "2021-12-31", false, null],
+      ["COD", 1, "Gold mining was estimated to employ more than 270,000 artisanal miners in 2019 (USGS).", "cite-308b9f4ab176", "2019-12-31", false, null],
+      ["COD", 2, "A survey by IPIS between 2017 and 2022 found gold produced at a minimum of 1,230 mines in eastern Congo (Kinshasa) (cited by the USGS).", "cite-308b9f4ab176", "2022-12-31", false, null],
+      ["COD", 3, "AngloGold Ashanti and Barrick Gold produce gold at the Kibali Mine in Haut-Uele Province (USGS, 2022).", "cite-308b9f4ab176", "2022-12-31", false, null],
+      ["COG", 1, "Gold in the Republic of the Congo is produced by artisanal miners (USGS, 2022).", "cite-ba80d5b14a05", "2022-12-31", false, null],
+      ["DZA", 1, "Gold and silver were produced by Entreprise d'Exploitation des Mines d'Or (ENOR), in which the state energy company Sonatrach was a major stakeholder (USGS, 2019).", "cite-9b8ed68530ed", "2019-12-31", false, null],
+      ["EGY", 1, "Egypt's entire gold production in 2020 came from the Sukari mine, its largest and first modern gold mine (USGS).", "cite-83dbcc9a0b19", "2020-12-31", false, null],
+      ["EGY", 2, "Egypt's 2019 mining code (Law No. 145 of 2019) no longer limits mining companies' ownership of new projects to 50% (USGS).", "cite-83dbcc9a0b19", "2021-12-31", false, null],
+      ["ERI", 1, "USGS gold production figures (Minerals Yearbook 2019): Reported sales.", "usgs-myb-2019-eri", "2020-07-07", false, null],
+      ["ETH", 1, "USGS gold production figures (Minerals Yearbook 2022): Reported exports.", "usgs-myb-2022-eth", "2023-09-25", false, null],
+      ["GAB", 1, "USGS gold production figures (Minerals Yearbook 2020-21): Gold produced only by artisanal miners after 2017.", "usgs-myb-2020-21-gab", "2022-05-11", false, null],
+      ["GAB", 2, "The Bakoudou gold mine closed in 2017 when its gold resources were depleted; Managem was developing the Eteke gold project in the Mouila region (USGS).", "cite-e5897af2239a", "2021-12-31", false, null],
+      ["GHA", 1, "Ghana became Africa's leading gold producer in 2019 and the sixth-ranked in the world, with 4.3% of global output (USGS).", "cite-fea29dd3501a", "2019-12-31", false, null],
+      ["GHA", 2, "Artisanal and small-scale mining was estimated to employ more than 1 million people and produced 35% of Ghana's gold in 2019 (41% in 2018) (USGS).", "cite-fea29dd3501a", "2019-12-31", false, null],
+      ["GHA", 3, "Gold made up about 40% of Ghana's export earnings in 2019 (USGS).", "cite-fea29dd3501a", "2019-12-31", false, null],
+      ["GHA", 4, "Since 2025 the Ghana Gold Board (GoldBod) has been the sole authority with exclusive rights to buy, sell, assay and export gold in Ghana (GoldBod).", "cite-7155aa3d2a34", "2025-04-02", false, null],
+      ["GIN", 1, "USGS gold production figures (Minerals Yearbook 2020-21): Does not include artisanal production. Guinea produced artisanal gold but information was inadequate to make reliable estimates of output.", "usgs-myb-2020-21-gin", "2022-10-18", false, null],
+      ["GIN", 2, "Guinea exported about 26.5 t of gold in 2018 (Institute of National Statistics, via the USGS); artisanal miners mine gold throughout the country.", "cite-1ff8c3e92c6c", "2018-12-31", false, null],
+      ["KEN", 1, "In 2019 artisanal and small-scale miners produced 395 kg of gold, mostly near Lake Victoria (USGS).", "cite-0ca01d80f71f", "2019-12-31", false, null],
+      ["KEN", 2, "Mercury emissions from artisanal and small-scale gold mining in Kenya were estimated at 2,100 kg a year (USGS).", "cite-0ca01d80f71f", "2019-12-31", false, null],
+      ["LBR", 1, "Gold made up about 40% of Liberia's export receipts in 2019 (Central Bank of Liberia, via the USGS).", "cite-1ef432b19da5", "2019-12-31", false, null],
+      ["LBR", 2, "A government programme put a moratorium on new small-scale (class C) mining licences and banned dredges on water bodies used for gold and diamond mining (USGS, 2019).", "cite-1ef432b19da5", "2019-12-31", false, null],
+      ["LBY", 1, "In September 2021 Libya issued its first gold exploration permit, to Blue Castle Mining Co. (USGS).", "cite-41b0b50477d4", "2021-09-30", false, null],
+      ["LBY", 2, "Artisanal gold mining increased in southeastern Libya near the borders with Egypt and Sudan, and in the southwest along the borders with Algeria, Chad and Niger (USGS).", "cite-41b0b50477d4", "2021-12-31", false, null],
+      ["MDG", 1, "USGS gold production figures (Minerals Yearbook 2022): Reported exports.", "usgs-myb-2022-mdg", "2024-01-29", false, null],
+      ["MDG", 2, "USGS gold production figures (Minerals Yearbook 2022): Does not include smuggled artisanal production, which was estimated to be between 2,000 and 10,000 killograms per year..", "usgs-myb-2022-mdg", "2024-01-29", false, null],
+      ["MDG", 3, "Informal gold mining was estimated to employ about 450,000 workers in Madagascar (USGS, citing van der Waal, 2019).", "cite-bb01c0485e2a", "2019-12-31", false, null],
+      ["MDG", 4, "The United Arab Emirates took 97% of Madagascar's gold exports by volume in 2018 (USGS).", "cite-bb01c0485e2a", "2018-12-31", false, null],
+      ["MLI", 1, "USGS gold production figures (Minerals Yearbook 2020-21): Does not include artisanal gold production, which was estimated to be more than 6,000 kilograms.", "usgs-myb-2020-21-mli", "2022-06-13", false, null],
+      ["MOZ", 1, "Small-scale and artisanal operations produce gold, among other minerals, in Mozambique (USGS, 2019).", "cite-c3db93a54a95", "2019-12-31", false, null],
+      ["MRT", 1, "Artisanal gold mining became legal under a 2016 decree granting small-scale permits to miners using metal detectors in a 1,791 km² zone of Inchiri District; in 2019 artisanal miners sold 1,049 kg of gold to the Government (USGS).", "cite-423c695b6c03", "2019-12-31", false, null],
+      ["MRT", 2, "Gold production came mainly from the Tasiast mine, the Guelb Moghrein copper-gold mine and artisanal mining (USGS, 2019).", "cite-423c695b6c03", "2019-12-31", false, null],
+      ["MWI", 1, "The Government planned to formalise gold mining by forming cooperatives of artisanal miners (USGS, 2019).", "cite-dcc7ac34d663", "2019-12-31", false, null],
+      ["NAM", 1, "USGS gold production figures (Minerals Yearbook 2022): Excludes gold recovered as a byproduct of copper mining.", "usgs-myb-2022-nam", "2024-01-24", false, null],
+      ["NAM", 2, "Most of Namibia's gold comes from B2Gold's Otjikoto Mine, which produced 5,227 kg in 2020 (USGS).", "cite-7c153375af97", "2020-12-31", false, null],
+      ["NER", 1, "USGS gold production figures (Minerals Yearbook 2020-21): Includes artisanal and small-scale production of gold.", "usgs-myb-2020-21-ner", "2022-06-23", false, null],
+      ["NGA", 1, "Artisanal miners and small-scale mining companies produce gold in Nigeria (USGS, 2019).", "cite-91c2a748abf7", "2019-12-31", false, null],
+      ["NGA", 2, "In December 2018 Kian Smith Trade & Co. began building a gold refinery in Ogun State (USGS).", "cite-91c2a748abf7", "2018-12-31", false, null],
+      ["RWA", 1, "USGS gold production figures (Minerals Yearbook 2022): Fiscal year data.", "usgs-myb-2022-rwa", "2023-10-30", false, null],
+      ["SDN", 1, "Gold in Sudan is produced by artisanal miners and by local and international mining companies (USGS, 2019).", "cite-ba339357a4f1", "2019-12-31", false, null],
+      ["SDN", 2, "From 1 January 2020 private mining companies could export up to 70% of their gold, depositing the proceeds in local banks, and had to sell the rest to the Central Bank of Sudan (USGS).", "cite-ba339357a4f1", "2020-01-01", false, null],
+      ["SEN", 1, "Teranga Gold produced 7,505 kg of gold at the Sabodala mine in 2019 (USGS).", "cite-e3cb6436297a", "2019-12-31", false, null],
+      ["SEN", 2, "Several other companies explored for gold in Senegal in 2019 (USGS).", "cite-e3cb6436297a", "2019-12-31", false, null],
+      ["SLE", 1, "Some gold projects in Sierra Leone were aiming to start production, but were still in the early stages of planning and development (USGS, 2019).", "cite-6ed57ef03288", "2019-12-31", false, null],
+      ["SOM", 1, "Milxo, in a contested region of north-eastern Somalia, grew from a few hundred people in 2016 to an estimated 10,000 to 15,000 residents during a gold rush (Global Initiative Against Transnational Organized Crime, 2026).", "cite-78d47d992659", "2026-02-02", false, null],
+      ["SWZ", 1, "USGS gold production figures (Minerals Yearbook 2023): Gold production does not include the country's artisanal output.", "usgs-myb-2023-swz", "2024-07-03", false, null],
+      ["TCD", 1, "In 2020 IronRidge Resources was developing five gold exploration projects in the Ouaddai Region of southeastern Chad, where there had been sporadic artisanal gold mining (USGS).", "cite-21482ebf365a", "2020-12-31", false, null],
+      ["TGO", 1, "USGS gold production figures (Minerals Yearbook 2020-21): Data reported by the Government of Togo as exports that predominately consist of artisanal gold mine production transiting Togo from neighboring countries and, to a lesser extent, domestic artisanal mine production. Data may include gold from other artisanal sources.", "usgs-myb-2020-21-tgo", "2022-08-29", false, null],
+      ["TZA", 1, "Gold accounted for 39.8% of Tanzania's exports in 2019 (USGS).", "cite-ba2824baae2c", "2019-12-31", false, null],
+      ["TZA", 2, "In March 2019 the Government set up 28 mineral-trading centres to formalise artisanal and small-scale mining (USGS).", "cite-ba2824baae2c", "2019-03-31", false, null],
+      ["TZA", 3, "Regulations in force from 1 October 2024 require miners and licensed dealers to set aside at least 20% of their gold for sale within Tanzania, including to the Bank of Tanzania (FB Attorneys).", "cite-8708cbd8e434", "2024-10-04", false, null],
+      ["TZA", 4, "The Governor of the Bank of Tanzania said the bank had bought 5,022.85 kg of gold by 13 June 2025, under its gold purchase programme (The Chanzo).", "cite-125d4cb94985", "2025-06-13", false, null],
+      ["UGA", 1, "About 65,000 artisanal miners were estimated to produce gold in Karamoja and Mubende Districts at the end of 2019 (USGS).", "cite-b9ed6af53cc8", "2019-12-31", false, null],
+      ["UGA", 2, "African Gold Refinery produced 17,000 kg of refined gold at Entebbe in 2019 (USGS).", "cite-b9ed6af53cc8", "2019-12-31", false, null],
+      ["ZAF", 1, "South Africa's long decline in mined gold output continued in 2022: 92,573 kg, against 107,890 kg in 2021 and 155,286 kg in 2012 (USGS).", "cite-f730dc42f916", "2022-12-31", false, null],
+      ["ZAF", 2, "Rand Refinery refines most newly mined gold in South Africa; most of its output comes from gold mined elsewhere in Africa, including Ghana and Tanzania (USGS, 2022).", "cite-f730dc42f916", "2022-12-31", false, null],
+      ["ZMB", 1, "USGS gold production figures (Minerals Yearbook 2022): Does not include artisanal and small-scale production.", "usgs-myb-2022-zmb", "2023-12-11", false, null],
+      ["ZMB", 2, "The Kansanshi Mine is Zambia's only large-scale gold producer; artisanal and small-scale miners also produce gold, in unreported amounts (USGS).", "cite-ffa08a660608", "2021-12-31", false, null],
+      ["ZMB", 3, "In 2019 the Government announced a plan to formalise artisanal and small-scale gold mining (USGS).", "cite-ffa08a660608", "2019-12-31", false, null],
+      ["ZWE", 1, "Gold accounted for 25% of the value of Zimbabwe's exports in 2019 (USGS).", "cite-8fc0803e670a", "2019-12-31", false, null],
+      ["ZWE", 2, "In April 2024 Zimbabwe introduced the ZiG (Zimbabwe Gold) currency, backed by a basket of foreign currency and precious metals, mainly gold (FactCheckZW).", "cite-a301b7755273", "2024-04-05", false, null]
+    ]
+  }
+}

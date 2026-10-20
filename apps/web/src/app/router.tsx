@@ -1,0 +1,101 @@
+import type { RouteObject } from 'react-router';
+
+import type { RouteDataHandle } from '../features/coverage/routeData';
+import { InitialLoad } from './InitialLoad';
+import { Layout } from './layout/Layout';
+import { NotFoundPage } from './NotFoundPage';
+import { RootErrorBoundary } from './RootErrorBoundary';
+import { RouteErrorBoundary } from './RouteErrorBoundary';
+
+/**
+ * Route table. Each data route declares its datasets for the ribbon (see routeData.ts); route
+ * modules are code-split with `lazy`.
+ */
+export const ROUTE_DATA = {
+  home: {
+    datasets: ['symbology-pdf', 'boundaries-natural-earth', 'flags-flagpedia'],
+    timeDependent: false,
+  },
+  countries: {
+    datasets: ['symbology-pdf', 'flags-flagpedia'],
+    timeDependent: false,
+  },
+  harim: {
+    datasets: ['mountains-baseline', 'mountains-wikidata', 'mountains-geonames'],
+    timeDependent: false,
+  },
+  dhahabu: {
+    datasets: [
+      'gold-price',
+      'gold-production',
+      'gold-official-reserves',
+      'gold-trade',
+      'gold-presence',
+    ],
+    timeDependent: true,
+  },
+} as const satisfies Record<string, RouteDataHandle>;
+
+/**
+ * The route table, shared by the browser router (main.tsx) and the build's prerender
+ * (entry-server.tsx).
+ */
+export const routes: RouteObject[] = [
+  {
+    path: '/',
+    Component: Layout,
+    HydrateFallback: InitialLoad,
+    ErrorBoundary: RootErrorBoundary,
+    children: [
+      {
+        ErrorBoundary: RouteErrorBoundary,
+        children: [
+          {
+            index: true,
+            handle: ROUTE_DATA.home,
+            lazy: {
+              Component: async () => (await import('../features/map/HomePage')).HomePage,
+            },
+          },
+          {
+            path: 'countries',
+            handle: ROUTE_DATA.countries,
+            lazy: {
+              Component: async () =>
+                (await import('../features/countries/CountriesPage')).CountriesPage,
+            },
+          },
+          {
+            path: 'harim',
+            handle: ROUTE_DATA.harim,
+            lazy: {
+              Component: async () => (await import('../features/harim/HarimPage')).HarimPage,
+            },
+          },
+          {
+            path: 'harim/ranges/:slug',
+            handle: ROUTE_DATA.harim,
+            lazy: {
+              Component: async () => (await import('../features/harim/RangePage')).RangePage,
+            },
+          },
+          {
+            path: 'harim/peaks/:slug',
+            handle: ROUTE_DATA.harim,
+            lazy: {
+              Component: async () => (await import('../features/harim/PeakPage')).PeakPage,
+            },
+          },
+          {
+            path: 'dhahabu',
+            handle: ROUTE_DATA.dhahabu,
+            lazy: {
+              Component: async () => (await import('../features/dhahabu/DhahabuPage')).DhahabuPage,
+            },
+          },
+          { path: '*', Component: NotFoundPage },
+        ],
+      },
+    ],
+  },
+];

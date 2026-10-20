@@ -1,0 +1,531 @@
+{
+  "$generated": {
+    "by": "python -m pipelines extract-pdf",
+    "source_pdf": "data/source/africa-state-symbology.pdf",
+    "source_pdf_sha256": "fa0f533bf8ba372dcf1afd49970821f0c0dc9e34ff552c19ab51651e3e1b0dc9",
+    "content_sha256": "f95a467e612e6a2c68dc4b33f239c47eada0e97ca536956a2c27090b8a972e12",
+    "note": "Edit freely, then run `python -m pipelines load`. Re-running extract-pdf will not overwrite edited seeds unless --force is given."
+  },
+  "sources": [
+    {
+      "source_key": "symbology-ref-1",
+      "ref_no": 1,
+      "title": "The Origins of African States, and Their Names",
+      "url": "https://www.cfr.org/articles/origins-african-states-and-their-names",
+      "source_type": "think_tank",
+      "reliability_tier": "secondary"
+    },
+    {
+      "source_key": "symbology-ref-2",
+      "ref_no": 2,
+      "title": "National Symbols of African Countries: Explained with Meanings",
+      "url": "https://nationalthings.com/national-symbols-of-african-countries/",
+      "source_type": "aggregator",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-3",
+      "ref_no": 3,
+      "title": "What do the names of African countries mean? - The Star",
+      "url": "https://www.the-star.co.ke/news/infographics/2026-09-22-what-do-the-names-of-african-countries-mean",
+      "source_type": "news",
+      "reliability_tier": "secondary"
+    },
+    {
+      "source_key": "symbology-ref-4",
+      "ref_no": 4,
+      "title": "What Do the Names of African Countries Mean? - Voronoi",
+      "url": "https://www.voronoiapp.com/history/What-Do-the-Names-of-African-Countries-Mean-9098",
+      "source_type": "aggregator",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-5",
+      "ref_no": 5,
+      "title": "Etymology of African Country Names | PDF | Africa | Asia - Scribd",
+      "url": "https://www.scribd.com/document/376343014/Research-The-Literal-Translation-of-Country-Names",
+      "source_type": "document_sharing",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-6",
+      "ref_no": 6,
+      "title": "History of Burkina Faso | Events, People, Dates, & Facts - Britannica",
+      "url": "https://www.britannica.com/topic/history-of-Burkina-Faso",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "symbology-ref-7",
+      "ref_no": 7,
+      "title": "Burkina Faso - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Burkina_Faso",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "symbology-ref-8",
+      "ref_no": 8,
+      "title": "Thomas Sankara | Ideology, Achievements, Books, & Death",
+      "url": "https://www.britannica.com/biography/Thomas-Sankara",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "symbology-ref-9",
+      "ref_no": 9,
+      "title": "Swaziland Gets A Name Change: Call It eSwatini Now | KCUR",
+      "url": "https://www.kcur.org/2018-04-20/swaziland-gets-a-name-change-call-it-eswatini-now",
+      "source_type": "news",
+      "reliability_tier": "secondary"
+    },
+    {
+      "source_key": "symbology-ref-10",
+      "ref_no": 10,
+      "title": "Eswatini - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Eswatini",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "symbology-ref-11",
+      "ref_no": 11,
+      "title": "Flag of Ethiopia - Quixoticguide",
+      "url": "https://quixoticguide.com/flag-of-ethiopia/",
+      "source_type": "aggregator",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-12",
+      "ref_no": 12,
+      "title": "Significance of African Colors | PDF - Scribd",
+      "url": "https://www.scribd.com/document/859528880/African-Colors",
+      "source_type": "document_sharing",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-13",
+      "ref_no": 13,
+      "title": "TIL the reason many African countries have the colours green",
+      "url": "https://www.reddit.com/r/todayilearned/comments/1et5j94/til_the_reason_many_african_countries_have_the/",
+      "source_type": "forum",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-14",
+      "ref_no": 14,
+      "title": "Flag of Ethiopia: The mother of all Pan-African colors",
+      "url": "https://www.flags-and-anthems.com/flag-aethiopia.html",
+      "source_type": "aggregator",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-15",
+      "ref_no": 15,
+      "title": "Ethiopia Flag Unveiled: Colors, Meaning, Coat of Arms, Flag ... - Mappr",
+      "url": "https://www.mappr.co/flag-maps/ethiopia/",
+      "source_type": "aggregator",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-16",
+      "ref_no": 16,
+      "title": "African Countries and Their Flags | PDF - Scribd",
+      "url": "https://www.scribd.com/document/675831568/AFRICAA-docx",
+      "source_type": "document_sharing",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-17",
+      "ref_no": 17,
+      "title": "Complete Flags of the World - Bookey Book Summary",
+      "url": "https://cdn.bookey.app/files/pdf/book/en/complete-flags-of-the-world.pdf",
+      "source_type": "book_summary",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-18",
+      "ref_no": 18,
+      "title": "National Animals of Africa: 54 Countries (Facts & List)",
+      "url": "https://nationalanimalquiz.com/animals/continent/africa",
+      "source_type": "quiz",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-19",
+      "ref_no": 19,
+      "title": "List of CAF national association football teams by nickname",
+      "url": "https://en.wikipedia.org/wiki/List_of_CAF_national_association_football_teams_by_nickname",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "symbology-ref-20",
+      "ref_no": 20,
+      "title": "From beasts to metal on the pitch. AFCON teams flaunt nicknames",
+      "url": "https://www.facebook.com/EconomicTimes/posts/-from-beasts-to-metal-on-the-pitch-afcon-teams-flaunt-nicknames-inspired-by-anim/1353200946835810/",
+      "source_type": "social_media",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-21",
+      "ref_no": 21,
+      "title": "List of country-name etymologies - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/List_of_country-name_etymologies",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "symbology-ref-22",
+      "ref_no": 22,
+      "title": "The literal meaning of every country's name in Africa - Reddit",
+      "url": "https://www.reddit.com/r/MapPorn/comments/158i50a/the_literal_meaning_of_every_countrys_name_in/",
+      "source_type": "forum",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-23",
+      "ref_no": 23,
+      "title": "National Animals Of African Countries - World Atlas",
+      "url": "https://www.worldatlas.com/articles/national-animals-of-african-countries.html",
+      "source_type": "aggregator",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-24",
+      "ref_no": 24,
+      "title": "African countries and their national animal symbols - Facebook",
+      "url": "https://www.facebook.com/groups/407362666620556/posts/1952564445433696/",
+      "source_type": "social_media",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-25",
+      "ref_no": 25,
+      "title": "What is the significance of blue, yellow, green, and red in many flags?",
+      "url": "https://www.quora.com/What-is-the-significance-of-blue-yellow-green-and-red-in-many-flags",
+      "source_type": "forum",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-26",
+      "ref_no": 26,
+      "title": "National animals of countries and flags",
+      "url": "https://animalsandflags.com/gallery-1",
+      "source_type": "aggregator",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-27",
+      "ref_no": 27,
+      "title": "Flags of Africa - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Flags_of_Africa",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "symbology-ref-28",
+      "ref_no": 28,
+      "title": "National Animals of Africa Countries - Wildlife Symbols & Directory",
+      "url": "https://www.geocountries.com/national/animals/africa",
+      "source_type": "aggregator",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-29",
+      "ref_no": 29,
+      "title": "Wildlife & Dangerous Animals in Burundi 2026 - The Animal Map",
+      "url": "https://theanimalmap.com/en/countries/burundi",
+      "source_type": "aggregator",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-30",
+      "ref_no": 30,
+      "title": "Wildlife in Ghana - Types of Ghanaian Animals",
+      "url": "https://a-z-animals.com/animals/location/africa/ghana/",
+      "source_type": "aggregator",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-31",
+      "ref_no": 31,
+      "title": "Wildlife in Equatorial Guinea - Types of Equatorial Guinean Animals",
+      "url": "https://a-z-animals.com/animals/location/africa/equatorial-guinea/",
+      "source_type": "aggregator",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-32",
+      "ref_no": 32,
+      "title": "List of national mottos - Monarchies Wiki - Fandom",
+      "url": "https://monarchies.fandom.com/wiki/List_of_national_mottos",
+      "source_type": "fan_wiki",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-33",
+      "ref_no": 33,
+      "title": "List of national mottos - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/List_of_national_mottos",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "symbology-ref-34",
+      "ref_no": 34,
+      "title": "Wildlife in Kenya - Types of Kenyan Animals",
+      "url": "https://a-z-animals.com/animals/location/africa/kenya/",
+      "source_type": "aggregator",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-35",
+      "ref_no": 35,
+      "title": "List of Country National Animals - Facebook",
+      "url": "https://www.facebook.com/fb-answers/list-of-country-national-animals/?locale=he_IL",
+      "source_type": "social_media",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-36",
+      "ref_no": 36,
+      "title": "Complete Flags of the World - Todobanderas",
+      "url": "https://todobanderas.com/documents/completeflagsoftheworld.pdf",
+      "source_type": "book",
+      "reliability_tier": "secondary"
+    },
+    {
+      "source_key": "symbology-ref-37",
+      "ref_no": 37,
+      "title": "Wildlife in Tanzania - Types of Tanzanian Animals",
+      "url": "https://a-z-animals.com/animals/location/africa/tanzania/",
+      "source_type": "aggregator",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-38",
+      "ref_no": 38,
+      "title": "South Africa - CountryHumans Wiki - Miraheze",
+      "url": "https://countryhumans.miraheze.org/wiki/South_Africa",
+      "source_type": "fan_wiki",
+      "reliability_tier": "low"
+    },
+    {
+      "source_key": "symbology-ref-39",
+      "ref_no": 39,
+      "title": "6 insane South African national emblems that will make you proud",
+      "url": "https://www.finglobal.com/2019/01/08/national-symbols-of-south-africa/",
+      "source_type": "news",
+      "reliability_tier": "secondary"
+    },
+    {
+      "source_key": "wikipedia-coat-of-arms-of-cameroon",
+      "ref_no": null,
+      "title": "Coat of arms of Cameroon - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Coat_of_arms_of_Cameroon",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-coat-of-arms-of-malawi",
+      "ref_no": null,
+      "title": "Coat of arms of Malawi - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Coat_of_arms_of_Malawi",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-flag-of-rwanda",
+      "ref_no": null,
+      "title": "Flag of Rwanda - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Flag_of_Rwanda",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-penon-of-algiers",
+      "ref_no": null,
+      "title": "Peñón of Algiers - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Pe%C3%B1%C3%B3n_of_Algiers",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-coelacanth",
+      "ref_no": null,
+      "title": "Coelacanth - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Coelacanth",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-zaire",
+      "ref_no": null,
+      "title": "Zaire - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Zaire",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-coat-of-arms-of-mauritius",
+      "ref_no": null,
+      "title": "Coat of arms of Mauritius - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Coat_of_arms_of_Mauritius",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-coat-of-arms-of-lesotho",
+      "ref_no": null,
+      "title": "Coat of arms of Lesotho - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Coat_of_arms_of_Lesotho",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-coat-of-arms-of-namibia",
+      "ref_no": null,
+      "title": "Coat of arms of Namibia - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Coat_of_arms_of_Namibia",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-coat-of-arms-of-kenya",
+      "ref_no": null,
+      "title": "Coat of arms of Kenya - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Coat_of_arms_of_Kenya",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-coat-of-arms-of-gabon",
+      "ref_no": null,
+      "title": "Coat of arms of Gabon - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Coat_of_arms_of_Gabon",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-coat-of-arms-of-benin",
+      "ref_no": null,
+      "title": "Coat of arms of Benin - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Coat_of_arms_of_Benin",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-flag-of-south-africa",
+      "ref_no": null,
+      "title": "Flag of South Africa - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Flag_of_South_Africa",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-coat-of-arms-of-south-africa",
+      "ref_no": null,
+      "title": "Coat of arms of South Africa - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Coat_of_arms_of_South_Africa",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-national-symbols-of-south-africa",
+      "ref_no": null,
+      "title": "National symbols of South Africa - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/National_symbols_of_South_Africa",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-emblem-of-sudan",
+      "ref_no": null,
+      "title": "Emblem of Sudan - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Emblem_of_Sudan",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-senegal",
+      "ref_no": null,
+      "title": "Senegal - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Senegal",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-mali",
+      "ref_no": null,
+      "title": "Mali - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Mali",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-benin",
+      "ref_no": null,
+      "title": "Benin - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Benin",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-gambia-river",
+      "ref_no": null,
+      "title": "Gambia River - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Gambia_River",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-flag-of-libya",
+      "ref_no": null,
+      "title": "Flag of Libya - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Flag_of_Libya",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-ethiopia",
+      "ref_no": null,
+      "title": "Ethiopia - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Ethiopia",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-western-chimpanzee",
+      "ref_no": null,
+      "title": "Western chimpanzee - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Western_chimpanzee",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-giraffe",
+      "ref_no": null,
+      "title": "Giraffe - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Giraffe",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-list-of-national-animals",
+      "ref_no": null,
+      "title": "List of national animals - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/List_of_national_animals",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "wikipedia-flag-of-morocco",
+      "ref_no": null,
+      "title": "Flag of Morocco - Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Flag_of_Morocco",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    }
+  ]
+}

@@ -1,0 +1,643 @@
+{
+  "$comment": "The 54 sovereign African states covered by the research document. Region assignment follows the document's grouping (North 6, West 15, Central 9, East 16, Southern 8), not the UN geoscheme. 'aliases' lists every label the PDF uses for the country (table and prose). ISO codes per ISO 3166-1; cross-checked on 2026-10-14 against the independent ISO 3166 list at github.com/lukes/ISO-3166-Countries-with-Regional-Codes (all 54 alpha-2, alpha-3 and numeric codes matched).",
+  "regions": [
+    {
+      "slug": "north",
+      "name": "North Africa",
+      "pdf_heading": "Regional Analysis: North Africa",
+      "sort_order": 1
+    },
+    {
+      "slug": "west",
+      "name": "West Africa",
+      "pdf_heading": "Regional Analysis: West Africa",
+      "sort_order": 2
+    },
+    {
+      "slug": "central",
+      "name": "Central Africa",
+      "pdf_heading": "Regional Analysis: Central Africa",
+      "sort_order": 3
+    },
+    {
+      "slug": "east",
+      "name": "East Africa",
+      "pdf_heading": "Regional Analysis: East Africa",
+      "sort_order": 4
+    },
+    {
+      "slug": "southern",
+      "name": "Southern Africa",
+      "pdf_heading": "Regional Analysis: Southern Africa",
+      "sort_order": 5
+    }
+  ],
+  "countries": [
+    {
+      "name": "Algeria",
+      "official_name": "People's Democratic Republic of Algeria",
+      "iso2": "DZ",
+      "iso3": "DZA",
+      "iso_numeric": 12,
+      "region": "north",
+      "aliases": [
+        "Algeria"
+      ]
+    },
+    {
+      "name": "Egypt",
+      "official_name": "Arab Republic of Egypt",
+      "iso2": "EG",
+      "iso3": "EGY",
+      "iso_numeric": 818,
+      "region": "north",
+      "aliases": [
+        "Egypt"
+      ]
+    },
+    {
+      "name": "Libya",
+      "official_name": "State of Libya",
+      "iso2": "LY",
+      "iso3": "LBY",
+      "iso_numeric": 434,
+      "region": "north",
+      "aliases": [
+        "Libya"
+      ]
+    },
+    {
+      "name": "Mauritania",
+      "official_name": "Islamic Republic of Mauritania",
+      "iso2": "MR",
+      "iso3": "MRT",
+      "iso_numeric": 478,
+      "region": "north",
+      "aliases": [
+        "Mauritania"
+      ]
+    },
+    {
+      "name": "Morocco",
+      "official_name": "Kingdom of Morocco",
+      "iso2": "MA",
+      "iso3": "MAR",
+      "iso_numeric": 504,
+      "region": "north",
+      "aliases": [
+        "Morocco"
+      ]
+    },
+    {
+      "name": "Tunisia",
+      "official_name": "Republic of Tunisia",
+      "iso2": "TN",
+      "iso3": "TUN",
+      "iso_numeric": 788,
+      "region": "north",
+      "aliases": [
+        "Tunisia"
+      ]
+    },
+    {
+      "name": "Benin",
+      "official_name": "Republic of Benin",
+      "iso2": "BJ",
+      "iso3": "BEN",
+      "iso_numeric": 204,
+      "region": "west",
+      "aliases": [
+        "Benin"
+      ]
+    },
+    {
+      "name": "Burkina Faso",
+      "official_name": "Burkina Faso",
+      "iso2": "BF",
+      "iso3": "BFA",
+      "iso_numeric": 854,
+      "region": "west",
+      "aliases": [
+        "Burkina Faso"
+      ]
+    },
+    {
+      "name": "Cabo Verde",
+      "official_name": "Republic of Cabo Verde",
+      "iso2": "CV",
+      "iso3": "CPV",
+      "iso_numeric": 132,
+      "region": "west",
+      "aliases": [
+        "Cabo Verde",
+        "Cape Verde"
+      ]
+    },
+    {
+      "name": "Côte d'Ivoire",
+      "official_name": "Republic of Côte d'Ivoire",
+      "iso2": "CI",
+      "iso3": "CIV",
+      "iso_numeric": 384,
+      "region": "west",
+      "aliases": [
+        "Côte d'Ivoire",
+        "Ivory Coast"
+      ]
+    },
+    {
+      "name": "The Gambia",
+      "official_name": "Republic of The Gambia",
+      "iso2": "GM",
+      "iso3": "GMB",
+      "iso_numeric": 270,
+      "region": "west",
+      "aliases": [
+        "Gambia",
+        "The Gambia"
+      ]
+    },
+    {
+      "name": "Ghana",
+      "official_name": "Republic of Ghana",
+      "iso2": "GH",
+      "iso3": "GHA",
+      "iso_numeric": 288,
+      "region": "west",
+      "aliases": [
+        "Ghana"
+      ]
+    },
+    {
+      "name": "Guinea",
+      "official_name": "Republic of Guinea",
+      "iso2": "GN",
+      "iso3": "GIN",
+      "iso_numeric": 324,
+      "region": "west",
+      "aliases": [
+        "Guinea"
+      ]
+    },
+    {
+      "name": "Guinea-Bissau",
+      "official_name": "Republic of Guinea-Bissau",
+      "iso2": "GW",
+      "iso3": "GNB",
+      "iso_numeric": 624,
+      "region": "west",
+      "aliases": [
+        "Guinea-Bissau"
+      ]
+    },
+    {
+      "name": "Liberia",
+      "official_name": "Republic of Liberia",
+      "iso2": "LR",
+      "iso3": "LBR",
+      "iso_numeric": 430,
+      "region": "west",
+      "aliases": [
+        "Liberia"
+      ]
+    },
+    {
+      "name": "Mali",
+      "official_name": "Republic of Mali",
+      "iso2": "ML",
+      "iso3": "MLI",
+      "iso_numeric": 466,
+      "region": "west",
+      "aliases": [
+        "Mali"
+      ]
+    },
+    {
+      "name": "Niger",
+      "official_name": "Republic of the Niger",
+      "iso2": "NE",
+      "iso3": "NER",
+      "iso_numeric": 562,
+      "region": "west",
+      "aliases": [
+        "Niger"
+      ]
+    },
+    {
+      "name": "Nigeria",
+      "official_name": "Federal Republic of Nigeria",
+      "iso2": "NG",
+      "iso3": "NGA",
+      "iso_numeric": 566,
+      "region": "west",
+      "aliases": [
+        "Nigeria"
+      ]
+    },
+    {
+      "name": "Senegal",
+      "official_name": "Republic of Senegal",
+      "iso2": "SN",
+      "iso3": "SEN",
+      "iso_numeric": 686,
+      "region": "west",
+      "aliases": [
+        "Senegal"
+      ]
+    },
+    {
+      "name": "Sierra Leone",
+      "official_name": "Republic of Sierra Leone",
+      "iso2": "SL",
+      "iso3": "SLE",
+      "iso_numeric": 694,
+      "region": "west",
+      "aliases": [
+        "Sierra Leone"
+      ]
+    },
+    {
+      "name": "Togo",
+      "official_name": "Togolese Republic",
+      "iso2": "TG",
+      "iso3": "TGO",
+      "iso_numeric": 768,
+      "region": "west",
+      "aliases": [
+        "Togo"
+      ]
+    },
+    {
+      "name": "Angola",
+      "official_name": "Republic of Angola",
+      "iso2": "AO",
+      "iso3": "AGO",
+      "iso_numeric": 24,
+      "region": "central",
+      "aliases": [
+        "Angola"
+      ]
+    },
+    {
+      "name": "Cameroon",
+      "official_name": "Republic of Cameroon",
+      "iso2": "CM",
+      "iso3": "CMR",
+      "iso_numeric": 120,
+      "region": "central",
+      "aliases": [
+        "Cameroon"
+      ]
+    },
+    {
+      "name": "Central African Republic",
+      "official_name": "Central African Republic",
+      "iso2": "CF",
+      "iso3": "CAF",
+      "iso_numeric": 140,
+      "region": "central",
+      "aliases": [
+        "Central African Republic",
+        "Central African Republic (CAR)",
+        "CAR"
+      ]
+    },
+    {
+      "name": "Chad",
+      "official_name": "Republic of Chad",
+      "iso2": "TD",
+      "iso3": "TCD",
+      "iso_numeric": 148,
+      "region": "central",
+      "aliases": [
+        "Chad"
+      ]
+    },
+    {
+      "name": "Republic of the Congo",
+      "official_name": "Republic of the Congo",
+      "iso2": "CG",
+      "iso3": "COG",
+      "iso_numeric": 178,
+      "region": "central",
+      "aliases": [
+        "Republic of the Congo",
+        "Congo (Rep.)"
+      ]
+    },
+    {
+      "name": "Democratic Republic of the Congo",
+      "official_name": "Democratic Republic of the Congo",
+      "iso2": "CD",
+      "iso3": "COD",
+      "iso_numeric": 180,
+      "region": "central",
+      "aliases": [
+        "Democratic Republic of the Congo",
+        "Democratic Republic of the Congo (DRC)",
+        "DRC"
+      ]
+    },
+    {
+      "name": "Equatorial Guinea",
+      "official_name": "Republic of Equatorial Guinea",
+      "iso2": "GQ",
+      "iso3": "GNQ",
+      "iso_numeric": 226,
+      "region": "central",
+      "aliases": [
+        "Equatorial Guinea",
+        "Eq. Guinea"
+      ]
+    },
+    {
+      "name": "Gabon",
+      "official_name": "Gabonese Republic",
+      "iso2": "GA",
+      "iso3": "GAB",
+      "iso_numeric": 266,
+      "region": "central",
+      "aliases": [
+        "Gabon"
+      ]
+    },
+    {
+      "name": "São Tomé and Príncipe",
+      "official_name": "Democratic Republic of São Tomé and Príncipe",
+      "iso2": "ST",
+      "iso3": "STP",
+      "iso_numeric": 678,
+      "region": "central",
+      "aliases": [
+        "São Tomé and Príncipe",
+        "Sao Tome and Principe",
+        "Sao Tome"
+      ]
+    },
+    {
+      "name": "Burundi",
+      "official_name": "Republic of Burundi",
+      "iso2": "BI",
+      "iso3": "BDI",
+      "iso_numeric": 108,
+      "region": "east",
+      "aliases": [
+        "Burundi"
+      ]
+    },
+    {
+      "name": "Comoros",
+      "official_name": "Union of the Comoros",
+      "iso2": "KM",
+      "iso3": "COM",
+      "iso_numeric": 174,
+      "region": "east",
+      "aliases": [
+        "Comoros"
+      ]
+    },
+    {
+      "name": "Djibouti",
+      "official_name": "Republic of Djibouti",
+      "iso2": "DJ",
+      "iso3": "DJI",
+      "iso_numeric": 262,
+      "region": "east",
+      "aliases": [
+        "Djibouti"
+      ]
+    },
+    {
+      "name": "Eritrea",
+      "official_name": "State of Eritrea",
+      "iso2": "ER",
+      "iso3": "ERI",
+      "iso_numeric": 232,
+      "region": "east",
+      "aliases": [
+        "Eritrea"
+      ]
+    },
+    {
+      "name": "Ethiopia",
+      "official_name": "Federal Democratic Republic of Ethiopia",
+      "iso2": "ET",
+      "iso3": "ETH",
+      "iso_numeric": 231,
+      "region": "east",
+      "aliases": [
+        "Ethiopia"
+      ]
+    },
+    {
+      "name": "Kenya",
+      "official_name": "Republic of Kenya",
+      "iso2": "KE",
+      "iso3": "KEN",
+      "iso_numeric": 404,
+      "region": "east",
+      "aliases": [
+        "Kenya"
+      ]
+    },
+    {
+      "name": "Madagascar",
+      "official_name": "Republic of Madagascar",
+      "iso2": "MG",
+      "iso3": "MDG",
+      "iso_numeric": 450,
+      "region": "east",
+      "aliases": [
+        "Madagascar"
+      ]
+    },
+    {
+      "name": "Malawi",
+      "official_name": "Republic of Malawi",
+      "iso2": "MW",
+      "iso3": "MWI",
+      "iso_numeric": 454,
+      "region": "east",
+      "aliases": [
+        "Malawi"
+      ]
+    },
+    {
+      "name": "Mauritius",
+      "official_name": "Republic of Mauritius",
+      "iso2": "MU",
+      "iso3": "MUS",
+      "iso_numeric": 480,
+      "region": "east",
+      "aliases": [
+        "Mauritius"
+      ]
+    },
+    {
+      "name": "Rwanda",
+      "official_name": "Republic of Rwanda",
+      "iso2": "RW",
+      "iso3": "RWA",
+      "iso_numeric": 646,
+      "region": "east",
+      "aliases": [
+        "Rwanda"
+      ]
+    },
+    {
+      "name": "Seychelles",
+      "official_name": "Republic of Seychelles",
+      "iso2": "SC",
+      "iso3": "SYC",
+      "iso_numeric": 690,
+      "region": "east",
+      "aliases": [
+        "Seychelles"
+      ]
+    },
+    {
+      "name": "Somalia",
+      "official_name": "Federal Republic of Somalia",
+      "iso2": "SO",
+      "iso3": "SOM",
+      "iso_numeric": 706,
+      "region": "east",
+      "aliases": [
+        "Somalia"
+      ]
+    },
+    {
+      "name": "South Sudan",
+      "official_name": "Republic of South Sudan",
+      "iso2": "SS",
+      "iso3": "SSD",
+      "iso_numeric": 728,
+      "region": "east",
+      "aliases": [
+        "South Sudan"
+      ]
+    },
+    {
+      "name": "Sudan",
+      "official_name": "Republic of the Sudan",
+      "iso2": "SD",
+      "iso3": "SDN",
+      "iso_numeric": 729,
+      "region": "east",
+      "aliases": [
+        "Sudan"
+      ]
+    },
+    {
+      "name": "Tanzania",
+      "official_name": "United Republic of Tanzania",
+      "iso2": "TZ",
+      "iso3": "TZA",
+      "iso_numeric": 834,
+      "region": "east",
+      "aliases": [
+        "Tanzania"
+      ]
+    },
+    {
+      "name": "Uganda",
+      "official_name": "Republic of Uganda",
+      "iso2": "UG",
+      "iso3": "UGA",
+      "iso_numeric": 800,
+      "region": "east",
+      "aliases": [
+        "Uganda"
+      ]
+    },
+    {
+      "name": "Botswana",
+      "official_name": "Republic of Botswana",
+      "iso2": "BW",
+      "iso3": "BWA",
+      "iso_numeric": 72,
+      "region": "southern",
+      "aliases": [
+        "Botswana"
+      ]
+    },
+    {
+      "name": "Eswatini",
+      "official_name": "Kingdom of Eswatini",
+      "iso2": "SZ",
+      "iso3": "SWZ",
+      "iso_numeric": 748,
+      "region": "southern",
+      "aliases": [
+        "Eswatini",
+        "Swaziland"
+      ]
+    },
+    {
+      "name": "Lesotho",
+      "official_name": "Kingdom of Lesotho",
+      "iso2": "LS",
+      "iso3": "LSO",
+      "iso_numeric": 426,
+      "region": "southern",
+      "aliases": [
+        "Lesotho"
+      ]
+    },
+    {
+      "name": "Mozambique",
+      "official_name": "Republic of Mozambique",
+      "iso2": "MZ",
+      "iso3": "MOZ",
+      "iso_numeric": 508,
+      "region": "southern",
+      "aliases": [
+        "Mozambique"
+      ]
+    },
+    {
+      "name": "Namibia",
+      "official_name": "Republic of Namibia",
+      "iso2": "NA",
+      "iso3": "NAM",
+      "iso_numeric": 516,
+      "region": "southern",
+      "aliases": [
+        "Namibia"
+      ]
+    },
+    {
+      "name": "South Africa",
+      "official_name": "Republic of South Africa",
+      "iso2": "ZA",
+      "iso3": "ZAF",
+      "iso_numeric": 710,
+      "region": "southern",
+      "aliases": [
+        "South Africa"
+      ]
+    },
+    {
+      "name": "Zambia",
+      "official_name": "Republic of Zambia",
+      "iso2": "ZM",
+      "iso3": "ZMB",
+      "iso_numeric": 894,
+      "region": "southern",
+      "aliases": [
+        "Zambia"
+      ]
+    },
+    {
+      "name": "Zimbabwe",
+      "official_name": "Republic of Zimbabwe",
+      "iso2": "ZW",
+      "iso3": "ZWE",
+      "iso_numeric": 716,
+      "region": "southern",
+      "aliases": [
+        "Zimbabwe"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,151 @@
+.wrapper {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.stage {
+  position: relative;
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+/* Phones: the legend sits directly under the map. Larger screens: over the South Atlantic. */
+@media (--bp-md) {
+  .legendSlot {
+    position: absolute;
+    bottom: var(--space-3);
+    left: var(--space-3);
+  }
+}
+
+/* Square-ish on phones (Africa is about as tall as it is wide), tall hero on larger screens. */
+.frame {
+  aspect-ratio: 0.95;
+}
+
+@media (--bp-md) {
+  .frame {
+    aspect-ratio: auto;
+    height: clamp(26rem, calc(100dvh - 15rem), 52rem);
+  }
+}
+
+.country,
+.marker {
+  fill: var(--fill);
+  cursor: pointer;
+  transition: opacity var(--duration-med) var(--ease-out);
+  animation: country-in var(--duration-slow) var(--ease-out) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+.country:focus,
+.marker:focus {
+  outline: none; /* the highlight outline below is the focus indicator */
+}
+
+.unknown {
+  fill: var(--map-context-land);
+}
+
+.disputed {
+  cursor: default;
+}
+
+.dimmed {
+  opacity: var(--map-dimmed-opacity);
+}
+
+.markerHit {
+  fill: transparent;
+}
+
+.markerDot {
+  fill: var(--fill);
+  stroke: var(--map-marker-ring);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.markerRing,
+.highlight {
+  fill: none;
+  stroke: var(--map-highlight);
+  stroke-width: 2.25;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+@keyframes country-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.notice {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  left: var(--space-3);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+}
+
+/* The development hint (if any) takes its own row below the message and button. */
+.notice .noticeHint {
+  flex-basis: 100%;
+  max-width: none;
+}
+
+.retry {
+  min-height: var(--touch-target);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-pill);
+  font-weight: var(--weight-semibold);
+  background: var(--glass-bg-strong);
+}
+
+.tooltip {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-popover);
+  display: grid;
+  gap: var(--space-1);
+  max-width: min(18rem, calc(100vw - 16px));
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  pointer-events: none;
+}
+
+.tooltipNote {
+  max-width: 16rem;
+  padding-top: var(--space-1);
+  border-top: 1px solid var(--color-line);
+  font-size: var(--text-xs);
+  color: var(--color-ink-muted);
+}
+
+.tooltipTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.notes {
+  display: grid;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--color-ink-muted);
+}

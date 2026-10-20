@@ -1,0 +1,17 @@
+/*
+ * Breakpoint tokens (mobile-first). Injected into every stylesheet by postcss-global-data and
+ * compiled by postcss-custom-media. Mirror: src/lib/breakpoints.ts (keep in sync; tested).
+ */
+@custom-media --bp-sm (width >= 480px);
+@custom-media --bp-md (width >= 720px);
+@custom-media --bp-lg (width >= 1024px);
+@custom-media --bp-xl (width >= 1280px);
+@custom-media --bp-2xl (width >= 1440px);
+@custom-media --below-sm (width < 480px);
+@custom-media --below-md (width < 720px);
+@custom-media --below-lg (width < 1024px);
+@custom-media --motion-ok (prefers-reduced-motion: no-preference);
+@custom-media --reduced-transparency (prefers-reduced-transparency: reduce);
+@custom-media --more-contrast (prefers-contrast: more);
+@custom-media --coarse-pointer (pointer: coarse);
+@custom-media --fine-pointer (pointer: fine);

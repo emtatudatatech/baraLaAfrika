@@ -1,0 +1,120 @@
+{
+  "$generated": {
+    "by": "python -m pipelines gold-presence",
+    "generated_on": "2026-10-18"
+  },
+  "datasets": [
+    {
+      "key": "gold-presence",
+      "name": "Gold presence tiers (derived from the cited sources)",
+      "provider": "Bara La Afrika (derived from USGS data and curated citations)",
+      "license": "Derived data; each tier cites its source",
+      "attribution": "Presence tiers derived by Bara La Afrika from the cited sources.",
+      "coverage_start": null,
+      "coverage_end": null,
+      "as_of": "2026-10-18",
+      "refresh_cadence": "on_release"
+    }
+  ],
+  "sources": [
+    {
+      "source_key": "cite-39ffc94aa930",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Other Countries of Africa",
+      "url": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-other-africa.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-195dccc7538d",
+      "ref_no": null,
+      "title": "Wikipedia: Geology of Guinea-Bissau",
+      "url": "https://en.wikipedia.org/wiki/Geology_of_Guinea-Bissau",
+      "source_type": "encyclopedia",
+      "reliability_tier": "reference"
+    },
+    {
+      "source_key": "cite-be89969a53ca",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Togo",
+      "url": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-togo.pdf",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-055c7ff7d63e",
+      "ref_no": null,
+      "title": "U.S. Geological Survey, Minerals Yearbook 2022, volume III: Indian Ocean Islands (Table 1, note 2)",
+      "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/myb3-2022-Indian%20Ocean%20Islands-advrel.xlsx",
+      "source_type": "statistics",
+      "reliability_tier": "primary"
+    },
+    {
+      "source_key": "cite-78d47d992659",
+      "ref_no": null,
+      "title": "Global Initiative Against Transnational Organized Crime: The Somali gold rush: Milxo and the ungoverned mining frontier (2 February 2026)",
+      "url": "https://globalinitiative.net/analysis/somali-gold-rush-milxo-mining/",
+      "source_type": "report",
+      "reliability_tier": "secondary"
+    }
+  ],
+  "presence": {
+    "columns": ["iso3", "presence_tier", "presence_basis", "presence_confidence", "presence_as_of_year", "presence_source", "commercial_mining", "asm_present", "asm_share_pct_estimate", "asm_source", "needs_review", "review_notes", "override"],
+    "rows": [
+      ["DZA", "producer", "Mine production 0.1 t in 2022 (estimated; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Algeria).", "medium", 2022, "usgs-myb-2022-dza", true, null, null, null, false, null, false],
+      ["EGY", "producer", "Mine production 13.7 t in 2022 (reported; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Egypt).", "medium", 2022, "usgs-myb-2022-egy", true, null, null, null, false, null, false],
+      ["LBY", "occurrences_known", "A USGS production table note lists gold among commodities that may have been produced, without a reliable output estimate (U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Libya).", "medium", 2021, "usgs-myb-2020-21-lby", true, true, null, null, false, null, false],
+      ["MRT", "producer", "Mine production 8.1 t in 2021 (reported; U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Mauritania).", "medium", 2021, "usgs-myb-2020-21-mrt", true, true, null, null, false, null, false],
+      ["MAR", "producer", "Mine production 0.167 t in 2022 (reported; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Morocco).", "medium", 2022, "usgs-myb-2022-mar", true, null, null, null, false, null, false],
+      ["TUN", "none_identified", "No gold in the production tables, their notes or the industry tables of the USGS Minerals Yearbook chapters consulted (editions 2017-18, 2019, 2020-21, 2022).", "medium", 2022, "usgs-myb-2022-tun", null, null, null, null, false, null, false],
+      ["BEN", "occurrences_known", "A USGS production table note lists gold among commodities that may have been produced, without a reliable output estimate (U.S. Geological Survey, Minerals Yearbook 2022, volume III: Benin).", "medium", 2022, "usgs-myb-2022-ben", null, null, null, null, false, null, false],
+      ["BFA", "major_producer", "Mine production 60.0 t in 2024 (estimated; U.S. Geological Survey, Mineral Commodity Summaries 2025: Gold).", "medium", 2024, "usgs-mcs-2025-gold", true, true, null, null, false, null, false],
+      ["CPV", "none_identified", "The USGS lists kaolin, salt, and sand and aggregate as the minerals that may have been produced in Cabo Verde in 2019; gold is not among them.", "low", 2019, "cite-39ffc94aa930", null, null, null, null, false, null, true],
+      ["CIV", "major_producer", "Mine production 21.0 t in 2021 (estimated; U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Côte d'Ivoire). The USGS notes: Does not include production from artisanal mining.", "medium", 2021, "usgs-myb-2020-21-civ", true, true, null, null, false, null, false],
+      ["GMB", "none_identified", "The USGS lists clay, ilmenite, laterite, silica sand and zircon as the minerals that may have been produced in The Gambia in 2019; gold is not among them.", "low", 2019, "cite-39ffc94aa930", null, null, null, null, false, null, true],
+      ["GHA", "major_producer", "Mine production 150.0 t in 2025 (estimated; U.S. Geological Survey, Mineral Commodity Summaries 2026: Gold (data release doi:10.5066/P1WKQ63T)).", "medium", 2025, "usgs-mcs-2026-gold", true, true, 17.6, "usgs-myb-2022-gha", false, null, false],
+      ["GIN", "producer", "Mine production 17.9 t in 2021 (reported; U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Guinea). The USGS notes: Does not include artisanal production. Guinea produced artisanal gold but information was inadequate to make reliable estimates of output.", "medium", 2021, "usgs-myb-2020-21-gin", true, true, null, null, false, null, false],
+      ["GNB", "occurrences_known", "Small, low-grade gold anomalies are documented in the northeast of Guinea-Bissau (Wikipedia, Geology of Guinea-Bissau). No production is reported.", "low", null, "cite-195dccc7538d", null, null, null, null, false, null, true],
+      ["LBR", "producer", "Mine production 11.7 t in 2022 (estimated; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Liberia).", "medium", 2022, "usgs-myb-2022-lbr", true, true, 74.4, "usgs-myb-2022-lbr", false, null, false],
+      ["MLI", "major_producer", "Mine production 70.0 t in 2024 (estimated; U.S. Geological Survey, Mineral Commodity Summaries 2025: Gold).", "medium", 2024, "usgs-mcs-2025-gold", true, true, null, null, false, null, false],
+      ["NER", "producer", "Mine production 2.0 t in 2021 (estimated; U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Niger). The USGS notes: Includes artisanal and small-scale production of gold.", "medium", 2021, "usgs-myb-2020-21-ner", true, true, null, null, false, null, false],
+      ["NGA", "producer", "Mine production 0.349 t in 2021 (reported; U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Nigeria).", "medium", 2021, "usgs-myb-2020-21-nga", true, true, null, null, false, null, false],
+      ["SEN", "producer", "Mine production 15.9 t in 2021 (reported; U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Senegal).", "medium", 2021, "usgs-myb-2020-21-sen", true, null, null, null, false, null, false],
+      ["SLE", "producer", "Mine production 0.06 t in 2021 (estimated; U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Sierra Leone).", "medium", 2021, "usgs-myb-2020-21-sle", null, true, null, null, false, null, false],
+      ["TGO", "producer", "The USGS reports about 20 t of gold a year for Togo, but says these figures are export data that mostly include artisanal gold transiting Togo from neighbouring countries and, to a lesser extent, domestic artisanal production. Domestic output is not quantified, so Togo is not counted as a major producer.", "low", 2019, "cite-be89969a53ca", true, true, null, null, false, null, true],
+      ["AGO", "occurrences_known", "A USGS production table note lists gold among commodities that may have been produced, without a reliable output estimate (U.S. Geological Survey, Minerals Yearbook 2022, volume III: Angola).", "medium", 2022, "usgs-myb-2022-ago", null, null, null, null, false, null, false],
+      ["CMR", "producer", "Mine production 0.3 t in 2022 (estimated; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Cameroon).", "medium", 2022, "usgs-myb-2022-cmr", null, null, null, null, false, null, false],
+      ["CAF", "producer", "Mine production 1.8 t in 2023 (reported; U.S. Geological Survey, Minerals Yearbook 2023, volume III: Central African Republic). The USGS notes: Exported production reported by the Banque des États de l'Afrique Centrale. Exported production may not reflect the totality of the country's artisanal output.", "high", 2023, "usgs-myb-2023-caf", true, true, null, null, false, null, false],
+      ["TCD", "occurrences_known", "A USGS production table note lists gold among commodities that may have been produced, without a reliable output estimate (U.S. Geological Survey, Minerals Yearbook 2022, volume III: Chad).", "medium", 2022, "usgs-myb-2022-tcd", true, true, null, null, false, null, false],
+      ["COG", "occurrences_known", "A USGS production table note lists gold among commodities that may have been produced, without a reliable output estimate (U.S. Geological Survey, Minerals Yearbook 2022, volume III: Republic of the Congo).", "medium", 2022, "usgs-myb-2022-cog", true, null, null, null, false, null, false],
+      ["COD", "major_producer", "Mine production 43.0 t in 2022 (estimated; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Democratic Republic of the Congo).", "medium", 2022, "usgs-myb-2022-cod", true, true, null, null, false, null, false],
+      ["GNQ", "occurrences_known", "A USGS production table note lists gold among commodities that may have been produced, without a reliable output estimate (U.S. Geological Survey, Minerals Yearbook 2023, volume III: Equatorial Guinea).", "medium", 2023, "usgs-myb-2023-gnq", true, true, null, null, false, null, false],
+      ["GAB", "producer", "Mine production 0.1 t in 2021 (estimated; U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Gabon).", "medium", 2021, "usgs-myb-2020-21-gab", true, true, null, null, false, null, false],
+      ["STP", "none_identified", "The USGS lists sand and aggregates as the minerals that may have been produced in São Tomé and Príncipe in 2019; gold is not among them.", "low", 2019, "cite-39ffc94aa930", null, null, null, null, false, null, true],
+      ["BDI", "producer", "Mine production 0.042 t in 2022 (estimated; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Burundi).", "medium", 2022, "usgs-myb-2022-bdi", true, true, null, null, false, null, false],
+      ["COM", "none_identified", "The USGS Minerals Yearbook 2022 chapter on the Indian Ocean Islands states that Comoros \"did not produce any minerals\".", "medium", 2022, "cite-055c7ff7d63e", null, null, null, null, false, null, true],
+      ["DJI", "none_identified", "No gold in the production tables, their notes or the industry tables of the USGS Minerals Yearbook chapters consulted (editions 2016, 2019, 2020-21, 2022, 2023).", "medium", 2023, "usgs-myb-2023-dji", null, null, null, null, false, null, false],
+      ["ERI", "producer", "Mine production 4.1 t in 2023 (estimated; U.S. Geological Survey, Minerals Yearbook 2023, volume III: Eritrea). The USGS notes: Reported sales.", "medium", 2023, "usgs-myb-2023-eri", true, null, null, null, false, null, false],
+      ["ETH", "producer", "Mine production 8.7 t in 2022 (reported; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Ethiopia). The USGS notes: Reported exports.", "medium", 2022, "usgs-myb-2022-eth", true, true, null, null, false, null, false],
+      ["KEN", "producer", "Mine production 0.565 t in 2022 (reported; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Kenya).", "medium", 2022, "usgs-myb-2022-ken", true, null, null, null, false, null, false],
+      ["MDG", "occurrences_known", "The USGS lists gold operations in its structure-of-industry table, without a production figure (U.S. Geological Survey, Minerals Yearbook 2019, volume III: Madagascar).", "medium", 2019, "usgs-myb-2019-mdg", null, true, null, null, false, null, false],
+      ["MWI", "occurrences_known", "A USGS production table note lists gold among commodities that may have been produced, without a reliable output estimate (U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Malawi).", "medium", 2021, "usgs-myb-2020-21-mwi", null, true, null, null, false, null, false],
+      ["MUS", "none_identified", "No gold in the production tables, their notes or the industry tables of the USGS Minerals Yearbook chapters consulted (editions 2016, 2017-18, 2019, 2020-21, 2022).", "medium", 2022, "usgs-myb-2022-mus", null, null, null, null, false, null, false],
+      ["RWA", "producer", "Mine production 0.35 t in 2022 (estimated; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Rwanda).", "medium", 2022, "usgs-myb-2022-rwa", true, null, null, null, false, null, false],
+      ["SYC", "none_identified", "No gold in the production tables, their notes or the industry tables of the USGS Minerals Yearbook chapters consulted (editions 2016, 2017-18, 2019, 2020-21, 2022).", "medium", 2022, "usgs-myb-2022-syc", null, null, null, null, false, null, false],
+      ["SOM", "occurrences_known", "The Global Initiative Against Transnational Organized Crime reports artisanal gold mining at Milxo in north-eastern Somalia, which it describes as one of Africa's least-known gold booms. No production figure is published.", "medium", 2026, "cite-78d47d992659", null, true, null, null, false, null, true],
+      ["SSD", "occurrences_known", "A USGS production table note lists gold among commodities that may have been produced, without a reliable output estimate (U.S. Geological Survey, Minerals Yearbook 2022, volume III: South Sudan).", "medium", 2022, "usgs-myb-2022-ssd", null, true, null, null, false, null, false],
+      ["SDN", "major_producer", "Mine production 50.0 t in 2022 (estimated; U.S. Geological Survey, Mineral Commodity Summaries 2023: Gold).", "medium", 2022, "usgs-mcs-2023-gold", true, true, null, null, false, null, false],
+      ["TZA", "major_producer", "Mine production 60.0 t in 2024 (estimated; U.S. Geological Survey, Mineral Commodity Summaries 2025: Gold).", "medium", 2024, "usgs-mcs-2025-gold", true, true, null, null, false, null, false],
+      ["UGA", "producer", "Mine production 3.6 t in 2021 (estimated; U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Uganda).", "medium", 2021, "usgs-myb-2020-21-uga", true, true, null, null, false, null, false],
+      ["BWA", "producer", "Mine production 0.427 t in 2022 (reported; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Botswana).", "medium", 2022, "usgs-myb-2022-bwa", true, null, null, null, false, null, false],
+      ["SWZ", "occurrences_known", "The USGS lists gold operations in its structure-of-industry table, without a production figure (U.S. Geological Survey, Minerals Yearbook 2019, volume III: Eswatini).", "medium", 2019, "usgs-myb-2019-swz", true, true, null, null, false, null, false],
+      ["LSO", "none_identified", "No gold in the production tables, their notes or the industry tables of the USGS Minerals Yearbook chapters consulted (editions 2016, 2017-18, 2019, 2020-21, 2022).", "medium", 2022, "usgs-myb-2022-lso", null, null, null, null, false, null, false],
+      ["MOZ", "producer", "Mine production 0.764 t in 2021 (reported; U.S. Geological Survey, Minerals Yearbook 2020-21, volume III: Mozambique).", "medium", 2021, "usgs-myb-2020-21-moz", true, true, null, null, false, null, false],
+      ["NAM", "producer", "Mine production 7.4 t in 2022 (reported; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Namibia).", "medium", 2022, "usgs-myb-2022-nam", null, null, null, null, false, null, false],
+      ["ZAF", "major_producer", "Mine production 90.0 t in 2025 (estimated; U.S. Geological Survey, Mineral Commodity Summaries 2026: Gold (data release doi:10.5066/P1WKQ63T)).", "medium", 2025, "usgs-mcs-2026-gold", true, null, null, null, false, null, false],
+      ["ZMB", "producer", "Mine production 3.5 t in 2022 (reported; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Zambia). The USGS notes: Does not include artisanal and small-scale production.", "medium", 2022, "usgs-myb-2022-zmb", true, true, null, null, false, null, false],
+      ["ZWE", "major_producer", "Mine production 37.4 t in 2022 (reported; U.S. Geological Survey, Minerals Yearbook 2022, volume III: Zimbabwe).", "medium", 2022, "usgs-myb-2022-zwe", true, true, null, null, false, null, false]
+    ]
+  }
+}

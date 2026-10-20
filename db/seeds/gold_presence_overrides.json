@@ -1,0 +1,111 @@
+{
+  "$comment": "Curated presence tiers that replace the computed ones (spec 5.6.5). Each entry needs a citation: source.title, source.url and the exact quote it relies on; an entry without them is loaded as needs_review. Fields: iso3, presence_tier (major_producer | producer | occurrences_known | none_identified | unknown), presence_basis, presence_confidence (high | medium | low), presence_as_of_year, optional asm_present and commercial_mining (true/false, as the source states), source {title, url, source_type, reliability_tier}, quote, checked_on (YYYY-MM-DD). Each quote is re-checked against the source on every run.",
+  "overrides": [
+    {
+      "iso3": "COM",
+      "presence_tier": "none_identified",
+      "presence_basis": "The USGS Minerals Yearbook 2022 chapter on the Indian Ocean Islands states that Comoros \"did not produce any minerals\".",
+      "presence_confidence": "medium",
+      "presence_as_of_year": 2022,
+      "source": {
+        "title": "U.S. Geological Survey, Minerals Yearbook 2022, volume III: Indian Ocean Islands (Table 1, note 2)",
+        "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/myb3-2022-Indian%20Ocean%20Islands-advrel.xlsx",
+        "source_type": "statistics",
+        "reliability_tier": "primary"
+      },
+      "quote": "Although Comoros is a part of the Indian Ocean Islands, it did not produce any minerals and depended upon cement imports to meet domestic demand.",
+      "checked_on": "2026-10-18"
+    },
+    {
+      "iso3": "TGO",
+      "presence_tier": "producer",
+      "presence_basis": "The USGS reports about 20 t of gold a year for Togo, but says these figures are export data that mostly include artisanal gold transiting Togo from neighbouring countries and, to a lesser extent, domestic artisanal production. Domestic output is not quantified, so Togo is not counted as a major producer.",
+      "presence_confidence": "low",
+      "presence_as_of_year": 2019,
+      "source": {
+        "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Togo",
+        "url": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-togo.pdf",
+        "source_type": "statistics",
+        "reliability_tier": "primary"
+      },
+      "quote": "Data reported by the Government of Togo as exports predominately include artisanal gold mine production transiting Togo from neighboring countries and, to a lesser extent, domestic artisanal mine production.",
+      "checked_on": "2026-10-18"
+    },
+    {
+      "iso3": "GNB",
+      "presence_tier": "occurrences_known",
+      "presence_basis": "Small, low-grade gold anomalies are documented in the northeast of Guinea-Bissau (Wikipedia, Geology of Guinea-Bissau). No production is reported.",
+      "presence_confidence": "low",
+      "presence_as_of_year": null,
+      "source": {
+        "title": "Wikipedia: Geology of Guinea-Bissau",
+        "url": "https://en.wikipedia.org/wiki/Geology_of_Guinea-Bissau",
+        "source_type": "encyclopedia",
+        "reliability_tier": "reference"
+      },
+      "quote": "Some small, low-grade gold anomalies exist in the northeast of Guinea-Bissau.",
+      "checked_on": "2026-10-18"
+    },
+    {
+      "iso3": "SOM",
+      "presence_tier": "occurrences_known",
+      "presence_basis": "The Global Initiative Against Transnational Organized Crime reports artisanal gold mining at Milxo in north-eastern Somalia, which it describes as one of Africa's least-known gold booms. No production figure is published.",
+      "presence_confidence": "medium",
+      "presence_as_of_year": 2026,
+      "asm_present": true,
+      "source": {
+        "title": "Global Initiative Against Transnational Organized Crime: The Somali gold rush: Milxo and the ungoverned mining frontier (2 February 2026)",
+        "url": "https://globalinitiative.net/analysis/somali-gold-rush-milxo-mining/",
+        "source_type": "report",
+        "reliability_tier": "secondary"
+      },
+      "quote": "Milxo is a tiny mining settlement in a remote and contested region of north-eastern Somalia that, over the past decade, has become the site of one of Africa’s least-known gold booms.",
+      "checked_on": "2026-10-18"
+    },
+    {
+      "iso3": "CPV",
+      "presence_tier": "none_identified",
+      "presence_basis": "The USGS lists kaolin, salt, and sand and aggregate as the minerals that may have been produced in Cabo Verde in 2019; gold is not among them.",
+      "presence_confidence": "low",
+      "presence_as_of_year": 2019,
+      "source": {
+        "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Other Countries of Africa",
+        "url": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-other-africa.pdf",
+        "source_type": "statistics",
+        "reliability_tier": "primary"
+      },
+      "quote": "In 2019, kaolin, salt, and sand and aggregate may have been produced in Cabo Verde, but available information was inadequate to make reliable estimates of output",
+      "checked_on": "2026-10-18"
+    },
+    {
+      "iso3": "GMB",
+      "presence_tier": "none_identified",
+      "presence_basis": "The USGS lists clay, ilmenite, laterite, silica sand and zircon as the minerals that may have been produced in The Gambia in 2019; gold is not among them.",
+      "presence_confidence": "low",
+      "presence_as_of_year": 2019,
+      "source": {
+        "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Other Countries of Africa",
+        "url": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-other-africa.pdf",
+        "source_type": "statistics",
+        "reliability_tier": "primary"
+      },
+      "quote": "In 2019, clay, ilmenite, laterite, silica sand, and zircon may have been produced in The Gambia, but available information was inadequate to make reliable estimates of output",
+      "checked_on": "2026-10-18"
+    },
+    {
+      "iso3": "STP",
+      "presence_tier": "none_identified",
+      "presence_basis": "The USGS lists sand and aggregates as the minerals that may have been produced in São Tomé and Príncipe in 2019; gold is not among them.",
+      "presence_confidence": "low",
+      "presence_as_of_year": 2019,
+      "source": {
+        "title": "U.S. Geological Survey, Minerals Yearbook 2019, volume III: Other Countries of Africa",
+        "url": "https://pubs.usgs.gov/myb/vol3/2019/myb3-2019-other-africa.pdf",
+        "source_type": "statistics",
+        "reliability_tier": "primary"
+      },
+      "quote": "In 2019, sand and aggregates may have been produced in Sao Tome e Principe, but available information was inadequate to make reliable estimates of output",
+      "checked_on": "2026-10-18"
+    }
+  ]
+}

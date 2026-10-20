@@ -15,7 +15,7 @@ permissions:
 jobs:
   web:
     name: Lint, type-check, test, build (web + functions)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -33,7 +33,7 @@ jobs:
 
   e2e:
     name: Playwright (desktop + mobile)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: web
     steps:
       - uses: actions/checkout@v7
@@ -53,10 +53,10 @@ jobs:
 
   pipelines:
     name: Pipelines (ruff, mypy, pytest)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0 (no floating major tag is published)
       # Node provides the in-memory PGlite Postgres server the migration tests connect to.
       - uses: actions/setup-node@v7
         with:

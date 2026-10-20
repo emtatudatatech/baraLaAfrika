@@ -21,6 +21,11 @@ const zips = readdirSync(bundles).filter((file) => file.endsWith('.zip'));
 if (zips.length === 0) throw new Error(`No function bundles in ${bundles}`);
 
 delete process.env.DATABASE_URL_READ;
+
+// A valid query for functions with required parameters, so the call reaches the database (and
+// its 503) instead of stopping at validation (400).
+const QUERIES = { 'gold-series': '?metric=production' };
+
 const failures = [];
 for (const zip of zips) {
   const name = zip.replace(/\.zip$/, '');
@@ -30,7 +35,8 @@ for (const zip of zips) {
     const module = await import(
       pathToFileURL(join(directory, 'netlify', 'functions', `${name}.mjs`)).href
     );
-    const response = await module.default(new Request(`https://bundle.test${module.config.path}`), {
+    const url = `https://bundle.test${module.config.path}${QUERIES[name] ?? ''}`;
+    const response = await module.default(new Request(url), {
       params: { iso3: 'KEN', slug: 'mount-kenya' },
     });
     const body = await response.json();

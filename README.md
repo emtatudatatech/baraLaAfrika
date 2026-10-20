@@ -392,7 +392,7 @@ The target is Lighthouse ≥ 90 on mobile for Performance, Accessibility, Best P
 
 | Command | What it runs |
 |---|---|
-| `npm run check` | ESLint + Stylelint, `tsc -b`, Vitest, production build |
+| `npm run check` | ESLint + Stylelint, Prettier (check), `tsc -b`, Vitest, production build: the same steps as CI's web job |
 | `npm run lint` / `npm run typecheck` / `npm test` / `npm run build` | individually |
 | `npm run format` / `npm run format:check` | Prettier |
 | `npm run check:functions` | Builds the Netlify Functions as a deploy does and checks each bundle loads and answers |

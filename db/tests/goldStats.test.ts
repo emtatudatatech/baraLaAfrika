@@ -267,7 +267,10 @@ describe('the price effect (gold_price_effect, gold_holdings_change and card 11)
 
   it('adds the price effect card for the countries counted in central bank gold', async () => {
     const card = (await stats(db)).price_effect;
-    const detail = card?.detail as Record<"changeUsd" | "priceEffectUsd" | "volumeEffectUsd" | "countries" | "tonnesChange", number>;
+    const detail = card?.detail as Record<
+      'changeUsd' | 'priceEffectUsd' | 'volumeEffectUsd' | 'countries' | 'tonnesChange',
+      number
+    >;
     expect(card?.as_of).toBe('2021-12-31');
     expect(detail.countries).toBe(2); // AAA and BBB; DDD is stale
     expect(Number(card?.value)).toBe(Math.round(500 * k * 11 + 500 * k * 4.5));

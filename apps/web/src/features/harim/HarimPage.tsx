@@ -13,6 +13,7 @@ import { strings } from '../../lib/strings';
 import { type Unit, formatElevation, useUnits } from '../../lib/units';
 import { useMediaQuery } from '../../lib/useMediaQuery';
 import { useResource } from '../../lib/useResource';
+import { latestParams } from '../../lib/latestParams';
 import styles from './HarimPage.module.css';
 import {
   COUNTRY_SORTS,
@@ -184,7 +185,7 @@ export function HarimPage() {
 
   // Views are shareable, not history entries: changes replace the current URL.
   const update = (change: Partial<HarimView>) => {
-    setParams((current) => updateParams(current, change), { replace: true });
+    setParams(() => updateParams(latestParams(), change), { replace: true });
   };
   const switchView = (next: View) => {
     if (next === view.view) return;

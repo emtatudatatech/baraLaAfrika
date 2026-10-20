@@ -7,7 +7,7 @@ import {
   REGION_SLUGS,
   type GoldSort,
 } from '@bla/shared';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router';
 
 import { DevApiHint } from '../../components/DevApiHint/DevApiHint';
@@ -21,8 +21,11 @@ import { useGoldUnit } from '../../lib/goldUnits';
 import { strings } from '../../lib/strings';
 import { useMediaQuery } from '../../lib/useMediaQuery';
 import { useResource } from '../../lib/useResource';
+import { latestParams } from '../../lib/latestParams';
 import { useTimeRange } from '../coverage/timeRangeContext';
 import harimStyles from '../harim/HarimPage.module.css';
+import { GoldCharts } from './charts/GoldCharts';
+import { GoldDrawer } from './GoldDrawer';
 import { GoldExport } from './GoldExport';
 import { GoldStatsBand } from './GoldStatsBand';
 import type { GoldStatAction } from './goldStats';
@@ -36,6 +39,7 @@ import {
   visibleRows,
 } from './goldQuery';
 import { HowToRead } from './HowToRead';
+import { GoldMap, type MapPlace } from './map/GoldMap';
 import styles from './DhahabuPage.module.css';
 
 const text = strings.dhahabu;
@@ -74,6 +78,26 @@ export function DhahabuPage() {
     () => new Map<string, CountryRef>(rows.map((row) => [row.country.iso3, row.country])),
     [rows],
   );
+  // Centroids and small-state markers for the map (the same cached list as the other pages).
+  const summaries = useResource('countries:all', () => api.countries());
+  const places = useMemo(
+    () =>
+      new Map<string, MapPlace>(
+        (summaries.data?.countries ?? []).map((c) => [
+          c.iso3,
+          { centroid: c.centroid, isMicrostateMarker: c.isMicrostateMarker },
+        ]),
+      ),
+    [summaries.data],
+  );
+  const regionRows = useMemo(
+    () => (view.region === null ? rows : rows.filter((r) => r.country.region.slug === view.region)),
+    [rows, view.region],
+  );
+  // Linked selection: a hovered table row outlines its country on the map, and the reverse.
+  const [tableHover, setTableHover] = useState<string | null>(null);
+  const [mapHover, setMapHover] = useState<string | null>(null);
+  const holdingsRef = useRef<HTMLElement>(null);
   const regionOptions = useMemo<RegionOption[]>(
     () =>
       REGION_SLUGS.flatMap((slug) => {
@@ -90,7 +114,7 @@ export function DhahabuPage() {
 
   // Views are shareable, not history entries: changes replace the current URL.
   const update = (change: Partial<GoldView>) => {
-    setParams((current) => updateParams(current, change), {
+    setParams(() => updateParams(latestParams(), change), {
       replace: true,
       preventScrollReset: true,
     });
@@ -116,10 +140,15 @@ export function DhahabuPage() {
   }, [highlighted, revealTick]);
 
   const onStatAction = (action: GoldStatAction) => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (action.kind === 'sort') {
       update({ sort: action.sort });
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       controlsRef.current?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      return;
+    }
+    if (action.kind === 'holdings') {
+      holdingsRef.current?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      holdingsRef.current?.focus({ preventScroll: true });
       return;
     }
     // Make sure the country is listed: drop the search and presence filters that would hide it.
@@ -128,6 +157,18 @@ export function DhahabuPage() {
     setHighlighted(action.iso3);
     setRevealTick((n) => n + 1);
   };
+
+  const openCountry = useCallback(
+    (iso3: string) => {
+      setParams(() => updateParams(latestParams(), { country: iso3 }), {
+        replace: true,
+        preventScrollReset: true,
+      });
+    },
+    [setParams],
+  );
+  const drawerRow =
+    view.country === null ? undefined : rows.find((r) => r.country.iso3 === view.country);
 
   const hasFilters = view.region !== null || view.q !== '' || view.presence !== null;
   const clearFilters = () => {
@@ -296,15 +337,68 @@ export function DhahabuPage() {
               rows={visible}
               unit={unit}
               highlighted={highlighted}
+              linked={mapHover}
+              onOpen={openCountry}
+              onHover={setTableHover}
               sort={view.sort}
               onSort={(column) => {
                 update({ sort: nextSort(view.sort, column) });
               }}
             />
           ) : (
-            <GoldCards rows={visible} unit={unit} highlighted={highlighted} />
+            <GoldCards
+              rows={visible}
+              unit={unit}
+              highlighted={highlighted}
+              linked={mapHover}
+              onOpen={openCountry}
+              onHover={setTableHover}
+            />
           ))}
       </section>
+
+      {ready && rows.length > 0 && (
+        <GoldMap
+          rows={rows}
+          places={places}
+          metric={view.metric}
+          onMetric={(metric) => {
+            update({ metric });
+          }}
+          region={view.region}
+          unit={unit}
+          highlighted={tableHover}
+          selected={view.country}
+          wide={isWide}
+          onOpen={openCountry}
+          onHover={setMapHover}
+        />
+      )}
+
+      {ready && range !== null && (
+        <GoldCharts
+          rows={regionRows}
+          region={view.region}
+          regionName={regionName}
+          from={range.start}
+          to={range.end}
+          unit={unit}
+          onOpen={openCountry}
+          holdingsRef={holdingsRef}
+        />
+      )}
+
+      {drawerRow && (
+        <GoldDrawer
+          key={drawerRow.country.iso3}
+          row={drawerRow}
+          year={year}
+          unit={unit}
+          onClose={() => {
+            update({ country: null });
+          }}
+        />
+      )}
     </>
   );
 }

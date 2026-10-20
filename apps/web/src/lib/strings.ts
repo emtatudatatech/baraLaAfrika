@@ -260,6 +260,8 @@ export const strings = {
     },
     highestPeak: 'Highest peak',
     highestPeakLink: (peak: string, height: string) => `${peak}, ${height}`,
+    gold: 'Gold',
+    goldLink: (country: string, tier: string) => `Gold in ${country}: ${tier}`,
     loading: 'Loading the full profile…',
     loadError: 'The full profile could not be loaded.',
     retry: 'Retry',
@@ -723,6 +725,12 @@ export const strings = {
         'Timing, valuation, classification, transit or unrecorded flows; not evidence of wrongdoing.',
       netBuy: (change: string, month: string) => `${change} in the 12 months to ${month}`,
       noNetBuyer: 'No net buyer: no holding grew over 12 months.',
+      priceEffectOf: (change: string) => `of a ${change} change in value over 12 months`,
+      volumeEffect: (value: string) => `Tonnes bought or sold: ${value}`,
+      comparedCountries: (count: number) =>
+        count === 1
+          ? '1 central bank reporting both months; computed at monthly average prices'
+          : `${String(count)} central banks reporting both months; computed at monthly average prices`,
       actions: {
         gold_producing_countries: 'Sort by production',
         africa_production: 'Sort by production',
@@ -734,6 +742,7 @@ export const strings = {
         most_gold_dependent: 'Show the country',
         biggest_reporting_gap: 'Show the country',
         largest_net_buyer: 'Show the country',
+        price_effect: 'See the holdings chart',
       },
     },
     filtersLabel: 'Filter the countries',
@@ -830,6 +839,184 @@ export const strings = {
     },
     moreFigures: 'More figures',
     fewerFigures: 'Fewer figures',
+    openDetails: (country: string) => `Open ${country}’s details`,
+    map: {
+      title: 'Map',
+      label: 'Map of Africa: gold by country',
+      metricLabel: 'Show on the map',
+      metrics: {
+        production: 'Mine production',
+        holdings: 'Central bank gold',
+        exports: 'Gold exports (value)',
+        share: 'Share of exports',
+        presence: 'Presence',
+      },
+      legendTitles: {
+        production: 'Mine production',
+        holdings: 'Central bank gold',
+        exports: 'Gold exports, as reported',
+        share: 'Gold’s share of merchandise exports',
+        presence: 'Presence of gold',
+      },
+      under: (value: string) => `Under ${value}`,
+      between: (low: string, high: string) => `${low} to ${high}`,
+      over: (value: string) => `${value} or more`,
+      noData: 'No data',
+      included: 'Included in other countries',
+      inconsistent: 'Inconsistent data (not drawn)',
+      latestNote:
+        'Each country’s latest figure up to the reference year (the tooltip gives its year or month); the classes have about equal numbers of countries.',
+      keyboardHint:
+        'Tab to the map, then use the arrow keys to move between countries; Enter opens a country’s details.',
+      tableLink: 'The country table lists the same figures',
+      partners: (value: string, year: number) =>
+        `Not reported; partners report ${value} (${String(year)})`,
+      evidence: (year: number) => `evidence from ${String(year)}`,
+    },
+    drawer: {
+      countryProfile: 'Country profile',
+      atReference: (when: string) => `Key figures (${when})`,
+      latestAvailable: 'latest available',
+      upTo: (year: number) => `up to ${String(year)}`,
+      presence: 'Presence of gold',
+      evidenceYear: (year: number) => `Evidence from ${String(year)}`,
+      commercial: 'Industrial (large-scale) mine output reported',
+      production: 'Mine production',
+      productionNone: 'No mine production figures in the sources used.',
+      productionColumns: { year: 'Year', tonnes: 'Production', value: 'Value (computed)' },
+      trade: 'Trade in gold',
+      tradeNote:
+        'Recorded trade in non-monetary gold (HS 7108) reported to UN Comtrade. Partners’ reports (“mirror”) often differ from the country’s own: timing, valuation, classification, transit or unrecorded flows. A gap is not evidence of wrongdoing.',
+      tradeNone: 'No recorded gold trade in UN Comtrade.',
+      tradeColumns: {
+        year: 'Year',
+        exports: 'Exports (reported)',
+        mirror: 'Partners report importing',
+        imports: 'Imports (reported)',
+      },
+      partners: (year: number) => `Where its gold went in ${String(year)}`,
+      partnersReported: 'As the country reports',
+      partnersMirror: 'As partners report',
+      holdings: 'Central bank gold',
+      holdingsNone: 'No central bank gold holdings reported to the IMF.',
+      holdingsColumns: {
+        month: 'Month',
+        tonnes: 'Holdings',
+        value: 'Value',
+        share: 'Share of reserves',
+      },
+      holdingsNote:
+        'Each year’s last reported month; values computed at that month’s average price.',
+      inground: 'In-ground reserves (geological)',
+      ingroundNote:
+        'An estimate of gold still in the ground that is economically extractable, by the source’s definition. A different thing from central bank gold: never added to or compared with it.',
+      illustrative: (value: string, price: string, month: string) =>
+        `${value} at ${price} (${month}): illustrative at a given price, not a realisable sum.`,
+      artisanal: 'Artisanal and small-scale mining',
+      asmPresent: 'Reported in the sources consulted.',
+      asmAbsent: 'Not reported in the sources consulted.',
+      asmShare: (pct: string) => `About ${pct} of gold output, by the source’s estimate.`,
+      asmSource: 'Source',
+      notes: 'Notes',
+      noteMeta: (source: string, date: string) => `${source}, ${date}`,
+      sources: 'Sources',
+      sourcesNote:
+        'Every source behind this panel, with what it supports. Reliability tiers are this project’s assessment.',
+      usedFor: {
+        presence: 'presence',
+        artisanal: 'artisanal mining',
+        production: 'production',
+        trade: 'trade',
+        holdings: 'central bank gold',
+        inground: 'in-ground reserves',
+        notes: 'notes',
+      } as Record<string, string>,
+      loading: 'Loading the country’s gold data…',
+    },
+    charts: {
+      title: 'Charts',
+      tableToggle: 'Show the data as a table',
+      loading: 'Loading the chart…',
+      loadError: 'The chart could not be loaded.',
+      retry: 'Retry',
+      noData: 'No data in this year range.',
+      openCountry: 'Open the country',
+      regions: 'Regions',
+      producers: {
+        title: 'Top gold producers',
+        description: (year: number, count: number) =>
+          `Mine production in ${String(year)}: the ${String(count)} largest producers, in tonnes, coloured by region.`,
+        subtitle: (year: number) =>
+          `Mine production in ${String(year)}, the latest complete year in the range`,
+        estimate: 'estimate',
+        valueComputed: (value: string, price: string) => `${value} at ${price} (computed)`,
+        columns: { country: 'Country', production: 'Mine production', value: 'Value (computed)' },
+      },
+      production: {
+        title: 'Africa’s mine production and the gold price',
+        description: (from: number, to: number) =>
+          `Two panels for ${String(from)}–${String(to)}: Africa’s total mine production by year (partial years marked), and the gold price.`,
+        productionPanel: 'Africa’s mine production (tonnes)',
+        pricePanel: 'Gold price (annual average of monthly prices, US$ per troy ounce)',
+        pricePanelShort: 'Gold price (US$/oz, annual average)',
+        complete: 'Complete year',
+        partial: 'Partial: some producers have no figure yet',
+        startsAt: (year: number) => `production figures start in ${String(year)}`,
+        noProduction: (from: number) =>
+          `No production figures before ${String(from)} in the sources used.`,
+        tooltipProduction: (tonnes: string, countries: number) =>
+          `${tonnes} from ${String(countries)} countries`,
+        tooltipMissing: (count: number) =>
+          `partial: ${String(count)} producer${count === 1 ? '' : 's'} without a figure`,
+        tooltipPrice: (price: string) => `Average price ${price}`,
+        monthsSoFar: (months: number) =>
+          `(${String(months)} month${months === 1 ? '' : 's'} so far)`,
+        columns: {
+          year: 'Year',
+          production: 'Mine production',
+          complete: 'Complete',
+          price: 'Average price',
+        },
+        yes: 'Yes',
+        no: 'No (partial)',
+      },
+      holdings: {
+        title: 'Central bank gold holdings',
+        description: (count: number) =>
+          `Lines for the ${String(count)} largest African holders over the year range, by month.`,
+        showIn: 'Show holdings in',
+        tonnes: 'Tonnes',
+        usd: 'US$ value',
+        computedNote: 'US dollar values are computed at each month’s average gold price.',
+        startsAt: (year: number) => `reports start in ${String(year)}`,
+        columns: { month: 'Month' },
+        split: {
+          title: 'Price or tonnes?',
+          countryLabel: 'Central bank',
+          summary: (country: string, from: string, to: string, change: string) =>
+            `From ${from} to ${to} the value of ${country}’s gold changed by ${change}.`,
+          start: (month: string) => `Value, ${month}`,
+          end: (month: string) => `Value, ${month}`,
+          price: 'From the price',
+          volume: 'From tonnes bought or sold',
+          volumeShort: 'From tonnes',
+          tonnes: (from: string, to: string) => `Holdings went from ${from} to ${to}.`,
+          note: 'The two parts add up exactly to the change. The price part is the change in the monthly average price times the average of the two holdings.',
+          noPrice: 'A month’s price is missing, so the change cannot be split.',
+          none: 'Fewer than two reports in this year range.',
+        },
+      },
+      dependence: {
+        title: 'Gold dependence',
+        description: (count: number) =>
+          `Gold’s share of reported merchandise exports for ${String(count)} countries, each in its latest year with both figures.`,
+        subtitle:
+          'Gold’s share of each country’s reported merchandise exports (UN Comtrade), latest year up to the reference year',
+        columns: { country: 'Country', share: 'Share of exports', year: 'Year' },
+        showAll: (count: number) => `Show all ${String(count)}`,
+        showTop: (count: number) => `Show the top ${String(count)}`,
+      },
+    },
   },
   devHints: {
     apiNotRunning:

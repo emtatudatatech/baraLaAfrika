@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 import {
   GOLD_EXPORT_FORMATS,
+  GOLD_SERIES_MAX_COUNTRIES,
+  GOLD_SERIES_METRICS,
   GOLD_SORTS,
   PRESENCE_TIERS,
   PRICE_GRANULARITIES,
@@ -64,6 +66,52 @@ export const GoldPriceQuerySchema = z
   .refine((q) => q.from === undefined || q.to === undefined || q.from <= q.to, {
     message: 'from must not be after to',
   });
+
+/** `KEN,TZA` → ['KEN', 'TZA'] (upper-cased, de-duplicated). */
+const Iso3List = z
+  .string()
+  .transform((value) => [
+    ...new Set(
+      value
+        .split(',')
+        .map((code) => code.trim().toUpperCase())
+        .filter((code) => code !== ''),
+    ),
+  ])
+  .pipe(
+    z
+      .array(z.string().regex(/^[A-Z]{3}$/))
+      .min(1)
+      .max(GOLD_SERIES_MAX_COUNTRIES),
+  );
+
+const fromBeforeTo = (q: { from?: number | undefined; to?: number | undefined }) =>
+  q.from === undefined || q.to === undefined || q.from <= q.to;
+
+export const GoldSeriesQuerySchema = z
+  .object({
+    metric: z.enum(GOLD_SERIES_METRICS),
+    /** Countries to return (omit for all, within `region`). */
+    countries: Iso3List.optional(),
+    region: RegionSlugSchema.optional(),
+    from: Year.optional(),
+    to: Year.optional(),
+    /** Holdings can be monthly; production and trade are annual. */
+    granularity: z.enum(PRICE_GRANULARITIES).default('year'),
+  })
+  .refine(fromBeforeTo, { message: 'from must not be after to' });
+export type GoldSeriesQuery = z.infer<typeof GoldSeriesQuerySchema>;
+
+export const GoldHoldingsChangeQuerySchema = z
+  .object({
+    countries: Iso3List.optional(),
+    from: Year.optional(),
+    to: Year.optional(),
+  })
+  .refine(fromBeforeTo, { message: 'from must not be after to' });
+export type GoldHoldingsChangeQuery = z.infer<typeof GoldHoldingsChangeQuerySchema>;
+
+export const GoldCountryQuerySchema = z.object({ year: Year.optional() });
 
 // ── Responses ────────────────────────────────────────────────────────────────
 
@@ -311,6 +359,20 @@ export const GoldStatSchema = z.discriminatedUnion('key', [
     detail: z.object({ noNetBuyer: z.boolean() }),
     entities: z.array(GoldStatBuyerSchema),
   }),
+  z.object({
+    ...statBase,
+    key: z.literal('price_effect'),
+    detail: z.object({
+      changeUsd: z.number().nullable(),
+      priceEffectUsd: z.number().nullable(),
+      volumeEffectUsd: z.number().nullable(),
+      valueFromUsd: z.number().nullable(),
+      valueToUsd: z.number().nullable(),
+      tonnesChange: z.number().nullable(),
+      countries: count.nullable(),
+    }),
+    entities: z.array(z.never()),
+  }),
 ]);
 export type GoldStat = z.infer<typeof GoldStatSchema>;
 
@@ -334,3 +396,160 @@ export const GoldPriceResponseSchema = z.object({
   points: z.array(GoldPricePointSchema),
 });
 export type GoldPriceResponse = z.infer<typeof GoldPriceResponseSchema>;
+
+// ── Chart series ─────────────────────────────────────────────────────────────
+
+export const GoldSeriesPointSchema = z.object({
+  /** `2021` for years, `2021-09` for months. */
+  period: z.string(),
+  /** Tonnes or US dollars; null when the source lumps the country into "other countries". */
+  value: z.number().nullable(),
+  /** Production: reported, estimate or included_in_other; trade: reported or mirror. */
+  basis: z.string().nullable(),
+  /** Production only: the computed value at the year's average price (null until complete). */
+  valueUsd: z.number().nullable(),
+});
+export type GoldSeriesPoint = z.infer<typeof GoldSeriesPointSchema>;
+
+export const GoldSeriesSchema = z.object({
+  country: z.object({ iso3: z.string().length(3), name: z.string(), region: RegionSlugSchema }),
+  points: z.array(GoldSeriesPointSchema),
+});
+export type GoldSeries = z.infer<typeof GoldSeriesSchema>;
+
+export const GoldProductionTotalSchema = z.object({
+  year: z.number().int(),
+  tonnes: z.number(),
+  countries: count,
+  /** What producers without a figure that year would add (their nearest figure, ±3 years). */
+  missingTonnes: z.number(),
+  missingCountries: count,
+  /** At most 5% missing: a total that can be compared. */
+  complete: z.boolean(),
+});
+export type GoldProductionTotal = z.infer<typeof GoldProductionTotalSchema>;
+
+export const GoldSeriesResponseSchema = z.object({
+  metric: z.enum(GOLD_SERIES_METRICS),
+  unit: z.enum(['t', 'USD']),
+  granularity: z.enum(PRICE_GRANULARITIES),
+  series: z.array(GoldSeriesSchema),
+  /** Production: Africa's (or the region's) total per year, with its completeness. */
+  totals: z.array(GoldProductionTotalSchema).nullable(),
+  /** True when the request asked for more points than the cap and was cut (latest kept). */
+  capped: z.boolean(),
+});
+export type GoldSeriesResponse = z.infer<typeof GoldSeriesResponseSchema>;
+
+// ── Price effect versus volume effect ───────────────────────────────────────
+
+export const GoldHoldingsChangeSchema = z.object({
+  country: z.object({ iso3: z.string().length(3), name: z.string() }),
+  fromMonth: IsoDate,
+  toMonth: IsoDate,
+  tonnesFrom: z.number(),
+  tonnesTo: z.number(),
+  priceFrom: z.number().nullable(),
+  priceTo: z.number().nullable(),
+  valueFromUsd: z.number(),
+  valueToUsd: z.number(),
+  changeUsd: z.number(),
+  /** The two effects sum exactly to changeUsd; null when a month's price is missing. */
+  priceEffectUsd: z.number().nullable(),
+  volumeEffectUsd: z.number().nullable(),
+});
+export type GoldHoldingsChange = z.infer<typeof GoldHoldingsChangeSchema>;
+
+export const GoldHoldingsChangeResponseSchema = z.object({
+  changes: z.array(GoldHoldingsChangeSchema),
+});
+export type GoldHoldingsChangeResponse = z.infer<typeof GoldHoldingsChangeResponseSchema>;
+
+// ── One country (the drawer) ─────────────────────────────────────────────────
+
+const SourceLinkSchema = z.object({
+  title: z.string(),
+  url: z.url(),
+  reliabilityTier: ReliabilityTierSchema,
+});
+
+export const GoldTradeYearSchema = z.object({
+  year: z.number().int(),
+  exportsReported: GoldTradeFigureSchema.nullable(),
+  exportsMirror: GoldTradeFigureSchema.nullable(),
+  importsReported: GoldTradeFigureSchema.nullable(),
+  importsMirror: GoldTradeFigureSchema.nullable(),
+});
+export type GoldTradeYear = z.infer<typeof GoldTradeYearSchema>;
+
+export const GoldPartnerSchema = z.object({
+  rank: z.number().int(),
+  name: z.string(),
+  iso3: z.string().length(3).nullable(),
+  valueUsd: z.number(),
+  netWeightKg: z.number().nullable(),
+});
+
+export const GoldCountryDetailSchema = z.object({
+  /** The table's row for the reference year (latest available without one). */
+  row: GoldCountrySchema,
+  artisanalSource: SourceLinkSchema.nullable(),
+  production: z.array(
+    z.object({
+      year: z.number().int(),
+      tonnes: z.number().nullable(),
+      basis: ProductionBasisSchema,
+      valueUsd: z.number().nullable(),
+      priceUsdPerOz: z.number().nullable(),
+      source: z.string(),
+      notes: z.string().nullable(),
+    }),
+  ),
+  trade: z.array(GoldTradeYearSchema),
+  /** The top partners for the latest year with a breakdown of the country's gold exports. */
+  partners: z
+    .object({
+      year: z.number().int(),
+      reported: z.array(GoldPartnerSchema),
+      mirror: z.array(GoldPartnerSchema),
+    })
+    .nullable(),
+  /** Each year's last reported month. */
+  holdings: z.array(
+    z.object({
+      asOf: IsoDate,
+      tonnes: z.number(),
+      valueUsd: z.number(),
+      pctOfReserves: z.number().nullable(),
+    }),
+  ),
+  /** Geological reserves: a different thing from central bank holdings. */
+  inground: z.array(
+    z.object({
+      year: z.number().int(),
+      tonnes: z.number(),
+      definition: z.string(),
+      source: z.string(),
+    }),
+  ),
+  /** The latest monthly price, for the illustrative value of in-ground reserves. */
+  latestPrice: z.object({ month: IsoDate, usdPerOz: z.number() }).nullable(),
+  notes: z.array(
+    z.object({
+      note: z.string(),
+      asOf: IsoDate,
+      source: SourceLinkSchema,
+      needsReview: z.boolean(),
+      reviewNotes: z.string().nullable(),
+    }),
+  ),
+  /** Every source behind the drawer, with what it supports. */
+  sources: z.array(SourceLinkSchema.extend({ usedFor: z.array(z.string()) })),
+});
+export type GoldCountryDetail = z.infer<typeof GoldCountryDetailSchema>;
+
+export const GoldCountryResponseSchema = z.object({
+  year: z.number().int().nullable(),
+  country: GoldCountryDetailSchema,
+});
+export type GoldCountryResponse = z.infer<typeof GoldCountryResponseSchema>;

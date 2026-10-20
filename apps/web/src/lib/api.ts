@@ -5,7 +5,13 @@ import type {
   CoverageResponse,
   DatasetKey,
   GoldCountriesResponse,
+  GoldCountryResponse,
+  GoldHoldingsChangeResponse,
+  GoldPriceResponse,
+  GoldSeriesMetric,
+  GoldSeriesResponse,
   GoldStatsResponse,
+  PriceGranularity,
   HarimStatsResponse,
   MountainResponse,
   MountainSummaryResponse,
@@ -130,6 +136,62 @@ export const api = {
       withQuery('/api/gold/stats', {
         region: region ?? undefined,
         year: year === undefined ? undefined : String(year),
+      }),
+      signal,
+    ),
+  /** One country's gold drawer; its row follows the reference year. */
+  goldCountry: (iso3: string, year: number | undefined, signal?: AbortSignal) =>
+    apiGet<GoldCountryResponse>(
+      withQuery(`/api/gold/countries/${encodeURIComponent(iso3)}`, {
+        year: year === undefined ? undefined : String(year),
+      }),
+      signal,
+    ),
+  /** A chart series: one per country (production adds Africa's yearly totals). */
+  goldSeries: (
+    query: {
+      metric: GoldSeriesMetric;
+      countries?: readonly string[];
+      region?: RegionSlug | null;
+      from?: number;
+      to?: number;
+      granularity?: PriceGranularity;
+    },
+    signal?: AbortSignal,
+  ) =>
+    apiGet<GoldSeriesResponse>(
+      withQuery('/api/gold/series', {
+        metric: query.metric,
+        countries: query.countries?.join(','),
+        region: query.region ?? undefined,
+        from: query.from === undefined ? undefined : String(query.from),
+        to: query.to === undefined ? undefined : String(query.to),
+        granularity: query.granularity,
+      }),
+      signal,
+    ),
+  /** Each country's change in holdings value, split into price and volume effects. */
+  goldHoldingsChange: (
+    query: { countries?: readonly string[]; from?: number; to?: number },
+    signal?: AbortSignal,
+  ) =>
+    apiGet<GoldHoldingsChangeResponse>(
+      withQuery('/api/gold/holdings-change', {
+        countries: query.countries?.join(','),
+        from: query.from === undefined ? undefined : String(query.from),
+        to: query.to === undefined ? undefined : String(query.to),
+      }),
+      signal,
+    ),
+  goldPrice: (
+    query: { from?: number; to?: number; granularity: PriceGranularity },
+    signal?: AbortSignal,
+  ) =>
+    apiGet<GoldPriceResponse>(
+      withQuery('/api/gold/price', {
+        from: query.from === undefined ? undefined : String(query.from),
+        to: query.to === undefined ? undefined : String(query.to),
+        granularity: query.granularity,
       }),
       signal,
     ),

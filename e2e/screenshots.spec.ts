@@ -35,6 +35,8 @@ const DHAHABU_STATES = [
   { path: '/dhahabu?region=west', name: 'dhahabu-west', ready: 'gold-row' },
   { path: '/dhahabu?sort=holdings', name: 'dhahabu-holdings', ready: 'gold-row' },
   { path: '/dhahabu?from=2000&to=2015', name: 'dhahabu-2015', ready: 'gold-row' },
+  { path: '/dhahabu?metric=presence', name: 'dhahabu-presence-map', ready: 'gold-row' },
+  { path: '/dhahabu?metric=holdings&country=GHA', name: 'dhahabu-drawer', ready: 'gold-drawer' },
 ] as const;
 
 const SHOTS = [
@@ -65,7 +67,7 @@ for (const viewport of VIEWPORTS) {
           await waitForMap(page);
         }
         if (route.path.startsWith('/harim/ranges/')) await waitForMap(page);
-        if (route.path.startsWith('/dhahabu')) await waitForStats(page);
+        if (route.path.startsWith('/dhahabu')) await waitForContent(page, '/dhahabu');
         await waitForAnimations(page);
         // A full-page capture does not scroll, so lazy images below the fold would stay blank.
         await page.evaluate(async () => {

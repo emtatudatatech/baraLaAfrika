@@ -1,6 +1,6 @@
 # Dhahabu statistics
 
-The cards at the top of `/dhahabu` (spec 7.6.1). Every value is computed in the database by `v_gold_stats(scope_region, as_of_year)` (migration `db/migrations/0008_dhahabu_api.sql`) and served by `GET /api/gold/stats?region=<slug>&year=<yyyy>`; nothing is computed in the browser. The **Definition** below is the exact text the API returns and the page shows in each card's "How is this calculated?" popover (a test checks they match).
+The cards at the top of `/dhahabu` (spec 7.6.1). Every value is computed in the database by `v_gold_stats(scope_region, as_of_year)` (migrations `db/migrations/0008_dhahabu_api.sql` and `0009_dhahabu_charts.sql`, which adds the price effect) and served by `GET /api/gold/stats?region=<slug>&year=<yyyy>`; nothing is computed in the browser. The **Definition** below is the exact text the API returns and the page shows in each card's "How is this calculated?" popover (a test checks they match).
 
 ## Shared rules
 
@@ -115,6 +115,12 @@ The cards at the top of `/dhahabu` (spec 7.6.1). Every value is computed in the 
 
 **Ties.** Every country at the maximum is listed.
 
-## Not shown
+### 11. Price effect (12 months) (`price_effect`)
 
-- **Price effect** (the optional 11th card): how much of the 12-month change in the US dollar value of central bank holdings came from the price rather than tonnes. It is part of the central bank holdings chart (milestone 16), where the country and period can be chosen.
+**Definition.** How much of the 12-month change in the US dollar value of central bank gold came from the gold price, and how much from tonnes bought or sold, for the countries counted in "Central bank gold held" that also reported 12 months earlier. Price effect: the change in the monthly average price × the troy ounces at the average of the two holdings; volume effect: the rest of the change, so the two add up exactly to it. Values are computed at each month's average price.
+
+**Value and details.** `value`: the price effect in US dollars. `detail`: `changeUsd` (the change in value), `priceEffectUsd` and `volumeEffectUsd` (they sum exactly to `changeUsd`), `valueFromUsd` and `valueToUsd`, `tonnesChange` and `countries` (how many countries are compared). Each country's split is `gold_price_effect(tonnes_from, tonnes_to, price_from, price_to)`, the same function behind `GET /api/gold/holdings-change` and the holdings chart; the card sums the countries' price effects, and the volume effect is the change less the price effect (so rounding never breaks the sum).
+
+**Dated.** The newest month of the countries compared (as for "Central bank gold held"); `null` when no country reported 12 months earlier.
+
+**Ties.** Not applicable (a sum).

@@ -22,9 +22,14 @@ const MONTHLY: readonly GoldStatKey[] = [
   'largest_holder',
   'gold_price',
   'largest_net_buyer',
+  'price_effect',
 ];
 
-export type GoldStatAction = { kind: 'sort'; sort: GoldSort } | { kind: 'country'; iso3: string };
+export type GoldStatAction =
+  | { kind: 'sort'; sort: GoldSort }
+  | { kind: 'country'; iso3: string }
+  /** Bring the central bank holdings chart into view. */
+  | { kind: 'holdings' };
 
 /** What a click on a card (or one of its tied countries) does; null when it does nothing. */
 export function goldStatAction(stat: GoldStat, index = 0): GoldStatAction | null {
@@ -37,6 +42,8 @@ export function goldStatAction(stat: GoldStat, index = 0): GoldStatAction | null
       return { kind: 'sort', sort: 'holdings' };
     case 'gold_price':
       return null;
+    case 'price_effect':
+      return { kind: 'holdings' };
     case 'largest_producer':
     case 'largest_holder':
     case 'most_gold_dependent':

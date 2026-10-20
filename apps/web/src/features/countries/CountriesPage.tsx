@@ -11,6 +11,7 @@ import { cx } from '../../lib/cx';
 import { strings } from '../../lib/strings';
 import { useMediaQuery } from '../../lib/useMediaQuery';
 import { useResource } from '../../lib/useResource';
+import { latestParams } from '../../lib/latestParams';
 import styles from './CountriesPage.module.css';
 import { CountriesTable, CountriesTableSkeleton } from './CountriesTable';
 import { CountryCards, CountryCardsSkeleton } from './CountryCards';
@@ -55,7 +56,7 @@ export function CountriesPage() {
 
   // Views are shareable, not history entries: filter changes replace the current URL.
   const update = (change: Partial<CountriesView>) => {
-    setParams((current) => updateParams(current, change), { replace: true });
+    setParams(() => updateParams(latestParams(), change), { replace: true });
   };
 
   // The search box is uncontrolled (no caret jumps while the URL updates); keep it in step when

@@ -192,7 +192,7 @@ describe('GET /api/coverage', () => {
     expect(baseline?.name).toContain('emtatudatatech/harim@318dee9');
   });
 
-  it('reports each gold dataset\'s own coverage for the ribbon', async () => {
+  it("reports each gold dataset's own coverage for the ribbon", async () => {
     const response = await call(
       coverage,
       '/api/coverage?datasets=gold-price,gold-production,gold-official-reserves,gold-trade',

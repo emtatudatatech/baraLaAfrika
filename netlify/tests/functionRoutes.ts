@@ -8,8 +8,11 @@ import * as countries from '../functions/countries.ts';
 import * as country from '../functions/country.ts';
 import * as coverage from '../functions/coverage.ts';
 import * as goldCountries from '../functions/gold-countries.ts';
+import * as goldCountry from '../functions/gold-country.ts';
 import * as goldExport from '../functions/gold-export.ts';
+import * as goldHoldingsChange from '../functions/gold-holdings-change.ts';
 import * as goldPrice from '../functions/gold-price.ts';
+import * as goldSeries from '../functions/gold-series.ts';
 import * as goldStats from '../functions/gold-stats.ts';
 import * as mountain from '../functions/mountain.ts';
 import * as mountainRange from '../functions/mountain-range.ts';
@@ -32,8 +35,11 @@ export const FUNCTIONS: Record<string, FunctionModule> = {
   country,
   coverage,
   'gold-countries': goldCountries,
+  'gold-country': goldCountry,
   'gold-export': goldExport,
+  'gold-holdings-change': goldHoldingsChange,
   'gold-price': goldPrice,
+  'gold-series': goldSeries,
   'gold-stats': goldStats,
   mountain,
   'mountain-range': mountainRange,

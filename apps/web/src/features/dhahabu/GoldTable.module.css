@@ -2,6 +2,12 @@
   vertical-align: top;
 }
 
+/* A country hovered on the map. */
+.linked > *,
+li.linked {
+  background: color-mix(in oklch, var(--accent) 10%, transparent);
+}
+
 /* A country brought into view by a card or a link. */
 .highlighted > *,
 li.highlighted {
@@ -20,14 +26,32 @@ li.highlighted {
   box-shadow: inset 3px 0 0 var(--color-focus);
 }
 
+/* The country's name opens its drawer. */
 .name {
   display: block;
+  padding: 0;
+  border: 0;
   border-radius: var(--radius-xs);
+  font: inherit;
+  font-weight: var(--weight-semibold);
+  text-align: start;
+  color: inherit;
+  background: none;
+  cursor: pointer;
+}
+
+.name:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .name:focus-visible {
   outline: 3px solid var(--color-focus);
   outline-offset: 2px;
+}
+
+.row {
+  cursor: pointer;
 }
 
 .cards {
@@ -70,7 +94,7 @@ li.highlighted {
   min-width: 0;
 }
 
-.cardTitle .name {
+.cardName {
   margin: 0;
   font-family: var(--font-display);
   font-size: var(--text-md);

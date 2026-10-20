@@ -42,10 +42,10 @@ test('lists all 54 countries, the largest producer first, every figure dated', a
   await expectNoHorizontalOverflow(page);
 });
 
-test('the band shows the ten cards, each with its year or month', async ({ page }) => {
+test('the band shows the eleven cards, each with its year or month', async ({ page }) => {
   await openDhahabu(page);
   const cards = page.getByTestId('stat-card');
-  await expect(cards).toHaveCount(10);
+  await expect(cards).toHaveCount(11);
   await expect(card(page, 'gold_producing_countries')).toContainText('of 54');
   await expect(card(page, 'africa_production').getByTestId('stat-period')).toHaveText('2021');
   await expect(card(page, 'production_value')).toContainText('Computed, not reported');
@@ -55,6 +55,10 @@ test('the band shows the ten cards, each with its year or month', async ({ page 
   // The headline and its detail agree.
   await expect(card(page, 'largest_net_buyer')).toContainText(/\+6\.87\st\b.*\+6\.87\st in/s);
   await expect(page.getByRole('article', { name: 'Largest producer (All Africa)' })).toBeVisible();
+  // The price effect: its two parts are shown, and its action brings the holdings chart into view.
+  await expect(card(page, 'price_effect')).toContainText('Tonnes bought or sold');
+  await card(page, 'price_effect').getByRole('button', { name: 'See the holdings chart' }).click();
+  await expect(page.getByTestId('gold-holdings-chart')).toBeFocused();
 });
 
 test('region, search and presence filters update the URL, the rows and the band', async ({
@@ -224,6 +228,126 @@ for (const theme of ['light', 'dark'] as const) {
   test(`Dhahabu passes axe checks in ${theme} mode`, async ({ page }) => {
     await useTheme(page, theme);
     await openDhahabu(page);
+    await waitForFonts(page);
+    await expectNoAxeViolations(page);
+  });
+}
+
+test('the map switches metric with the URL and opens a country’s drawer', async ({
+  page,
+  isMobile,
+}) => {
+  await openDhahabu(page);
+  const map = page.getByTestId('gold-map');
+  await expect(map.locator('[data-testid="gold-map-country"]')).toHaveCount(54);
+  const legend = page.getByTestId('gold-map-legend');
+  await expect(legend).toContainText('Mine production');
+  await expect(legend).toContainText('No data');
+  if (isMobile) await page.getByTestId('gold-map-metric').selectOption('presence');
+  else await page.getByTestId('gold-map-metric-presence').click();
+  await expect(page).toHaveURL(/metric=presence/);
+  await expect(legend).toContainText('Major producer');
+  await expect(legend).toContainText('None identified');
+  // Every country has a name, the metric and its value for screen readers.
+  await expect(map.locator('[data-iso3="GHA"][role="button"]')).toHaveAccessibleName(
+    'Ghana, Presence: Major producer',
+  );
+
+  // A shared link restores the metric; Enter on a focused country opens its drawer.
+  await page.reload();
+  await expect(page.getByTestId('gold-map-legend')).toContainText('Presence of gold');
+  await map.locator('[data-iso3="GHA"][role="button"]').focus();
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(/country=GHA/);
+  await expect(page.getByTestId('gold-drawer')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByTestId('gold-drawer')).toBeHidden();
+  await expect(page).not.toHaveURL(/country=/);
+});
+
+test('desktop: hovering the map shows each figure with its year', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'hover');
+  await openDhahabu(page, '?metric=holdings');
+  await page.getByTestId('gold-map').locator('[data-iso3="DZA"][role="button"]').hover();
+  const tooltip = page.getByTestId('gold-map-tooltip');
+  await expect(tooltip).toContainText('Algeria');
+  await expect(tooltip).toContainText(/Central bank gold: \d+/);
+  await expect(tooltip).toContainText(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) 20\d\d/);
+});
+
+test('a row opens the drawer: figures, histories, in-ground reserves apart, sources', async ({
+  page,
+}) => {
+  await openDhahabu(page);
+  await page
+    .locator('[data-testid="gold-row"][data-iso3="ZAF"]')
+    .getByTestId('gold-country-name')
+    .click();
+  await expect(page).toHaveURL(/country=ZAF/);
+  const drawer = page.getByTestId('gold-drawer');
+  await expect(drawer.getByRole('heading', { name: 'South Africa' })).toBeVisible();
+  await expect(drawer.getByTestId('gold-drawer-production')).toContainText('2021');
+  await expect(drawer.getByTestId('gold-drawer-trade')).toBeVisible();
+  await expect(drawer.getByTestId('gold-drawer-holdings')).toBeVisible();
+  await expect(drawer).toContainText('not evidence of wrongdoing');
+  const inground = drawer.getByTestId('gold-drawer-inground');
+  await expect(inground).toContainText('illustrative at a given price, not a realisable sum');
+  await expect(drawer.getByRole('heading', { name: 'Sources' })).toBeVisible();
+  await expect(
+    drawer.getByRole('link', { name: /U\.S\. Geological Survey/ }).first(),
+  ).toBeVisible();
+  await expectNoHorizontalOverflow(page);
+});
+
+test('cross-links: the drawer opens the country profile, which links back to its gold', async ({
+  page,
+}) => {
+  await page.goto('/dhahabu?country=GHA');
+  await page.getByTestId('gold-drawer-profile').click();
+  await expect(page).toHaveURL(/\/countries\?country=GHA$/);
+  const back = page.getByTestId('country-drawer').getByTestId('drawer-gold');
+  await expect(back).toContainText('Gold in Ghana: Major producer');
+  await back.getByRole('link').click();
+  await expect(page).toHaveURL(/\/dhahabu\?country=GHA$/);
+  await expect(page.getByTestId('gold-drawer')).toBeVisible();
+});
+
+test('the charts follow the ribbon’s year range', async ({ page }) => {
+  await openDhahabu(page, '?from=2005&to=2015');
+  const producers = page.getByTestId('gold-producers-chart');
+  await expect(producers).toContainText('Mine production in 2015');
+  await expect(page.getByTestId('gold-producers-bar').first()).toHaveAttribute('data-iso3', 'ZAF');
+  // Production bars only within the range; the price line spans it.
+  const years = await page
+    .getByTestId('gold-production-bar')
+    .evaluateAll((bars) => bars.map((bar) => Number(bar.getAttribute('data-year'))));
+  expect(years.length).toBeGreaterThan(0);
+  expect(Math.max(...years)).toBeLessThanOrEqual(2015);
+  await expect(page.getByTestId('gold-price-line')).toHaveAttribute('d', /^M/);
+  // The holdings lines and the price-or-tonnes split stay inside the range too.
+  await expect(page.getByTestId('gold-holdings-line')).toHaveCount(5);
+  await expect(page.getByTestId('gold-split-summary')).toContainText(
+    /to (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) 2015/,
+  );
+});
+
+test('holdings switch to US dollars, and the split names its two parts', async ({ page }) => {
+  await openDhahabu(page);
+  await page.getByTestId('gold-holdings-mode-usd').click();
+  await expect(page.getByTestId('gold-holdings-mode-usd')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByTestId('gold-holdings-chart')).toContainText('computed at each month');
+  const split = page.getByTestId('gold-split');
+  await split.getByTestId('gold-split-country').selectOption({ label: 'Libya' });
+  await expect(page.getByTestId('gold-split-summary')).toContainText('Libya');
+  await expect(split.locator('[data-step="price"]')).toBeAttached();
+  await expect(split.locator('[data-step="volume"]')).toBeAttached();
+});
+
+for (const theme of ['light', 'dark'] as const) {
+  test(`the open drawer passes axe checks in ${theme} mode`, async ({ page }) => {
+    await useTheme(page, theme);
+    await page.goto('/dhahabu?country=TZA');
+    await expect(page.getByTestId('gold-drawer-production')).toBeVisible();
     await waitForFonts(page);
     await expectNoAxeViolations(page);
   });

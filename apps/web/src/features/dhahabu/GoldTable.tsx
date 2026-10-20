@@ -1,5 +1,5 @@
 import type { GoldCountry, GoldSort, GoldUnit } from '@bla/shared';
-import { useState } from 'react';
+import { type MouseEvent, useState } from 'react';
 
 import { FlagImage } from '../../components/FlagImage/FlagImage';
 import { Icon } from '../../components/Icon/Icon';
@@ -66,6 +66,37 @@ export interface GoldRowsProps {
   unit: GoldUnit;
   /** The country to highlight (from a statistics card or a link), if any. */
   highlighted: string | null;
+  /** The country hovered on the map (linked selection), if any. */
+  linked: string | null;
+  /** Opens the country's drawer. */
+  onOpen: (iso3: string) => void;
+  /** Hovering a row outlines the country on the map. */
+  onHover: (iso3: string | null) => void;
+}
+
+/** A click anywhere on a row opens the drawer, except on the row's own buttons and links. */
+function rowClick(onOpen: () => void) {
+  return (event: MouseEvent<HTMLElement>) => {
+    if ((event.target as Element).closest('button, a')) return;
+    onOpen();
+  };
+}
+
+function NameButton({ row, onOpen }: { row: GoldCountry; onOpen: (iso3: string) => void }) {
+  return (
+    <button
+      type="button"
+      className={styles.name}
+      aria-haspopup="dialog"
+      aria-label={strings.dhahabu.openDetails(row.country.name)}
+      data-testid="gold-country-name"
+      onClick={() => {
+        onOpen(row.country.iso3);
+      }}
+    >
+      {row.country.name}
+    </button>
+  );
 }
 
 /** The country table (≥ 1024px): one row per country, every figure with its own year or date. */
@@ -73,6 +104,9 @@ export function GoldTable({
   rows,
   unit,
   highlighted,
+  linked,
+  onOpen,
+  onHover,
   sort,
   onSort,
 }: GoldRowsProps & { sort: GoldSort; onSort: (column: SortColumn) => void }) {
@@ -101,10 +135,23 @@ export function GoldTable({
         {rows.map((row) => (
           <tr
             key={row.country.iso3}
-            className={cx(styles.row, highlighted === row.country.iso3 && styles.highlighted)}
+            className={cx(
+              styles.row,
+              highlighted === row.country.iso3 && styles.highlighted,
+              linked === row.country.iso3 && styles.linked,
+            )}
             style={{ '--accent': `var(--region-${row.country.region.slug})` }}
             data-iso3={row.country.iso3}
             data-testid="gold-row"
+            onClick={rowClick(() => {
+              onOpen(row.country.iso3);
+            })}
+            onPointerEnter={() => {
+              onHover(row.country.iso3);
+            }}
+            onPointerLeave={() => {
+              onHover(null);
+            }}
           >
             <td className={tableStyles.flagCell}>
               <FlagImage
@@ -115,9 +162,7 @@ export function GoldTable({
               />
             </td>
             <th scope="row" className={tableStyles.nameCell}>
-              <span className={styles.name} tabIndex={-1} data-testid="gold-country-name">
-                {row.country.name}
-              </span>
+              <NameButton row={row} onOpen={onOpen} />
               <RegionChip
                 slug={row.country.region.slug}
                 name={row.country.region.name}
@@ -147,7 +192,7 @@ export function GoldTable({
 }
 
 /** Below 1024px: one card per country, the key figures first and the rest on request. */
-export function GoldCards({ rows, unit, highlighted }: GoldRowsProps) {
+export function GoldCards({ rows, unit, highlighted, linked, onOpen, onHover }: GoldRowsProps) {
   return (
     <ul className={styles.cards} data-testid="gold-cards">
       {rows.map((row) => (
@@ -156,6 +201,9 @@ export function GoldCards({ rows, unit, highlighted }: GoldRowsProps) {
           row={row}
           unit={unit}
           highlighted={highlighted === row.country.iso3}
+          linked={linked === row.country.iso3}
+          onOpen={onOpen}
+          onHover={onHover}
         />
       ))}
     </ul>
@@ -166,25 +214,42 @@ function GoldCard({
   row,
   unit,
   highlighted,
+  linked,
+  onOpen,
+  onHover,
 }: {
   row: GoldCountry;
   unit: GoldUnit;
   highlighted: boolean;
+  linked: boolean;
+  onOpen: (iso3: string) => void;
+  onHover: (iso3: string | null) => void;
 }) {
   const [open, setOpen] = useState(false);
   const panelId = `gold-card-${row.country.iso3}`;
   return (
     <li
-      className={cx('glass', styles.card, highlighted && styles.highlighted)}
+      className={cx(
+        'glass',
+        styles.card,
+        highlighted && styles.highlighted,
+        linked && styles.linked,
+      )}
       style={{ '--accent': `var(--region-${row.country.region.slug})` }}
       data-iso3={row.country.iso3}
       data-testid="gold-row"
+      onPointerEnter={() => {
+        onHover(row.country.iso3);
+      }}
+      onPointerLeave={() => {
+        onHover(null);
+      }}
     >
       <div className={styles.cardHead}>
         <FlagImage flag={row.country.flag} countryName={row.country.name} width={40} decorative />
         <div className={styles.cardTitle}>
-          <h3 className={styles.name} tabIndex={-1} data-testid="gold-country-name">
-            {row.country.name}
+          <h3 className={styles.cardName}>
+            <NameButton row={row} onOpen={onOpen} />
           </h3>
           <RegionChip slug={row.country.region.slug} name={row.country.region.name} />
         </div>

@@ -194,6 +194,93 @@ describe('v_gold_stats', () => {
   });
 });
 
+describe('the price effect (gold_price_effect, gold_holdings_change and card 11)', () => {
+  let db: PGlite;
+  const k = 32150.7466;
+
+  beforeAll(async () => {
+    db = await fixture();
+    // The price rises from 2,000 to 2,500 US$/oz in December 2021; values follow (computed).
+    await db.exec(`
+      UPDATE gold_price_monthly SET usd_per_troy_oz = 2500 WHERE month = '2021-12-01';
+      UPDATE gold_official_reserves SET value_usd = tonnes * 32150.7466 * 2500
+      WHERE as_of = '2021-12-31';
+    `);
+  });
+
+  it('splits a change into price and volume effects that sum exactly to it', async () => {
+    const result = await db.query<{
+      iso3: string;
+      change_usd: string;
+      price_effect_usd: string;
+      volume_effect_usd: string;
+    }>(
+      `SELECT iso3, change_usd::text, price_effect_usd::text, volume_effect_usd::text
+       FROM gold_holdings_change(NULL, '2020-01-01', '2021-12-31')`,
+    );
+    // DDD has a single report in the window: no change to split.
+    expect(result.rows.map((r) => r.iso3)).toEqual(['AAA', 'BBB']);
+    const [aaa, bbb] = result.rows;
+    // AAA: 10 t at 2,000 → 12 t at 2,500.
+    expect(Number(aaa?.change_usd)).toBeCloseTo(k * (12 * 2500 - 10 * 2000), 2);
+    expect(Number(aaa?.price_effect_usd)).toBeCloseTo(500 * k * 11, 2);
+    expect(Number(aaa?.volume_effect_usd)).toBeCloseTo(2 * k * 2250, 2);
+    // BBB sold a tonne as the price rose: the value is unchanged, the effects cancel.
+    expect(Number(bbb?.change_usd)).toBe(0);
+    expect(Number(bbb?.price_effect_usd)).toBeCloseTo(500 * k * 4.5, 2);
+    for (const row of result.rows) {
+      // Exact in the database's decimal arithmetic (compared as cents).
+      expect(
+        Math.round(Number(row.price_effect_usd) * 100) +
+          Math.round(Number(row.volume_effect_usd) * 100),
+      ).toBe(Math.round(Number(row.change_usd) * 100));
+    }
+  });
+
+  it('is independent of which effect is counted first', async () => {
+    const forward = await db.query<{ v: string }>(
+      'SELECT gold_price_effect(10, 12, 2000, 2500)::text AS v',
+    );
+    const backward = await db.query<{ v: string }>(
+      'SELECT gold_price_effect(12, 10, 2500, 2000)::text AS v',
+    );
+    expect(Number(forward.rows[0]?.v)).toBeCloseTo(-Number(backward.rows[0]?.v), 2);
+  });
+
+  it('leaves the split empty when a month has no price', async () => {
+    const result = await db.query<{ price: string | null; volume: string | null }>(
+      `SELECT price_effect_usd::text AS price, volume_effect_usd::text AS volume
+       FROM gold_holdings_change(ARRAY['AAA'], '2020-01-01', '2022-12-31')`,
+    );
+    expect(result.rows[0]?.price).not.toBeNull();
+    await db.query(`DELETE FROM gold_price_monthly WHERE month = '2021-12-01'`);
+    const missing = await db.query<{ price: string | null; volume: string | null }>(
+      `SELECT price_effect_usd::text AS price, volume_effect_usd::text AS volume
+       FROM gold_holdings_change(ARRAY['AAA'], '2020-01-01', '2022-12-31')`,
+    );
+    expect(missing.rows[0]).toEqual({ price: null, volume: null });
+    await db.query(
+      `INSERT INTO gold_price_monthly (month, usd_per_troy_oz, source_id)
+       SELECT '2021-12-01', 2500, id FROM sources WHERE source_key = 'price'`,
+    );
+  });
+
+  it('adds the price effect card for the countries counted in central bank gold', async () => {
+    const card = (await stats(db)).price_effect;
+    const detail = card?.detail as Record<"changeUsd" | "priceEffectUsd" | "volumeEffectUsd" | "countries" | "tonnesChange", number>;
+    expect(card?.as_of).toBe('2021-12-31');
+    expect(detail.countries).toBe(2); // AAA and BBB; DDD is stale
+    expect(Number(card?.value)).toBe(Math.round(500 * k * 11 + 500 * k * 4.5));
+    expect(detail.changeUsd).toBe(Math.round(k * (12 * 2500 - 10 * 2000)));
+    expect(detail.priceEffectUsd + detail.volumeEffectUsd).toBe(detail.changeUsd);
+    expect(detail.tonnesChange).toBe(1);
+    // Nothing to measure in East Africa (DDD's report is its only one).
+    const east = (await stats(db, 'east')).price_effect;
+    expect(east?.value).toBeNull();
+    expect(east?.as_of).toBeNull();
+  });
+});
+
 describe('gold_country_metrics', () => {
   let db: PGlite;
 

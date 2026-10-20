@@ -61,7 +61,10 @@ interface CountryRow {
  */
 export async function listGoldCountries(
   db: Db,
-  query: Pick<GoldCountriesQuery, 'region' | 'q' | 'year' | 'presence' | 'sort'>,
+  query: Pick<GoldCountriesQuery, 'region' | 'q' | 'year' | 'presence' | 'sort'> & {
+    /** One country only (the drawer). */
+    iso3?: string;
+  },
 ): Promise<GoldCountry[]> {
   const rows = await db.query<CountryRow>(
     `SELECT c.iso3, c.iso2, c.name, g.slug AS region_slug, g.name AS region_name,
@@ -84,8 +87,15 @@ export async function listGoldCountries(
      LEFT JOIN gold_reserves_reporting r ON r.country_id = c.id
      WHERE ($2::text IS NULL OR g.slug = $2)
        AND ($3::text IS NULL OR strpos(search_fold(c.name || ' ' || c.iso3), search_fold($3)) > 0)
-       AND ($4::text IS NULL OR p.presence_tier::text = $4)`,
-    [query.year ?? null, query.region ?? null, query.q ?? null, query.presence ?? null],
+       AND ($4::text IS NULL OR p.presence_tier::text = $4)
+       AND ($5::text IS NULL OR c.iso3 = $5)`,
+    [
+      query.year ?? null,
+      query.region ?? null,
+      query.q ?? null,
+      query.presence ?? null,
+      query.iso3 ?? null,
+    ],
   );
   return sortGoldCountries(rows.map(toGoldCountry), query.sort);
 }

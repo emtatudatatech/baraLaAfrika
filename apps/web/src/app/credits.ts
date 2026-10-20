@@ -66,27 +66,17 @@ export const CREDITS: readonly Credit[] = [
     name: 'International Monetary Fund',
     href: 'https://data.imf.org/',
     licence: 'IMF terms of use',
-    note: 'Source: International Monetary Fund, International Financial Statistics (data.imf.org). Values may be transformed (e.g. ounces to tonnes); see each export for details.',
+    note: 'Source: International Monetary Fund, International Liquidity (data.imf.org). Transformed: ounces converted to tonnes, US dollar values computed at monthly average prices; see each export for details.',
   },
   {
     name: 'U.S. Geological Survey',
     href: 'https://www.usgs.gov/',
     licence: 'Public domain (U.S. Government work)',
   },
-  {
-    name: 'British Geological Survey',
-    href: 'https://www.bgs.ac.uk/',
-    licence: 'Open Government Licence (to be confirmed)',
-  },
   { name: 'World Bank', href: 'https://www.worldbank.org/', licence: 'CC BY 4.0' },
   {
     name: 'UN Comtrade',
     href: 'https://comtradeplus.un.org/',
     licence: 'UN Comtrade terms of use',
-  },
-  {
-    name: 'World Gold Council · Goldhub',
-    href: 'https://www.gold.org/goldhub',
-    licence: 'Linked for reference only; no data republished',
   },
 ];

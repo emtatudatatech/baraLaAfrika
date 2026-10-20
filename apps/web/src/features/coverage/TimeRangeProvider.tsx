@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router';
 import { applyRange, boundsOf, resolveRange, type YearRange } from './timeRange';
 import { type TimeRangeContextValue, TimeRangeContext } from './timeRangeContext';
 import { useRouteCoverage } from './useRouteCoverage';
+import { latestParams } from '../../lib/latestParams';
 
 /**
  * Provides the URL-synced year range (?from=&to=) for time-series routes, bounded by the
@@ -23,7 +24,7 @@ export function TimeRangeProvider({ children }: { children: ReactNode }) {
   const setRange = useCallback(
     (next: YearRange) => {
       if (bounds === null) return;
-      setParams((current) => applyRange(current, next, bounds), {
+      setParams(() => applyRange(latestParams(), next, bounds), {
         replace: true,
         preventScrollReset: true,
       });

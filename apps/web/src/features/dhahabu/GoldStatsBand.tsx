@@ -45,6 +45,7 @@ const ICONS: Record<GoldStatKey, IconName> = {
   most_gold_dependent: 'local_shipping',
   biggest_reporting_gap: 'compare_arrows',
   largest_net_buyer: 'add_shopping_cart',
+  price_effect: 'trending_up',
 };
 
 const HERO: readonly GoldStatKey[] = [
@@ -452,5 +453,23 @@ function cardBody(
           </ul>
         ),
       };
+    case 'price_effect': {
+      const d = stat.detail;
+      if (d.changeUsd === null || d.volumeEffectUsd === null) return { detail: null };
+      return {
+        detail: (
+          <>
+            <p>{text.priceEffectOf(formatUsd(d.changeUsd, { sign: true }))}</p>
+            <p className={bandStyles.sub}>
+              {text.volumeEffect(formatUsd(d.volumeEffectUsd, { sign: true }))}
+              {d.tonnesChange !== null && ` (${formatMass(d.tonnesChange, unit, { sign: true })})`}
+            </p>
+            {d.countries !== null && (
+              <p className={bandStyles.note}>{text.comparedCountries(d.countries)}</p>
+            )}
+          </>
+        ),
+      };
+    }
   }
 }

@@ -40,6 +40,9 @@ export function CountryDrawer({ country, onClose }: CountryDrawerProps) {
     (row) => row.country.iso3 === country.iso3,
   )?.highestPeak;
   const [unit] = useUnits();
+  // Cross-link to Dhahabu: the gold table's rows (one cached request, shared with /dhahabu).
+  const gold = useResource('gold-countries:latest', () => api.goldCountries(undefined));
+  const goldRow = gold.data?.countries.find((row) => row.country.iso3 === country.iso3);
 
   return (
     <Drawer
@@ -73,6 +76,21 @@ export function CountryDrawer({ country, onClose }: CountryDrawerProps) {
               {strings.drawer.highestPeakLink(
                 highest.name,
                 formatElevation(highest.elevationM, unit),
+              )}
+            </Link>
+          </span>
+        </p>
+      )}
+
+      {goldRow && (
+        <p className={styles.peakLink} data-testid="drawer-gold">
+          <Icon name="diamond" size={20} />
+          <span>
+            {strings.drawer.gold}:{' '}
+            <Link to={`/dhahabu?country=${country.iso3}`}>
+              {strings.drawer.goldLink(
+                country.name,
+                strings.dhahabu.presence[goldRow.presence.tier],
               )}
             </Link>
           </span>

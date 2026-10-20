@@ -1,0 +1,262 @@
+/* The Dhahabu charts' own pieces (frames, tooltips and tables reuse the Harim chart styles). */
+.charts {
+  display: grid;
+  gap: var(--space-6);
+  min-width: 0;
+}
+
+.pair {
+  display: grid;
+  gap: var(--space-6);
+  min-width: 0;
+}
+
+@media (--bp-xl) {
+  .pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+}
+
+.anchor {
+  scroll-margin-top: calc(var(--ribbon-height, 0px) + var(--space-4));
+}
+
+.anchor:focus {
+  outline: none;
+}
+
+.subtitle,
+.empty,
+.footnote {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+}
+
+.footnote {
+  font-size: var(--text-xs);
+}
+
+.barValue {
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  fill: var(--color-ink);
+  dominant-baseline: central;
+}
+
+.panelLabel {
+  font-size: 12px;
+  font-weight: var(--weight-semibold);
+  fill: var(--color-ink-muted);
+}
+
+.panelNote {
+  font-size: 12px;
+  font-style: italic;
+  fill: var(--color-ink-muted);
+}
+
+.yTick {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  fill: var(--color-ink-muted);
+  text-anchor: end;
+  dominant-baseline: central;
+}
+
+.productionBar {
+  fill: var(--gold-accent);
+}
+
+/* A partial year: hatched in the same hue, with an outline, so it never reads as a dip. */
+.partialBar {
+  stroke: var(--gold-accent);
+  stroke-width: 1;
+}
+
+.partialFill {
+  fill: var(--gold-accent-soft);
+}
+
+.partialLine {
+  stroke: var(--gold-accent);
+  stroke-width: 1.5;
+}
+
+.partialSwatch {
+  border: 1px solid var(--gold-accent);
+  background: repeating-linear-gradient(
+    45deg,
+    var(--gold-accent) 0 1.5px,
+    var(--gold-accent-soft) 1.5px 4px
+  );
+}
+
+.priceLine,
+.line {
+  fill: none;
+  stroke: var(--line, var(--color-ink));
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.crosshair {
+  stroke: var(--color-ink-muted);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  pointer-events: none;
+}
+
+.tooltipNote {
+  font-size: var(--text-xs);
+  color: var(--color-ink-muted);
+}
+
+.tooltipRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.lineSwatch {
+  display: inline-block;
+  flex: none;
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--swatch);
+}
+
+.directLabel {
+  font-size: 12px;
+  font-weight: var(--weight-semibold);
+  fill: var(--color-ink);
+  dominant-baseline: central;
+}
+
+.tableScroll {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.skeleton {
+  height: 16rem;
+  border-radius: var(--radius-lg);
+}
+
+.error {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+  font-size: var(--text-sm);
+}
+
+.error p {
+  margin: 0;
+}
+
+.retry,
+.more {
+  min-height: var(--touch-target);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-pill);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-ink);
+  background: var(--glass-bg-strong);
+}
+
+.more {
+  justify-self: start;
+}
+
+/* Price or tonnes? */
+.split {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+}
+
+.split p {
+  margin: 0;
+}
+
+.splitHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+}
+
+.splitTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+}
+
+.splitTitle > span {
+  color: var(--gold-accent);
+}
+
+.splitSelect {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+}
+
+.splitSelect select {
+  min-height: var(--touch-target);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-md);
+  font: inherit;
+  color: var(--color-ink);
+  background: var(--glass-bg-strong);
+}
+
+.splitSkeleton {
+  height: 8rem;
+  border-radius: var(--radius-md);
+}
+
+.splitMeta {
+  font-size: var(--text-xs);
+  color: var(--color-ink-muted);
+}
+
+.bridge {
+  min-width: 0;
+}
+
+.bridgeTotal {
+  fill: var(--color-ink-subtle);
+}
+
+.bridgePrice {
+  fill: var(--gold-accent);
+}
+
+.bridgeVolume {
+  fill: var(--series-1);
+}

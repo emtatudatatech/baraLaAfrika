@@ -1,0 +1,137 @@
+.presence {
+  display: flex;
+}
+
+.profileLink {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+.figures {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.figures dt {
+  margin-bottom: 0.125rem;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--color-ink-muted);
+}
+
+.figures dd {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.number {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.scroll {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.table th,
+.table td {
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--color-line);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.table thead th {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--color-ink-muted);
+}
+
+.table tbody th {
+  font-weight: var(--weight-medium);
+}
+
+.table .number {
+  text-align: right;
+}
+
+/* Production: each year's figure with a bar scaled to the country's largest year. */
+.barCell {
+  position: relative;
+  display: block;
+  min-width: 8rem;
+}
+
+.miniBar {
+  position: absolute;
+  inset: 2px auto 2px 0;
+  border-radius: 0 3px 3px 0;
+  background: var(--gold-accent-soft);
+  box-shadow: inset -2px 0 0 var(--gold-accent);
+}
+
+.barLabel {
+  position: relative;
+  padding-left: var(--space-1);
+}
+
+.partners {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.subheading {
+  font-weight: var(--weight-semibold);
+}
+
+.partnerList {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding-left: var(--space-5);
+  font-size: var(--text-sm);
+}
+
+.partnerList li > span:first-child {
+  margin-right: var(--space-2);
+}
+
+.partnerList li > span:last-child {
+  color: var(--color-ink-muted);
+}
+
+/* In-ground reserves sit apart from central bank gold: a bordered block of their own. */
+.inground {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px dashed var(--color-line-strong);
+  border-radius: var(--radius-md);
+}
+
+.ingroundItem {
+  display: grid;
+  gap: 2px;
+}
+
+.notes {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

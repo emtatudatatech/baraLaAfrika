@@ -42,6 +42,7 @@ export const GOLD_STAT_KEYS = [
   'most_gold_dependent',
   'biggest_reporting_gap',
   'largest_net_buyer',
+  'price_effect',
 ] as const;
 export type GoldStatKey = (typeof GOLD_STAT_KEYS)[number];
 
@@ -53,3 +54,22 @@ export const GOLD_EXPORT_FORMATS = ['csv'] as const;
 
 export const PRICE_GRANULARITIES = ['month', 'year'] as const;
 export type PriceGranularity = (typeof PRICE_GRANULARITIES)[number];
+
+/** What the Dhahabu map can colour countries by (`?metric=`). */
+export const GOLD_MAP_METRICS = ['production', 'holdings', 'exports', 'share', 'presence'] as const;
+export type GoldMapMetric = (typeof GOLD_MAP_METRICS)[number];
+
+/** Chart series from /api/gold/series. */
+export const GOLD_SERIES_METRICS = [
+  'production',
+  'exports',
+  'imports',
+  'holdings_tonnes',
+  'holdings_usd',
+] as const;
+export type GoldSeriesMetric = (typeof GOLD_SERIES_METRICS)[number];
+
+/** The most points /api/gold/series returns (countries × periods); larger requests are cut. */
+export const GOLD_SERIES_MAX_POINTS = 6000;
+/** The most countries one series or holdings-change request may name. */
+export const GOLD_SERIES_MAX_COUNTRIES = 12;

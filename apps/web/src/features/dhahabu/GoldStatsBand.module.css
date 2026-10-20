@@ -1,16 +1,18 @@
 /* Dhahabu's cards: the warm gold accent, and the year or month each card describes. */
 
-/* Ten cards. Wide screens: four hero cards, then the six compact cards in one row. */
+/*
+ * Eleven cards. Wide screens: the four hero cards, then the compact cards four to a row; the
+ * last one (the price effect) takes two places so the rows end evenly.
+ */
 .band {
-  --band-columns: 24;
-  --band-hero-span: 6;
-  --band-compact-span: 4;
+  --band-columns: 12;
+  --band-hero-span: 3;
+  --band-compact-span: 3;
 }
 
-/* Three columns (720–1279px): the first and last cards span two, so four rows fill evenly. */
+/* Three columns (720–1279px): the first card spans two, so four rows fill evenly. */
 @media (--bp-md) and (width < 1280px) {
-  .card:first-child,
-  .card:last-child {
+  .card:first-child {
     grid-column: span 2;
   }
 }
@@ -54,4 +56,9 @@
   font-size: var(--text-xs);
   font-style: italic;
   color: var(--color-ink-muted);
+}
+
+/* The price effect, last, takes two places in the wide grid (see .band). */
+.card:last-child {
+  --band-compact-span: 6;
 }

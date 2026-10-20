@@ -157,6 +157,23 @@
   --presence-occurrences-known: oklch(70% 0.14 85deg);
   --presence-none-identified: oklch(60% 0.015 80deg);
   --presence-unknown: oklch(78% 0.01 80deg);
+
+  /*
+   * Dhahabu's sequential gold ramp for metric maps (low → high), one hue, monotone lightness,
+   * the lightest step at least 2:1 on the surface (checked with a palette validator).
+   */
+  --gold-seq-1: oklch(76% 0.11 88deg);
+  --gold-seq-2: oklch(66% 0.13 80deg);
+  --gold-seq-3: oklch(56% 0.14 70deg);
+  --gold-seq-4: oklch(46% 0.12 60deg);
+  --gold-seq-5: oklch(36% 0.09 50deg);
+
+  /* Categorical series for line charts (fixed order; validated for colour-blind separation). */
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --series-4: #eda100;
+  --series-5: #e87ba4;
 }
 
 :root[data-theme='dark'] {
@@ -222,4 +239,16 @@
   --presence-occurrences-known: oklch(62% 0.13 68deg);
   --presence-none-identified: oklch(65% 0.015 260deg);
   --presence-unknown: oklch(45% 0.01 260deg);
+
+  /* Dark mode: low values dim, high values bright. */
+  --gold-seq-1: oklch(47% 0.09 70deg);
+  --gold-seq-2: oklch(57% 0.12 74deg);
+  --gold-seq-3: oklch(67% 0.14 79deg);
+  --gold-seq-4: oklch(78% 0.14 85deg);
+  --gold-seq-5: oklch(89% 0.12 92deg);
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --series-5: #d55181;
 }

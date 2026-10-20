@@ -1,5 +1,7 @@
 import {
+  GOLD_MAP_METRICS,
   GOLD_SORTS,
+  type GoldMapMetric,
   type GoldCountry,
   type GoldSort,
   PRESENCE_TIERS,
@@ -13,8 +15,8 @@ import { searchFold } from '../../lib/searchFold';
 import type { YearRange } from '../coverage/timeRange';
 
 /*
- * The /dhahabu view lives in the URL (?region=&q=&presence=&sort=, plus the ribbon's ?from=&to=)
- * so every view can be shared. The 54 rows load once per reference year; filtering and sorting
+ * The /dhahabu view lives in the URL (?region=&q=&presence=&sort=&metric=&country=, plus the
+ * ribbon's ?from=&to=) so every view can be shared; `country` is the open drawer. The 54 rows load once per reference year; filtering and sorting
  * happen here, with the same meaning as /api/gold/countries.
  */
 
@@ -23,9 +25,14 @@ export interface GoldView {
   q: string;
   presence: PresenceTier | null;
   sort: GoldSort;
+  /** What the map shows. */
+  metric: GoldMapMetric;
+  /** The country whose drawer is open (ISO alpha-3). */
+  country: string | null;
 }
 
 export const DEFAULT_SORT: GoldSort = 'production';
+export const DEFAULT_METRIC: GoldMapMetric = 'production';
 
 function oneOf<T extends string>(values: readonly T[], value: string | null): T | null {
   return value !== null && (values as readonly string[]).includes(value) ? (value as T) : null;
@@ -38,6 +45,8 @@ export function parseView(params: URLSearchParams): GoldView {
     q: (params.get('q') ?? '').trim().slice(0, 80),
     presence: oneOf(PRESENCE_TIERS, params.get('presence')),
     sort: oneOf(GOLD_SORTS, params.get('sort')) ?? DEFAULT_SORT,
+    metric: oneOf(GOLD_MAP_METRICS, params.get('metric')) ?? DEFAULT_METRIC,
+    country: /^[A-Z]{3}$/.test(params.get('country') ?? '') ? params.get('country') : null,
   };
 }
 
@@ -53,6 +62,8 @@ export function updateParams(current: URLSearchParams, change: Partial<GoldView>
   if ('q' in change) set('q', (change.q ?? '').trim().slice(0, 80));
   if ('presence' in change) set('presence', change.presence);
   if ('sort' in change) set('sort', change.sort, DEFAULT_SORT);
+  if ('metric' in change) set('metric', change.metric, DEFAULT_METRIC);
+  if ('country' in change) set('country', change.country);
   return next;
 }
 

@@ -40,3 +40,13 @@ def test_load_dotenv_does_not_override(tmp_path: Path, monkeypatch: pytest.Monke
     assert os.environ["BLA_TEST_A"] == "from_env"
     assert os.environ["BLA_TEST_B"] == "quoted"
     monkeypatch.delenv("BLA_TEST_B")
+
+
+def test_require_env_drops_quotes_and_refuses_a_pasted_name(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("BLA_TEST_KEY", ' "abc123" ')
+    assert settings.require_env("BLA_TEST_KEY", purpose="test") == "abc123"
+    monkeypatch.setenv("BLA_TEST_KEY", "BLA_TEST_KEY=abc123")
+    with pytest.raises(settings.MissingSettingError, match="value alone"):
+        settings.require_env("BLA_TEST_KEY", purpose="test")

@@ -59,3 +59,15 @@ def test_requests_identify_the_project(tmp_path: Path) -> None:
     with httpx.Client(transport=transport, headers={"User-Agent": USER_AGENT}) as c:
         http.fetch_bytes("https://x.test/c", tmp_path / "c", client=c, min_interval=0)
     assert seen["ua"].startswith("BaraLaAfrika-pipelines/")
+
+
+def test_client_errors_carry_the_status_and_the_servers_reason(tmp_path: Path) -> None:
+    denied = httpx.MockTransport(
+        lambda _r: httpx.Response(401, json={"statusCode": 401, "message": "Access denied."})
+    )
+    with (
+        client(denied) as c,
+        pytest.raises(http.FetchError, match=r"HTTP 401 \(Access denied\.\)") as error,
+    ):
+        http.fetch_bytes("https://x.test/d", tmp_path / "d", client=c, min_interval=0)
+    assert error.value.status == 401

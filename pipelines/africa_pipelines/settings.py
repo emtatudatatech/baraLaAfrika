@@ -57,7 +57,16 @@ class MissingSettingError(RuntimeError):
 
 
 def require_env(name: str, *, purpose: str) -> str:
+    """A required setting's value. Surrounding quotes are dropped, as in .env, so a value set
+    with quotes (in .env or a CI secret) reads the same everywhere."""
     value = os.environ.get(name, "").strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in "'\"":
+        value = value[1:-1].strip()
+    if value.startswith(f"{name}="):
+        raise MissingSettingError(
+            f"{name} holds '{name}=…': set it to the value alone, without the name "
+            f"(check the GitHub Actions secret or .env)."
+        )
     if not value:
         raise MissingSettingError(
             f"{name} is not set. It is needed to {purpose}. "

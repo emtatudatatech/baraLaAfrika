@@ -37,7 +37,7 @@ from .gold_common import (
     table,
     write_seed,
 )
-from .http import fetch_bytes
+from .http import FetchError, fetch_bytes
 from .settings import require_env
 
 COMTRADE = SourceRecord(
@@ -76,14 +76,24 @@ class Caller:
                 self.skipped.append(cache_name)
                 raise BudgetExhaustedError(cache_name)
             self.calls += 1
-        body = fetch_bytes(
-            url,
-            path,
-            refresh=self.refresh,
-            min_interval=float(settings["min_interval_seconds"]),
-            timeout=120,
-            headers={"Ocp-Apim-Subscription-Key": self.key},
-        )
+        try:
+            body = fetch_bytes(
+                url,
+                path,
+                refresh=self.refresh,
+                min_interval=float(settings["min_interval_seconds"]),
+                timeout=120,
+                headers={"Ocp-Apim-Subscription-Key": self.key},
+            )
+        except FetchError as error:
+            if error.status in {401, 403}:
+                raise GoldError(
+                    f"UN Comtrade refused COMTRADE_API_KEY (HTTP {error.status}). Set it to the "
+                    "subscription key alone, as shown in your Comtrade Plus profile (API "
+                    "subscriptions, primary or secondary key): no quotes, spaces or "
+                    "'COMTRADE_API_KEY='. In GitHub Actions, replace the repository secret."
+                ) from error
+            raise
         return parse_response(body, cache_name, path)
 
 

@@ -952,3 +952,15 @@ def test_overrides_need_their_quote_in_the_source(monkeypatch: pytest.MonkeyPatc
     uncited = fresh()
     assert gold_presence.apply_override(uncited, {**entry, "quote": None}, checker, later) is None
     assert uncited.source is None and uncited.needs_review
+
+
+def test_a_refused_comtrade_key_says_what_to_fix(monkeypatch: pytest.MonkeyPatch) -> None:
+    def refused(url: str, *_args: Any, **_kwargs: Any) -> bytes:
+        raise FetchError(f"{url}: HTTP 401 (Access denied)", status=401)
+
+    monkeypatch.setattr(gold_trade, "fetch_bytes", refused)
+    caller = gold_trade.Caller("not-a-real-key", refresh=True, budget=5)
+    with pytest.raises(GoldError, match="refused COMTRADE_API_KEY") as error:
+        caller.get({"reporterCode": "404"}, "test-refused")
+    # The key itself is never repeated in the message.
+    assert "not-a-real-key" not in str(error.value)

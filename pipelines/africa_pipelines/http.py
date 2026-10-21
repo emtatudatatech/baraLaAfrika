@@ -18,7 +18,24 @@ _last_request_at: dict[str, float] = {}
 
 
 class FetchError(RuntimeError):
-    pass
+    """A download failed; `status` is the HTTP status when the server answered."""
+
+    def __init__(self, message: str, *, status: int | None = None) -> None:
+        super().__init__(message)
+        self.status = status
+
+
+def _error_detail(response: httpx.Response) -> str:
+    """The server's own short explanation of an error (its JSON `message`), if any."""
+    try:
+        payload = response.json()
+    except ValueError:
+        return ""
+    if isinstance(payload, dict):
+        message = payload.get("message") or payload.get("error")
+        if isinstance(message, str) and message.strip():
+            return f" ({' '.join(message.split())[:200]})"
+    return ""
 
 
 def _wait_for_slot(host: str, min_interval: float) -> None:
@@ -69,7 +86,10 @@ def fetch_bytes(
                 retry_after = response.headers.get("retry-after", "")
                 time.sleep(float(retry_after) if retry_after.isdigit() else 2**attempt)
                 continue
-            raise FetchError(f"{url}: HTTP {response.status_code}")
+            raise FetchError(
+                f"{url}: HTTP {response.status_code}{_error_detail(response)}",
+                status=response.status_code,
+            )
         raise FetchError(f"{url}: gave up after {MAX_ATTEMPTS} attempts")
     finally:
         if owns_client:

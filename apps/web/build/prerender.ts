@@ -17,9 +17,9 @@ const SERVER = join(WEB, 'dist-server/entry-server.js');
 /** The prerendered pages: the URL path and the file Netlify serves for it. */
 export const PRERENDERED = [
   { path: '/', file: 'index.html' },
-  { path: '/countries', file: 'countries/index.html' },
-  { path: '/harim', file: 'harim/index.html' },
-  { path: '/dhahabu', file: 'dhahabu/index.html' },
+  { path: '/countries', file: 'countries.html' },
+  { path: '/harim', file: 'harim.html' },
+  { path: '/dhahabu', file: 'dhahabu.html' },
 ] as const;
 
 /**

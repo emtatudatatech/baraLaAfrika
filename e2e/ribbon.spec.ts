@@ -7,7 +7,7 @@ import {
   waitForFonts,
 } from './helpers';
 
-/** Gold coverage as the Dhahabu pipelines will report it (they arrive in later milestones). */
+/** Fixed gold coverage, so the ribbon's dates and year bounds are known in these tests. */
 const GOLD = {
   datasets: [
     {

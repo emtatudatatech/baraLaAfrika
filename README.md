@@ -427,7 +427,7 @@ Functions never hold write credentials, and no secret is ever exposed to the cli
 
 - the build: `npm run build`, publishing `apps/web/dist`
 - functions from `netlify/functions`
-- the `/api/*` → `/.netlify/functions/:splat` redirect and the SPA fallback (`/*` → `/app.html`, the plain app; `index.html` is the prerendered home page, and each page with a shell is served from its own `index.html` first)
+- the `/api/*` → `/.netlify/functions/:splat` redirect and the SPA fallback (`/*` → `/app.html`, the plain app; `index.html` is the prerendered home page, and each page with a shell is served from its own flat file first, e.g. `/harim` from `harim.html`, which Netlify serves without a trailing-slash redirect)
 - security headers: HSTS, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, COOP
 - cache headers: one-year immutable for hashed assets, revalidate for HTML
 

@@ -7,6 +7,9 @@
  *
  * Local numbers are a floor, not the deployed figure: `vite preview` serves uncompressed files
  * (Netlify's CDN adds Brotli) and the API is a local process.
+ *
+ * `LIGHTHOUSE_URL=https://… npm run lighthouse` audits a deployed site instead (no local build or
+ * servers).
  */
 import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
@@ -24,7 +27,8 @@ const WEB = join(ROOT, 'apps/web');
 const OUT = join(ROOT, 'lighthouse');
 const API_PORT = '4177';
 const WEB_PORT = '4178';
-const BASE = `http://localhost:${WEB_PORT}`;
+const REMOTE = process.env.LIGHTHOUSE_URL?.replace(/\/$/, '');
+const BASE = REMOTE ?? `http://localhost:${WEB_PORT}`;
 const ROUTES = ['/', '/countries', '/harim', '/dhahabu'];
 const CATEGORIES = ['performance', 'accessibility', 'best-practices', 'seo'];
 const THRESHOLD = Number(process.env.LIGHTHOUSE_MIN ?? 90);
@@ -33,7 +37,7 @@ const VITE_BIN = join(
   'bin/vite.js',
 );
 
-if (!existsSync(join(WEB, 'dist/index.html'))) {
+if (!REMOTE && !existsSync(join(WEB, 'dist/index.html'))) {
   console.error('No production build: run `npm run build` first.');
   process.exit(1);
 }
@@ -66,11 +70,13 @@ async function waitFor(url, timeoutMs = 60_000) {
   throw new Error(`Nothing answered at ${url}`);
 }
 
-start(['e2e/api-server.ts'], ROOT, { E2E_API_PORT: API_PORT });
-await waitFor(`http://127.0.0.1:${API_PORT}/api/regions`);
-start([VITE_BIN, 'preview', '--port', WEB_PORT, '--strictPort'], WEB, {
-  BLA_API_PROXY: `http://127.0.0.1:${API_PORT}`,
-});
+if (!REMOTE) {
+  start(['e2e/api-server.ts'], ROOT, { E2E_API_PORT: API_PORT });
+  await waitFor(`http://127.0.0.1:${API_PORT}/api/regions`);
+  start([VITE_BIN, 'preview', '--port', WEB_PORT, '--strictPort'], WEB, {
+    BLA_API_PROXY: `http://127.0.0.1:${API_PORT}`,
+  });
+}
 await waitFor(BASE);
 
 const chrome = await chromeLauncher.launch({

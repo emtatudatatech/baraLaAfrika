@@ -21,9 +21,9 @@ describe('prerender', () => {
   it('prerenders the four main pages, each into the file Netlify serves', () => {
     expect(PRERENDERED.map((page) => [page.path, page.file])).toEqual([
       ['/', 'index.html'],
-      ['/countries', 'countries/index.html'],
-      ['/harim', 'harim/index.html'],
-      ['/dhahabu', 'dhahabu/index.html'],
+      ['/countries', 'countries.html'],
+      ['/harim', 'harim.html'],
+      ['/dhahabu', 'dhahabu.html'],
     ]);
   });
 });

@@ -8,8 +8,9 @@ import type { ChunkMetadata, Plugin, ResolvedConfig, Rolldown } from 'vite';
  * Page shells: a copy of the built index.html for /countries, /harim, /dhahabu and every
  * mountain and range page, with that page's title, description and Open Graph tags. Social
  * crawlers do not run JavaScript, so without these every shared link would show the site's
- * generic text. Browsers get the same single-page app either way; Netlify serves
- * /harim/peaks/<slug>/index.html before the SPA fallback.
+ * generic text. Browsers get the same single-page app either way. Each shell is a flat file
+ * (`harim.html`, `harim/peaks/<slug>.html`): Netlify serves /harim from harim.html as is, while a
+ * folder's harim/index.html would answer /harim with a redirect to /harim/.
  *
  * Each shell (and index.html, for the home page) also preloads its own route's code-split chunk
  * and styles, so they download alongside the entry instead of after it has run. The build also
@@ -252,8 +253,8 @@ export function pageShellsPlugin(seedsDir: string): Plugin {
     configResolved(resolved) {
       config = resolved;
     },
-    // `vite preview` (local checks and e2e) serves a page's shell (e.g. /harim/peaks/<slug>) as
-    // Netlify does, instead of falling back to the plain index.html.
+    // `vite preview` (local checks and e2e) serves a page's shell (e.g. /harim/peaks/<slug> from
+    // harim/peaks/<slug>.html) as Netlify does, instead of falling back to the plain app.
     configurePreviewServer(server) {
       const outDir = join(config.root, config.build.outDir);
       server.middlewares.use((request, _response, next) => {
@@ -265,9 +266,9 @@ export function pageShellsPlugin(seedsDir: string): Plugin {
           !path.includes('.') &&
           !path.startsWith('/api')
         ) {
-          const shell = join(outDir, path, 'index.html');
+          const shell = join(outDir, `${path}.html`);
           // A page's shell, or (like netlify.toml's fallback) the plain app for any other path.
-          request.url = existsSync(shell) ? `${path}/index.html${suffix}` : `/${APP_HTML}${suffix}`;
+          request.url = existsSync(shell) ? `${path}.html${suffix}` : `/${APP_HTML}${suffix}`;
         }
         next();
       });
@@ -322,7 +323,7 @@ export function pageShellsPlugin(seedsDir: string): Plugin {
       const origin = siteOrigin();
       await Promise.all(
         shells.map(async (shell) => {
-          const file = join(outDir, shell.path, 'index.html');
+          const file = join(outDir, `${shell.path}.html`);
           await mkdir(dirname(file), { recursive: true });
           await writeFile(file, renderShell(preloaded(shell.path), shell, origin));
         }),

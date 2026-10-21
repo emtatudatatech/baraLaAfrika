@@ -72,7 +72,7 @@ function countryRow(iso3: string): StatAction {
 /**
  * What a click on a card (or on one of its tied entities) does. Peaks above 4,000 m filter from
  * 4,001 m: the bands are strict, so a peak of exactly 4,000 m is not in the card's count.
- * The busiest range filters All peaks until the range pages exist (milestone 12).
+ * The busiest range filters All peaks to its mountains of 3,000 m or more.
  */
 export function statAction(stat: HarimStat, index = 0): StatAction | null {
   switch (stat.key) {

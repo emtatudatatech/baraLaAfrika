@@ -117,8 +117,7 @@ export const strings = {
       description:
         'Where gold is found in Africa, how much is mined and traded, and how much central banks hold.',
     },
-    underConstruction:
-      'This section is being built. Its data pipeline and views arrive in the next milestones.',
+    underConstruction: 'This section is being built and will open in a later version of the site.',
     notFound: {
       title: 'Page not found',
       body: 'We could not find that page. It may have moved, or the link may be mistyped.',

@@ -1,17 +1,17 @@
 # Bara La Afrika
 
-**Bara La Afrika** (Swahili for "the continent of Africa") is a long-running project for uncovering, learning about and understanding Africa from historical and contemporary perspectives. Version 1 is a responsive web app with four sections:
+**Bara La Afrika** (Swahili for "the continent of Africa") is a long-running project for uncovering, learning about and understanding Africa from historical and contemporary perspectives. It is a responsive web app with four sections:
 
 | Section | Route | What it shows |
 |---|---|---|
 | Home | `/` | Interactive Equal Earth map of Africa, countries coloured by region |
 | Countries | `/countries` | All 54 states: the meaning of their names, flags, national symbols and national animals (from the project's research document) |
-| **Harim** | `/harim` | Africa's mountains and their heights, per country |
-| **Dhahabu** | `/dhahabu` | Gold in Africa: deposits, mining, trade and central bank reserves |
+| **Harim** | `/harim` | Africa's mountains and their heights, country by country, with ranges, peak pages and exports |
+| **Dhahabu** | `/dhahabu` | Gold in Africa: where it is found, how much is mined and traded, and how much central banks hold |
 
 History and Contemporary Africa appear in the navigation as "Coming soon".
 
-> **Status:** milestones 1–16 of 17 are complete: scaffold, data foundation, flags with approved region colours, the API (connected to Neon), the **interactive map**, the **countries table**, the **data ribbon**, **Harim** in full (data, API and tables, statistics band, map and chart, ranges, peak pages and export), and **Dhahabu** in full: the source and licence check ([docs/dhahabu-sources.md](docs/dhahabu-sources.md)), the data ([coverage matrix](data/gold_coverage_matrix.md), [review report](data/gold_review_report.md)), the statistics band, country table, metric map, charts and country drawer, all driven by the ribbon's year range. Milestone 17 (polish and hardening) is done: prerendered and hydrated main pages, Lighthouse 97 / 100 / 100 / 100 on mobile for all four, a sitemap and per-page social cards, and the full deployment guide ([Deployment](#deployment-netlify)). The first production deploy needs the project owner's Netlify login. See [Roadmap](#roadmap).
+**Live site:** <https://baralaafrika.netlify.app>. Data is refreshed weekly by a GitHub Actions workflow; every figure on the site carries its own date, and the strip at the top of each page shows the sources behind it.
 
 ---
 
@@ -28,12 +28,13 @@ History and Contemporary Africa appear in the navigation as "Coming soon".
 - [Harim: the mountains page](#harim-the-mountains-page)
 - [Dhahabu: the gold page](#dhahabu-the-gold-page)
 - [The data ribbon and time range](#the-data-ribbon-and-time-range)
+- [Performance](#performance)
 - [Quality checks](#quality-checks)
 - [Environment variables](#environment-variables)
 - [Deployment (Netlify)](#deployment-netlify)
 - [Design system](#design-system)
-- [Decisions and deviations](#decisions-and-deviations)
-- [Roadmap](#roadmap)
+- [Decisions and trade-offs](#decisions-and-trade-offs)
+- [Scope and future work](#scope-and-future-work)
 - [Credits and licences](#credits-and-licences)
 
 ---
@@ -81,7 +82,8 @@ scripts/                  build helpers (Material Symbols subsetting, favicon, s
 config/constants.json     single source of truth for unit constants
 e2e/                      Playwright suites (desktop 1440×900, mobile 390×844)
 data/source/              the research PDF (raw downloads go to data/raw/, gitignored)
-docs/                     statistic definitions (harim-stats.md), gold sources and licences (dhahabu-sources.md)
+docs/                     statistic definitions (harim-stats.md, dhahabu-stats.md), gold sources and licences
+data/*.md                 review reports: research document, region colours, boundaries, mountains, gold
 ```
 
 ## Prerequisites
@@ -129,15 +131,15 @@ The pipelines run from the repo root (`uv run python -m pipelines --help`); see 
 
 ### First run
 
-| Step | Command | What it does | Status |
-|---|---|---|---|
-| 1 | `uv run python -m pipelines migrate` | Applies `db/migrations/*.sql` in order (checksummed; an applied file that was edited is an error) and grants `SELECT` to `bla_reader` | ✅ |
-| 2 | `uv run python -m pipelines extract-pdf` | Research PDF → `db/seeds/{countries,sources,datasets}.json` and `data/review_report.md`, with loud validation (54 countries; region counts 6/15/9/16/8; unique ISO codes; every summary field present; no stray citation digits) | ✅ |
-| 3 | `uv run python -m pipelines flags` | Downloads the 54 flag SVGs from flagcdn.com (cached in `data/raw/flags/`, copied to `apps/web/public/flags/` as the offline fallback), computes each flag's palette and each region's colour, and writes `db/seeds/flags.json` and `data/region_colors_report.md` | ✅ |
-| 4 | `uv run python -m pipelines boundaries` | Natural Earth 4.1.0 (1:50m, via world-atlas 2.0.2) → `apps/web/public/geo/africa.topo.json` (the 54 countries, Somaliland tagged as Somalia, Western Sahara as disputed) and `africa-context.topo.json` (neighbouring land, loaded after the countries); computes each country's area on the equal-area Equal Earth projection, a map anchor and whether it needs a circle marker; writes `db/seeds/boundaries.json` and `data/boundaries_report.md` | ✅ |
-| 5 | `uv run python -m pipelines mountains` | Builds the Harim catalogue (see [Mountain data](#mountain-data-harim)) → `db/seeds/{mountains,mountain_ranges,country_low_points}.json` and `data/mountains_review_report.md` | ✅ (awaiting review) |
-| 6 | `uv run python -m pipelines gold` | Builds the Dhahabu data (see [Gold data](#gold-data-dhahabu)) → `db/seeds/gold_*.json`, `data/gold_coverage_matrix.md` and `data/gold_review_report.md` (needs `COMTRADE_API_KEY`) | ✅ (awaiting review) |
-| 7 | `uv run python -m pipelines load` | Upserts the seeds into Neon (regions with the **approved** colours, countries, profiles, sources, citations, flag palettes, the mountain catalogue, the gold tables, datasets). Only rows whose values changed are written, so re-runs report 0 changes; each run is logged in `ingestion_runs` and refuses to start while migrations are pending | ✅ |
+| Step | Command | What it does |
+|---|---|---|
+| 1 | `uv run python -m pipelines migrate` | Applies `db/migrations/*.sql` in order (checksummed; an applied file that was edited is an error) and grants `SELECT` to `bla_reader` |
+| 2 | `uv run python -m pipelines extract-pdf` | Research PDF → `db/seeds/{countries,sources,datasets}.json` and `data/review_report.md`, with loud validation (54 countries; region counts 6/15/9/16/8; unique ISO codes; every summary field present; no stray citation digits) |
+| 3 | `uv run python -m pipelines flags` | Downloads the 54 flag SVGs from flagcdn.com (cached in `data/raw/flags/`, copied to `apps/web/public/flags/` as the offline fallback), computes each flag's palette and each region's colour, and writes `db/seeds/flags.json` and `data/region_colors_report.md` |
+| 4 | `uv run python -m pipelines boundaries` | Natural Earth 4.1.0 (1:50m, via world-atlas 2.0.2) → `apps/web/public/geo/africa.topo.json` (the 54 countries, Somaliland tagged as Somalia, Western Sahara as disputed) and `africa-context.topo.json` (neighbouring land, loaded after the countries); computes each country's area on the equal-area Equal Earth projection, a map anchor and whether it needs a circle marker; writes `db/seeds/boundaries.json` and `data/boundaries_report.md` |
+| 5 | `uv run python -m pipelines mountains` | Builds the Harim catalogue (see [Mountain data](#mountain-data-harim)) → `db/seeds/{mountains,mountain_ranges,country_low_points}.json` and `data/mountains_review_report.md` |
+| 6 | `uv run python -m pipelines gold` | Builds the Dhahabu data (see [Gold data](#gold-data-dhahabu)) → `db/seeds/gold_*.json`, `data/gold_coverage_matrix.md` and `data/gold_review_report.md` (needs `COMTRADE_API_KEY`) |
+| 7 | `uv run python -m pipelines load` | Upserts the seeds into Neon (regions with the **approved** colours, countries, profiles, sources, citations, flag palettes, the mountain catalogue, the gold tables, datasets). Only rows whose values changed are written, so re-runs report 0 changes; each run is logged in `ingestion_runs` and refuses to start while migrations are pending |
 
 `uv run python -m pipelines status` prints every dataset's "as of" date, last refresh, cadence and last run (flagging overdue datasets).
 
@@ -171,7 +173,7 @@ The pipelines run from the repo root (`uv run python -m pipelines --help`); see 
 
 ### Gold data (Dhahabu)
 
-`python -m pipelines gold` runs seven steps (`pipelines/africa_pipelines/gold_*.py`), each also a command of its own. Every download is cached under `data/raw/gold/`; `--refresh` fetches again. Sources, licences and the owner's decisions are in [docs/dhahabu-sources.md](docs/dhahabu-sources.md): only sources usable without asking permission (the British Geological Survey and the World Gold Council are left out).
+`python -m pipelines gold` runs seven steps (`pipelines/africa_pipelines/gold_*.py`), each also a command of its own. Every download is cached under `data/raw/gold/`; `--refresh` fetches again. Sources, licences and the decisions behind them are in [docs/dhahabu-sources.md](docs/dhahabu-sources.md): only sources usable without asking permission are used (the British Geological Survey and the World Gold Council are not).
 
 | Step | Source | Output |
 |---|---|---|
@@ -215,7 +217,7 @@ How the extraction works and where its judgement calls live:
 
 ### Scheduled refresh
 
-`.github/workflows/data-refresh.yml` runs weekly (and on demand): `migrate` → `flags --refresh` → `mountains --refresh` and the gold steps (first Monday of the month, or on a manual run; gold production only on a manual run) → `load` → `status`, then calls the Netlify build hook if `load` changed any rows. If upstream data changed the generated seeds, the run warns and uploads them (with the colour and mountain reports) as the `refreshed-data` artifact for you to review and commit; the approved region colours are never replaced automatically. Repository secrets: `DATABASE_URL_WRITE` (required), `COMTRADE_API_KEY` (for gold trade; without it the step is skipped with a warning) and `NETLIFY_BUILD_HOOK` (optional).
+`.github/workflows/data-refresh.yml` runs every Monday at 03:17 UTC (and on demand): `migrate` → `flags --refresh` → `mountains --refresh` and the gold steps (first Monday of the month, or on a manual run; gold production only on a manual run) → `load` → `status`, then calls the Netlify build hook if `load` changed any rows. If upstream data changed the generated seeds, the run warns and uploads them (with the colour and mountain reports) as the `refreshed-data` artifact for you to review and commit; the approved region colours are never replaced automatically. Repository secrets: `DATABASE_URL_WRITE` (required), `COMTRADE_API_KEY` (for gold trade; without it the step is skipped with a warning) and `NETLIFY_BUILD_HOOK` (optional).
 
 ### Local database for tests
 
@@ -297,7 +299,7 @@ The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth**
   - **Hero cards:** mountains catalogued (with countries and territory peaks), volcanic mountains (a bar and legend by status), the tallest mountain (a massif with its top summit, and the flag), and the lowest national high point ("Africa's lowest 'highest point'", never "the shortest mountain").
   - **Compact cards:** peaks above 4,000 m (a bar and legend of the four height bands), the most mountainous country, the busiest range with its tallest peak, the lowest point and the greatest relief. Ties are listed, each with its own button.
   - **Scope:** "All Africa", or the selected region as a chip in its colour, always shown above the cards; the figures recompute for the region (the previous figures stay, dimmed, while the new ones load). Screen readers hear the scope with each card's name, and the lowest-point card names the region ("Lowest point in East Africa").
-  - **Each card does something:** open the peak's drawer (tallest, lowest high point), filter All peaks (volcanoes; peaks above 4,000 m from 4,001 m, since the bands are strict; the most mountainous country's peaks of 3,000 m or more; the busiest range's peaks until range pages exist in milestone 12), or open the country's row (lowest point, greatest relief). The page then scrolls to the list. The whole card is the target, through its own button (keyboard and screen readers).
+  - **Each card does something:** open the peak's drawer (tallest, lowest high point), filter All peaks (volcanoes; peaks above 4,000 m from 4,001 m, since the bands are strict; the most mountainous country's peaks of 3,000 m or more; the busiest range's peaks of 3,000 m or more), or open the country's row (lowest point, greatest relief). The page then scrolls to the list. The whole card is the target, through its own button (keyboard and screen readers).
   - **"How is this calculated?":** the "i" button shows the API's definition over the card; Escape or Close returns focus to the button.
   - **Caveats:** a height whose confidence is low, or whose other sources differ by more than 10 m, gets a "Sources disagree" marker listing the other heights; a low point marked for review gets "Needs verification".
   - **Motion and states:** numbers count up on first load (800 ms, never with reduced motion; screen readers get the final figure only); skeletons while loading; an error with Retry.
@@ -321,7 +323,7 @@ The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth**
 - **Export:** "Export" by the result count downloads the current view or the whole catalogue as CSV or GeoJSON from `/api/mountains/export`; a message confirms the download or reports a failure.
 - **Link previews:** the build writes a page shell for `/countries`, `/harim`, `/dhahabu` and every mountain and range page (`apps/web/build/pageShells.ts`, from the committed seeds) with that page's title, description and Open Graph tags, so shared links show the right text; Netlify serves them before the single-page fallback (as does `vite preview`). The preview images are `public/og/harim.png` (Harim and its pages), `og/dhahabu.png` and `og/site.png` (the site and `/countries`), all from `node scripts/build-og-images.mjs`.
 - **Peak drawer:** a click on any mountain or summit opens it: height in both units with its confidence, the source of the height and every other sourced height, prominence, isolation, coordinates, range, type, massif and summits (each opens in the same drawer), local names and name origin with their sources ("Unsourced" otherwise), notes, the "Needs verification" reasons and all sources by field.
-- **URL state:** `?view=country|peaks`, `region`, `q`, `sort`, `country`, `minHeight`, `volcanic`, `range` and `peak` (the open drawer). Invalid values are ignored; `view=ranges` shows the by-country view with a note until the ranges view arrives (milestone 12). Switching to By country drops the peak-only filters. A `country` in the URL filters to that country and opens its row (the link from other pages).
+- **URL state:** `?view=country|peaks|ranges`, `region`, `q`, `sort`, `country`, `minHeight`, `volcanic`, `range` and `peak` (the open drawer). Invalid values are ignored. Switching to By country or By range drops the peak-only filters. A `country` in the URL filters to that country and opens its row (the link from other pages).
 - **Units:** a metres/feet toggle, remembered in this browser (`bla-units`) and applied everywhere on the page. Below sea level uses a true minus sign (`−155 m`).
 - **Data loading:** the 54 summary rows load with the page; the catalogue (about 340 mountains) loads once when a row is expanded or All peaks is opened, and is then filtered and sorted in the browser with the same meaning as the API's parameters (search also matches a massif's summit names, so "Kibo" finds Kilimanjaro).
 - **Layout:** stacked cards below 720px. The tables are laid out to fit their panel from 720px up (a test checks 720, 900, 1024 and 1280px), so nothing is clipped and the page never scrolls sideways. The lowest point and relief columns show from 1280px, can be switched on from 1024px, and otherwise appear in the expanded row; All peaks is a compact list below 1024px.
@@ -329,7 +331,7 @@ The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth**
 
 ## Dhahabu: the gold page
 
-`/dhahabu` (`apps/web/src/features/dhahabu/`) covers, for each of the 54 countries, whether gold is found, how much is mined and traded, and how much central banks hold. It is the first page driven by the ribbon's year range.
+`/dhahabu` (`apps/web/src/features/dhahabu/`) covers, for each of the 54 countries, whether gold is found, how much is mined and traded, and how much central banks hold. It is the site's time-series page: the ribbon's year range drives its cards, table, map and charts.
 
 - **Reference year:** the end of the ribbon's year range. Every card and table figure is the latest in or before it, and shows its own year or month (countries report on different schedules). With the full range the page shows the latest available figures, and the API gets no `year`. A note above the table says which applies.
 - **Statistics band** (`GoldStatsBand.tsx`, from `/api/gold/stats`; definitions and tie rules in [docs/dhahabu-stats.md](docs/dhahabu-stats.md)): eleven glass cards, each with a year or month chip, the definition behind "How is this calculated?", count-up (none with reduced motion) and an action.
@@ -358,6 +360,7 @@ The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth**
   - **Central bank gold holdings:** monthly lines for the five largest holders, in tonnes (in the chosen unit) or US dollars, in five validated categorical colours with direct labels and a legend; it starts at the first report (2000). Below it, **Price or tonnes?** picks a bank and shows, as a bridge from the start value to the end value, how much of the change came from the price and how much from tonnes bought or sold, from `/api/gold/holdings-change`.
 - **Country drawer** (`GoldDrawer.tsx`; side panel, bottom sheet on phones): the key figures at the reference year; presence with its evidence, confidence, year and source; production by year with bars and computed values; trade by year (reported and what partners report, with the neutral note) and the top destinations; central bank gold (each year's last month); **in-ground reserves** in a separate dashed block, with a US dollar value labelled "illustrative at a given price, not a realisable sum"; artisanal mining; curated notes with their source and date; every source with its reliability tier and what it supports. "Country profile" opens the country on `/countries`, whose drawer links back ("Gold in …").
 
+## The data ribbon and time range
 
 The strip at the top of every page (`apps/web/src/features/coverage/`) shows the data behind the current view.
 
@@ -368,7 +371,7 @@ The strip at the top of every page (`apps/web/src/features/coverage/`) shows the
 - **Date-range control:** read-only on reference pages ("Not time-dependent", with the explanation on hover, focus or in the details). On time-series pages (`/dhahabu`) it is a year picker with presets (last 5 years, last 10 years, since 2000, all years) and From/To lists. It is bounded by the data's coverage and never goes beyond it. With no data loaded it shows "No data yet" instead of inventing a range.
 - **URL:** the range lives in `?from=&to=` (years). The full coverage is the default and leaves no params; values outside the data are clamped and a reversed range is put in order, so shared links always resolve to a valid range. Reference pages ignore the params.
 
-**For views (Dhahabu from milestone 15, and later modules):**
+**For time-series views** (Dhahabu, and any later one):
 
 ```ts
 const { interactive, bounds, range, referenceYear, setRange } = useTimeRange();
@@ -386,7 +389,16 @@ The target is Lighthouse ≥ 90 on mobile for Performance, Accessibility, Best P
 - **The app starts after the first paint:** a prerendered page loads `/boot.js`, which imports the app's entry once the page has painted, so the styles and fonts get the connection first; each page links its route's stylesheets directly. Pages without prerendered markup (peak and range pages, any other path via `app.html`) load the app's module and preload their route's chunk in the usual way.
 - **No layout shift:** the skeletons reserve the loaded cards' heights and choose carousel or grid in CSS; region chips show their names (`REGION_NAMES`, checked against the seed) with counts pending until the data arrives.
 - **Payload:** routes are code-split; the map's context land loads after the countries; Material Symbols is subset to the icons used (≈24 KiB); fonts are self-hosted Latin subsets; API time series are capped and pre-aggregated in SQL; images have explicit dimensions; `flagcdn.com` is preconnected.
-- **Measured** (`npm run lighthouse`, mobile, local production build, 2026-10-20): Performance 97 on all four pages, and 100 for Accessibility, Best Practices and SEO. LCP is 2.0–2.1 s, TBT under 100 ms and CLS under 0.04. Deployed figures should be at least as good: Netlify's CDN adds Brotli and HTTP/2.
+- **Measured** on the live site (`LIGHTHOUSE_URL=https://baralaafrika.netlify.app npm run lighthouse`, mobile, 2026-10-21):
+
+  | Page | Performance | Accessibility | Best Practices | SEO | LCP |
+  |---|---|---|---|---|---|
+  | `/` | 92 | 100 | 100 | 100 | 1.1 s |
+  | `/countries` | 98 | 100 | 100 | 100 | 1.1 s |
+  | `/harim` | 98 | 100 | 100 | 100 | 1.1 s |
+  | `/dhahabu` | 99 | 100 | 100 | 100 | 1.1 s |
+
+  CLS stays under 0.03 and TBT under 300 ms. The local production build scores 97 / 100 / 100 / 100 on all four pages (LCP about 2 s, without the CDN's compression).
 
 ## Quality checks
 
@@ -398,14 +410,14 @@ The target is Lighthouse ≥ 90 on mobile for Performance, Accessibility, Best P
 | `npm run check:functions` | Builds the Netlify Functions as a deploy does and checks each bundle loads and answers |
 | `npm run e2e` | Playwright: desktop (1440×900) and mobile (390×844) projects; includes axe accessibility checks in light and dark mode and no-horizontal-scroll checks at 320px. It runs the **real API handlers** (`e2e/api-server.ts`) on an in-memory Postgres loaded with the committed seeds, proxied behind `vite preview`, so no Neon connection is needed |
 | `npm run screenshots` | Captures every page at desktop and mobile, light and dark, into `screenshots/` (gitignored) for visual review |
-| `npm run lighthouse` | Lighthouse (mobile) on `/`, `/countries`, `/harim` and `/dhahabu` against the production build (run `npm run build` first) and the local API; fails below 90 in any category; HTML and JSON reports in `lighthouse/` (gitignored) |
+| `npm run lighthouse` | Lighthouse (mobile) on `/`, `/countries`, `/harim` and `/dhahabu` against the production build (run `npm run build` first) and the local API; fails below 90 in any category; HTML and JSON reports in `lighthouse/` (gitignored). `LIGHTHOUSE_URL=https://… npm run lighthouse` audits a deployed site instead |
 | `uv run ruff check . && uv run ruff format --check .` | Python lint and format |
 | `uv run mypy` | Python type-check (strict) |
 | `uv run pytest` | Python tests (needs `npm install` for the PGlite-backed database tests) |
 
 Vitest also checks the repository itself: `scripts/gitignore.test.ts` fails if `.gitignore` hides any source file, and `scripts/netlifyConfig.test.ts` keeps the production CSP out of `netlify dev`.
 
-CI (`.github/workflows/ci.yml`) runs all of these on every push to `main` and on pull requests.
+CI (`.github/workflows/ci.yml`, Ubuntu 24.04) runs the web checks (`npm run check` and `check:functions`), the Playwright suites and the Python checks on every pull request and every push to `main`. Runs on a pull request cancel that PR's older run; runs on `main` always complete. `npm run screenshots` and `npm run lighthouse` are run by hand.
 
 ## Environment variables
 
@@ -435,6 +447,8 @@ The **Content-Security-Policy** is generated at build time into `dist/_headers` 
 
 The build also writes `sitemap.xml` (every page with a shell) and a `robots.txt` that points to it, using the deploy's address (`URL`, or `DEPLOY_PRIME_URL` for previews); local builds have no address and skip the sitemap.
 
+The live site is <https://baralaafrika.netlify.app>, built from `main` on every push.
+
 ### From clone to deployed site
 
 1. **Database (once):** create the Neon project, run `db/roles.sql` and set the connection strings as in [One-time Neon setup](#one-time-neon-setup).
@@ -442,8 +456,10 @@ The build also writes `sitemap.xml` (every page with a shell) and a `robots.txt`
 3. **Netlify site (once):** `npx netlify login`, then `npx netlify init` in the repository (or create the site in the Netlify UI from the GitHub repository). The build settings come from `netlify.toml`, so leave the UI fields empty.
 4. **Environment variables:** in **Site configuration → Environment variables**, add `DATABASE_URL_READ` (the `bla_reader` connection string), scoped to Functions. Nothing else belongs on Netlify: `DATABASE_URL_WRITE` and `COMTRADE_API_KEY` are pipeline secrets (local `.env`, GitHub Actions).
 5. **Deploy:** push to the production branch (Netlify builds every push), or from your machine run `npx netlify deploy --build` for a draft URL and `npx netlify deploy --build --prod` for production.
-6. **Check:** open the site and `/api/regions` (it should list five regions). Run Lighthouse on the deployed pages (PageSpeed Insights, or Chrome DevTools in mobile mode).
+6. **Check:** open the site and `/api/regions` (it should list five regions), then run `LIGHTHOUSE_URL=https://<site> npm run lighthouse`.
 7. **Scheduled refresh:** in GitHub → Settings → Secrets and variables → Actions, add `DATABASE_URL_WRITE`, `COMTRADE_API_KEY` and (optional) `NETLIFY_BUILD_HOOK`. `.github/workflows/data-refresh.yml` then refreshes the data weekly and monthly, and triggers a rebuild when something changed.
+
+**Netlify badge:** on its free plan Netlify injects a "Powered by Netlify" badge script. The site's Content-Security-Policy blocks its inline script (a console error that costs Best Practices points), so the badge is turned off in the Netlify project settings.
 
 **Deploy previews** work out of the box: every pull request gets its own URL, and its functions read `DATABASE_URL_READ`. To keep previews off production data, create a Neon branch for previews and set a different `DATABASE_URL_READ` for the **Deploy previews** context in the Netlify UI.
 
@@ -465,9 +481,9 @@ The build also writes `sitemap.xml` (every page with a shell) and a `robots.txt`
 - **Signature:** every page ends with "© {year} Michael Maina Mwangi. All rights reserved." and "Proudly built in Kenya." with the self-hosted Kenyan flag (`SiteFooter.tsx`). The year comes from the visitor's clock, so it never goes stale.
 - **Favicon:** a dark-filled silhouette of Africa (mainland and Madagascar), built from the site's own Natural Earth boundaries (public domain) by `node scripts/build-favicon.mjs`. The SVG switches to a light fill when the browser uses a dark colour scheme, so it stays visible on dark tab strips; `favicon.ico` (16/32/48 px) is the fallback. The script also stamps the icon links in `index.html` with `?v=<hash of both files>`, so browsers that cached an older icon for the same address (another project on `localhost`, or a previous deploy) fetch the new one; a test checks the stamp is current. Material Symbols has no Africa icon. The home page's tab reads just "Bara La Afrika".
 
-## Decisions and deviations
+## Decisions and trade-offs
 
-Decisions taken where the specification left room, or where the current ecosystem required it:
+Decisions taken where the project brief (`africa-explorer-claude-code-prompt.md`) left room, or where the current ecosystem required it:
 
 - **TypeScript 6.0, not 7.x:** typescript-eslint (needed for type-aware linting) supports TypeScript < 6.1 only.
 - **ESLint 10 with eslint-plugin-jsx-a11y:** the plugin's declared peer range stops at ESLint 9, which is no longer supported upstream. It was verified to work under ESLint 10, and a scoped `overrides` entry in `package.json` records this.
@@ -477,7 +493,9 @@ Decisions taken where the specification left room, or where the current ecosyste
 - **Charts:** hand-written React SVG with small, tested scale and path helpers (no charting library, not even d3-scale). This keeps the bundle smaller, themes charts directly from CSS tokens, and gives full control of focus, ARIA and data-table fallbacks. The map uses d3-geo and d3-zoom.
 - **Prerendered pages hydrate only on a bare URL:** a URL with a query (filters, an open drawer, a map metric) renders afresh over the prerendered markup, since its first view differs; the page still paints early. Peak and range pages are not prerendered (about 380 pages of mostly data): they keep their link-preview shells and render in the browser.
 - **The app starts after the first paint** on prerendered pages (`public/boot.js`). On a slow connection the page is readable a little before it is interactive, in exchange for an early, stable first paint (and LCP).
-- **Lighthouse locally:** `npm run lighthouse` serves the production build with `vite preview` and the seed-backed local API, so its figures are a floor for the deployed site rather than a measurement of it.
+- **Lighthouse locally:** `npm run lighthouse` serves the production build with `vite preview` and the seed-backed local API, so its figures are a floor for the deployed site; `LIGHTHOUSE_URL` measures a deploy.
+- **Flat page files:** each page with its own HTML is a flat file (`harim.html`, `harim/peaks/<slug>.html`), because Netlify answers a folder's `index.html` with a redirect to a trailing-slash URL.
+- **CI on a pinned runner:** the workflows use `ubuntu-24.04` rather than `ubuntu-latest`, so a new image cannot change system packages unannounced; `astral-sh/setup-uv` is pinned by commit (it publishes no floating major tag).
 - **Icon substitutions:** `terrain` is now only a legacy alias of `landscape`, and `filter_hdr` is not in the current canonical set. They are replaced by `landscape_2` and `mountain_flag` where the specification suggested them.
 - **Nav includes Dhahabu:** the nav order follows §1 of the specification (Home · Countries · Harim · Dhahabu · History · Contemporary Africa).
 - **Local database:** tests run SQL against **PGlite** (Postgres in WebAssembly), so neither local work nor CI needs a database server. Real data is loaded into Neon.
@@ -496,8 +514,8 @@ Decisions taken where the specification left room, or where the current ecosyste
 - **Mountain confidence:** the specification's "more than 50 m apart → low confidence" is applied to the reliable sources, so a wrong prototype height alone does not make a well-sourced peak low-confidence. An outlier against a value two independent sources agree on gives medium; the disagreement is still flagged for review.
 - **The World Factbook as a cross-check:** it was discontinued in February 2026; its final edition (public domain) is used from a pinned mirror.
 - **Unsourced massif summits are not invented:** Mount Emin, Mount Gessi and Mount Luigi di Savoia are modelled as single mountains because no consulted source names their summits.
-- **Volcanoes from the Global Volcanism Program:** Wikidata's "instance of" misses many volcanoes (Mount Meru and Ol Doinyo Lengai are typed only as "mountain"), so a Global Volcanism Program ID (P1886) also makes a mountain a volcano. This was found while building the tables in milestone 9 and changed 34 peaks' type from "peak" to "volcano" (nothing else in the catalogue changed). Volcanoes neither identifies are curated with a quoted source (Mount Kenya so far). Volcanic status is taken only from what a source states, so it is unknown for most volcanoes.
-- **Statistics band:** "Most prominent peak" is hidden because prominence is known for only about a third of the mountains of 3,000 m or more (the specification's 80% rule). "Busiest range" filters All peaks to the range until the range pages exist (milestone 12). "Peaks above 4,000 m" filters from 4,001 m because the bands are strict (Abuye Meda, exactly 4,000 m, is in the 3,000–4,000 m band).
+- **Volcanoes from the Global Volcanism Program:** Wikidata's "instance of" misses many volcanoes (Mount Meru and Ol Doinyo Lengai are typed only as "mountain"), so a Global Volcanism Program ID (P1886) also makes a mountain a volcano. This rule makes 34 more peaks volcanoes than Wikidata's classes alone. Volcanoes neither identifies are curated with a quoted source (Mount Kenya so far). Volcanic status is taken only from what a source states, so it is unknown for most volcanoes.
+- **Statistics band:** "Most prominent peak" is hidden because prominence is known for only about a third of the mountains of 3,000 m or more (the specification's 80% rule). "Peaks above 4,000 m" filters from 4,001 m because the bands are strict (Abuye Meda, exactly 4,000 m, is in the 3,000–4,000 m band).
 - **Height-band colours:** the prototype's red, orange, yellow and green are kept, but their lightness now steps in order (so the order also reads without colour) and adjacent bands were checked for normal and colour-blind vision with a palette validator, in both themes. Pale bands get a dark outline on the light map; the legend always gives the counts in text.
 - **Map selection opens a card first:** a click on a peak opens a small card ("Full details", "Show in the table") rather than scrolling the page away from the map; "Show in the table" then highlights the row and moves focus to it.
 - **Close groups stay grouped:** peaks a few kilometres apart (the Rwenzori summits, parts of the Virunga) can still touch at the closest zoom, so they remain a group whose list opens on click.
@@ -527,36 +545,19 @@ Decisions taken where the specification left room, or where the current ecosyste
 - **No mines endpoint or layer:** `/api/gold/mines` and the map's mines toggle are not built while the mines data fails the quality bar (the drawer has no "major mines" section for the same reason). No "Explore on Goldhub" links (owner's decision).
 - **Dev-tool advisories:** `npm audit` reports advisories in dev-only tooling (`netlify-cli`'s local server dependencies and Stylelint's glob dependencies). None of it ships to the browser or the deployed functions.
 
-## Roadmap
+## Scope and future work
 
-v1 milestones (stop points for review are marked ⏸):
+The site covers the four sections above. Each was built against review gates on the data and the design (region colours approved 2026-10-15; the Dhahabu sources decided and its data reviewed 2026-10-18), and the review reports in `data/` record what was checked.
 
-1. ✅ Scaffold
-2. ✅ Data foundation: migrations, PDF extraction, seeds, review report ⏸
-3. ✅ Flags and region colours ⏸ (colours approved 2026-10-15)
-4. ✅ API (Neon connected)
-5. ✅ Map
-6. ✅ Countries table
-7. ✅ Ribbon and coverage
-8. ✅ Harim data ⏸
-9. ✅ Harim API and table
-10. ✅ Harim statistics band ⏸
-11. ✅ Harim map and chart
-12. ✅ Harim ranges, peak pages and export
-13. ✅ Dhahabu source and licence check ⏸ ([docs/dhahabu-sources.md](docs/dhahabu-sources.md); decided 2026-10-18)
-14. ✅ Dhahabu data ⏸ ([coverage matrix](data/gold_coverage_matrix.md), [review report](data/gold_review_report.md); reviewed 2026-10-18)
-15. ✅ Dhahabu API, table, band and live ribbon ⏸
-16. ✅ Dhahabu map, charts and drawer
-17. ✅ Polish, Lighthouse and deployment (prerender, Lighthouse ≥ 90, deployment guide; the first deploy waits for the owner's Netlify login)
+**Planned, not built:**
 
-**Not in v1:**
-
+- **Harim, "Ice and fire":** glacier extent over time (Kilimanjaro, Mount Kenya, the Rwenzori) and eruption histories, driven by the ribbon's year range. It starts with a data assessment of the candidate sources (the Smithsonian Global Volcanism Program, GLIMS and the Randolph Glacier Inventory, published ice-extent studies), and sparse records will be shown as dated points, never interpolated.
+- **Harim:** protected areas and UNESCO World Heritage mountain sites; an elevation-zones infographic; a west-to-east skyline chart; hillshade or 3D terrain; a "which is taller?" quiz; peak photos, climbing routes and first-ascent history.
 - **Dhahabu:** gold demand, jewellery and investment flows (including ETFs); company-level production and ownership data; artisanal-mining formalisation and responsible-sourcing indicators; a standalone page per country; inflation-adjusted values. Forecasts and investment advice will never be added.
-- **Harim:** glaciers and volcanic activity (v1.1, after a data assessment); protected areas and UNESCO World Heritage mountain sites; an elevation-zones infographic; a west-to-east skyline chart; hillshade or 3D terrain; a "which is taller?" quiz; peak photos, climbing routes and first-ascent history.
-- **General:** historical timelines; contemporary indicators (via a future `indicators` / `observations` time-series model); user accounts; a CMS; multi-language content; long-form search; offline/PWA support.
+- **General:** the History and Contemporary Africa sections; historical timelines; contemporary indicators (via a future `indicators` / `observations` time-series model); user accounts; a CMS; multi-language content; long-form search; offline/PWA support.
 
 ## Credits and licences
 
-Credits are shown in the site footer and in data exports, including the attribution wording required by GeoNames (CC BY 4.0) and the IMF. Sources: the project's state-symbology research document, Natural Earth, Flagpedia, Material Symbols (Apache 2.0), Fraunces and Instrument Sans (SIL OFL 1.1), Wikidata (CC0), GeoNames (CC BY 4.0), the CIA World Factbook's final edition (public domain), Wikipedia (CC BY-SA 4.0, cited per item), the Harim prototype, the IMF, USGS, the World Bank and UN Comtrade. The Smithsonian Global Volcanism Program is linked for reference only; none of its data is republished. The British Geological Survey and the World Gold Council are neither used nor linked (owner's decision, 2026-10-18).
+Credits are shown in the site footer and in data exports, including the attribution wording required by GeoNames (CC BY 4.0) and the IMF. Sources: the project's state-symbology research document, Natural Earth, Flagpedia, Material Symbols (Apache 2.0), Fraunces and Instrument Sans (SIL OFL 1.1), Wikidata (CC0), GeoNames (CC BY 4.0), the CIA World Factbook's final edition (public domain), Wikipedia (CC BY-SA 4.0, cited per item), the Harim prototype, the IMF, USGS, the World Bank and UN Comtrade. The Smithsonian Global Volcanism Program is linked for reference only; none of its data is republished. The British Geological Survey and the World Gold Council are neither used nor linked (decided 2026-10-18).
 
 Boundaries are shown as published by Natural Earth and do not imply endorsement of any border or territorial claim.

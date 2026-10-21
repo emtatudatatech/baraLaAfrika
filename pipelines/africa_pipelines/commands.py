@@ -1,4 +1,4 @@
-"""Registry of CLI commands. Each milestone adds its pipeline commands here."""
+"""Registry of CLI commands: every pipeline registers its commands here."""
 
 from __future__ import annotations
 

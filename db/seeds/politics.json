@@ -1,8 +1,8 @@
 {
   "$generated": {
     "by": "python -m pipelines politics",
-    "approved_on": null,
-    "pending_changes": ["No snapshot has been approved yet: every record is new."]
+    "approved_on": "2026-10-22",
+    "pending_changes": []
   },
   "datasets": [
     {
@@ -54,7 +54,7 @@
       "reliability_tier": "primary"
     }
   ],
-  "approved_on": null,
+  "approved_on": "2026-10-22",
   "leaders": {
     "columns": ["iso3", "position", "role", "title", "person", "article", "wikidata_qid", "executive", "transitional", "de_facto", "source"],
     "rows": [

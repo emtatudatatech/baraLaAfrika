@@ -151,10 +151,15 @@ def review_report(result: Build) -> str:
             "- **Human Development Index: read from Our World in Data's copy.** UNDP's own "
             "download (`hdr.undp.org`) did not answer (connections were reset), so the pipeline "
             "used Our World in Data's republication of the same UNDP series (HDR 2025, "
-            "1990–2023). The values are UNDP's (CC BY 3.0 IGO); OWID's own terms for "
-            "republished data could not be read to confirm. **Decision needed:** accept this "
-            "fallback, or provide the UNDP file by hand (saved as `data/raw/indicators/"
-            "undp_hdr.csv`, it is used instead)."
+            "1990–2023). The values are UNDP's (CC BY 3.0 IGO), credited to UNDP with the copy "
+            "named. "
+            + (
+                f"The owner accepted this fallback on {config()['hdr']['fallback_accepted_on']}; "
+                "every refresh tries UNDP's own file first."
+                if config()["hdr"].get("fallback_accepted_on")
+                else "**Decision needed:** accept this fallback, or provide the UNDP file by "
+                "hand (saved as `data/raw/indicators/undp_hdr.csv`, it is used instead)."
+            )
         )
     else:
         w("- **Human Development Index:** read from UNDP's own download.")

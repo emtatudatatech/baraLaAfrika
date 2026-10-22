@@ -100,6 +100,8 @@ export const strings = {
     'vinara-sipri': 'SIPRI military spending',
     'vinara-hdr': 'UNDP Human Development Index',
     'vinara-ids': 'World Bank debt statistics',
+    'vinara-leaders': 'Heads of state and government',
+    'vinara-elections': 'Next elections',
   },
   pages: {
     home: {

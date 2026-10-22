@@ -9,7 +9,14 @@ from typing import LiteralString
 import psycopg
 import pytest
 
-from pipelines.africa_pipelines import gold_load, indicators_load, load, migrate, status
+from pipelines.africa_pipelines import (
+    gold_load,
+    indicators_load,
+    load,
+    migrate,
+    politics_load,
+    status,
+)
 from pipelines.africa_pipelines.settings import SEEDS_DIR
 
 APPROVED = json.loads(load.APPROVAL_PATH.read_text(encoding="utf-8"))["colors"]
@@ -42,11 +49,18 @@ def test_first_load_populates_everything_with_approved_colours(pglite_url: str) 
         assert gold is not None
         indicators = indicators_load.read(SEEDS_DIR)
         assert indicators is not None
+        politics = politics_load.read(SEEDS_DIR)
+        assert politics is not None
         expected_sources = (
             {s["source_key"] for s in symbology_sources}
             | {s["source_key"] for s in harim["sources"]}
             | {s["source_key"] for s in gold["sources"]}
             | {s["source_key"] for s in indicators["sources"]}
+            | (
+                {s["source_key"] for s in politics["sources"]}
+                if politics["seed"]["approved_on"]
+                else set()
+            )
         )
         assert scalar(conn, "SELECT count(*) FROM sources") == len(expected_sources)
         palette_rows = scalar(conn, "SELECT count(*) FROM flag_palette")
@@ -66,6 +80,7 @@ def test_first_load_populates_everything_with_approved_colours(pglite_url: str) 
         ).fetchall()
         gold_runs = [(d["key"], "succeeded") for d in gold["datasets"]]
         indicator_runs = [(d["key"], "succeeded") for d in indicators["datasets"]]
+        politics_runs = [(d["key"], "succeeded") for d in politics["datasets"]]
         assert sorted(runs) == sorted(
             [
                 ("boundaries-natural-earth", "succeeded"),
@@ -76,6 +91,7 @@ def test_first_load_populates_everything_with_approved_colours(pglite_url: str) 
                 ("symbology-pdf", "succeeded"),
                 *gold_runs,
                 *indicator_runs,
+                *politics_runs,
             ]
         )
         assert scalar(conn, "SELECT count(*) FROM datasets WHERE last_refreshed_at IS NULL") == 0
@@ -268,3 +284,32 @@ def test_indicators_load_their_rules_and_reload_without_changes(pglite_url: str)
         second = load.load(conn)
         for table in ("indicators", "indicator_observations", "external_debt_creditors"):
             assert second.changes.get(table, 0) == 0, table
+
+
+def test_leaders_and_elections_load_only_once_approved(pglite_url: str, tmp_path: Path) -> None:
+    seeds = tmp_path / "seeds"
+    shutil.copytree(SEEDS_DIR, seeds)
+    politics_seed = json.loads((seeds / "politics.json").read_text())
+    with migrated(pglite_url) as conn:
+        politics_seed["approved_on"] = None
+        (seeds / "politics.json").write_text(json.dumps(politics_seed))
+        skipped = load.load(conn, seeds)
+        assert any("awaiting approval" in w for w in skipped.warnings)
+        assert scalar(conn, "SELECT count(*) FROM country_leaders") == 0
+
+        politics_seed["approved_on"] = "2026-10-22"
+        (seeds / "politics.json").write_text(json.dumps(politics_seed))
+        loaded = load.load(conn, seeds)
+        assert loaded.changes["country_elections"] == 54
+        assert scalar(conn, "SELECT count(*) FROM country_leaders WHERE is_executive") == 54
+        assert (
+            scalar(
+                conn,
+                "SELECT count(*) FROM country_elections e JOIN countries c ON c.id = e.country_id "
+                "WHERE c.iso3 = 'ERI' AND e.decides = 'none' AND e.note IS NOT NULL",
+            )
+            == 1
+        )
+        again = load.load(conn, seeds)
+        assert again.changes.get("country_leaders", 0) == 0
+        assert again.changes.get("country_elections", 0) == 0

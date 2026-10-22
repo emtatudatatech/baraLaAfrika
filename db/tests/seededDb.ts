@@ -593,11 +593,83 @@ export async function loadIndicators(db: PGlite): Promise<void> {
   );
 }
 
+interface PoliticsSeed {
+  datasets: SeedDataset[];
+  sources: SeedSource[];
+  approved_on: string | null;
+  leaders: SeedTable;
+  elections: SeedTable;
+  notes: Record<string, string>;
+}
+
+/**
+ * Leaders and elections, as `python -m pipelines load` writes them once approved
+ * (politics_load.py). A seed still awaiting approval is loaded here too, dated by its run, so
+ * the API can be tested before the owner's approval.
+ */
+export async function loadPolitics(db: PGlite): Promise<void> {
+  const seed = readJson('db', 'seeds', 'politics.json') as PoliticsSeed;
+  const approvedOn = seed.approved_on ?? '2026-10-22';
+  for (const d of seed.datasets) {
+    await db.query(
+      `INSERT INTO datasets (key, name, provider, license, attribution, coverage_start,
+         coverage_end, as_of, refresh_cadence, last_refreshed_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, '2026-10-22T08:00:00Z')`,
+      [
+        d.key,
+        d.name,
+        d.provider,
+        d.license,
+        d.attribution,
+        d.coverage_start,
+        d.coverage_end,
+        d.as_of,
+        d.refresh_cadence,
+      ],
+    );
+  }
+  await db.query(
+    `INSERT INTO sources (source_key, title, url, source_type, reliability_tier)
+     SELECT source_key, title, url, source_type, reliability_tier::reliability_tier
+     FROM json_to_recordset($1::json) AS s(source_key text, title text, url text,
+       source_type text, reliability_tier text)
+     ON CONFLICT (source_key) DO NOTHING`,
+    [JSON.stringify(seed.sources)],
+  );
+  await db.query(
+    `INSERT INTO country_leaders (country_id, position, role, title, person_name,
+       wikipedia_article, wikidata_qid, is_executive, is_transitional, is_de_facto, source_id,
+       approved_on)
+     SELECT c.id, r.position, r.role::leader_role, r.title, r.person, r.article, r.wikidata_qid,
+       r.executive, r.transitional, r.de_facto, s.id, $2::date
+     FROM json_to_recordset($1::json) AS r(iso3 text, position int, role text, title text,
+       person text, article text, wikidata_qid text, executive boolean, transitional boolean,
+       de_facto boolean, source text)
+     JOIN countries c ON c.iso3 = r.iso3
+     JOIN sources s ON s.source_key = r.source`,
+    [JSON.stringify(recordsOf(seed.leaders)), approvedOn],
+  );
+  await db.query(
+    `INSERT INTO country_elections (country_id, decides, kind, next_date, next_precision,
+       next_article, last_date, last_precision, last_article, note, source_id, approved_on)
+     SELECT c.id, r.decides::election_decides, r.kind::election_kind, r.next_date,
+       r.next_precision::date_precision, r.next_article, r.last_date,
+       r.last_precision::date_precision, r.last_article, ($2::json ->> r.iso3), s.id, $3::date
+     FROM json_to_recordset($1::json) AS r(iso3 text, decides text, kind text, next_date date,
+       next_precision text, next_article text, last_date date, last_precision text,
+       last_article text, source text)
+     JOIN countries c ON c.iso3 = r.iso3
+     JOIN sources s ON s.source_key = r.source`,
+    [JSON.stringify(recordsOf(seed.elections)), JSON.stringify(seed.notes), approvedOn],
+  );
+}
+
 export async function seededDb(): Promise<PGlite> {
   const db = await migratedDb();
   await loadSeeds(db);
   await loadHarim(db);
   await loadGold(db);
   await loadIndicators(db);
+  await loadPolitics(db);
   return db;
 }

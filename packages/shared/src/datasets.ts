@@ -20,6 +20,8 @@ export const DATASET_KEYS = [
   'vinara-sipri',
   'vinara-hdr',
   'vinara-ids',
+  'vinara-leaders',
+  'vinara-elections',
 ] as const;
 
 export type DatasetKey = (typeof DATASET_KEYS)[number];

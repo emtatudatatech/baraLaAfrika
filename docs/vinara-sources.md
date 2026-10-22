@@ -22,10 +22,11 @@ Every terms page was read on **22 October 2026**, and every endpoint below was t
 | [World Bank International Debt Statistics](#6-world-bank-international-debt-statistics-ids) | External debt by creditor ("major lenders") | Bulk CSV/XLSX, API | CC BY 4.0 | ✅ |
 | [UNDP Human Development Report](#7-undp-human-development-report) | Human Development Index | CSV/XLSX; Our World in Data's copy when UNDP's site does not answer | CC BY 3.0 IGO | ✅ |
 | [SIPRI Military Expenditure Database](#8-sipri-military-expenditure) | Military spending (US$ and % of GDP) | Via WDI (still SIPRI's terms) | Non-commercial fair use under 10% of the dataset | ⚠️ Fair use only (see the decision) |
-| [Wikidata](#9-wikidata) | Heads of state and government; election dates where present | SPARQL | CC0 | ✅ Leaders; elections sparse |
-| [Official electoral sources](#10-elections-official-sources-ifes-eisa) | Next national election per country | Manual citations | Facts with a short quote | ✅ Curated, quotes re-checked |
-| [IFES ElectionGuide](#10-elections-official-sources-ifes-eisa) | — | Registered API | "personal and non-commercial purposes" | ⏸ Not used without written confirmation |
-| [EISA election calendar](#10-elections-official-sources-ifes-eisa) | — | Web page | Republishing and automated collection prohibited | ⛔ Not used (link only) |
+| [Wikipedia: List of current heads of state and government](#9-leaders-wikipedia-and-wikidata) | Heads of state and government, and which office holds executive power | MediaWiki API (wikitext) | Facts; text CC BY-SA 4.0 | ✅ Leaders, approved before they are shown |
+| [Wikidata](#9-leaders-wikipedia-and-wikidata) | Each leader's identifier; a second opinion on who holds office | SPARQL; Wikipedia page properties | CC0 | ✅ Cross-check |
+| [Wikipedia: List of next general elections](#10-elections-wikipedia-ifes-eisa) | Last and next legislative and presidential elections | MediaWiki API (wikitext) | Facts; text CC BY-SA 4.0 | ✅ Elections, approved before they are shown |
+| [IFES ElectionGuide](#10-elections-wikipedia-ifes-eisa) | — | Registered API | "personal and non-commercial purposes" | ⏸ Not used without written confirmation |
+| [EISA election calendar](#10-elections-wikipedia-ifes-eisa) | — | Web page | Republishing and automated collection prohibited | ⛔ Not used (link only) |
 | [Yahoo Finance](#11-yahoo-finance) | — | No documented API | Automated access and redistribution need permission | ⛔ Not used |
 
 ---
@@ -135,7 +136,7 @@ That gives daily series for 22 of the 54 states. Every parity is checked against
 
 **Licence.** "All materials provided on this website are copyrighted under the Creative Commons Attribution 3.0 IGO license." Credit, a licence link and a note of changes are required.
 
-**Access.** On 22 October 2026 `hdr.undp.org` reset or timed out every connection, both from this project's network and from an independent fetcher. The pipeline therefore tries UNDP's file first and, if UNDP does not answer, reads Our World in Data's republication of the same series (<https://ourworldindata.org/grapher/human-development-index>, column `hdi__sex_total`, cited by OWID as "UNDP, Human Development Report (2025) – with minor processing by Our World in Data", 1990–2023). The values are UNDP's, under UNDP's CC BY 3.0 IGO licence; the site credits UNDP and names the copy used. Our World in Data's own terms for republished third-party data could not be read on 22 October 2026 (its pages also reset the connection) and are to be confirmed before this copy is relied on.
+**Access.** On 22 October 2026 `hdr.undp.org` reset or timed out every connection, both from this project's network and from an independent fetcher. The pipeline therefore tries UNDP's file first and, if UNDP does not answer, reads Our World in Data's republication of the same series (<https://ourworldindata.org/grapher/human-development-index>, column `hdi__sex_total`, cited by OWID as "UNDP, Human Development Report (2025) – with minor processing by Our World in Data", 1990–2023). The values are UNDP's, under UNDP's CC BY 3.0 IGO licence; the site credits UNDP and names the copy used. Our World in Data's own terms for republished third-party data could not be read on 22 October 2026 (its pages also reset the connection) and remain to be confirmed; the owner accepted the copy on that basis (see [Decisions](#decisions)).
 
 ## 8. SIPRI military expenditure
 
@@ -145,17 +146,22 @@ That gives daily series for 22 of the 54 states. Every parity is checked against
 
 **Licence.** WDI's metadata gives these two series **"SIPRI terms and conditions"**, not CC BY: going through the World Bank does not change the terms. SIPRI defines fair use as excerpts "for non-commercial purposes; and the reproduction of less than 10 per cent of a published data set. NB: Both the above conditions must apply". Commercial use "must be authorized". SIPRI's data set covers about 170 countries from 1949; 54 states over a 10-year window is about 540 country-years, roughly 4% of it per series. See [Decisions](#decisions).
 
-## 9. Wikidata
+## 9. Leaders: Wikipedia and Wikidata
 
-**Provides.** Heads of state (`P35`) and government (`P6`) on each country item, with the offices (`P1906`, `P1313`), start dates and titles; election items with a date (`P585`) where one is recorded.
+**Provides.** Wikipedia's *List of current heads of state and government* (<https://en.wikipedia.org/wiki/List_of_current_heads_of_state_and_government>) gives each state's head of state and head of government with their titles. It colours the office that "constitutionally administer[s] the executive" green, and an office holding *de facto* executive power without a constitutional basis blue. It also marks acting, interim and transitional holders, and links each person's article. The page is protected against disruptive editing and was current to 21 October 2026 when read.
 
-**Licence.** "All structured data … is released into the public domain under Creative Commons Zero."
+**Wikidata.** Each person's Wikidata item is read from their article's page properties, and Wikidata's current head-of-state (`P35`) and head-of-government (`P6`) statements are compared with the list. On 22 October 2026 Wikidata alone was not reliable enough to lead: it kept former office holders without end dates (Ghana's former president as head of government, two presidents for Malawi), listed prime ministers that Benin and Zambia do not have, and lacked Guinea-Bissau's head of state and several new prime ministers. It is used as a cross-check, and its differences are listed in the review report.
 
-**Coverage.** Leaders: all 54. Elections: sparse. For example, *2027 Kenyan general election* (Q138325200) exists but has no date. Leader changes are flagged in the review report before they reach the site, since anyone can edit Wikidata.
+**Access.** `https://en.wikipedia.org/w/api.php?action=parse&page=…&prop=wikitext|revid`, no key; the revision read is recorded.
 
-## 10. Elections: official sources, IFES, EISA
+**Licence.** Who holds an office is a fact. The site shows names, titles and dates, and its own short notes; no Wikipedia prose is republished. The notes rest on quotes from the list (for example Somalia's disputed presidency), which every run re-checks. Wikipedia's text is CC BY-SA 4.0 and Wikidata is CC0; both are credited.
 
-- **Official sources** (electoral commissions, constitutions, official gazettes) and **Wikipedia** articles for scheduled elections: each country's next national election is curated with its source and the exact quote, which every run re-checks against the source's text, as for Dhahabu's notes. A date is a fact; only the short quote is reproduced.
+**Review.** Anyone can edit either source, so the site shows the snapshot the owner approved. Each weekly run lists every difference from it in `data/politics_review_report.md`, and nothing changes on the site until the difference is approved.
+
+## 10. Elections: Wikipedia, IFES, EISA
+
+- **Wikipedia's *List of next general elections*** (<https://en.wikipedia.org/wiki/List_of_next_general_elections>) gives, per state, the last and next legislative and presidential elections, each linked to its article. In its words, "In cases where the exact date is unspecified, the latest possible date is listed". So a month or year alone is a deadline, and is stored as its last day with its precision. "Next" without a date means none is set. The same approval applies as for leaders. Wikidata's election items were too sparse to use: its *2027 Kenyan general election* (Q138325200) has no date.
+- **Official sources** (electoral commissions, constitutions, gazettes) are cited where a curated note needs them; each note's quote is re-checked every run.
 - **IFES ElectionGuide** (<https://www.electionguide.org/p/use/>): "ElectionGuide data may be used freely for personal and non-commercial purposes", with attribution; the API and downloads need a registered token. Whether "personal" covers a public website is unclear, so it is not used unless IFES confirms in writing.
 - **EISA** (<https://www.eisa.org/terms-conditions>): users must not "Republish material from this website (including republication on another website)" or "conduct any systematic or automated data collection activities". Not used; it may be linked as further reading.
 
@@ -173,3 +179,4 @@ Decided by the owner on 22 October 2026:
 - **Elections:** curated from official sources with re-checked quotes. IFES ElectionGuide is not used unless IFES confirms in writing; EISA is not used.
 - **Inflation:** ranked by the mean absolute rate (closest to price stability), as in [vinara-method.md](vinara-method.md).
 - **GDP at PPP** is a ranked metric alongside GDP in US$.
+- **Human Development Index:** when UNDP's site does not answer, Our World in Data's copy of the same UNDP series is used, credited to UNDP with the copy named; every refresh tries UNDP's own file first.

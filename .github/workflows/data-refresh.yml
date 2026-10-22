@@ -74,6 +74,11 @@ jobs:
             echo "Not the first Monday of the month; the committed gold seeds are loaded as they are."
           fi
 
+      # Leaders and elections: changes are never approved here; they wait in
+      # data/politics_review_report.md until the owner approves them (politics --approve).
+      - name: Refresh leaders and elections (weekly)
+        run: uv run python -m pipelines politics --refresh
+
       # Vinara's indicators: projections and future years are refused, and validation failures
       # stop the run (see data/indicators_review_report.md).
       - name: Refresh Vinara indicators (monthly, or when run by hand)
@@ -91,7 +96,7 @@ jobs:
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "::warning::Upstream data changed the generated seeds; download the 'refreshed-data' artifact, review data/region_colors_report.md, data/mountains_review_report.md, data/gold_review_report.md and data/indicators_review_report.md, and commit the changes."
+            echo "::warning::Upstream data changed the generated seeds; download the 'refreshed-data' artifact, review data/region_colors_report.md, data/mountains_review_report.md, data/gold_review_report.md, data/indicators_review_report.md and data/politics_review_report.md, and commit the changes."
             git diff --stat -- db/seeds data
           fi
 
@@ -109,6 +114,7 @@ jobs:
             data/gold_review_report.md
             data/indicators_coverage_matrix.md
             data/indicators_review_report.md
+            data/politics_review_report.md
           retention-days: 30
 
       - name: Load into Neon

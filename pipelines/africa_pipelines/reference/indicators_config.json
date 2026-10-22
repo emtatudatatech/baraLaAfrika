@@ -13,7 +13,8 @@
     "url": "https://hdr.undp.org/sites/default/files/2025_HDR/HDR25_Composite_indices_complete_time_series.csv",
     "edition": "Human Development Report 2025",
     "fallback_url": "https://ourworldindata.org/grapher/human-development-index.csv?v=1&csvType=full&useColumnShortNames=true",
-    "fallback_column": "hdi__sex_total"
+    "fallback_column": "hdi__sex_total",
+    "fallback_accepted_on": "2026-10-22"
   },
   "ids": {
     "totals_url": "https://api.worldbank.org/v2/sources/6/series/{code}/country/{countries}/counterpart-area/WLD/time/{years}?format=json&per_page=20000",

@@ -19,6 +19,7 @@ from pipelines.africa_pipelines import (
     indicators,
     load,
     migrate,
+    politics,
     status,
 )
 from pipelines.cli import Command
@@ -132,6 +133,13 @@ ALL: list[Command] = [
         "creditor into seeds, with the coverage matrix and review report.",
         configure=indicators.configure,
         run=indicators.run,
+    ),
+    Command(
+        name="politics",
+        help="Read leaders and next elections (Wikipedia lists, Wikidata check) into a seed and "
+        "the review report; --approve records them as approved.",
+        configure=politics.configure,
+        run=politics.run,
     ),
     Command(
         name="load",

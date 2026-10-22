@@ -1,0 +1,85 @@
+{
+  "$comment": "Vinara's leaders and elections (docs/vinara-sources.md §9–10, docs/vinara-method.md 'Leaders and elections'). Leaders and elections are read from two Wikipedia lists each run; what the site shows is the snapshot approved in politics_approved.json, and any difference is reported for review first. `names` maps a country to its name in each list where it differs from ours. `executive_overrides` replaces the list's executive office where it names a body rather than a person. `elections.decides` overrides the rule for which election decides the executive (presidential where the executive president is elected; otherwise legislative); `none` means no national election is held. Every note carries the exact words it rests on, re-checked against the source each run.",
+  "sources": {
+    "leaders": {
+      "source_key": "wikipedia-current-leaders",
+      "title": "Wikipedia: List of current heads of state and government",
+      "page": "List of current heads of state and government"
+    },
+    "elections": {
+      "source_key": "wikipedia-next-elections",
+      "title": "Wikipedia: List of next general elections",
+      "page": "List of next general elections"
+    }
+  },
+  "api": "https://en.wikipedia.org/w/api.php?action=parse&page={page}&prop=wikitext|revid&format=json&formatversion=2",
+  "pageprops_api": "https://en.wikipedia.org/w/api.php?action=query&prop=pageprops&ppprop=wikibase_item&redirects=1&titles={titles}&format=json&formatversion=2",
+  "election_window_months": 12,
+  "names": {
+    "CPV": {"leaders": "Cape Verde", "elections": "Cape Verde"},
+    "CIV": {"leaders": "Ivory Coast", "elections": "Ivory Coast"},
+    "GMB": {"leaders": "Gambia", "elections": "Gambia"},
+    "STP": {"elections": "Sao Tome and Principe"}
+  },
+  "executive_overrides": {
+    "SDN": {
+      "title": "Chairman of the Transitional Sovereignty Council",
+      "person": "Abdel Fattah al-Burhan",
+      "article": "Abdel Fattah al-Burhan",
+      "role": "head_of_state",
+      "reason": "The list marks the Transitional Sovereignty Council, a collective body, as the executive; its chairman holds power.",
+      "quotes": [
+        "The Transitional Sovereignty Council is the collective head of state of Sudan",
+        "Chairman Abdel Fattah al-Burhan, who is also Commander-in-Chief of the Sudanese Armed Forces, has monopolized power."
+      ]
+    }
+  },
+  "elections": {
+    "ERI": {"decides": "none"}
+  },
+  "notes": {
+    "SOM": {
+      "text": "The presidency has been disputed since 15 May 2026: the opposition holds that President Hassan Sheikh Mohamud's term ended then; he holds that constitutional amendments extended it to 15 May 2027.",
+      "source": "leaders",
+      "quotes": [
+        "The presidency has been disputed since 15 May 2026, with Mohamud asserting that the constitutional amendments passed on 30 March 2024 extended his term as president until 15 May 2027."
+      ]
+    },
+    "LBY": {
+      "text": "Libya has rival authorities. Shown is the Government of National Unity; the Government of National Stability, with Khalifa Haftar's Libyan National Army, controls part of the country.",
+      "source": "leaders",
+      "quotes": [
+        "Supreme Commander of the Libyan National Army – Khalifa Haftar",
+        "These alternative governments control part of their territory"
+      ]
+    },
+    "SDN": {
+      "text": "Sudan's head of state is the Transitional Sovereignty Council, a collective body whose chairman holds power. The Rapid Support Forces' Government of Peace and Unity is a rival authority.",
+      "source": "leaders",
+      "quotes": [
+        "The Transitional Sovereignty Council is the collective head of state of Sudan",
+        "Government of Peace and Unity"
+      ]
+    },
+    "CPV": {
+      "text": "Janira Hopffer Almada is acting President.",
+      "source": "leaders",
+      "quotes": ["Acting President – Janira Hopffer Almada"]
+    },
+    "ERI": {
+      "text": "Eritrea holds no national elections.",
+      "source": "elections",
+      "quotes": ["One-party state, does not hold elections"]
+    },
+    "SWZ": {
+      "text": "Elections choose the parliament, which has very limited powers; the King holds executive power.",
+      "source": "elections",
+      "quotes": ["Absolute monarchy, parliament has very limited powers"]
+    },
+    "MAR": {
+      "text": "Elections choose the parliament and, through it, the head of government; the King holds executive power.",
+      "source": "leaders",
+      "quotes": ["King – Mohammed VI", "Prime Minister – Fatima Ezzahra El Mansouri"]
+    }
+  }
+}

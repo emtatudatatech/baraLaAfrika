@@ -221,9 +221,11 @@ describe('GET /api/coverage', () => {
       'mountains-geonames',
       'mountains-wikidata',
       'symbology-pdf',
+      'vinara-elections',
       'vinara-hdr',
       'vinara-ids',
       'vinara-imf-weo',
+      'vinara-leaders',
       'vinara-sipri',
       'vinara-wdi',
     ]);

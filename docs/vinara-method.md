@@ -78,14 +78,18 @@ A regional figure is shown only when the members with data account for at least 
 
 ## Leaders and elections
 
-- **Leader:** the person holding executive power, with their title (President, King, Prime Minister, Transitional President…). Where the head of state and the head of government are different people, both are shown, the executive one first (for example a ceremonial monarch and an elected prime minister).
-- **Next national election:** the next election that decides the executive: presidential where the president is directly elected, otherwise the legislative election.
+- **Leader:** the person holding executive power, with their title (President, King, Prime Minister, Transitional President…): the office the leaders list marks as constitutionally administering the executive. Where the head of state and the head of government are different people, both are shown, the executive one first (for example a ceremonial monarch and an elected prime minister).
+  - Acting, interim and transitional office holders, and the leaders of military transitions, are labelled **transitional**.
+  - A holder the list marks as exercising power without its constitutional basis is labelled **de facto**.
+  - Where the list names a collective body as the executive (Sudan's Transitional Sovereignty Council), its chairman is shown, with a note.
+- **Next national election:** the next election that decides the executive. That is the presidential election where the executive president is directly elected; otherwise (a prime minister holds executive power, or parliament elects the president) the legislative election. Where a king holds executive power (Morocco, Eswatini), the legislative election is shown, with a note that it does not choose the King. Eritrea holds no national elections.
 - **Election status:**
   - **Election within 12 months:** the election's date is within 12 months of today;
   - **No election within 12 months:** a date is set and is further away;
   - **No date set:** no election is scheduled (for example under a transitional government without a set date).
-  - When only the year is known, the election is taken to fall on 31 December of that year, and the date reads "2027 (date not set)".
+  - When only the month or the year is known, the source gives it as the latest possible date, so it is taken as the last day of that month or year: "by July 2031". A listed date that has passed before the source names the next one counts as no date set.
 - Status is computed from today's date each time it is shown.
+- **Review:** leaders and elections change, and their sources can be edited by anyone, so the site shows the records the owner approved, and every change waits in the review report until it is approved.
 
 ## Ranking
 

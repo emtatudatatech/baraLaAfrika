@@ -49,6 +49,10 @@ ignore = ["PLR0913", "PLR2004", "PLR0912", "PLR0915", "PLC0415"]
 "pipelines/tests/test_gold.py" = ["RUF001", "RUF003"]
 # The indicators reports use typographic dashes for year ranges on purpose.
 "pipelines/africa_pipelines/indicators_report.py" = ["RUF001"]
+# Wikipedia's leader lists separate an office from its holder with an en dash.
+"pipelines/africa_pipelines/politics*.py" = ["RUF001"]
+# Its fixtures are verbatim wikitext rows, which are long.
+"pipelines/tests/test_politics.py" = ["RUF001", "E501"]
 
 [tool.mypy]
 python_version = "3.15"

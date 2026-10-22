@@ -3,7 +3,7 @@
 Loads regions (with the approved region colours), countries, country profiles, sources,
 country↔source citations, flag palettes, map anchors, the Harim catalogue (ranges, mountains,
 their countries and sources, country low points), the Dhahabu gold tables, Vinara's annual
-indicators and public external debt by creditor, and dataset rows.
+indicators, public external debt by creditor, approved leaders and elections, and dataset rows.
 Idempotent: every upsert only touches rows whose values actually changed, so a second run reports
 zero changes. Each run is logged in `ingestion_runs` (one per dataset); on failure nothing is
 loaded and the runs are marked failed.
@@ -22,7 +22,7 @@ from typing import Any, LiteralString
 
 import psycopg
 
-from . import gold_load, harim_load, indicators_load
+from . import gold_load, harim_load, indicators_load, politics_load
 from .migrate import applied_checksums, discover, plan
 from .settings import SEEDS_DIR, require_env
 
@@ -79,6 +79,15 @@ def read_seeds(seeds_dir: Path, approval_path: Path = APPROVAL_PATH) -> dict[str
             + (gold["sources"] if gold else [])
         )
         harim_load.check_shared_sources({"sources": indicators["sources"]}, others)
+    politics = politics_load.read(seeds_dir)
+    if politics is not None:
+        others = (
+            sources["sources"]
+            + (harim["sources"] if harim else [])
+            + (gold["sources"] if gold else [])
+            + (indicators["sources"] if indicators else [])
+        )
+        harim_load.check_shared_sources({"sources": politics["sources"]}, others)
     return {
         "countries": countries,
         "sources": sources,
@@ -87,10 +96,12 @@ def read_seeds(seeds_dir: Path, approval_path: Path = APPROVAL_PATH) -> dict[str
         + ([boundaries["dataset"]] if boundaries else [])
         + (harim["datasets"] if harim else [])
         + (gold["datasets"] if gold else [])
-        + (indicators["datasets"] if indicators else []),
+        + (indicators["datasets"] if indicators else [])
+        + (politics["datasets"] if politics else []),
         "harim": harim,
         "gold": gold,
         "indicators": indicators,
+        "politics": politics,
         "flags": flags,
         "boundaries": boundaries,
         "approval": approval,
@@ -409,6 +420,8 @@ def load(conn: psycopg.Connection[Any], seeds_dir: Path = SEEDS_DIR) -> LoadResu
                 gold_load.load(cur, seeds["gold"], result.add)
             if seeds["indicators"] is not None:
                 indicators_load.load(cur, seeds["indicators"], result.add)
+            if seeds["politics"] is not None:
+                politics_load.load(cur, seeds["politics"], result.add, result.warnings.append)
             harim_changes = sum(
                 result.changes.get(t, 0)
                 for t in ("mountain_ranges", "mountains", "mountain_countries",
@@ -437,6 +450,10 @@ def load(conn: psycopg.Connection[Any], seeds_dir: Path = SEEDS_DIR) -> LoadResu
                 **{
                     key: sum(result.changes.get(t, 0) for t in tables)
                     for key, tables in indicators_load.DATASET_TABLES.items()
+                },
+                **{
+                    key: sum(result.changes.get(t, 0) for t in tables)
+                    for key, tables in politics_load.DATASET_TABLES.items()
                 },
             }
             for key, run_id in run_ids.items():

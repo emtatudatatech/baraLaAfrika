@@ -79,6 +79,25 @@ describe('schema', () => {
   });
 });
 
+describe('election_status()', () => {
+  it('counts 12 months from today; a missing or passed date is "no date set"', async () => {
+    const db = await migratedDb();
+    const result = await db.query<{ s: string[] }>(`
+      SELECT array[
+        election_status('2027-10-22', '2026-10-22'),
+        election_status('2027-10-23', '2026-10-22'),
+        election_status(NULL, '2026-10-22'),
+        election_status('2026-10-01', '2026-10-22')
+      ] AS s`);
+    expect(result.rows[0]?.s).toEqual([
+      'within_12_months',
+      'beyond_12_months',
+      'no_date_set',
+      'no_date_set',
+    ]);
+  });
+});
+
 describe('committed seeds', () => {
   it('load into the schema: 54 countries with profiles and citations', async () => {
     const db = await seededDb();
@@ -131,6 +150,14 @@ describe('committed seeds', () => {
       SELECT count(DISTINCT o.country_id)::int AS n FROM indicator_observations o
       JOIN indicators i ON i.id = o.indicator_id WHERE i.key = 'population'`);
     expect(population.rows[0]?.n).toBe(54);
+  });
+
+  it('load one executive leader and one election record per country', async () => {
+    const db = await seededDb();
+    const counts = await db.query<{ executives: number; elections: number }>(`
+      SELECT (SELECT count(*)::int FROM country_leaders WHERE is_executive) AS executives,
+             (SELECT count(*)::int FROM country_elections) AS elections`);
+    expect(counts.rows[0]).toEqual({ executives: 54, elections: 54 });
   });
 
   it('fold accents for search', async () => {

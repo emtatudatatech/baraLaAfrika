@@ -46,16 +46,16 @@ async function errorOf(response: Response): Promise<{ code: string; message: str
 }
 
 describe('GET /api/regions', () => {
-  it('returns the five regions in document order with approved colours and counts', async () => {
+  it('returns the five M49 regions in order with approved colours and counts', async () => {
     const response = await call(regions, '/api/regions');
     expect(response.status).toBe(200);
     const body = RegionsResponseSchema.parse(await response.json());
     expect(body.regions.map((r) => [r.slug, r.countryCount, r.colorHex])).toEqual([
       ['north', 6, '#c1272d'],
-      ['west', 15, '#009e49'],
+      ['west', 16, '#55d27a'],
       ['central', 9, '#fcd116'],
-      ['east', 16, '#418fde'],
-      ['southern', 8, '#001489'],
+      ['east', 18, '#006600'],
+      ['southern', 5, '#6da9d2'],
     ]);
   });
 });
@@ -70,7 +70,7 @@ describe('GET /api/countries', () => {
     const kenya = body.countries.find((c) => c.iso3 === 'KEN');
     expect(kenya).toMatchObject({
       name: 'Kenya',
-      region: { slug: 'east', colorHex: '#418fde' },
+      region: { slug: 'east', colorHex: '#006600' },
       flag: {
         svgUrl: 'https://flagcdn.com/ke.svg',
         pngUrlTemplate: 'https://flagcdn.com/w{width}/ke.png',
@@ -84,7 +84,7 @@ describe('GET /api/countries', () => {
     const body = CountriesResponseSchema.parse(
       await (await call(countries, '/api/countries?region=north')).json(),
     );
-    expect(body.countries.map((c) => c.iso3)).toEqual(['DZA', 'EGY', 'LBY', 'MRT', 'MAR', 'TUN']);
+    expect(body.countries.map((c) => c.iso3)).toEqual(['DZA', 'EGY', 'LBY', 'MAR', 'SDN', 'TUN']);
   });
 
   it('searches without accents and by ISO code', async () => {

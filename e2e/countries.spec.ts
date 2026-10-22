@@ -47,16 +47,16 @@ test('region chips filter the list and update the URL', async ({ page, isMobile 
   const list = await openCountries(page, isMobile);
   const east = page
     .getByRole('group', { name: 'Region' })
-    .getByRole('button', { name: /East Africa/ });
+    .getByRole('button', { name: /Eastern Africa/ });
   await east.click();
   await expect(page).toHaveURL(/\/countries\?region=east$/);
   await expect(east).toHaveAttribute('aria-pressed', 'true');
-  await expect(list).toHaveCount(16);
+  await expect(list).toHaveCount(18);
   await expect(
-    page.getByRole('status').filter({ hasText: 'Showing 16 of 54 countries' }),
+    page.getByRole('status').filter({ hasText: 'Showing 18 of 54 countries' }),
   ).toBeVisible();
-  // Every remaining row or card carries the East Africa chip.
-  await expect(list.filter({ hasText: 'East Africa' })).toHaveCount(16);
+  // Every remaining row or card carries the Eastern Africa chip.
+  await expect(list.filter({ hasText: 'Eastern Africa' })).toHaveCount(18);
   await page.getByRole('button', { name: /^All/ }).click();
   await expect(page).toHaveURL(/\/countries$/);
   await expect(list).toHaveCount(54);
@@ -84,7 +84,7 @@ test('search ignores accents, updates the URL, and shows an empty state', async 
 test('a shared URL restores region, search and sort', async ({ page, isMobile }) => {
   const list = await openCountries(page, isMobile, '?region=west&q=gu&sort=-name');
   await expect(
-    page.getByRole('group', { name: 'Region' }).getByRole('button', { name: /West Africa/ }),
+    page.getByRole('group', { name: 'Region' }).getByRole('button', { name: /Western Africa/ }),
   ).toHaveAttribute('aria-pressed', 'true');
   await expect(page.getByRole('searchbox', { name: 'Search countries' })).toHaveValue('gu');
   const shown = await names(list);
@@ -137,7 +137,7 @@ test('column headers sort the table and update the URL', async ({ page, isMobile
     );
     return [regions[0], regions.at(-1)];
   };
-  await expect.poll(regionEnds).toEqual(['North Africa', 'Southern Africa']);
+  await expect.poll(regionEnds).toEqual(['Northern Africa', 'Southern Africa']);
 });
 
 test('phones sort with the Sort by menu', async ({ page, isMobile }) => {

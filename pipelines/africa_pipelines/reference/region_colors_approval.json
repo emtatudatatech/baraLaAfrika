@@ -1,12 +1,26 @@
 {
-  "$comment": "Region identity colours approved by the project owner. `load` writes these to regions.color_hex. If a later `flags` run computes different colours, these approved colours stay in use and the report flags the difference until a new approval is recorded here.",
-  "approved_on": "2026-10-15",
+  "$comment": "Region identity colours approved by the project owner. `computed` is the `flags` result that was approved; `colors` are the colours `load` writes to regions.color_hex, which equal `computed` except for any owner `adjustments` (each with its reason). If a later `flags` run computes different colours, these approved colours stay in use and the report flags the difference until a new approval is recorded here.",
+  "approved_on": "2026-10-22",
   "selected": "strict",
-  "colors": {
+  "computed": {
     "north": "#c1272d",
     "west": "#009e49",
     "central": "#fcd116",
-    "east": "#418fde",
-    "southern": "#001489"
+    "east": "#006600",
+    "southern": "#6da9d2"
+  },
+  "colors": {
+    "north": "#c1272d",
+    "west": "#55d27a",
+    "central": "#fcd116",
+    "east": "#006600",
+    "southern": "#6da9d2"
+  },
+  "adjustments": {
+    "west": {
+      "from": "#009e49",
+      "to": "#55d27a",
+      "reason": "Lightened on the owner's instruction (2026-10-22) so Western Africa stands apart from Eastern Africa's green: same OKLCH hue and chroma, lightness 0.61 to 0.77. CIEDE2000 to Eastern Africa rises from 20.4 to 36.4 (at least 33.4 to every region); simulated colour-vision-deficiency difference at least 10.8; contrast 1.69:1 on the light page."
+    }
   }
 }

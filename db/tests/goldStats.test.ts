@@ -23,7 +23,7 @@ interface StatRow {
 async function fixture(): Promise<PGlite> {
   const db = await migratedDb();
   await db.exec(`
-    INSERT INTO regions (slug, name, sort_order) VALUES ('west', 'West Africa', 1), ('east', 'East Africa', 2);
+    INSERT INTO regions (slug, name, sort_order) VALUES ('west', 'Western Africa', 1), ('east', 'Eastern Africa', 2);
     INSERT INTO countries (iso2, iso3, iso_numeric, name, region_id, flag_url_template)
     SELECT v.iso2, v.iso3, v.num, v.name, r.id, 'https://flagcdn.com/w{width}/' || lower(v.iso2) || '.png'
     FROM (VALUES ('AA', 'AAA', 1, 'Aland', 'west'), ('BB', 'BBB', 2, 'Bland', 'west'),
@@ -277,7 +277,7 @@ describe('the price effect (gold_price_effect, gold_holdings_change and card 11)
     expect(detail.changeUsd).toBe(Math.round(k * (12 * 2500 - 10 * 2000)));
     expect(detail.priceEffectUsd + detail.volumeEffectUsd).toBe(detail.changeUsd);
     expect(detail.tonnesChange).toBe(1);
-    // Nothing to measure in East Africa (DDD's report is its only one).
+    // Nothing to measure in Eastern Africa (DDD's report is its only one).
     const east = (await stats(db, 'east')).price_effect;
     expect(east?.value).toBeNull();
     expect(east?.as_of).toBeNull();

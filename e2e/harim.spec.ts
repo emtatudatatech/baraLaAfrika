@@ -147,10 +147,10 @@ test('region chips and search filter the table and update the URL', async ({ pag
   const items = countryItems(page, isMobile);
   const east = page
     .getByRole('group', { name: 'Region' })
-    .getByRole('button', { name: /East Africa/ });
+    .getByRole('button', { name: /Eastern Africa/ });
   await east.click();
   await expect(page).toHaveURL(/\/harim\?region=east$/);
-  await expect(items).toHaveCount(16);
+  await expect(items).toHaveCount(18);
   await page.getByRole('searchbox', { name: 'Search mountains' }).fill('rwenzori');
   await expect(page).toHaveURL(/region=east&q=rwenzori/);
   await expect(items).toHaveCount(1);
@@ -183,7 +183,7 @@ test('All peaks filters by region and minimum height, kept in the URL', async ({
   expect(high).toBeLessThan(all);
   await page
     .getByRole('group', { name: 'Region' })
-    .getByRole('button', { name: /North Africa/ })
+    .getByRole('button', { name: /Northern Africa/ })
     .click();
   await expect(page).toHaveURL(/region=north/);
   await expect(items.first()).toContainText('Jbel Toubkal');

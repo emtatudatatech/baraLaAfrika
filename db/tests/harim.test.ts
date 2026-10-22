@@ -49,7 +49,7 @@ describe('Harim schema rules', () => {
     await db.exec(`
       INSERT INTO sources (source_key, title, url, source_type, reliability_tier)
       VALUES ('test', 'Test', 'https://example.test', 'test', 'reference');
-      INSERT INTO regions (slug, name, sort_order) VALUES ('east', 'East Africa', 4);
+      INSERT INTO regions (slug, name, sort_order) VALUES ('east', 'Eastern Africa', 4);
       INSERT INTO countries (iso2, iso3, iso_numeric, name, region_id, flag_url_template)
       SELECT 'TZ', 'TZA', 834, 'Tanzania', id, 'https://flagcdn.com/w{width}/tz.png'
       FROM regions WHERE slug = 'east';`);

@@ -26,7 +26,7 @@ from typing import Any
 import numpy as np
 
 from . import http
-from .flags_report import write_report
+from .flags_report import approved_computation, write_report
 from .region_colors import (
     FlagPalette,
     Params,
@@ -208,7 +208,9 @@ def seed_payload(
     computed = {r: c.hex for r, c in chosen.picks.items()}
     approval = load_approval()
     approved = (
-        approval is not None and approval["selected"] == selected and approval["colors"] == computed
+        approval is not None
+        and approval["selected"] == selected
+        and approved_computation(approval) == computed
     )
     return {
         "dataset": {

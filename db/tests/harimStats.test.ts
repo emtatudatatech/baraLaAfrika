@@ -29,8 +29,8 @@ async function fixture(): Promise<PGlite> {
   await db.exec(`
     INSERT INTO sources (source_key, title, url, source_type, reliability_tier)
       VALUES ('s', 'S', 'https://s.test', 'test', 'reference');
-    INSERT INTO regions (slug, name, sort_order) VALUES ('east', 'East Africa', 4),
-      ('north', 'North Africa', 1);
+    INSERT INTO regions (slug, name, sort_order) VALUES ('east', 'Eastern Africa', 4),
+      ('north', 'Northern Africa', 1);
     INSERT INTO countries (iso2, iso3, iso_numeric, name, region_id, flag_url_template)
       SELECT v.iso2, v.iso3, v.num, v.name, r.id, 'https://flagcdn.com/w{width}/x.png'
       FROM (VALUES ('AA', 'AAA', 1, 'Alpha', 'east'), ('BB', 'BBB', 2, 'Beta', 'east'),
@@ -226,7 +226,7 @@ describe('v_harim_stats', () => {
   it('recomputes for a region, and shows 0 (not an error) when a region has no volcanoes', async () => {
     const north = await stats(db, 'north');
     expect(all.lowest_point?.label).toBe('Lowest point in Africa');
-    expect(north.lowest_point?.label).toBe('Lowest point in North Africa');
+    expect(north.lowest_point?.label).toBe('Lowest point in Northern Africa');
     expect(Number(north.mountains_catalogued?.value)).toBe(1);
     expect(north.mountains_catalogued?.detail).toEqual({ countries: 1, territoryPeaks: 0 });
     expect(Number(north.volcanic_mountains?.value)).toBe(0);

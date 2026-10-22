@@ -87,10 +87,10 @@ describe('committed seeds', () => {
       JOIN regions r ON r.id = c.region_id GROUP BY r.slug`);
     expect(Object.fromEntries(counts.rows.map((r) => [r.region, r.n]))).toEqual({
       north: 6,
-      west: 15,
+      west: 16,
       central: 9,
-      east: 16,
-      southern: 8,
+      east: 18,
+      southern: 5,
     });
     const profiles = await db.query<{ n: number }>(
       'SELECT count(*)::int AS n FROM country_profiles',

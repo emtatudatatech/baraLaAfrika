@@ -15,7 +15,7 @@ Every terms page was read on **22 October 2026**, and every endpoint below was t
 | Source | Used for | Access | Licence (as read) | Status |
 |---|---|---|---|---|
 | [UN M49 standard](#1-un-m49-regions) | The five regions and their members | Web page (no download) | UN site terms: personal, non-commercial | ✅ Used as a cited classification (see the decision) |
-| [World Bank WDI](#2-world-bank-world-development-indicators-wdi) | Population, land and surface area, GDP, real growth, inflation, GNI, GDP per capita (PPP), population growth | REST API, no key | CC BY 4.0 (per indicator) | ✅ Primary for every annual series except debt |
+| [World Bank WDI](#2-world-bank-world-development-indicators-wdi) | Population, land and surface area, GDP, GDP at purchasing power parity (PPP), real growth, inflation, GNI, GDP per capita (PPP), population growth | REST API, no key | CC BY 4.0 (per indicator) | ✅ Primary for every annual series except debt |
 | [IMF World Economic Outlook](#3-imf-world-economic-outlook-weo) | Government gross debt (% of GDP); the latest year where WDI has none | SDMX 3.0 API, no key | IMF data terms | ✅ Debt; recent-year estimates only, labelled; projections never |
 | [IMF Exchange Rates (ER)](#4-imf-exchange-rates-er) | Monthly exchange rates for all 54 | SDMX 3.0 API, no key | IMF data terms | ✅ Primary FX series; stale for 5 countries |
 | [ECB euro reference rates](#5-ecb-euro-foreign-exchange-reference-rates) | Daily rates for euro-pegged, rand-linked and dollar-pegged currencies | Data Portal API, no key | Free reuse, source quoted, not modified (*paraphrased*) | ✅ Daily series for 22 countries |
@@ -59,6 +59,7 @@ Every terms page was read on **22 October 2026**, and every endpoint below was t
 | Land area (km²) | `AG.LND.TOTL.K2` | 2024 (all 54) |
 | Surface area (km², land and inland water) | `AG.SRF.TOTL.K2` | 2024 |
 | GDP (current US$) | `NY.GDP.MKTP.CD` | 2025 for 52; Eritrea 2011, South Sudan 2015 |
+| GDP, PPP (current international $) | `NY.GDP.MKTP.PP.CD` | 2025 for 52; Eritrea 2011, South Sudan 2015 |
 | Real GDP growth (%) | `NY.GDP.MKTP.KD.ZG` | 2025 for 52 |
 | Inflation, consumer prices (%) | `FP.CPI.TOTL.ZG` | 2025 for 45; older or none for the rest |
 | GNI (current US$) | `NY.GNP.MKTP.CD` | 2025 |
@@ -156,13 +157,11 @@ Not used. Yahoo publishes no documented Yahoo Finance API; libraries call undocu
 
 ## Decisions
 
-Decided by the owner, 22 October 2026:
-- **Regions:** the whole site uses the UN M49 regions (all 54 states have one).
+Decided by the owner on 22 October 2026:
+- **Regions:** the whole site uses the UN M49 regions (all 54 states have one). Each country's region is stated with a citation to M49; the M49 table itself is not republished. The display names are M49's, except **Central Africa (M49: Middle Africa)**.
 - **FX:** official sources only: IMF monthly rates as the published series for all 54, and daily rates where an official, licensed daily source exists (the ECB-derived rates above). Yahoo Finance is not used.
-- **Military spending:** included if its terms allow; the World Bank route does not change SIPRI's terms (section 8).
-
-Open, for the owner (recommendations in **bold**):
-1. **M49 classification:** **state each country's region with a citation to M49, without republishing the M49 table** (above); optionally ask statistics@un.org to confirm.
-2. **Military spending:** **include it under SIPRI's fair use**: a non-commercial site, 54 states and at most 10 years shown or exported (about 4% of the data set), a clear SIPRI reference on every view and export. If the site ever becomes commercial, it must be removed or licensed.
-3. **Stale exchange rates** (Somalia, Guinea, Sudan, Sierra Leone, Mauritania): **look for official central-bank series with open terms**; where none exists, show the IMF series up to its last month, marked stale, and leave the country out of FX rankings for windows it does not cover.
-4. **IFES ElectionGuide:** **not used**; the owner may ask IFES for written confirmation, after which it could be a cross-check.
+- **Stale exchange rates** (Somalia, Guinea, Sudan, Sierra Leone, Mauritania): official central-bank series with open terms are sought; where none exists, the IMF series is shown to its last month, marked stale, and the country is left out of FX rankings for windows it does not cover.
+- **Military spending:** included under SIPRI's fair use. The site is non-commercial; at most 54 states over 10 years are shown or exported (about 4% of the data set); SIPRI is referenced on every view and export. If the site ever becomes commercial, the series must be licensed or removed.
+- **Elections:** curated from official sources with re-checked quotes. IFES ElectionGuide is not used unless IFES confirms in writing; EISA is not used.
+- **Inflation:** ranked by the mean absolute rate (closest to price stability), as in [vinara-method.md](vinara-method.md).
+- **GDP at PPP** is a ranked metric alongside GDP in US$.

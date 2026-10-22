@@ -23,6 +23,7 @@ Every rule here is computed in the database, not in the browser, and the definit
 | Population | Latest population | Largest |
 | Land area | Land area (km², excluding inland water) | Largest |
 | GDP | Latest GDP, current US$ | Largest |
+| GDP at purchasing power parity | Latest GDP, PPP (current international $) | Largest |
 | GDP per capita | Latest GDP per capita, PPP (international $) | Largest |
 | Real GDP growth | Mean annual real growth over the window | Highest |
 | Inflation | Mean of the absolute annual inflation rate over the window (closest to price stability) | Lowest |
@@ -57,7 +58,7 @@ Population growth, the election calendar and external debt by creditor are shown
 
 The signal is descriptive: it reports what happened in the last three years of the window and never projects a crossover.
 
-- **Gap closing** for level metrics (population, area, GDP, GDP per capita, GNI, military spending, HDI, debt): the gap between cardinal and contender narrowed in each of the last three annual steps.
+- **Gap closing** for level metrics (population, area, GDP, GDP at PPP, GDP per capita, GNI, military spending, HDI, debt): the gap between cardinal and contender narrowed in each of the last three annual steps.
 - **Gap closing** for rate metrics (growth, inflation, currency performance and stability): the contender did better than the cardinal in at least two of the last three years.
 - Otherwise **Lead holding**. With fewer than three years of data for either country: **Not enough data**.
 - The contender may already lead in the latest year while the window still ranks the cardinal first: the page then says so in words.
@@ -66,7 +67,7 @@ The signal is descriptive: it reports what happened in the last three years of t
 
 | Metric | Regional figure |
 |---|---|
-| Population, land area, GDP, GNI, military spending | Sum over member states |
+| Population, land area, GDP, GDP at PPP, GNI, military spending | Sum over member states |
 | GDP per capita | Total GDP (PPP) over total population |
 | Real growth, inflation | GDP-weighted mean (weights: GDP in current US$ in the previous year), shown with the median |
 | Government debt | GDP-weighted mean |

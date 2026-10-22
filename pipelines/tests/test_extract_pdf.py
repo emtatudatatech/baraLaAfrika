@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from collections import Counter
 from pathlib import Path
 
 import pytest
@@ -20,7 +21,7 @@ def by_iso3(extraction: Extraction, iso3: str) -> extract_pdf.CountryRecord:
     return next(c for c in extraction.countries if c.iso3 == iso3)
 
 
-def test_validation_passes_with_54_countries_in_document_regions(extraction: Extraction) -> None:
+def test_validation_passes_with_54_countries_in_m49_regions(extraction: Extraction) -> None:
     assert len(extraction.countries) == 54
     counts = dict.fromkeys(extract_pdf.EXPECTED_REGION_COUNTS, 0)
     for country in extraction.countries:
@@ -35,12 +36,33 @@ def test_validation_passes_with_54_countries_in_document_regions(extraction: Ext
     ]
 
 
-def test_regions_follow_the_document_not_the_un_geoscheme(extraction: Extraction) -> None:
+def test_regions_follow_un_m49_not_the_document(extraction: Extraction) -> None:
     regions = {c.iso3: c.region for c in extraction.countries}
-    assert regions["MRT"] == "north"
-    assert regions["SDN"] == "east"
+    # The five states the research document groups differently.
+    assert regions["MRT"] == "west"
+    assert regions["SDN"] == "north"
+    assert regions["MOZ"] == "east"
+    assert regions["ZMB"] == "east"
+    assert regions["ZWE"] == "east"
+    # M49's Middle Africa, shown as Central Africa.
     assert regions["TCD"] == "central"
     assert regions["AGO"] == "central"
+    names = {r["slug"]: r["name"] for r in extraction.regions}
+    assert names == {
+        "north": "Northern Africa",
+        "west": "Western Africa",
+        "central": "Central Africa",
+        "east": "Eastern Africa",
+        "southern": "Southern Africa",
+    }
+
+
+def test_document_grouping_still_matches_the_pdf_headings() -> None:
+    states = json.loads(extract_pdf.STATES_FILE.read_text(encoding="utf-8"))
+    counts = Counter(extract_pdf.document_region(c) for c in states["countries"])
+    assert dict(counts) == extract_pdf.DOCUMENT_REGION_COUNTS
+    moved = {c["iso3"] for c in states["countries"] if "document_region" in c}
+    assert moved == {"MRT", "SDN", "MOZ", "ZMB", "ZWE"}
 
 
 def test_every_country_has_all_summary_fields(extraction: Extraction) -> None:

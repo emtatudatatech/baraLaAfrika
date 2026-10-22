@@ -15,7 +15,7 @@ describe('gold schema', () => {
   beforeAll(async () => {
     db = await migratedDb();
     await db.exec(`
-      INSERT INTO regions (slug, name, sort_order) VALUES ('west', 'West Africa', 1);
+      INSERT INTO regions (slug, name, sort_order) VALUES ('west', 'Western Africa', 1);
       INSERT INTO countries (iso2, iso3, iso_numeric, name, region_id, flag_url_template)
         SELECT 'GH', 'GHA', 288, 'Ghana', id, 'https://flagcdn.com/w{width}/gh.png' FROM regions;
       INSERT INTO countries (iso2, iso3, iso_numeric, name, region_id, flag_url_template)

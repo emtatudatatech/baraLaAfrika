@@ -30,7 +30,7 @@ test('By range lists range cards, filterable, searchable and sortable', async ({
   ).toBe(true);
   await page
     .getByRole('group', { name: 'Region' })
-    .getByRole('button', { name: /North Africa/ })
+    .getByRole('button', { name: /Northern Africa/ })
     .click();
   await expect(page.locator('[data-slug="high-atlas"]')).toBeVisible();
   await expect(page.locator('[data-slug="rwenzori"]')).toHaveCount(0);

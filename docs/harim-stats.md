@@ -71,7 +71,7 @@ The cards at the top of `/harim` (spec 7.5.1). Every value is computed in the da
 
 ### 8. Lowest point in Africa (`lowest_point`)
 
-For a region the label names it ("Lowest point in East Africa").
+For a region the label names it ("Lowest point in Eastern Africa").
 
 **Definition.** The lowest of the countries' lowest points; negative values are below sea level. Ties are all listed.
 

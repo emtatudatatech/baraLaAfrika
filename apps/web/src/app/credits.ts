@@ -21,6 +21,12 @@ export const CREDITS: readonly Credit[] = [
     licence: 'Public domain',
     note: 'Country boundaries (admin-0, 1:50m)',
   },
+  {
+    name: 'UN M49 standard',
+    href: 'https://unstats.un.org/unsd/methodology/m49/',
+    licence: 'Cited classification; the table is not republished',
+    note: 'The five regions (Middle Africa is shown as Central Africa)',
+  },
   { name: 'Flagpedia', href: 'https://flagpedia.net/', licence: 'Flag images via flagcdn.com' },
   {
     name: 'Material Symbols',

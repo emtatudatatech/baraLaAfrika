@@ -13,7 +13,7 @@ function row(change: Partial<GoldCountry> = {}): GoldCountry {
       iso3: 'XXX',
       iso2: 'xx',
       name: 'Testland',
-      region: { slug: 'west', name: 'West Africa', colorHex: null },
+      region: { slug: 'west', name: 'Western Africa', colorHex: null },
     } as GoldCountry['country'],
     presence: {
       tier: 'producer',

@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -11,13 +14,16 @@ import {
   oklchToHex,
 } from './colour';
 
-const APPROVED = {
-  north: '#c1272d',
-  west: '#009e49',
-  central: '#fcd116',
-  east: '#418fde',
-  southern: '#001489',
-};
+// The approved region colours (Vitest runs from the repo root), so the checks below cover the
+// palette the site uses.
+const APPROVED = (
+  JSON.parse(
+    readFileSync(
+      resolve(process.cwd(), 'pipelines/africa_pipelines/reference/region_colors_approval.json'),
+      'utf8',
+    ),
+  ) as { colors: Record<string, string> }
+).colors;
 
 describe('colour helpers', () => {
   it('round-trips OKLCH', () => {
@@ -60,6 +66,6 @@ describe('darkThemePalette', () => {
 
   it('leaves colours that already pass unchanged', () => {
     expect(dark.central).toBe('#fcd116');
-    expect(dark.west).toBe('#009e49');
+    expect(dark.west).toBe('#55d27a');
   });
 });

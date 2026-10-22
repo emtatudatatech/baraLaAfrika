@@ -70,7 +70,7 @@ test('the region filter applies to the map and zooms to the region', async ({ pa
   await expect(onMap(page, 'jbel-toubkal')).toBeAttached();
   await page
     .getByRole('group', { name: 'Region' })
-    .getByRole('button', { name: /East Africa/ })
+    .getByRole('button', { name: /Eastern Africa/ })
     .click();
   await expect(onMap(page, 'jbel-toubkal')).toHaveCount(0);
   await expect.poll(() => zoomOf(page)).toBeGreaterThan(1);
@@ -234,11 +234,11 @@ test('the chart shows the highest peak of every country, sortable and filtered b
   await expect(bars.first()).toHaveAttribute('data-iso3', 'DZA');
   await page
     .getByRole('group', { name: 'Region' })
-    .getByRole('button', { name: /East Africa/ })
+    .getByRole('button', { name: /Eastern Africa/ })
     .click();
-  await expect(bars).toHaveCount(16);
+  await expect(bars).toHaveCount(18);
   await chart.getByText('Show the data as a table').click();
-  await expect(chart.getByTestId('harim-chart-table').locator('tbody tr')).toHaveCount(16);
+  await expect(chart.getByTestId('harim-chart-table').locator('tbody tr')).toHaveCount(18);
   await bars.first().dispatchEvent('click');
   await expect(chart.getByTestId('harim-chart-tooltip')).toBeVisible();
 });

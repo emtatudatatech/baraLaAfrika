@@ -4,7 +4,7 @@
 
 | Section | Route | What it shows |
 |---|---|---|
-| Home | `/` | Interactive Equal Earth map of Africa, countries coloured by region |
+| Home | `/` | Interactive Equal Earth map of Africa, countries coloured by their UN M49 region |
 | Countries | `/countries` | All 54 states: the meaning of their names, flags, national symbols and national animals (from the project's research document) |
 | **Harim** | `/harim` | Africa's mountains and their heights, country by country, with ranges, peak pages and exports |
 | **Dhahabu** | `/dhahabu` | Gold in Africa: where it is found, how much is mined and traded, and how much central banks hold |
@@ -134,7 +134,7 @@ The pipelines run from the repo root (`uv run python -m pipelines --help`); see 
 | Step | Command | What it does |
 |---|---|---|
 | 1 | `uv run python -m pipelines migrate` | Applies `db/migrations/*.sql` in order (checksummed; an applied file that was edited is an error) and grants `SELECT` to `bla_reader` |
-| 2 | `uv run python -m pipelines extract-pdf` | Research PDF → `db/seeds/{countries,sources,datasets}.json` and `data/review_report.md`, with loud validation (54 countries; region counts 6/15/9/16/8; unique ISO codes; every summary field present; no stray citation digits) |
+| 2 | `uv run python -m pipelines extract-pdf` | Research PDF → `db/seeds/{countries,sources,datasets}.json` and `data/review_report.md`, with loud validation (54 countries; UN M49 region counts 6/16/9/18/5; the PDF's own headings checked against the document's grouping; unique ISO codes; every summary field present; no stray citation digits) |
 | 3 | `uv run python -m pipelines flags` | Downloads the 54 flag SVGs from flagcdn.com (cached in `data/raw/flags/`, copied to `apps/web/public/flags/` as the offline fallback), computes each flag's palette and each region's colour, and writes `db/seeds/flags.json` and `data/region_colors_report.md` |
 | 4 | `uv run python -m pipelines boundaries` | Natural Earth 4.1.0 (1:50m, via world-atlas 2.0.2) → `apps/web/public/geo/africa.topo.json` (the 54 countries, Somaliland tagged as Somalia, Western Sahara as disputed) and `africa-context.topo.json` (neighbouring land, loaded after the countries); computes each country's area on the equal-area Equal Earth projection, a map anchor and whether it needs a circle marker; writes `db/seeds/boundaries.json` and `data/boundaries_report.md` |
 | 5 | `uv run python -m pipelines mountains` | Builds the Harim catalogue (see [Mountain data](#mountain-data-harim)) → `db/seeds/{mountains,mountain_ranges,country_low_points}.json` and `data/mountains_review_report.md` |
@@ -196,9 +196,9 @@ The pipelines run from the repo root (`uv run python -m pipelines --help`); see 
 
 Each region's identity colour is the **mode colour across its flags**: flags are rasterised, clustered into at most 8 colours in CIELAB, merged across flags (CIEDE2000 < 10) and summed per region; white, black and grey are excluded by default, and near-identical picks are resolved by giving the colour to the region where it has the larger share. Anti-aliasing blends at stripe edges are folded back into the real flag colours first. Every parameter is a command-line option (`python -m pipelines flags --help`), and `--include-neutrals` switches which result is selected (both are always reported).
 
-`data/region_colors_report.md` shows the picks with swatches, the top five candidates per region, every uniqueness decision, both results, per-flag palettes and automated checks (distinctness, colour-vision-deficiency simulation, contrast against the light and dark page). Colours are never adjusted by hand.
+`data/region_colors_report.md` shows the picks with swatches, the top five candidates per region, every uniqueness decision, both results, per-flag palettes and automated checks (distinctness, colour-vision-deficiency simulation, contrast against the light and dark page). Colours are never adjusted by hand in the computation; an adjustment the owner approves is recorded with its reason in the approval file.
 
-**Approval.** The approved colours (2026-10-15: North `#c1272d`, West `#009e49`, Central `#fcd116`, East `#418fde`, Southern `#001489`) are recorded in `pipelines/africa_pipelines/reference/region_colors_approval.json`, and `load` writes **only** those to `regions.color_hex`. If a later `flags` run computes different colours, the approved ones stay in use and the report says the computation differs, until a new approval is recorded there.
+**Approval.** The approved colours (2026-10-22: Northern `#c1272d`, Western `#55d27a`, Central `#fcd116`, Eastern `#006600`, Southern `#6da9d2`) are recorded in `pipelines/africa_pipelines/reference/region_colors_approval.json`, and `load` writes **only** those to `regions.color_hex`. The file keeps the approved computation separately from the colours in use: Western Africa's computed `#009e49` is lightened to `#55d27a` (same hue) so it stands apart from Eastern Africa's green, and the report names that adjustment with its reason. If a later `flags` run computes different colours, the approved ones stay in use and the report says the computation differs, until a new approval is recorded there.
 
 ### Correcting the data
 
@@ -211,7 +211,7 @@ The research document is not fully verified (see `data/review_report.md`). To co
 
 How the extraction works and where its judgement calls live:
 
-- `pipelines/africa_pipelines/reference/african_states.json`: canonical names (with diacritics), ISO codes, regions, and every label the PDF uses for each country.
+- `pipelines/africa_pipelines/reference/african_states.json`: canonical names (with diacritics), ISO codes, UN M49 regions (with the research document's own grouping for the five states it files differently), and every label the PDF uses for each country.
 - `pipelines/africa_pipelines/reference/symbology_curation.json`: the reviewed mapping of each country's prose sentences to profile fields, the animal-status decisions with their reasons, the reviewed etymology categories, the known inconsistencies (each marked corrected, status changed or open) and the **verified corrections**. Each correction replaces or appends exact text, gives its reason and cites the reference source it was checked against; that source is added to `sources` and cited on the corrected field. If a correction's original text stops matching, extraction fails rather than silently skipping it. The review report lists every correction with its before and after text.
 - `pipelines/africa_pipelines/reference/source_tiers.json`: the reliability tier for each cited website.
 
@@ -229,7 +229,7 @@ Netlify Functions in `netlify/functions/`, one file per route, each declaring it
 
 | Route | Returns |
 |---|---|
-| `GET /api/regions` | The five regions in document order: name, description, approved `colorHex`, country count |
+| `GET /api/regions` | The five UN M49 regions in display order: name, description, approved `colorHex`, country count |
 | `GET /api/countries?region=<slug>&q=<text>` | Country summaries (all 54 without parameters): region, flag URLs (Flagpedia SVG, PNG template, self-hosted fallback), short profile fields, animal status, `needsReview`. `q` matches names, official names and ISO codes, accent-insensitively ("cote" finds Côte d'Ivoire) |
 | `GET /api/countries/:iso3` | The full profile: long texts, scientific name, review notes and every cited source with its reliability tier and the fields it supports. Unknown or malformed codes are 404 |
 | `GET /api/coverage?datasets=a,b` | Each dataset's provider, licence, attribution, coverage, "as of" date and last refresh; requested keys with no data yet are listed in `missing` |
@@ -280,7 +280,7 @@ The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth**
 - **Filters live in the URL**, so every view can be shared: `?region=<slug>`, `?q=<search>`, `?sort=<column>` (a leading `-` sorts descending, e.g. `sort=-animal`) and `?country=<ISO3>` (opens that country's drawer). Invalid values are ignored. Filter changes replace the current history entry rather than adding one.
 - **Region chips** in the region colours, plus "All", each with its country count.
 - **Search** ignores case and accents ("cote" finds Côte d'Ivoire). It matches names, official names, ISO codes and every visible column, so "eagle" finds the countries whose animal is an eagle. The list loads once (shared with the map) and filters instantly; the API's `q` parameter matches names and codes only.
-- **Sorting:** every column but the flag. Ties sort by country name; regions sort in their display order (North → Southern). Phones get a "Sort by" menu.
+- **Sorting:** every column but the flag. Ties sort by country name; regions sort in their display order (Northern → Southern). Phones get a "Sort by" menu.
 - **Flags** come from Flagpedia (`flagcdn.com`, 1x/2x, explicit size, lazy-loaded, self-hosted fallback). Hovering or focusing a flag shows the document's flag text (summary, then the full description); a tap toggles it on touch screens. Escape dismisses it, and it stays inside the viewport.
 - **Animal status:** anything short of official (de facto, inferred, sports nickname, contested) is badged in the table, so inference never reads as fact.
 - **Drawer:** a click on a row (or Enter on the country name) opens the full profile in a modal dialog: a side panel on wide screens, a bottom sheet on phones. It shows the long texts, the etymology category (when assigned), the animal status with its meaning, every source with its reliability tier and the fields it supports, and a "Needs verification" marker that expands to the review notes. Somalia's drawer explains Somaliland. Escape, the close button or a click on the backdrop close it, and focus returns to where it was.
@@ -298,7 +298,7 @@ The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth**
 - **Statistics band** (`features/harim/stats/`): nine glass cards under the header, all figures from `/api/mountains/stats` (computed in the database; definitions in [`docs/harim-stats.md`](docs/harim-stats.md)).
   - **Hero cards:** mountains catalogued (with countries and territory peaks), volcanic mountains (a bar and legend by status), the tallest mountain (a massif with its top summit, and the flag), and the lowest national high point ("Africa's lowest 'highest point'", never "the shortest mountain").
   - **Compact cards:** peaks above 4,000 m (a bar and legend of the four height bands), the most mountainous country, the busiest range with its tallest peak, the lowest point and the greatest relief. Ties are listed, each with its own button.
-  - **Scope:** "All Africa", or the selected region as a chip in its colour, always shown above the cards; the figures recompute for the region (the previous figures stay, dimmed, while the new ones load). Screen readers hear the scope with each card's name, and the lowest-point card names the region ("Lowest point in East Africa").
+  - **Scope:** "All Africa", or the selected region as a chip in its colour, always shown above the cards; the figures recompute for the region (the previous figures stay, dimmed, while the new ones load). Screen readers hear the scope with each card's name, and the lowest-point card names the region ("Lowest point in Eastern Africa").
   - **Each card does something:** open the peak's drawer (tallest, lowest high point), filter All peaks (volcanoes; peaks above 4,000 m from 4,001 m, since the bands are strict; the most mountainous country's peaks of 3,000 m or more; the busiest range's peaks of 3,000 m or more), or open the country's row (lowest point, greatest relief). The page then scrolls to the list. The whole card is the target, through its own button (keyboard and screen readers).
   - **"How is this calculated?":** the "i" button shows the API's definition over the card; Escape or Close returns focus to the button.
   - **Caveats:** a height whose confidence is low, or whose other sources differ by more than 10 m, gets a "Sources disagree" marker listing the other heights; a low point marked for review gets "Needs verification".

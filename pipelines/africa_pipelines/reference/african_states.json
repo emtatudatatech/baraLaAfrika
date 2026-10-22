@@ -1,33 +1,43 @@
 {
-  "$comment": "The 54 sovereign African states covered by the research document. Region assignment follows the document's grouping (North 6, West 15, Central 9, East 16, Southern 8), not the UN geoscheme. 'aliases' lists every label the PDF uses for the country (table and prose). ISO codes per ISO 3166-1; cross-checked on 2026-10-14 against the independent ISO 3166 list at github.com/lukes/ISO-3166-Countries-with-Regional-Codes (all 54 alpha-2, alpha-3 and numeric codes matched).",
+  "$comment": "The 54 sovereign African states covered by the research document. Region assignment follows the UN M49 standard (https://unstats.un.org/unsd/methodology/m49/overview/): Northern Africa 6, Western Africa 16, Middle Africa 9 (shown as Central Africa), Eastern Africa 18, Southern Africa 5. Membership confirmed against M49 on 2026-10-22. The research document groups five states differently (Mauritania under North Africa; Sudan under East Africa; Mozambique, Zambia and Zimbabwe under Southern Africa); 'document_region' records that grouping where it differs, so the PDF's headings still validate. 'pdf_heading' is the document's heading for the region; 'm49_code' is the M49 area code. 'aliases' lists every label the PDF uses for the country (table and prose). ISO codes per ISO 3166-1; cross-checked on 2026-10-14 against the independent ISO 3166 list at github.com/lukes/ISO-3166-Countries-with-Regional-Codes (all 54 alpha-2, alpha-3 and numeric codes matched).",
   "regions": [
     {
       "slug": "north",
-      "name": "North Africa",
+      "name": "Northern Africa",
+      "m49_code": "015",
+      "m49_name": "Northern Africa",
       "pdf_heading": "Regional Analysis: North Africa",
       "sort_order": 1
     },
     {
       "slug": "west",
-      "name": "West Africa",
+      "name": "Western Africa",
+      "m49_code": "011",
+      "m49_name": "Western Africa",
       "pdf_heading": "Regional Analysis: West Africa",
       "sort_order": 2
     },
     {
       "slug": "central",
       "name": "Central Africa",
+      "m49_code": "017",
+      "m49_name": "Middle Africa",
       "pdf_heading": "Regional Analysis: Central Africa",
       "sort_order": 3
     },
     {
       "slug": "east",
-      "name": "East Africa",
+      "name": "Eastern Africa",
+      "m49_code": "014",
+      "m49_name": "Eastern Africa",
       "pdf_heading": "Regional Analysis: East Africa",
       "sort_order": 4
     },
     {
       "slug": "southern",
       "name": "Southern Africa",
+      "m49_code": "018",
+      "m49_name": "Southern Africa",
       "pdf_heading": "Regional Analysis: Southern Africa",
       "sort_order": 5
     }
@@ -72,7 +82,8 @@
       "iso2": "MR",
       "iso3": "MRT",
       "iso_numeric": 478,
-      "region": "north",
+      "region": "west",
+      "document_region": "north",
       "aliases": [
         "Mauritania"
       ]
@@ -523,7 +534,8 @@
       "iso2": "SD",
       "iso3": "SDN",
       "iso_numeric": 729,
-      "region": "east",
+      "region": "north",
+      "document_region": "east",
       "aliases": [
         "Sudan"
       ]
@@ -590,7 +602,8 @@
       "iso2": "MZ",
       "iso3": "MOZ",
       "iso_numeric": 508,
-      "region": "southern",
+      "region": "east",
+      "document_region": "southern",
       "aliases": [
         "Mozambique"
       ]
@@ -623,7 +636,8 @@
       "iso2": "ZM",
       "iso3": "ZMB",
       "iso_numeric": 894,
-      "region": "southern",
+      "region": "east",
+      "document_region": "southern",
       "aliases": [
         "Zambia"
       ]
@@ -634,7 +648,8 @@
       "iso2": "ZW",
       "iso3": "ZWE",
       "iso_numeric": 716,
-      "region": "southern",
+      "region": "east",
+      "document_region": "southern",
       "aliases": [
         "Zimbabwe"
       ]

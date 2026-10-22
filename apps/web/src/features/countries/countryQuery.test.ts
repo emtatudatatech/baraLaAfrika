@@ -14,10 +14,10 @@ import { parseReviewNotes } from '../../lib/reviewNotes';
 import { searchFold } from '../../lib/searchFold';
 
 const REGION_NAMES: Record<RegionSlug, string> = {
-  north: 'North Africa',
-  west: 'West Africa',
+  north: 'Northern Africa',
+  west: 'Western Africa',
   central: 'Central Africa',
-  east: 'East Africa',
+  east: 'Eastern Africa',
   southern: 'Southern Africa',
 };
 

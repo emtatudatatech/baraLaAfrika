@@ -67,11 +67,11 @@ test('region, search and presence filters update the URL, the rows and the band'
   await openDhahabu(page);
   await page
     .getByRole('group', { name: 'Region' })
-    .getByRole('button', { name: /West Africa/ })
+    .getByRole('button', { name: /Western Africa/ })
     .click();
   await expect(page).toHaveURL(/region=west/);
-  await expect(rows(page)).toHaveCount(15);
-  await expect(page.getByTestId('stats-scope')).toContainText('West Africa');
+  await expect(rows(page)).toHaveCount(16);
+  await expect(page.getByTestId('stats-scope')).toContainText('Western Africa');
   await expect(card(page, 'largest_producer')).toContainText('Ghana');
 
   await page.getByTestId('gold-presence-filter').selectOption('major_producer');
@@ -193,7 +193,7 @@ test('Export downloads the current view as CSV with its attribution block', asyn
   expect(body).toContain('nominal US dollars');
   const lines = body.split('\r\n').filter((line) => line !== '' && !line.startsWith('#'));
   // The header plus one row per country in the view.
-  expect(lines.length - 1).toBe(15);
+  expect(lines.length - 1).toBe(16);
   await expect(page.getByTestId('gold-export-toast')).toContainText('Downloaded dhahabu-countries');
 });
 

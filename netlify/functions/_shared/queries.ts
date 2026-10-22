@@ -1,11 +1,15 @@
 import type {
   CountryDetail,
+  CountryFacts,
   CountrySummary,
   CoverageDataset,
   DatasetKey,
+  Election,
+  Leader,
   Region,
   RegionSlug,
   Source,
+  YearValue,
 } from './contract.ts';
 
 import type { Db } from './db.ts';
@@ -59,12 +63,66 @@ interface CountrySummaryRow {
   national_animal_name: string;
   animal_status: CountrySummary['animalStatus'];
   needs_review: boolean;
+  population: string | null;
+  population_year: number | null;
+  population_is_estimate: boolean | null;
+  land_area_km2: string | null;
+  land_area_year: number | null;
+  leaders: Leader[] | string;
+  election_decides: Election['decides'] | null;
+  election_kind: Election['kind'];
+  election_date: string | null;
+  election_precision: Election['precision'];
+  election_status: Election['status'] | null;
+  politics_note: string | null;
 }
 
 const SUMMARY_COLUMNS = `country_id, iso3, iso2, name, official_name, region_slug, region_name,
   region_color_hex, flag_url_template, centroid_lon, centroid_lat, is_microstate_marker,
   etymology_summary, etymology_category, flag_design_summary, flag_design_detail,
   national_symbol_summary, national_animal_name, animal_status, needs_review`;
+
+/** The summary's columns from v_country_summary (as `v`) and v_country_facts (as `f`). */
+const SUMMARY_SELECT = `${SUMMARY_COLUMNS.split(',')
+  .map((column) => `v.${column.trim()}`)
+  .join(', ')},
+  f.population::text AS population, f.population_year, f.population_is_estimate,
+  f.land_area_km2::text AS land_area_km2, f.land_area_year, f.leaders, f.election_decides,
+  f.election_kind, f.election_date::text AS election_date, f.election_precision,
+  f.election_status, f.politics_note`;
+const SUMMARY_FROM = `v_country_summary v LEFT JOIN v_country_facts f ON f.country_id = v.country_id`;
+
+function yearValue(
+  value: string | null,
+  year: number | null,
+  estimate: boolean | null,
+): YearValue | null {
+  return value === null || year === null
+    ? null
+    : { value: Number(value), year, estimate: estimate === true };
+}
+
+function facts(row: CountrySummaryRow): CountryFacts {
+  // node-postgres parses json columns; the Neon HTTP driver may hand them over as text.
+  const leaders =
+    typeof row.leaders === 'string' ? (JSON.parse(row.leaders) as Leader[]) : row.leaders;
+  return {
+    population: yearValue(row.population, row.population_year, row.population_is_estimate),
+    landAreaKm2: yearValue(row.land_area_km2, row.land_area_year, false),
+    leaders,
+    election:
+      row.election_decides === null || row.election_status === null
+        ? null
+        : {
+            decides: row.election_decides,
+            kind: row.election_kind,
+            date: row.election_date,
+            precision: row.election_precision,
+            status: row.election_status,
+          },
+    note: row.politics_note,
+  };
+}
 
 function toSummary(row: CountrySummaryRow): CountrySummary {
   const code = row.iso2.toLowerCase();
@@ -92,6 +150,7 @@ function toSummary(row: CountrySummaryRow): CountrySummary {
     nationalAnimalName: row.national_animal_name,
     animalStatus: row.animal_status,
     needsReview: row.needs_review,
+    facts: facts(row),
   };
 }
 
@@ -100,10 +159,10 @@ export async function listCountries(
   filters: { region?: RegionSlug | undefined; q?: string | undefined },
 ): Promise<CountrySummary[]> {
   const rows = await db.query<CountrySummaryRow>(
-    `SELECT ${SUMMARY_COLUMNS} FROM v_country_summary
-     WHERE ($1::text IS NULL OR region_slug = $1)
-       AND ($2::text IS NULL OR strpos(search_text, search_fold($2)) > 0)
-     ORDER BY search_fold(name), name`,
+    `SELECT ${SUMMARY_SELECT} FROM ${SUMMARY_FROM}
+     WHERE ($1::text IS NULL OR v.region_slug = $1)
+       AND ($2::text IS NULL OR strpos(v.search_text, search_fold($2)) > 0)
+     ORDER BY search_fold(v.name), v.name`,
     [filters.region ?? null, filters.q ?? null],
   );
   return rows.map(toSummary);
@@ -129,12 +188,10 @@ interface SourceRow {
 
 export async function getCountry(db: Db, iso3: string): Promise<CountryDetail | null> {
   const [row] = await db.query<CountryDetailRow>(
-    `SELECT ${SUMMARY_COLUMNS.split(',')
-      .map((column) => `v.${column.trim()}`)
-      .join(', ')},
+    `SELECT ${SUMMARY_SELECT},
        p.etymology_detail, p.national_symbol_detail, p.national_animal_scientific,
        p.national_animal_detail, p.review_notes
-     FROM v_country_summary v JOIN country_profiles p ON p.country_id = v.country_id
+     FROM ${SUMMARY_FROM} JOIN country_profiles p ON p.country_id = v.country_id
      WHERE v.iso3 = $1`,
     [iso3],
   );

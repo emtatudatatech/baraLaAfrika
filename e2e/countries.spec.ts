@@ -359,3 +359,52 @@ for (const theme of ['light', 'dark'] as const) {
     await expectNoAxeViolations(page);
   });
 }
+
+test('the Facts view shows population, land area, leaders and the next election', async ({
+  page,
+  isMobile,
+}) => {
+  const list = await openCountries(page, isMobile);
+  await page.getByTestId('countries-view-facts').click();
+  await expect(page).toHaveURL(/\/countries\?view=facts$/);
+  await expect(page.getByTestId('countries-view-facts')).toHaveAttribute('aria-pressed', 'true');
+  const kenya = list.filter({ has: page.getByTestId('country-name').getByText('Kenya') });
+  if (isMobile) await kenya.getByRole('button', { expanded: false }).click();
+  await expect(kenya).toContainText(/million/);
+  await expect(kenya).toContainText('km²');
+  await expect(kenya).toContainText('William Ruto');
+  await expect(kenya).toContainText('General election, 10 Aug 2027');
+  await expect(kenya.locator('[data-status]')).toHaveCount(1);
+  // Eritrea holds no national elections; Somalia's note explains its disputed presidency.
+  const eritrea = list.filter({ has: page.getByTestId('country-name').getByText('Eritrea') });
+  if (isMobile) await eritrea.getByRole('button', { expanded: false }).click();
+  await expect(eritrea).toContainText('No national elections');
+  if (!isMobile) {
+    await expect(page.getByRole('columnheader', { name: 'National animal' })).toHaveCount(0);
+    const somalia = list.filter({ has: page.getByTestId('country-name').getByText('Somalia') });
+    await somalia.getByRole('button', { name: /About Somalia/ }).hover();
+    await expect(page.getByRole('tooltip')).toContainText('disputed since 15 May 2026');
+    await page.keyboard.press('Escape');
+    await page.mouse.move(0, 0);
+    // Rows scrolled under the sticky header count as obscured targets; check from the top.
+    await page.evaluate(() => {
+      window.scrollTo(0, 0);
+    });
+  }
+  await expectNoHorizontalOverflow(page);
+  await expectNoAxeViolations(page);
+});
+
+test('the Facts view sorts by population, largest first, and keeps the sort in the URL', async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, 'desktop headers');
+  const list = await openCountries(page, isMobile, '?view=facts');
+  await page.getByRole('button', { name: 'Population' }).click();
+  await expect(page).toHaveURL(/view=facts&sort=-population/);
+  await expect.poll(async () => (await names(list)).slice(0, 2)).toEqual(['Nigeria', 'Ethiopia']);
+  // Switching back to Symbols drops a sort its columns do not have.
+  await page.getByTestId('countries-view-symbols').click();
+  await expect(page).toHaveURL(/\/countries$/);
+});

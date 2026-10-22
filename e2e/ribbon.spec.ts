@@ -81,7 +81,8 @@ test('reference pages show live "as of" dates and refresh times from /api/covera
 }) => {
   await page.goto('/');
   const ribbon = ribbonOf(page);
-  await expect(ribbon.getByTestId('ribbon-as-of')).toHaveText('as of 15 Oct 2026');
+  // The newest "as of" among the page's datasets: the leaders and elections approved 22 Oct.
+  await expect(ribbon.getByTestId('ribbon-as-of')).toHaveText('as of 22 Oct 2026');
   if (!isMobile) {
     await expect(ribbon).toContainText('Boundaries: Natural Earth');
     await expect(ribbon).toContainText('Refreshed 2 days ago');
@@ -94,7 +95,7 @@ test('reference pages show live "as of" dates and refresh times from /api/covera
   await expect(boundaries).toContainText('Does not change');
   await expect(boundaries).toContainText('15 Oct 2026 (2 days ago)');
   await expect(boundaries).toContainText('Public domain');
-  await expect(list.locator('[data-dataset]')).toHaveCount(3);
+  await expect(list.locator('[data-dataset]')).toHaveCount(6);
   await expect(ribbon).toContainText("This page's data is not time-dependent.");
   await expectNoHorizontalOverflow(page);
 });

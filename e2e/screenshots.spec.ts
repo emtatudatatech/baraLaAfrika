@@ -39,8 +39,14 @@ const DHAHABU_STATES = [
   { path: '/dhahabu?metric=holdings&country=GHA', name: 'dhahabu-drawer', ready: 'gold-drawer' },
 ] as const;
 
+/** The countries table's Facts view (population, land area, leaders, next election). */
+const COUNTRIES_STATES = [
+  { path: '/countries?view=facts', name: 'countries-facts', ready: 'country-name' },
+] as const;
+
 const SHOTS = [
   ...ROUTES.map((route) => ({ path: route.path, name: route.name, ready: null })),
+  ...COUNTRIES_STATES,
   ...HARIM_STATES,
   ...DHAHABU_STATES,
 ];

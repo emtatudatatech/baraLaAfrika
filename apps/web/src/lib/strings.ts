@@ -113,7 +113,7 @@ export const strings = {
     countries: {
       title: 'Countries',
       description:
-        'All 54 African states: the meaning of their names, their flags, national symbols and national animals.',
+        'All 54 African states: the meaning of their names, their flags, national symbols and national animals, and their population, leaders and next elections.',
     },
     harim: {
       title: 'Harim · Mountains of Africa',
@@ -169,6 +169,10 @@ export const strings = {
     close: 'Close',
     meaning: 'Name means',
     animal: 'National animal',
+    population: 'Population',
+    area: 'Land area',
+    leader: 'Leader',
+    election: 'Next election',
     seeInTable: 'See in table',
   },
   animalStatus: {
@@ -208,7 +212,9 @@ export const strings = {
     regionGroup: 'Region',
     allRegions: 'All',
     searchLabel: 'Search countries',
-    searchPlaceholder: 'Name, meaning, symbol or animal',
+    searchPlaceholder: 'Name, meaning, symbol, animal or leader',
+    viewLabel: 'Columns',
+    views: { symbols: 'Symbols', facts: 'Facts' },
     sortLabel: 'Sort by',
     sortOptions: {
       name: 'Country',
@@ -216,15 +222,27 @@ export const strings = {
       etymology: 'Name meaning',
       symbol: 'National symbol',
       animal: 'National animal',
+      population: 'Population',
+      area: 'Land area',
+      leader: 'Leader',
+      election: 'Next election',
     },
     ascending: 'A to Z',
     descending: 'Z to A',
+    /** Direction labels for columns that are not text. */
+    directions: {
+      population: { asc: 'smallest first', desc: 'largest first' },
+      area: { asc: 'smallest first', desc: 'largest first' },
+      election: { asc: 'soonest first', desc: 'latest first' },
+    },
     resultCount: (shown: number, total: number) =>
       shown === total
         ? `Showing all ${String(total)} countries`
         : `Showing ${String(shown)} of ${String(total)} countries`,
     caption:
       'African countries with the meaning of their names, their flags, national symbols and national animals',
+    factsCaption:
+      'African countries with their population, land area, leaders and next national election',
     columns: {
       flag: 'Flag design',
       name: 'Country',
@@ -232,6 +250,10 @@ export const strings = {
       etymology: 'Name meaning',
       symbol: 'National symbol',
       animal: 'National animal',
+      population: 'Population',
+      area: 'Land area',
+      leader: 'Leader',
+      election: 'Next election',
     },
     flagButton: (name: string) => `Flag of ${name}`,
     viewDetails: 'Full profile and sources',
@@ -240,6 +262,30 @@ export const strings = {
     clearFilters: 'Clear filters',
     loadError: 'The countries could not be loaded.',
     retry: 'Retry',
+  },
+  facts: {
+    noData: 'No data',
+    estimate: 'IMF estimate',
+    population: (formatted: string, year: number) => `${formatted} (${String(year)})`,
+    area: (formatted: string) => `${formatted} km²`,
+    million: (value: string) => `${value} million`,
+    billion: (value: string) => `${value} billion`,
+    leaderPending: 'Not yet available',
+    transitional: 'Transitional',
+    deFacto: 'De facto',
+    electionKinds: {
+      presidential: 'Presidential election',
+      legislative: 'Legislative election',
+      general: 'General election',
+    },
+    noElections: 'No national elections',
+    byDate: (date: string) => `by ${date}`,
+    electionStatus: {
+      within_12_months: 'Election within 12 months',
+      beyond_12_months: 'No election within 12 months',
+      no_date_set: 'No date set',
+    },
+    noteLabel: (name: string) => `About ${name}'s leaders and elections`,
   },
   drawer: {
     close: 'Close',

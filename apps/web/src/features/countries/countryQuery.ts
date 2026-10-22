@@ -3,13 +3,39 @@ import { type CountrySummary, REGION_SLUGS, type RegionSlug, isRegionSlug } from
 import { searchFold } from '../../lib/searchFold';
 
 /*
- * The countries table's view state lives in the URL (?region=&q=&sort=&country=) so every view
- * is shareable. All 54 countries are loaded once (and shared with the map); filtering and
+ * The countries table's view state lives in the URL (?view=&region=&q=&sort=&country=) so every
+ * view is shareable. All 54 countries are loaded once (and shared with the map); filtering and
  * sorting happen here, instantly, without a request per keystroke.
  */
 
-export const SORT_KEYS = ['name', 'region', 'etymology', 'symbol', 'animal'] as const;
+export const SORT_KEYS = [
+  'name',
+  'region',
+  'etymology',
+  'symbol',
+  'animal',
+  'population',
+  'area',
+  'leader',
+  'election',
+] as const;
 export type SortKey = (typeof SORT_KEYS)[number];
+
+/** Two sets of columns: the symbols from the research document, and the country's facts. */
+export const TABLE_VIEWS = ['symbols', 'facts'] as const;
+export type TableView = (typeof TABLE_VIEWS)[number];
+
+/** The sort keys each view's columns offer (name and region belong to both). */
+export const VIEW_SORT_KEYS: Record<TableView, readonly SortKey[]> = {
+  symbols: ['name', 'region', 'etymology', 'symbol', 'animal'],
+  facts: ['name', 'region', 'population', 'area', 'leader', 'election'],
+};
+
+/** Figures sort largest first on the first click; text A to Z; elections soonest first. */
+const FIRST_DIRECTION: Partial<Record<SortKey, 'asc' | 'desc'>> = {
+  population: 'desc',
+  area: 'desc',
+};
 
 export interface SortState {
   key: SortKey;
@@ -17,6 +43,7 @@ export interface SortState {
 }
 
 export interface CountriesView {
+  view: TableView;
   region: RegionSlug | null;
   q: string;
   sort: SortState;
@@ -47,7 +74,9 @@ export function formatSort(sort: SortState): string {
 export function parseView(params: URLSearchParams): CountriesView {
   const region = params.get('region');
   const country = params.get('country')?.trim().toUpperCase() ?? '';
+  const view = params.get('view');
   return {
+    view: view === 'facts' ? 'facts' : 'symbols',
     region: isRegionSlug(region) ? region : null,
     q: (params.get('q') ?? '').trim().slice(0, MAX_QUERY_LENGTH),
     sort: parseSort(params.get('sort')),
@@ -68,6 +97,7 @@ export function updateParams(
     if (value === null || value === '') next.delete(key);
     else next.set(key, value);
   };
+  if ('view' in change) set('view', change.view === 'facts' ? 'facts' : null);
   if ('region' in change) set('region', change.region ?? null);
   if ('q' in change) set('q', (change.q ?? '').trim().slice(0, MAX_QUERY_LENGTH));
   if ('sort' in change) {
@@ -83,9 +113,12 @@ export function updateParams(
   return next;
 }
 
-/** Clicking a column header: a new column sorts ascending, the current one flips direction. */
+/**
+ * Clicking a column header: a new column starts in its natural order (figures largest first,
+ * text A to Z, elections soonest first); the current one flips direction.
+ */
 export function toggleSort(current: SortState, key: SortKey): SortState {
-  if (current.key !== key) return { key, direction: 'asc' };
+  if (current.key !== key) return { key, direction: FIRST_DIRECTION[key] ?? 'asc' };
   return { key, direction: current.direction === 'asc' ? 'desc' : 'asc' };
 }
 
@@ -101,6 +134,7 @@ function searchText(country: CountrySummary): string {
       country.etymologySummary,
       country.nationalSymbolSummary,
       country.nationalAnimalName,
+      ...country.facts.leaders.map((leader) => leader.name),
     ].join(' '),
   );
 }
@@ -119,8 +153,34 @@ export function filterCountries(
 
 const collator = new Intl.Collator('en', { sensitivity: 'base', numeric: true });
 
+/** Numeric sort value, or null (no data, which always sorts last). */
+function numericValue(country: CountrySummary, key: SortKey): number | null {
+  switch (key) {
+    case 'population':
+      return country.facts.population?.value ?? null;
+    case 'area':
+      return country.facts.landAreaKm2?.value ?? null;
+    case 'election': {
+      const election = country.facts.election;
+      return election?.status === 'no_date_set' || !election?.date
+        ? null
+        : Date.parse(election.date);
+    }
+    default:
+      return null;
+  }
+}
+
+const NUMERIC_KEYS: ReadonlySet<SortKey> = new Set(['population', 'area', 'election']);
+
 function sortValue(country: CountrySummary, key: SortKey): string {
   switch (key) {
+    case 'leader':
+      return country.facts.leaders[0]?.name ?? '';
+    case 'population':
+    case 'area':
+    case 'election':
+      return '';
     case 'name':
       return country.name;
     case 'region':
@@ -144,6 +204,19 @@ export function sortCountries(
 ): CountrySummary[] {
   const sign = sort.direction === 'asc' ? 1 : -1;
   return [...countries].sort((a, b) => {
+    if (NUMERIC_KEYS.has(sort.key)) {
+      const x = numericValue(a, sort.key);
+      const y = numericValue(b, sort.key);
+      // No data sorts last in both directions.
+      if (x === null || y === null) {
+        if (x !== y) return x === null ? 1 : -1;
+        return collator.compare(a.name, b.name);
+      }
+      return x !== y ? (x - y) * sign : collator.compare(a.name, b.name);
+    }
+    if (sort.key === 'leader' && !a.facts.leaders[0] !== !b.facts.leaders[0]) {
+      return a.facts.leaders[0] ? -1 : 1;
+    }
     const primary =
       sort.key === 'region'
         ? REGION_SLUGS.indexOf(a.region.slug) - REGION_SLUGS.indexOf(b.region.slug)

@@ -261,7 +261,7 @@ Netlify Functions in `netlify/functions/`, one file per route, each declaring it
 | Route | Returns |
 |---|---|
 | `GET /api/regions` | The five UN M49 regions in display order: name, description, approved `colorHex`, country count |
-| `GET /api/countries?region=<slug>&q=<text>` | Country summaries (all 54 without parameters): region, flag URLs (Flagpedia SVG, PNG template, self-hosted fallback), short profile fields, animal status, `needsReview`. `q` matches names, official names and ISO codes, accent-insensitively ("cote" finds Côte d'Ivoire) |
+| `GET /api/countries?region=<slug>&q=<text>` | Country summaries (all 54 without parameters): region, flag URLs (Flagpedia SVG, PNG template, self-hosted fallback), short profile fields, animal status, `needsReview`, and `facts` from `v_country_facts` (migration 0013): latest population and land area with their years, leaders (executive first), and the next election with its status as of the request. `q` matches names, official names and ISO codes, accent-insensitively ("cote" finds Côte d'Ivoire) |
 | `GET /api/countries/:iso3` | The full profile: long texts, scientific name, review notes and every cited source with its reliability tier and the fields it supports. Unknown or malformed codes are 404 |
 | `GET /api/coverage?datasets=a,b` | Each dataset's provider, licence, attribution, coverage, "as of" date and last refresh; requested keys with no data yet are listed in `missing` |
 | `GET /api/mountains/summary?region=&q=` | One row per country (54), highest peak first: the highest peak (with a massif's top summit and the countries it is shared with), number of mountains, mean height, ranges, lowest point and relief |
@@ -296,7 +296,7 @@ The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth**
 - **Boundaries** are drawn once as meshes (borders and coastlines), with thin strokes that stay thin at any zoom. **Somaliland** is merged into Somalia (no internal line); Somalia's tooltip and profile explain this (declared independence in 1991, self-governing, not recognised by the African Union or UN), and screen readers hear the same note. **Western Sahara** is hatched, with the tooltip "Disputed territory". A note under the map states that boundaries do not imply endorsement of any claim.
 - **Small states** (under 20,000 km² on the map: Cabo Verde, São Tomé and Príncipe, Comoros, Mauritius, Seychelles, The Gambia, Eswatini) get clickable circle markers. Lesotho (about 30,000 km²) is large enough to click.
 - **Interaction:**
-  - Hover or keyboard focus shows a tooltip with the flag, name and region.
+  - Hover or keyboard focus shows a tooltip with the flag, name and region, the population and land area, the leader and the next election with its status; the click popover (a bottom sheet on phones) shows the same facts.
   - Click or tap opens a short profile with "See in table": a popover on larger screens, a bottom sheet on phones. Escape closes it and returns focus.
   - The **legend** isolates a region (others dim) and links to `/countries?region=…`.
   - Zoom with the + / − / reset buttons, pinch, or Ctrl/⌘ + scroll; drag to pan. One-finger swipes still scroll the page on phones.
@@ -306,12 +306,15 @@ The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth**
 
 ## The countries table
 
-`/countries` (`apps/web/src/features/countries/`) lists all 54 countries with their flag, region, name meaning, national symbol and national animal.
+`/countries` (`apps/web/src/features/countries/`) lists all 54 countries with their flag and region, in two views:
 
-- **Filters live in the URL**, so every view can be shared: `?region=<slug>`, `?q=<search>`, `?sort=<column>` (a leading `-` sorts descending, e.g. `sort=-animal`) and `?country=<ISO3>` (opens that country's drawer). Invalid values are ignored. Filter changes replace the current history entry rather than adding one.
+- **Symbols** (the default): name meaning, national symbol and national animal.
+- **Facts** (`?view=facts`): population and land area, each with its year; the leader holding executive power (title above the name), then the other of head of state and head of government; and the next election that decides the executive, with its status ("Election within 12 months", "No election within 12 months" or "No date set", computed from today's date). Transitional and de facto leaders are labelled, and an "i" button explains a country's political context (Somalia's disputed presidency, Libya's and Sudan's rival authorities). A month or year alone reads as a deadline ("by Jul 2031").
+
+- **Filters live in the URL**, so every view can be shared: `?view=facts`, `?region=<slug>`, `?q=<search>`, `?sort=<column>` (a leading `-` sorts descending, e.g. `sort=-animal`) and `?country=<ISO3>` (opens that country's drawer). Invalid values are ignored. Filter changes replace the current history entry rather than adding one.
 - **Region chips** in the region colours, plus "All", each with its country count.
-- **Search** ignores case and accents ("cote" finds Côte d'Ivoire). It matches names, official names, ISO codes and every visible column, so "eagle" finds the countries whose animal is an eagle. The list loads once (shared with the map) and filters instantly; the API's `q` parameter matches names and codes only.
-- **Sorting:** every column but the flag. Ties sort by country name; regions sort in their display order (Northern → Southern). Phones get a "Sort by" menu.
+- **Search** ignores case and accents ("cote" finds Côte d'Ivoire). It matches names, official names, ISO codes, leaders and the symbol columns, so "eagle" finds the countries whose animal is an eagle and "ruto" finds Kenya. The list loads once (shared with the map) and filters instantly; the API's `q` parameter matches names and codes only.
+- **Sorting:** every column but the flag. Population and land area sort largest first on the first click, and elections soonest first; countries without a figure or a date always sort last. Ties sort by country name; regions sort in their display order (Northern → Southern). Phones get a "Sort by" menu for the view's columns, and cards that expand to the view's fields.
 - **Flags** come from Flagpedia (`flagcdn.com`, 1x/2x, explicit size, lazy-loaded, self-hosted fallback). Hovering or focusing a flag shows the document's flag text (summary, then the full description); a tap toggles it on touch screens. Escape dismisses it, and it stays inside the viewport.
 - **Animal status:** anything short of official (de facto, inferred, sports nickname, contested) is badged in the table, so inference never reads as fact.
 - **Drawer:** a click on a row (or Enter on the country name) opens the full profile in a modal dialog: a side panel on wide screens, a bottom sheet on phones. It shows the long texts, the etymology category (when assigned), the animal status with its meaning, every source with its reliability tier and the fields it supports, and a "Needs verification" marker that expands to the review notes. Somalia's drawer explains Somaliland. Escape, the close button or a click on the backdrop close it, and focus returns to where it was.

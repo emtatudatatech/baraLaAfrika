@@ -10,6 +10,7 @@ import { cx } from '../../lib/cx';
 import { strings } from '../../lib/strings';
 import { useMediaQuery } from '../../lib/useMediaQuery';
 import styles from './CountryPopover.module.css';
+import { MapFacts } from './MapFacts';
 import { territoryNote } from './territoryNotes';
 
 export interface CountryPopoverProps {
@@ -100,6 +101,7 @@ export function CountryPopover({ country, anchor, onClose }: CountryPopoverProps
           </dd>
         </div>
       </dl>
+      <MapFacts country={country} variant="popover" />
       {note !== undefined && <p className={styles.note}>{note}</p>}
       <Link className={styles.action} to={`/countries?country=${country.iso3}`}>
         {strings.popover.seeInTable}

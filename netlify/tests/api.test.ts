@@ -80,6 +80,34 @@ describe('GET /api/countries', () => {
     });
   });
 
+  it('carries each country’s facts: population, land area, leaders and next election', async () => {
+    const body = CountriesResponseSchema.parse(
+      await (await call(countries, '/api/countries')).json(),
+    );
+    const kenya = body.countries.find((c) => c.iso3 === 'KEN');
+    expect(kenya?.facts.population?.year).toBeGreaterThanOrEqual(2024);
+    expect(kenya?.facts.population?.value).toBeGreaterThan(50e6);
+    expect(kenya?.facts.landAreaKm2?.value).toBeGreaterThan(500_000);
+    expect(kenya?.facts.leaders.map((l) => [l.title, l.name, l.executive])).toEqual([
+      ['President', 'William Ruto', true],
+    ]);
+    expect(kenya?.facts.election).toMatchObject({
+      decides: 'presidential',
+      kind: 'general',
+      date: '2027-08-10',
+      precision: 'day',
+    });
+    const ethiopia = body.countries.find((c) => c.iso3 === 'ETH');
+    expect(ethiopia?.facts.leaders.map((l) => l.role)).toEqual([
+      'head_of_government',
+      'head_of_state',
+    ]);
+    const eritrea = body.countries.find((c) => c.iso3 === 'ERI');
+    expect(eritrea?.facts.election).toMatchObject({ decides: 'none', status: 'no_date_set' });
+    expect(eritrea?.facts.note).toContain('no national elections');
+    expect(body.countries.every((c) => c.facts.leaders.length > 0)).toBe(true);
+  });
+
   it('filters by region', async () => {
     const body = CountriesResponseSchema.parse(
       await (await call(countries, '/api/countries?region=north')).json(),

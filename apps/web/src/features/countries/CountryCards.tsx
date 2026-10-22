@@ -7,9 +7,13 @@ import { RegionChip } from '../../components/RegionChip/RegionChip';
 import { cx } from '../../lib/cx';
 import { strings } from '../../lib/strings';
 import styles from './CountryCards.module.css';
+import { ElectionSummary, LeaderSummary } from './CountryFacts';
+import type { TableView } from './countryQuery';
+import { areaText, populationText } from './factsFormat';
 import { FlagCell } from './FlagCell';
 
 export interface CountryCardsProps {
+  view: TableView;
   countries: readonly CountrySummary[];
   onOpen: (iso3: string) => void;
 }
@@ -18,7 +22,7 @@ export interface CountryCardsProps {
  * Phones (< 720px): a stacked card list instead of a squeezed table. Each card shows the flag,
  * name and region; it expands to the short summaries and a button to the full profile.
  */
-export function CountryCards({ countries, onOpen }: CountryCardsProps) {
+export function CountryCards({ view, countries, onOpen }: CountryCardsProps) {
   const [expanded, setExpanded] = useState<ReadonlySet<string>>(new Set());
   const toggle = (iso3: string) => {
     setExpanded((current) => {
@@ -64,29 +68,54 @@ export function CountryCards({ countries, onOpen }: CountryCardsProps) {
               </button>
             </div>
             <div id={panelId} className={styles.panel} hidden={!open}>
-              <dl className={styles.facts}>
-                <div>
-                  <dt>{strings.countries.columns.etymology}</dt>
-                  <dd>{country.etymologySummary}</dd>
-                </div>
-                <div>
-                  <dt>{strings.countries.columns.symbol}</dt>
-                  <dd>{country.nationalSymbolSummary}</dd>
-                </div>
-                <div>
-                  <dt>{strings.countries.columns.animal}</dt>
-                  <dd>
-                    {country.nationalAnimalName}{' '}
-                    {country.animalStatus !== 'official' && (
-                      <AnimalStatusBadge status={country.animalStatus} />
-                    )}
-                  </dd>
-                </div>
-                <div>
-                  <dt>{strings.countries.columns.flag}</dt>
-                  <dd>{country.flagDesignSummary}</dd>
-                </div>
-              </dl>
+              {view === 'facts' ? (
+                <dl className={styles.facts}>
+                  <div>
+                    <dt>{strings.countries.columns.population}</dt>
+                    <dd>{populationText(country.facts.population)}</dd>
+                  </div>
+                  <div>
+                    <dt>{strings.countries.columns.area}</dt>
+                    <dd>{areaText(country.facts.landAreaKm2)}</dd>
+                  </div>
+                  <div>
+                    <dt>{strings.countries.columns.leader}</dt>
+                    <dd>
+                      <LeaderSummary facts={country.facts} countryName={country.name} />
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>{strings.countries.columns.election}</dt>
+                    <dd>
+                      <ElectionSummary election={country.facts.election} />
+                    </dd>
+                  </div>
+                </dl>
+              ) : (
+                <dl className={styles.facts}>
+                  <div>
+                    <dt>{strings.countries.columns.etymology}</dt>
+                    <dd>{country.etymologySummary}</dd>
+                  </div>
+                  <div>
+                    <dt>{strings.countries.columns.symbol}</dt>
+                    <dd>{country.nationalSymbolSummary}</dd>
+                  </div>
+                  <div>
+                    <dt>{strings.countries.columns.animal}</dt>
+                    <dd>
+                      {country.nationalAnimalName}{' '}
+                      {country.animalStatus !== 'official' && (
+                        <AnimalStatusBadge status={country.animalStatus} />
+                      )}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>{strings.countries.columns.flag}</dt>
+                    <dd>{country.flagDesignSummary}</dd>
+                  </div>
+                </dl>
+              )}
               <button
                 type="button"
                 className={styles.details}

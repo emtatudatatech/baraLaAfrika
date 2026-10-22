@@ -1,0 +1,88 @@
+.stack {
+  display: grid;
+  gap: var(--space-1);
+  justify-items: start;
+}
+
+.muted {
+  color: var(--color-ink-muted);
+}
+
+.leader {
+  display: grid;
+}
+
+.title {
+  font-size: var(--text-xs);
+  color: var(--color-ink-muted);
+}
+
+.nameRow {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+}
+
+.name {
+  font-weight: var(--weight-semibold);
+}
+
+.other {
+  font-size: var(--text-xs);
+  color: var(--color-ink-muted);
+}
+
+.badge {
+  display: inline-block;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  line-height: 1.6;
+  white-space: nowrap;
+  color: var(--color-warning-ink);
+  background: var(--color-warning-soft);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0 var(--space-2) 0 var(--space-1);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  line-height: 1.6;
+  white-space: nowrap;
+  color: var(--color-ink-muted);
+}
+
+/* An election within 12 months is the one status worth noticing at a glance. */
+.chipSoon {
+  border-color: transparent;
+  color: var(--color-accent-ink);
+  background: var(--color-accent);
+}
+
+.chipIcon {
+  flex: none;
+}
+
+.noteButton {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  color: var(--color-ink-muted);
+  background: transparent;
+}
+
+.noteButton:hover {
+  color: var(--color-ink);
+  background: var(--color-accent-soft);
+}

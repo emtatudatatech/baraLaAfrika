@@ -50,6 +50,26 @@
   width: 15%;
 }
 
+.colFigure {
+  width: 11%;
+}
+
+/* Figures align on their digits, with the year they refer to beneath. */
+.figure {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.year {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--color-ink-muted);
+}
+
+.muted {
+  color: var(--color-ink-muted);
+}
+
 .sortButton {
   display: inline-flex;
   align-items: center;

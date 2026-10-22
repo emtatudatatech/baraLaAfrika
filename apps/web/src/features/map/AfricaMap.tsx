@@ -21,6 +21,7 @@ import { CountryPopover } from './CountryPopover';
 import { nextCountry } from './keyboard';
 import { type MapContext, type MapController, MapBase } from './MapBase';
 import { disputedFill } from './mapPatterns';
+import { MapFacts } from './MapFacts';
 import { territoryNote, territoryNoteId } from './territoryNotes';
 
 const MARKER_RADIUS = 6;
@@ -306,6 +307,7 @@ export function AfricaMap({
                     <strong>{country.name}</strong>
                   </span>
                   <span>{country.region.name}</span>
+                  <MapFacts country={country} variant="tooltip" />
                   {note !== undefined && <span className={styles.tooltipNote}>{note}</span>}
                 </>
               );

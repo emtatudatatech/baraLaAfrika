@@ -117,6 +117,59 @@ export const FlagSchema = z.object({
 });
 export type Flag = z.infer<typeof FlagSchema>;
 
+export const LEADER_ROLES = [
+  'head_of_state',
+  'head_of_government',
+  'head_of_state_and_government',
+] as const;
+export const ELECTION_STATUSES = ['within_12_months', 'beyond_12_months', 'no_date_set'] as const;
+export type ElectionStatus = (typeof ELECTION_STATUSES)[number];
+
+/** A figure with the year it refers to. */
+export const YearValueSchema = z.object({
+  value: z.number(),
+  year: z.number().int(),
+  /** An IMF estimate rather than a reported figure. */
+  estimate: z.boolean(),
+});
+export type YearValue = z.infer<typeof YearValueSchema>;
+
+export const LeaderSchema = z.object({
+  role: z.enum(LEADER_ROLES),
+  title: z.string(),
+  name: z.string(),
+  /** Holds executive power (listed first). */
+  executive: z.boolean(),
+  /** Acting, interim or transitional, or leading a military transition. */
+  transitional: z.boolean(),
+  /** Exercises power without its constitutional basis. */
+  deFacto: z.boolean(),
+});
+export type Leader = z.infer<typeof LeaderSchema>;
+
+export const ElectionSchema = z.object({
+  /** Which election decides the executive; `none`: no national elections are held. */
+  decides: z.enum(['presidential', 'legislative', 'none']),
+  kind: z.enum(['presidential', 'legislative', 'general']).nullable(),
+  /** The date; a month or year alone is its last day (the latest possible date). */
+  date: IsoDateSchema.nullable(),
+  precision: z.enum(['day', 'month', 'year']).nullable(),
+  /** As of the response: within 12 months, beyond, or no date set. */
+  status: z.enum(ELECTION_STATUSES),
+});
+export type Election = z.infer<typeof ElectionSchema>;
+
+export const CountryFactsSchema = z.object({
+  population: YearValueSchema.nullable(),
+  landAreaKm2: YearValueSchema.nullable(),
+  /** The executive first; empty until leaders are approved and loaded. */
+  leaders: z.array(LeaderSchema),
+  election: ElectionSchema.nullable(),
+  /** Context for the leaders and election (a disputed term, rival authorities…). */
+  note: z.string().nullable(),
+});
+export type CountryFacts = z.infer<typeof CountryFactsSchema>;
+
 export const CountrySummarySchema = z.object({
   iso3: z.string().length(3),
   iso2: z.string().length(2),
@@ -138,6 +191,7 @@ export const CountrySummarySchema = z.object({
   nationalAnimalName: z.string(),
   animalStatus: AnimalStatusSchema,
   needsReview: z.boolean(),
+  facts: CountryFactsSchema,
 });
 export type CountrySummary = z.infer<typeof CountrySummarySchema>;
 

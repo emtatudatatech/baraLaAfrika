@@ -98,6 +98,11 @@ test('hovering shows a tooltip with the flag, name and region', async ({ page, i
   const tooltip = page.getByRole('tooltip');
   await expect(tooltip).toContainText('Niger');
   await expect(tooltip).toContainText('Western Africa');
+  // The country's facts: population, land area, leader and next election.
+  await expect(tooltip.getByTestId('map-facts')).toContainText('million');
+  await expect(tooltip.getByTestId('map-facts')).toContainText('km²');
+  await expect(tooltip.getByTestId('map-facts')).toContainText('Abdourahamane Tiani');
+  await expect(tooltip.getByTestId('map-facts')).toContainText('Transitional');
   const flag = tooltip.getByRole('img', { name: 'Flag of Niger' });
   await expect(flag).toBeVisible();
   await expect
@@ -138,6 +143,8 @@ test('countries are keyboard navigable with one tab stop', async ({ page, isMobi
   await expect(map.locator('[data-iso3="ZWE"]')).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.getByTestId('country-popover')).toContainText('Zimbabwe');
+  await expect(page.getByTestId('country-popover')).toContainText('Emmerson Mnangagwa');
+  await expect(page.getByTestId('country-popover')).toContainText('No election within 12 months');
 });
 
 test('zoom buttons zoom in, out and reset', async ({ page }) => {

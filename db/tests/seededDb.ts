@@ -534,7 +534,7 @@ export async function loadIndicators(db: PGlite): Promise<void> {
     await db.query(
       `INSERT INTO datasets (key, name, provider, license, attribution, coverage_start,
          coverage_end, as_of, refresh_cadence, last_refreshed_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, '2026-10-22T08:00:00Z')`,
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, '2026-10-15T08:00:00Z')`,
       [
         d.key,
         d.name,
@@ -614,7 +614,7 @@ export async function loadPolitics(db: PGlite): Promise<void> {
     await db.query(
       `INSERT INTO datasets (key, name, provider, license, attribution, coverage_start,
          coverage_end, as_of, refresh_cadence, last_refreshed_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, '2026-10-22T08:00:00Z')`,
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, '2026-10-15T08:00:00Z')`,
       [
         d.key,
         d.name,

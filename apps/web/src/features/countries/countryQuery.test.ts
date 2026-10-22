@@ -48,6 +48,7 @@ function country(
     nationalAnimalName: 'Lion',
     animalStatus: 'official',
     needsReview: false,
+    facts: { population: null, landAreaKm2: null, leaders: [], election: null, note: null },
     ...extra,
   };
 }
@@ -66,14 +67,16 @@ const names = (list: readonly CountrySummary[]) => list.map((c) => c.name);
 describe('URL state', () => {
   it('parses a full view and ignores invalid values', () => {
     expect(
-      parseView(new URLSearchParams('region=east&q= kenya &sort=-animal&country=ken')),
+      parseView(new URLSearchParams('view=facts&region=east&q= kenya &sort=-animal&country=ken')),
     ).toEqual({
+      view: 'facts',
       region: 'east',
       q: 'kenya',
       sort: { key: 'animal', direction: 'desc' },
       country: 'KEN',
     });
-    expect(parseView(new URLSearchParams('region=asia&sort=flag&country=KENYA'))).toEqual({
+    expect(parseView(new URLSearchParams('view=x&region=asia&sort=flag&country=KENYA'))).toEqual({
+      view: 'symbols',
       region: null,
       q: '',
       sort: DEFAULT_SORT,
@@ -193,6 +196,92 @@ describe('sorting', () => {
       'São Tomé and Príncipe',
     ]);
     expect(names(FIXTURE)).toEqual(before);
+  });
+});
+
+function withFacts(
+  iso3: string,
+  name: string,
+  population: number | null,
+  election: {
+    date: string | null;
+    status: 'within_12_months' | 'beyond_12_months' | 'no_date_set';
+  },
+  leader?: string,
+): CountrySummary {
+  return country(iso3, name, 'east', {
+    facts: {
+      population: population === null ? null : { value: population, year: 2025, estimate: false },
+      landAreaKm2: null,
+      leaders:
+        leader === undefined
+          ? []
+          : [
+              {
+                role: 'head_of_state_and_government',
+                title: 'President',
+                name: leader,
+                executive: true,
+                transitional: false,
+                deFacto: false,
+              },
+            ],
+      election: {
+        decides: 'presidential',
+        kind: 'general',
+        date: election.date,
+        precision: election.date === null ? null : 'day',
+        status: election.status,
+      },
+      note: null,
+    },
+  });
+}
+
+describe('facts view', () => {
+  const FACTS = [
+    withFacts(
+      'KEN',
+      'Kenya',
+      56e6,
+      { date: '2027-08-10', status: 'within_12_months' },
+      'William Ruto',
+    ),
+    withFacts('ERI', 'Eritrea', null, { date: null, status: 'no_date_set' }, 'Isaias Afwerki'),
+    withFacts('NGA', 'Nigeria', 232e6, { date: '2027-01-16', status: 'within_12_months' }),
+    withFacts('GHA', 'Ghana', 35e6, { date: '2029-01-07', status: 'beyond_12_months' }),
+  ];
+  const names = (rows: CountrySummary[]) => rows.map((c) => c.name);
+
+  it('keeps the view in the URL only when it is not the default', () => {
+    expect(updateParams(new URLSearchParams('view=facts'), { view: 'symbols' }).toString()).toBe(
+      '',
+    );
+    expect(updateParams(new URLSearchParams(), { view: 'facts' }).toString()).toBe('view=facts');
+  });
+
+  it('sorts figures largest first on the first click, with no data last both ways', () => {
+    const first = toggleSort(DEFAULT_SORT, 'population');
+    expect(first).toEqual({ key: 'population', direction: 'desc' });
+    expect(names(sortCountries(FACTS, first))).toEqual(['Nigeria', 'Kenya', 'Ghana', 'Eritrea']);
+    expect(names(sortCountries(FACTS, toggleSort(first, 'population')))).toEqual([
+      'Ghana',
+      'Kenya',
+      'Nigeria',
+      'Eritrea',
+    ]);
+  });
+
+  it('sorts elections soonest first, countries without a date last', () => {
+    const sort = toggleSort(DEFAULT_SORT, 'election');
+    expect(sort.direction).toBe('asc');
+    expect(names(sortCountries(FACTS, sort))).toEqual(['Nigeria', 'Kenya', 'Ghana', 'Eritrea']);
+  });
+
+  it('sorts by leader with unknown leaders last, and searches leaders', () => {
+    const sort = toggleSort(DEFAULT_SORT, 'leader');
+    expect(names(sortCountries(FACTS, sort))).toEqual(['Eritrea', 'Kenya', 'Ghana', 'Nigeria']);
+    expect(names(filterCountries(FACTS, { region: null, q: 'ruto' }))).toEqual(['Kenya']);
   });
 });
 

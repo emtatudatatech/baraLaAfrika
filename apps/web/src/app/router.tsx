@@ -13,11 +13,24 @@ import { RouteErrorBoundary } from './RouteErrorBoundary';
  */
 export const ROUTE_DATA = {
   home: {
-    datasets: ['symbology-pdf', 'boundaries-natural-earth', 'flags-flagpedia'],
+    datasets: [
+      'symbology-pdf',
+      'boundaries-natural-earth',
+      'flags-flagpedia',
+      'vinara-wdi',
+      'vinara-leaders',
+      'vinara-elections',
+    ],
     timeDependent: false,
   },
   countries: {
-    datasets: ['symbology-pdf', 'flags-flagpedia'],
+    datasets: [
+      'symbology-pdf',
+      'flags-flagpedia',
+      'vinara-wdi',
+      'vinara-leaders',
+      'vinara-elections',
+    ],
     timeDependent: false,
   },
   harim: {

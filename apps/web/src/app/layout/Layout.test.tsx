@@ -109,7 +109,7 @@ describe('Layout', () => {
       'as of 15 Oct 2026',
     );
     expect(fetch).toHaveBeenCalledWith(
-      '/api/coverage?datasets=flags-flagpedia%2Csymbology-pdf',
+      '/api/coverage?datasets=flags-flagpedia%2Csymbology-pdf%2Cvinara-elections%2Cvinara-leaders%2Cvinara-wdi',
       expect.anything(),
     );
     const control = within(ribbon).getByTestId('ribbon-range');

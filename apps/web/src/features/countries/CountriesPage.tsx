@@ -5,6 +5,7 @@ import { useSearchParams } from 'react-router';
 import { DevApiHint } from '../../components/DevApiHint/DevApiHint';
 import { Icon } from '../../components/Icon/Icon';
 import { PageHeader } from '../../components/PageHeader/PageHeader';
+import { SegmentedControl } from '../../components/SegmentedControl/SegmentedControl';
 import { api } from '../../lib/api';
 import { minWidthQuery } from '../../lib/breakpoints';
 import { cx } from '../../lib/cx';
@@ -18,7 +19,10 @@ import { CountryCards, CountryCardsSkeleton } from './CountryCards';
 import { CountryDrawer } from './CountryDrawer';
 import {
   type CountriesView,
-  SORT_KEYS,
+  DEFAULT_SORT,
+  type SortKey,
+  type TableView,
+  VIEW_SORT_KEYS,
   filterCountries,
   formatSort,
   parseSort,
@@ -67,6 +71,20 @@ export function CountriesPage() {
   }, [view.q]);
 
   const hasFilters = view.region !== null || view.q !== '';
+
+  // A sort that belongs to the other view's columns falls back to the default.
+  const switchView = (next: TableView) => {
+    update({
+      view: next,
+      ...(VIEW_SORT_KEYS[next].includes(view.sort.key) ? {} : { sort: DEFAULT_SORT }),
+    });
+  };
+  const directionLabel = (key: SortKey, direction: 'asc' | 'desc') => {
+    const labels: Partial<Record<SortKey, { asc: string; desc: string }>> = text.directions;
+    const custom = labels[key];
+    if (custom !== undefined) return custom[direction];
+    return direction === 'asc' ? text.ascending : text.descending;
+  };
   const title = selected
     ? `${selected.name} · ${page.title} · ${strings.site.name}`
     : `${page.title} · ${strings.site.name}`;
@@ -78,6 +96,16 @@ export function CountriesPage() {
       <PageHeader icon="flag" title={page.title} description={page.description} />
 
       <section className={styles.controls} aria-label={text.filtersLabel}>
+        <SegmentedControl
+          label={text.viewLabel}
+          value={view.view}
+          onChange={switchView}
+          testId="countries-view"
+          options={[
+            { value: 'symbols', label: text.views.symbols, icon: 'flag' },
+            { value: 'facts', label: text.views.facts, icon: 'public' },
+          ]}
+        />
         <RegionFilter
           options={regionOptions}
           total={all.length}
@@ -112,10 +140,10 @@ export function CountriesPage() {
                   update({ sort: parseSort(event.currentTarget.value) });
                 }}
               >
-                {SORT_KEYS.flatMap((key) =>
+                {VIEW_SORT_KEYS[view.view].flatMap((key) =>
                   (['asc', 'desc'] as const).map((direction) => (
                     <option key={`${key}-${direction}`} value={formatSort({ key, direction })}>
-                      {`${text.sortOptions[key]} (${direction === 'asc' ? text.ascending : text.descending})`}
+                      {`${text.sortOptions[key]} (${directionLabel(key, direction)})`}
                     </option>
                   )),
                 )}
@@ -134,7 +162,7 @@ export function CountriesPage() {
         aria-busy={countries.status === 'loading'}
       >
         {countries.status === 'loading' &&
-          (isWide ? <CountriesTableSkeleton /> : <CountryCardsSkeleton />)}
+          (isWide ? <CountriesTableSkeleton view={view.view} /> : <CountryCardsSkeleton />)}
 
         {countries.status === 'error' && (
           <div className={styles.state} role="alert">
@@ -171,6 +199,7 @@ export function CountriesPage() {
           visible.length > 0 &&
           (isWide ? (
             <CountriesTable
+              view={view.view}
               countries={visible}
               sort={view.sort}
               onSort={(key) => {
@@ -182,6 +211,7 @@ export function CountriesPage() {
             />
           ) : (
             <CountryCards
+              view={view.view}
               countries={visible}
               onOpen={(iso3) => {
                 update({ country: iso3 });

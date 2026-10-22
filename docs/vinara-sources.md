@@ -20,7 +20,7 @@ Every terms page was read on **22 October 2026**, and every endpoint below was t
 | [IMF Exchange Rates (ER)](#4-imf-exchange-rates-er) | Monthly exchange rates for all 54 | SDMX 3.0 API, no key | IMF data terms | ✅ Primary FX series; stale for 5 countries |
 | [ECB euro reference rates](#5-ecb-euro-foreign-exchange-reference-rates) | Daily rates for euro-pegged, rand-linked and dollar-pegged currencies | Data Portal API, no key | Free reuse, source quoted, not modified (*paraphrased*) | ✅ Daily series for 22 countries |
 | [World Bank International Debt Statistics](#6-world-bank-international-debt-statistics-ids) | External debt by creditor ("major lenders") | Bulk CSV/XLSX, API | CC BY 4.0 | ✅ |
-| [UNDP Human Development Report](#7-undp-human-development-report) | Human Development Index | CSV/XLSX | CC BY 3.0 IGO | ✅ |
+| [UNDP Human Development Report](#7-undp-human-development-report) | Human Development Index | CSV/XLSX; Our World in Data's copy when UNDP's site does not answer | CC BY 3.0 IGO | ✅ |
 | [SIPRI Military Expenditure Database](#8-sipri-military-expenditure) | Military spending (US$ and % of GDP) | Via WDI (still SIPRI's terms) | Non-commercial fair use under 10% of the dataset | ⚠️ Fair use only (see the decision) |
 | [Wikidata](#9-wikidata) | Heads of state and government; election dates where present | SPARQL | CC0 | ✅ Leaders; elections sparse |
 | [Official electoral sources](#10-elections-official-sources-ifes-eisa) | Next national election per country | Manual citations | Facts with a short quote | ✅ Curated, quotes re-checked |
@@ -75,9 +75,11 @@ GNI's codes are `NY.GNP.*`; the `NY.GNI.*` codes the README of the original proj
 
 ## 3. IMF World Economic Outlook (WEO)
 
-**Provides.** `GGXWDG_NGDP` (general government gross debt, % of GDP), and as a cross-check `NGDPD`, `NGDP_RPCH` and `PCPIPCH`. Dataflow `IMF.RES/WEO` 9.0.0 through the IMF SDMX 3.0 API used by Dhahabu (`https://api.imf.org/external/sdmx/3.0/data/dataflow/IMF.RES/WEO/+/…`), no key.
+**Provides.** `GGXWDG_NGDP` (general government gross debt, % of GDP); and, to fill the year before the edition where WDI has no figure and as a cross-check, `NGDPD` (GDP, US$), `PPPGDP` (GDP at PPP), `PPPPC` (GDP per capita at PPP), `NGDP_RPCH` (real growth) and `PCPIPCH` (inflation). Dataflow `IMF.RES/WEO` 9.0.0 through the IMF SDMX 3.0 API used by Dhahabu (`https://api.imf.org/external/sdmx/3.0/data/dataflow/IMF.RES/WEO/+/…`), no key.
 
-**Projections.** WEO series run to 2031. The API's observation attribute `DERIVATION_TYPE` is empty, so it does not say which years are actual, estimated or projected. The rule is therefore fixed: years from the edition's year onwards are projections and are never loaded; the year before the edition is loaded only as an **IMF estimate**, labelled as such, and only where WDI has no figure. Eritrea's WEO series stop in 2019.
+**Edition.** The response's `PUBLICATION_DATE` gives the edition: 13 October 2026 is the October 2026 WEO. Values are in units (US dollars, not billions).
+
+**Projections.** WEO series run to 2031. The API's observation attribute `DERIVATION_TYPE` is empty, and the series attribute `LATEST_ACTUAL_ANNUAL_DATA` listed in the dataflow's metadata is not returned, so the API does not say which years are actual, estimated or projected. The rule is therefore fixed: years from the edition's year onwards are projections and are never loaded; the year before the edition is loaded only as an **IMF estimate**, labelled as such, and only where WDI has no figure. Eritrea's WEO series stop in 2019.
 
 **Licence.** IMF data terms, as for Dhahabu: free reuse with the IMF named as the source, plus the transformation statement where values are converted.
 
@@ -123,7 +125,9 @@ That gives daily series for 22 of the 54 states. Every parity is checked against
 
 **Provides.** External debt stocks by creditor type (multilateral, bilateral, bondholders, commercial banks) and, for bilateral debt, by creditor country: the "major lenders" analysis. Dataset page <https://datacatalog.worldbank.org/search/dataset/0038015>, bulk CSV and XLSX; also API source 6.
 
-**Licence.** "License: Creative Commons Attribution 4.0" (dataset page). IDS covers low- and middle-income countries that report to the World Bank's Debtor Reporting System; countries it does not cover show "not covered" (the coverage matrix lists them).
+**Licence.** "License: Creative Commons Attribution 4.0" (dataset page). IDS covers low- and middle-income countries that report to the World Bank's Debtor Reporting System: 50 of the 54. Libya, Namibia, Seychelles and South Sudan are not covered and show "not covered", never zero debt.
+
+**Access.** `https://api.worldbank.org/v2/sources/6/series/{code}/country/{iso3;…}/counterpart-area/{WLD|all}/time/{YR2024;…}?format=json`, no key. Years are a semicolon list (the API answers a `YR…:YR…` range here with a redirect to an error). Totals use the counterpart `WLD`. Creditors come from the same series with every counterpart: a creditor's kind is the series it appears in (`DT.DOD.MLAT.CD` multilateral, `DT.DOD.BLAT.CD` bilateral, `DT.DOD.PCBK.CD` commercial banks, `DT.DOD.PROP.CD` other private; for banks and other private lenders the counterpart is the lenders' country), and bondholders (`DT.DOD.PBND.CD`) are one creditor. The counterpart codes do not separate countries from institutions by themselves (Australia is 801, beside UN agencies), so the series decides. The last ten years are kept (2015–2024 in the December 2025 update).
 
 ## 7. UNDP Human Development Report
 
@@ -131,9 +135,13 @@ That gives daily series for 22 of the 54 states. Every parity is checked against
 
 **Licence.** "All materials provided on this website are copyrighted under the Creative Commons Attribution 3.0 IGO license." Credit, a licence link and a note of changes are required.
 
+**Access.** On 22 October 2026 `hdr.undp.org` reset or timed out every connection, both from this project's network and from an independent fetcher. The pipeline therefore tries UNDP's file first and, if UNDP does not answer, reads Our World in Data's republication of the same series (<https://ourworldindata.org/grapher/human-development-index>, column `hdi__sex_total`, cited by OWID as "UNDP, Human Development Report (2025) – with minor processing by Our World in Data", 1990–2023). The values are UNDP's, under UNDP's CC BY 3.0 IGO licence; the site credits UNDP and names the copy used. Our World in Data's own terms for republished third-party data could not be read on 22 October 2026 (its pages also reset the connection) and are to be confirmed before this copy is relied on.
+
 ## 8. SIPRI military expenditure
 
 **Provides.** Military spending in current US$ (`MS.MIL.XPND.CD`) and as % of GDP (`MS.MIL.XPND.GD.ZS`), read through the WDI API.
+
+**Years kept.** Only the latest ten years with data are stored (2016–2025 in the October 2026 WDI update); earlier years are dropped by the pipeline.
 
 **Licence.** WDI's metadata gives these two series **"SIPRI terms and conditions"**, not CC BY: going through the World Bank does not change the terms. SIPRI defines fair use as excerpts "for non-commercial purposes; and the reproduction of less than 10 per cent of a published data set. NB: Both the above conditions must apply". Commercial use "must be authorized". SIPRI's data set covers about 170 countries from 1949; 54 states over a 10-year window is about 540 country-years, roughly 4% of it per series. See [Decisions](#decisions).
 

@@ -1,7 +1,7 @@
 import type { PGlite } from '@electric-sql/pglite';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { migratedDb, seedCountries, seededDb } from './seededDb.ts';
+import { migratedDb, readJson, seedCountries, seededDb } from './seededDb.ts';
 
 describe('schema', () => {
   let db: PGlite;
@@ -106,6 +106,31 @@ describe('committed seeds', () => {
     const links = await db.query<{ n: number }>('SELECT count(*)::int AS n FROM country_sources');
     expect(links.rows[0]?.n).toBe(expected);
     expect(expected).toBeGreaterThan(54);
+  });
+
+  it('load every indicator observation and creditor, each with its edition', async () => {
+    const db = await seededDb();
+    const seed = readJson('db', 'seeds', 'indicators.json') as {
+      observations: { rows: unknown[] };
+    };
+    const creditors = readJson('db', 'seeds', 'external_debt_creditors.json') as {
+      creditors: { rows: unknown[] };
+    };
+    const counts = await db.query<{ observations: number; creditors: number; editions: number }>(`
+      SELECT (SELECT count(*)::int FROM indicator_observations) AS observations,
+             (SELECT count(*)::int FROM external_debt_creditors) AS creditors,
+             (SELECT count(*)::int FROM indicator_observations WHERE edition IS NULL)
+               + (SELECT count(*)::int FROM external_debt_creditors WHERE creditor_name IS NULL)
+               AS editions`);
+    expect(counts.rows[0]).toEqual({
+      observations: seed.observations.rows.length,
+      creditors: creditors.creditors.rows.length,
+      editions: 0,
+    });
+    const population = await db.query<{ n: number }>(`
+      SELECT count(DISTINCT o.country_id)::int AS n FROM indicator_observations o
+      JOIN indicators i ON i.id = o.indicator_id WHERE i.key = 'population'`);
+    expect(population.rows[0]?.n).toBe(54);
   });
 
   it('fold accents for search', async () => {

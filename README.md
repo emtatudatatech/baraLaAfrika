@@ -139,7 +139,8 @@ The pipelines run from the repo root (`uv run python -m pipelines --help`); see 
 | 4 | `uv run python -m pipelines boundaries` | Natural Earth 4.1.0 (1:50m, via world-atlas 2.0.2) → `apps/web/public/geo/africa.topo.json` (the 54 countries, Somaliland tagged as Somalia, Western Sahara as disputed) and `africa-context.topo.json` (neighbouring land, loaded after the countries); computes each country's area on the equal-area Equal Earth projection, a map anchor and whether it needs a circle marker; writes `db/seeds/boundaries.json` and `data/boundaries_report.md` |
 | 5 | `uv run python -m pipelines mountains` | Builds the Harim catalogue (see [Mountain data](#mountain-data-harim)) → `db/seeds/{mountains,mountain_ranges,country_low_points}.json` and `data/mountains_review_report.md` |
 | 6 | `uv run python -m pipelines gold` | Builds the Dhahabu data (see [Gold data](#gold-data-dhahabu)) → `db/seeds/gold_*.json`, `data/gold_coverage_matrix.md` and `data/gold_review_report.md` (needs `COMTRADE_API_KEY`) |
-| 7 | `uv run python -m pipelines load` | Upserts the seeds into Neon (regions with the **approved** colours, countries, profiles, sources, citations, flag palettes, the mountain catalogue, the gold tables, datasets). Only rows whose values changed are written, so re-runs report 0 changes; each run is logged in `ingestion_runs` and refuses to start while migrations are pending |
+| 7 | `uv run python -m pipelines indicators` | Builds the annual country indicators and public external debt by creditor (see [Country indicators](#country-indicators-vinara)) → `db/seeds/{indicators,external_debt_creditors}.json`, `data/indicators_coverage_matrix.md` and `data/indicators_review_report.md` |
+| 8 | `uv run python -m pipelines load` | Upserts the seeds into Neon (regions with the **approved** colours, countries, profiles, sources, citations, flag palettes, the mountain catalogue, the gold tables, the indicators, datasets). Only rows whose values changed are written, so re-runs report 0 changes; each run is logged in `ingestion_runs` and refuses to start while migrations are pending |
 
 `uv run python -m pipelines status` prints every dataset's "as of" date, last refresh, cadence and last run (flagging overdue datasets).
 
@@ -192,6 +193,25 @@ The pipelines run from the repo root (`uv run python -m pipelines --help`); see 
 - **Reports:** `data/gold_coverage_matrix.md` (country × metric, with the years available) and `data/gold_review_report.md` (tiers with their evidence, source conflicts, lumped countries, late reporters, trade gaps, the mines verdict, figures left out, what needs review).
 - **Database:** migration `0007_dhahabu.sql` (tables, `v_gold_price_annual`, `v_gold_production`, and `troy_oz_per_tonne()`, which a test checks against `config/constants.json`). Migration `0008_dhahabu_api.sql` adds world production (the MCS world totals) and each central bank's reporting status (`gold_reserves_reporting`), `gold_country_metrics(year)` with `v_gold_country_latest` (each metric's latest value in or before a year, with its own year or date), and `v_gold_stats(region, year)`, the statistics band (definitions in [docs/dhahabu-stats.md](docs/dhahabu-stats.md), which a test keeps word for word in step with the SQL). Migration `0009_dhahabu_charts.sql` adds `gold_price_effect()` and `gold_holdings_change()`, the split of a change in holdings value into a price effect and a volume effect (they sum exactly to the change, by construction), and the 11th card, "Price effect" (the 0008 function is renamed `gold_stats_core` and `v_gold_stats` adds the card to its ten).
 
+### Country indicators (Vinara)
+
+`python -m pipelines indicators` (`pipelines/africa_pipelines/indicators*.py`) reads annual figures for the 54 states from 2000. Every download is cached under `data/raw/indicators/`; `--refresh` fetches again. What each series is, and its code at the source, is in `pipelines/africa_pipelines/reference/indicators_config.json`; sources and licences are in [docs/vinara-sources.md](docs/vinara-sources.md) and the rules in [docs/vinara-method.md](docs/vinara-method.md).
+
+| Indicators | Source |
+|---|---|
+| Population and its growth, land and surface area, GDP (US$ and PPP), GDP per capita (PPP), real growth, inflation, GNI | World Bank WDI (CC BY 4.0) |
+| Government gross debt (% of GDP) | IMF World Economic Outlook |
+| Military spending (US$ and % of GDP) | SIPRI, read through WDI; only the latest ten years are kept (fair use) |
+| Human Development Index | UNDP Human Development Report (CC BY 3.0 IGO); when UNDP's site does not answer, Our World in Data's copy of the same series |
+| External debt, public external debt, and what is owed to multilateral lenders, governments, bondholders, commercial banks and other private lenders; each creditor's share | World Bank International Debt Statistics (CC BY 4.0) |
+
+- **One value per country, indicator and year.** The World Bank's figure is used where it has one. Where it has none for the year before the IMF's latest WEO edition, the IMF's figure for that year fills it (GDP, GDP at PPP, GDP per capita, growth, inflation), stored as an **estimate**. Government debt comes from the IMF, whose figure for that year is likewise an estimate. Projections (the edition's year and later) and years not yet ended are refused.
+- **No data is a missing row,** never zero. Countries outside the World Bank's debt reporting (Libya, Namibia, Seychelles, South Sudan) have no debt rows.
+- **Creditors:** the last ten years of public and publicly guaranteed external debt by creditor. A creditor's kind is the series it appears in (multilateral, bilateral, commercial banks, other private); bondholders are one creditor. Creditor amounts are checked against their totals.
+- **Validation** (the run fails otherwise): no duplicate or future observation; estimates only for the year before the edition; every value within a plausible range for its unit; at most ten years of SIPRI data; every indicator has data.
+- **Reports:** `data/indicators_coverage_matrix.md` (each country's latest year per indicator) and `data/indicators_review_report.md` (coverage and each indicator's default ten-year window, gaps, the IMF estimates used, where the World Bank and the IMF disagree, SIPRI's years, external debt coverage and the largest creditors, and extreme values to check).
+- **Database:** migration `0011_indicators.sql`: `indicators` (definition, unit, display precision, source code and dataset), `indicator_observations` (value, `reported` or `estimate`, source and edition) and `external_debt_creditors`.
+
 ### Region colours
 
 Each region's identity colour is the **mode colour across its flags**: flags are rasterised, clustered into at most 8 colours in CIELAB, merged across flags (CIEDE2000 < 10) and summed per region; white, black and grey are excluded by default, and near-identical picks are resolved by giving the colour to the region where it has the larger share. Anti-aliasing blends at stripe edges are folded back into the real flag colours first. Every parameter is a command-line option (`python -m pipelines flags --help`), and `--include-neutrals` switches which result is selected (both are always reported).
@@ -217,7 +237,7 @@ How the extraction works and where its judgement calls live:
 
 ### Scheduled refresh
 
-`.github/workflows/data-refresh.yml` runs every Monday at 03:17 UTC (and on demand): `migrate` → `flags --refresh` → `mountains --refresh` and the gold steps (first Monday of the month, or on a manual run; gold production only on a manual run) → `load` → `status`, then calls the Netlify build hook if `load` changed any rows. If upstream data changed the generated seeds, the run warns and uploads them (with the colour and mountain reports) as the `refreshed-data` artifact for you to review and commit; the approved region colours are never replaced automatically. Repository secrets: `DATABASE_URL_WRITE` (required), `COMTRADE_API_KEY` (for gold trade; without it the step is skipped with a warning) and `NETLIFY_BUILD_HOOK` (optional).
+`.github/workflows/data-refresh.yml` runs every Monday at 03:17 UTC (and on demand): `migrate` → `flags --refresh` → `mountains --refresh`, the gold steps and `indicators --refresh` (first Monday of the month, or on a manual run; gold production only on a manual run) → `load` → `status`, then calls the Netlify build hook if `load` changed any rows. If upstream data changed the generated seeds, the run warns and uploads them (with the colour, mountain, gold and indicator reports) as the `refreshed-data` artifact for you to review and commit; the approved region colours are never replaced automatically. Repository secrets: `DATABASE_URL_WRITE` (required), `COMTRADE_API_KEY` (for gold trade; without it the step is skipped with a warning) and `NETLIFY_BUILD_HOOK` (optional).
 
 ### Local database for tests
 

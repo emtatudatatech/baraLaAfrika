@@ -47,6 +47,8 @@ ignore = ["PLR0913", "PLR2004", "PLR0912", "PLR0915", "PLC0415"]
 # The gold reports and notes use typographic dashes and multiplication signs on purpose.
 "pipelines/africa_pipelines/gold_*.py" = ["RUF001", "RUF002", "RUF003"]
 "pipelines/tests/test_gold.py" = ["RUF001", "RUF003"]
+# The indicators reports use typographic dashes for year ranges on purpose.
+"pipelines/africa_pipelines/indicators_report.py" = ["RUF001"]
 
 [tool.mypy]
 python_version = "3.15"

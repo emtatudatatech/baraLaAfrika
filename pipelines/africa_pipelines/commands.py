@@ -16,6 +16,7 @@ from pipelines.africa_pipelines import (
     gold_reserves,
     gold_trade,
     harim,
+    indicators,
     load,
     migrate,
     status,
@@ -124,6 +125,13 @@ ALL: list[Command] = [
         "presence, profiles).",
         configure=_configure_gold,
         run=_run_gold,
+    ),
+    Command(
+        name="indicators",
+        help="Fetch Vinara's annual indicators (World Bank, IMF, UNDP, SIPRI) and debt by "
+        "creditor into seeds, with the coverage matrix and review report.",
+        configure=indicators.configure,
+        run=indicators.run,
     ),
     Command(
         name="load",

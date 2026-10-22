@@ -221,6 +221,11 @@ describe('GET /api/coverage', () => {
       'mountains-geonames',
       'mountains-wikidata',
       'symbology-pdf',
+      'vinara-hdr',
+      'vinara-ids',
+      'vinara-imf-weo',
+      'vinara-sipri',
+      'vinara-wdi',
     ]);
     expect(all.missing).toEqual([]);
     const bad = await call(coverage, '/api/coverage?datasets=symbology-pdf,nope');

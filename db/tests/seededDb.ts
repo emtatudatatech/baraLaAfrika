@@ -513,10 +513,91 @@ export async function loadGold(db: PGlite): Promise<void> {
   );
 }
 
+interface IndicatorSeed {
+  datasets: SeedDataset[];
+  sources: SeedSource[];
+  editions: Record<string, string>;
+  indicators: SeedTable;
+  observations: SeedTable;
+}
+
+/**
+ * Vinara's indicator tables, as `python -m pipelines load` writes them (indicators_load.py).
+ */
+export async function loadIndicators(db: PGlite): Promise<void> {
+  const seed = readJson('db', 'seeds', 'indicators.json') as IndicatorSeed;
+  const creditors = readJson('db', 'seeds', 'external_debt_creditors.json') as {
+    creditor_names: Record<string, string>;
+    creditors: SeedTable;
+  };
+  for (const d of seed.datasets) {
+    await db.query(
+      `INSERT INTO datasets (key, name, provider, license, attribution, coverage_start,
+         coverage_end, as_of, refresh_cadence, last_refreshed_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, '2026-10-22T08:00:00Z')`,
+      [
+        d.key,
+        d.name,
+        d.provider,
+        d.license,
+        d.attribution,
+        d.coverage_start,
+        d.coverage_end,
+        d.as_of,
+        d.refresh_cadence,
+      ],
+    );
+  }
+  await db.query(
+    `INSERT INTO sources (source_key, title, url, source_type, reliability_tier)
+     SELECT source_key, title, url, source_type, reliability_tier::reliability_tier
+     FROM json_to_recordset($1::json) AS s(source_key text, title text, url text,
+       source_type text, reliability_tier text)
+     ON CONFLICT (source_key) DO NOTHING`,
+    [JSON.stringify(seed.sources)],
+  );
+  await db.query(
+    `INSERT INTO indicators (key, name, unit, decimals, definition, source_code, dataset_id,
+       sort_order)
+     SELECT r.key, r.name, r.unit, r.decimals, r.definition, r.source_code, d.id, r.sort_order
+     FROM json_to_recordset($1::json) AS r(key text, name text, unit text, decimals int,
+       definition text, source_code text, dataset text, sort_order int)
+     JOIN datasets d ON d.key = r.dataset`,
+    [JSON.stringify(recordsOf(seed.indicators))],
+  );
+  await db.query(
+    `INSERT INTO indicator_observations (indicator_id, country_id, year, value, basis, source_id,
+       edition)
+     SELECT i.id, c.id, r.year, r.value, r.basis::observation_basis, s.id,
+       ($2::json ->> r.source)
+     FROM json_to_recordset($1::json) AS r(indicator text, iso3 text, year int, value numeric,
+       basis text, source text)
+     JOIN indicators i ON i.key = r.indicator
+     JOIN countries c ON c.iso3 = r.iso3
+     JOIN sources s ON s.source_key = r.source`,
+    [JSON.stringify(recordsOf(seed.observations)), JSON.stringify(seed.editions)],
+  );
+  await db.query(
+    `INSERT INTO external_debt_creditors (country_id, year, creditor_kind, creditor_code,
+       creditor_name, amount_usd, source_id, edition)
+     SELECT c.id, r.year, r.kind::creditor_kind, r.code, ($2::json ->> r.code), r.amount_usd,
+       (SELECT id FROM sources WHERE source_key = 'wb-ids'), $3
+     FROM json_to_recordset($1::json) AS r(iso3 text, year int, kind text, code text,
+       amount_usd numeric)
+     JOIN countries c ON c.iso3 = r.iso3`,
+    [
+      JSON.stringify(recordsOf(creditors.creditors)),
+      JSON.stringify(creditors.creditor_names),
+      seed.editions['wb-ids'],
+    ],
+  );
+}
+
 export async function seededDb(): Promise<PGlite> {
   const db = await migratedDb();
   await loadSeeds(db);
   await loadHarim(db);
   await loadGold(db);
+  await loadIndicators(db);
   return db;
 }

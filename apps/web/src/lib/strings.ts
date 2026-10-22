@@ -95,6 +95,11 @@ export const strings = {
     'gold-trade': 'Gold trade',
     'gold-presence': 'Presence tiers',
     'gold-mines': 'Gold mines',
+    'vinara-wdi': 'World Bank indicators',
+    'vinara-imf-weo': 'IMF World Economic Outlook',
+    'vinara-sipri': 'SIPRI military spending',
+    'vinara-hdr': 'UNDP Human Development Index',
+    'vinara-ids': 'World Bank debt statistics',
   },
   pages: {
     home: {

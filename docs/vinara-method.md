@@ -13,7 +13,7 @@ Every rule here is computed in the database, not in the browser, and the definit
 ## Time
 
 - **Window.** By default, the **last 10 complete years**. A year is complete for a metric when at least 90% of the states in scope have a figure for it. With the data read on 22 October 2026, GDP and growth are complete for 2025, so the default GDP window is 2016–2025. The ribbon's year range replaces the default.
-- **Recency.** Each figure is the most recent available in the window and is shown with its own year (or month, for exchange rates). Reported figures are preferred. Where the World Bank has no figure for the latest year, an IMF figure for the year before the WEO edition may fill it, labelled **IMF estimate**. Projections are never shown.
+- **Recency.** Each figure is the most recent available in the window and is shown with its own year (or month, for exchange rates). Reported figures are preferred. Where the World Bank has no figure for the year before the latest WEO edition, the IMF's figure for that year fills it (GDP, GDP at PPP, GDP per capita, real growth and inflation), labelled **IMF estimate**. Government debt is the IMF's series, and its figure for that year is labelled **IMF estimate** too. Projections are never shown.
 - **No data is never zero.** A country without a figure for the window takes no part in that metric's ranking, and says so.
 
 ## Metrics and their direction

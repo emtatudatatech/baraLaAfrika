@@ -15,6 +15,8 @@ Every rule here is computed in the database, not in the browser, and the definit
 - **Window.** By default, the **last 10 complete years**. A year is complete for a metric when at least 90% of the states in scope have a figure for it. With the data read on 22 October 2026, GDP and growth are complete for 2025, so the default GDP window is 2016–2025. The ribbon's year range replaces the default.
 - **Recency.** Each figure is the most recent available in the window and is shown with its own year (or month, for exchange rates). Reported figures are preferred. Where the World Bank has no figure for the year before the latest WEO edition, the IMF's figure for that year fills it (GDP, GDP at PPP, GDP per capita, real growth and inflation), labelled **IMF estimate**. Government debt is the IMF's series, and its figure for that year is labelled **IMF estimate** too. Projections are never shown.
 - **No data is never zero.** A country without a figure for the window takes no part in that metric's ranking, and says so.
+- **Enough years.** A mean over the window (growth, inflation) needs a figure in at least 80% of the window's years. Currency performance needs a rate in the window's first and last months; currency stability needs rates in at least 90% of its months.
+- **One window for currencies.** Currency performance and stability share one window, set by how many states have a full year of rates (January to December).
 
 ## Metrics and their direction
 
@@ -44,15 +46,33 @@ Population growth, the election calendar and external debt by creditor are shown
 
 - **Unit:** local currency per US dollar, from 1 January 2020 (the floor for exchange rates) to the day before the data's last refresh. Daily figures are official: the ECB's reference rates or rates derived from them at an official parity, the BIS's, or the state's own central bank's ([sources](vinara-sources.md#12-daily-rates-bis-and-central-banks)). States without a usable daily source show the IMF's monthly period averages, labelled monthly.
 - **Redenominations** are put on one unit before any calculation, from a table of currency changes, each with its date and official conversion: for example Mauritania's ouguiya (10 old = 1 new, 2018), São Tomé and Príncipe's dobra (1,000 old = 1 new, 2018) and Zimbabwe Gold (2,498.7242 Zimbabwe dollars = 1 ZiG, April 2024). Every series is on today's unit. A redenomination is never read as a gain or a loss in value; a currency's fall before a change (the Zimbabwe dollar in early 2024) is real and counts.
-- **Stale series:** a series more than 12 months behind the newest month is marked stale and shown to its last month. A currency takes part in a window's ranking only if its series covers the window.
+- **Stale series:** a series more than 12 months behind the newest month is marked stale and shown to its last month. A currency takes part in a window's ranking only if its series covers the window (see **Enough years** above).
 - **Pegs** are recorded with their dates (CFA francs, the Comorian franc, the Cabo Verdean escudo and the dobra to the euro; the loti, lilangeni and Namibian dollar to the rand; the Djiboutian franc to the dollar). Countries in one currency union share one currency's figures, and a regional figure counts each currency once.
 - **One basis for ranking:** currency performance and stability are ranked on monthly averages for every state (the mean of its daily rates where it has daily data, otherwise the IMF's monthly average), so all 54 compare alike. Daily rates are shown in the charts, and a state's recent daily volatility (the last 12 months) is shown beside it but not ranked.
+
+## Definitions
+
+The text the site shows for each metric, word for word (the API's `definition`; keys are the API's).
+
+- **Population** (`population`): The latest population in the window (World Bank). The largest leads.
+- **Land area** (`land_area`): Land area in square kilometres, excluding inland water: the latest figure in the window (World Bank). The largest leads.
+- **GDP** (`gdp_usd`): GDP in current US dollars: the latest figure in the window (World Bank; an IMF estimate where the World Bank has none for the latest year). The largest leads.
+- **GDP at purchasing power parity** (`gdp_ppp`): GDP at purchasing power parity, in current international dollars: the latest figure in the window (World Bank; an IMF estimate where the World Bank has none for the latest year). The largest leads.
+- **GDP per capita (PPP)** (`gdp_per_capita_ppp`): GDP per person at purchasing power parity, in current international dollars: the latest figure in the window. The largest leads.
+- **Real GDP growth** (`gdp_growth`): Real GDP growth: the mean of the annual rates over the window, for states with a figure in at least 80% of its years. The highest leads.
+- **Inflation** (`inflation`): Inflation: the mean of the absolute annual rates over the window, so that deflation counts as a departure from stable prices too, for states with a figure in at least 80% of its years. The lowest leads.
+- **Government debt** (`government_debt`): General government gross debt as a share of GDP: the latest figure in the window (IMF; its figure for the year before its latest edition is an estimate). The lowest leads.
+- **GNI** (`gni_usd`): GNI in current US dollars: the latest figure in the window (World Bank). The largest leads.
+- **Currency performance** (`currency_performance`): The change in the currency's value against the US dollar from the first month of the window to its last, on monthly averages (of official daily rates where a state has them, otherwise the IMF's). A rise means the currency gained. The largest gain, or the smallest loss, leads.
+- **Currency stability** (`currency_stability`): The volatility of the currency against the US dollar: the standard deviation of its monthly changes over the window, annualised, for currencies with rates in at least 90% of the window's months. The lowest leads.
+- **Military spending** (`military_usd`): Military expenditure in current US dollars: the latest figure in the window (SIPRI). The largest leads.
+- **Human development** (`hdi`): The Human Development Index: the latest figure in the window (UNDP). The highest leads.
 
 ## Cardinal and silent contender
 
 - **Cardinal:** the state ranked first by the metric's measure, among the states in scope that have a figure for the window.
 - **Silent contender:** the state ranked second.
-- **Ties** (equal to the published precision) are all named; they are never broken at random.
+- **Ties** (equal to the published precision) are all named; they are never broken at random. Currencies fixed to the dollar, or to one another, can tie at zero: two states sharing a currency always tie on both currency metrics.
 - **Region against region:** the same rule over the five regions' aggregates (below).
 
 ## Is the cardinal's lead narrowing?
@@ -61,7 +81,8 @@ The signal is descriptive: it reports what happened in the last three years of t
 
 - **Gap closing** for level metrics (population, area, GDP, GDP at PPP, GDP per capita, GNI, military spending, HDI, debt): the gap between cardinal and contender narrowed in each of the last three annual steps.
 - **Gap closing** for rate metrics (growth, inflation, currency performance and stability): the contender did better than the cardinal in at least two of the last three years.
-- Otherwise **Lead holding**. With fewer than three years of data for either country: **Not enough data**.
+- Otherwise **Lead holding**. Without a figure for both countries in each year the test needs (the window's last four years for levels, its last three for rates): **Not enough data**.
+- When the cardinal or the contender is a tie, there is no signal: it compares two states.
 - The contender may already lead in the latest year while the window still ranks the cardinal first: the page then says so in words.
 
 ## Regional figures
@@ -71,11 +92,13 @@ The signal is descriptive: it reports what happened in the last three years of t
 | Population, land area, GDP, GDP at PPP, GNI, military spending | Sum over member states |
 | GDP per capita | Total GDP (PPP) over total population |
 | Real growth, inflation | GDP-weighted mean (weights: GDP in current US$ in the previous year), shown with the median |
-| Government debt | GDP-weighted mean |
+| Government debt | GDP-weighted mean (weights: GDP in current US$ in the year of each state's figure) |
 | Currency performance and stability | Median over the region's currencies, each currency once |
+
+Every regional figure is shown with the median over the region's states. For growth and inflation the mean is taken year by year over the members with a figure, then averaged over the window; inflation uses each member's absolute rate, as for countries.
 | Human development | Population-weighted mean |
 
-A regional figure is shown only when the members with data account for at least 90% of the region's population (for sums and population-weighted figures) or of its GDP (for GDP-weighted figures); otherwise it is marked **partial** with the share covered.
+A regional figure is ranked only when the members with data account for at least 90% of the region's population (for sums, GDP per capita, population-weighted figures and currencies) or of its GDP (for GDP-weighted figures; for growth and inflation, in every year of the window). Otherwise it is shown, marked **partial** with the share covered, and not ranked.
 
 ## Leaders and elections
 

@@ -82,7 +82,8 @@ scripts/                  build helpers (Material Symbols subsetting, favicon, s
 config/constants.json     single source of truth for unit constants
 e2e/                      Playwright suites (desktop 1440×900, mobile 390×844)
 data/source/              the research PDF (raw downloads go to data/raw/, gitignored)
-docs/                     statistic definitions (harim-stats.md, dhahabu-stats.md), gold sources and licences
+docs/                     statistic definitions (harim-stats.md, dhahabu-stats.md), the Vinara method,
+                          and gold and Vinara sources and licences
 data/*.md                 review reports: research document, region colours, boundaries, mountains, gold
 ```
 
@@ -243,6 +244,16 @@ The pipelines run from the repo root (`uv run python -m pipelines --help`); see 
 - **Report:** `data/fx_review_report.md` lists, per state, its daily source and span, its monthly span and status, and why a state is monthly only; how each currency change was applied; the peg and daily checks; and every month a currency moved more than 50% against the dollar.
 - **Database:** migration `0014_fx.sql`: `country_currencies`, `currency_changes`, `fx_monthly`, `fx_daily` (with each rate's source) and `fx_reporting`.
 
+### The rankings (Vinara)
+
+Every Vinara rule is computed in the database (migration `0015_vinara.sql`), from the indicators and exchange rates above; there is no pipeline step. The rules are in [docs/vinara-method.md](docs/vinara-method.md), and each metric's definition there is word for word the one the database returns (a test keeps them identical).
+
+- `vinara_metrics`: the 13 ranked metrics, each with how it is measured over the window, which way leads, its precision (values equal at it tie), how a region's figure is made, and its definition.
+- `v_fx_month`: each state's monthly rate on one basis for ranking (the mean of its daily rates where it has them, otherwise the IMF's monthly average).
+- `vinara_window(metric, from, to)`: the default window (the last ten complete years) or a range asked for, kept within the data.
+- `vinara_rankings(metric, region, from, to)`: the states ranked, with ties sharing a rank; `vinara_signal(...)`: whether the cardinal's lead is narrowing; `vinara_region_values(...)`: each region's figure, its median over states and the share it covers.
+- `vinara_summary(region, from, to, metric)`: everything the page needs for each metric in one call. It holds intermediate rankings as JSON rather than temporary tables, so it runs for the read-only API role (a test runs it in a read-only transaction).
+
 ### Region colours
 
 Each region's identity colour is the **mode colour across its flags**: flags are rasterised, clustered into at most 8 colours in CIELAB, merged across flags (CIEDE2000 < 10) and summed per region; white, black and grey are excluded by default, and near-identical picks are resolved by giving the colour to the region where it has the larger share. Anti-aliasing blends at stripe edges are folded back into the real flag colours first. Every parameter is a command-line option (`python -m pipelines flags --help`), and `--include-neutrals` switches which result is selected (both are always reported).
@@ -298,10 +309,13 @@ Netlify Functions in `netlify/functions/`, one file per route, each declaring it
 | `GET /api/gold/countries/:iso3?year=` | One country's drawer: its table row at the reference year, production by year (with computed values), trade by year (reported and mirror) and its top export partners, central bank holdings (each year's last month), in-ground reserves, curated notes and every source with what it supports. Unknown or malformed codes are 404 |
 | `GET /api/gold/series?metric=production\|exports\|imports\|holdings_tonnes\|holdings_usd&countries=&region=&from=&to=&granularity=` | Chart series, one per country, pre-aggregated in SQL; production adds Africa's (or the region's) yearly totals with their completeness. At most 12 countries per request and 6,000 points (larger requests drop the earliest periods and say `capped`) |
 | `GET /api/gold/holdings-change?countries=&from=&to=` | For each country with two or more reports in the years, its first and last holding and the change in value split into price and volume effects (`gold_holdings_change`) |
+| `GET /api/vinara?region=&from=&to=` | For each of the 13 metrics, over its default window or the years asked for: the window, the cardinal and the silent contender (ties all named, each value with its year and whether it is an IMF estimate), the gap-closing signal, whether the contender led in the window's last year, how many states are ranked and why the others are not, and its definition. For Africa (no `region`), the five regions compared: each region's figure, median, coverage, whether it is partial, and its rank. 503 until the indicators are loaded |
+| `GET /api/vinara/metrics/:key?region=&from=&to=` | One metric in full: the same summary, every ranked state with its rank, the regions' figures (Africa only) and the cardinal's and contender's yearly values over the window, for charts. Unknown metrics are 404 |
 
 - **Errors** always have the shape `{ "error": { "code", "message" } }`: `bad_request` (400, invalid query parameters), `not_found` (404), `method_not_allowed` (405; only GET and HEAD), `service_unavailable` (503, database not configured) and `internal_error` (500; details are logged, never returned).
 - **Caching:** `Cache-Control: public, s-maxage=3600, stale-while-revalidate=86400` with a weak `ETag` (304 on `If-None-Match`). Errors are `no-store`.
 - **Database:** the Neon HTTP driver with the read-only `bla_reader` role (`DATABASE_URL_READ`); every query is parameterised (`netlify/functions/_shared/queries.ts` and `harimQueries.ts`). Search uses the `search_fold()` SQL function and the `v_country_summary` view (migration 0002). The Harim routes read `v_mountains`, `v_country_mountain_summary` and `v_harim_stats()` (migration 0004; 0005 adds each height's confidence and other sourced heights to the statistics, and names the region in the lowest point's label). Every statistic's definition and tie rule is in [`docs/harim-stats.md`](docs/harim-stats.md), word for word as the SQL returns it (a test keeps them identical).
+- **Vinara** reads `vinara_summary()`, `vinara_rankings()` and `vinara_country_years()` (migration 0015) through `netlify/functions/_shared/vinaraQueries.ts`, which only shapes their rows.
 - **Routing:** `/api/mountains/:slug` excludes the fixed paths (`summary`, `stats`, `export`, `ranges`), and a test checks every API path reaches exactly one function.
 - **Files:** a handler may return a ready `Response` (the export), with the same caching and ETag as JSON.
 - **Bundling:** functions import the shared contract by relative path (`_shared/contract.ts`), so Netlify's bundler inlines it. `npm run check:functions` builds the functions exactly as a deploy does and checks every bundle loads and answers.

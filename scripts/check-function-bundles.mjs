@@ -37,7 +37,7 @@ for (const zip of zips) {
     );
     const url = `https://bundle.test${module.config.path}${QUERIES[name] ?? ''}`;
     const response = await module.default(new Request(url), {
-      params: { iso3: 'KEN', slug: 'mount-kenya' },
+      params: { iso3: 'KEN', slug: 'mount-kenya', key: 'population' },
     });
     const body = await response.json();
     if (response.status !== 503 || body?.error?.code !== 'service_unavailable') {

@@ -10,6 +10,7 @@ import psycopg
 import pytest
 
 from pipelines.africa_pipelines import (
+    fx_load,
     gold_load,
     indicators_load,
     load,
@@ -51,6 +52,8 @@ def test_first_load_populates_everything_with_approved_colours(pglite_url: str) 
         assert indicators is not None
         politics = politics_load.read(SEEDS_DIR)
         assert politics is not None
+        fx_seeds = fx_load.read(SEEDS_DIR)
+        assert fx_seeds is not None
         expected_sources = (
             {s["source_key"] for s in symbology_sources}
             | {s["source_key"] for s in harim["sources"]}
@@ -61,6 +64,7 @@ def test_first_load_populates_everything_with_approved_colours(pglite_url: str) 
                 if politics["seed"]["approved_on"]
                 else set()
             )
+            | {s["source_key"] for s in fx_seeds["sources"]}
         )
         assert scalar(conn, "SELECT count(*) FROM sources") == len(expected_sources)
         palette_rows = scalar(conn, "SELECT count(*) FROM flag_palette")
@@ -81,6 +85,7 @@ def test_first_load_populates_everything_with_approved_colours(pglite_url: str) 
         gold_runs = [(d["key"], "succeeded") for d in gold["datasets"]]
         indicator_runs = [(d["key"], "succeeded") for d in indicators["datasets"]]
         politics_runs = [(d["key"], "succeeded") for d in politics["datasets"]]
+        fx_runs = [(d["key"], "succeeded") for d in fx_seeds["datasets"]]
         assert sorted(runs) == sorted(
             [
                 ("boundaries-natural-earth", "succeeded"),
@@ -92,6 +97,7 @@ def test_first_load_populates_everything_with_approved_colours(pglite_url: str) 
                 *gold_runs,
                 *indicator_runs,
                 *politics_runs,
+                *fx_runs,
             ]
         )
         assert scalar(conn, "SELECT count(*) FROM datasets WHERE last_refreshed_at IS NULL") == 0
@@ -313,3 +319,24 @@ def test_leaders_and_elections_load_only_once_approved(pglite_url: str, tmp_path
         again = load.load(conn, seeds)
         assert again.changes.get("country_leaders", 0) == 0
         assert again.changes.get("country_elections", 0) == 0
+
+
+def test_exchange_rates_load_and_reload_without_changes(pglite_url: str) -> None:
+    seed = json.loads((SEEDS_DIR / "fx.json").read_text())
+    daily = json.loads((SEEDS_DIR / "fx_daily.json").read_text())
+    with migrated(pglite_url) as conn:
+        first = load.load(conn)
+        assert first.changes["fx_monthly"] == len(seed["monthly"]["rows"])
+        assert first.changes["fx_daily"] == len(daily["daily"]["rows"])
+        assert first.changes["country_currencies"] == 54
+        assert (
+            scalar(
+                conn,
+                "SELECT count(*) FROM country_currencies WHERE peg_anchor = 'EUR' "
+                "AND currency_code IN ('XOF', 'XAF')",
+            )
+            == 14
+        )
+        second = load.load(conn)
+        for table in ("fx_monthly", "fx_daily", "country_currencies", "fx_reporting"):
+            assert second.changes.get(table, 0) == 0, table

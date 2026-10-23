@@ -160,6 +160,27 @@ describe('committed seeds', () => {
     expect(counts.rows[0]).toEqual({ executives: 54, elections: 54 });
   });
 
+  it('load exchange rates for every state, and daily rates per shared currency', async () => {
+    const db = await seededDb();
+    const counts = await db.query<{
+      states: number;
+      daily: number;
+      fresh: number;
+      reported: number;
+    }>(`
+      SELECT (SELECT count(DISTINCT country_id)::int FROM fx_monthly) AS states,
+             (SELECT count(DISTINCT currency_code)::int FROM fx_daily) AS daily,
+             (SELECT count(*)::int FROM fx_reporting WHERE status = 'current') AS fresh,
+             (SELECT count(*)::int FROM fx_reporting) AS reported`);
+    const daily = readJson('db', 'seeds', 'fx_daily.json') as { daily: { rows: string[][] } };
+    const monthly = readJson('db', 'seeds', 'fx.json') as { monthly: { rows: string[][] } };
+    // Every state has a status row; Somalia has no rate since 2020 (status "none").
+    expect(counts.rows[0]?.reported).toBe(54);
+    expect(counts.rows[0]?.states).toBe(new Set(monthly.monthly.rows.map((r) => r[0])).size);
+    expect(counts.rows[0]?.daily).toBe(new Set(daily.daily.rows.map((r) => r[0])).size);
+    expect(counts.rows[0]?.fresh).toBeGreaterThan(30);
+  });
+
   it('fold accents for search', async () => {
     const db = await seededDb();
     const result = await db.query<{ name: string }>(

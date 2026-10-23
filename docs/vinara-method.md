@@ -42,10 +42,11 @@ Population growth, the election calendar and external debt by creditor are shown
 
 ## Exchange rates
 
-- **Unit:** local currency per US dollar. Monthly figures are the IMF's period averages; daily figures are the ECB's reference rates or rates derived from them at an official parity ([sources](vinara-sources.md#5-ecb-euro-foreign-exchange-reference-rates)).
-- **Redenominations** are put on one unit before any calculation, from a table of currency changes, each with its date, factor and source: for example Mauritania's ouguiya (10 old = 1 new, 2018), São Tomé and Príncipe's dobra (1,000 old = 1 new, 2018) and Zimbabwe's currency changes (2019, 2024). A redenomination is never read as a gain or a loss in value.
+- **Unit:** local currency per US dollar, from 1 January 2020 (the floor for exchange rates) to the day before the data's last refresh. Daily figures are official: the ECB's reference rates or rates derived from them at an official parity, the BIS's, or the state's own central bank's ([sources](vinara-sources.md#12-daily-rates-bis-and-central-banks)). States without a usable daily source show the IMF's monthly period averages, labelled monthly.
+- **Redenominations** are put on one unit before any calculation, from a table of currency changes, each with its date and official conversion: for example Mauritania's ouguiya (10 old = 1 new, 2018), São Tomé and Príncipe's dobra (1,000 old = 1 new, 2018) and Zimbabwe Gold (2,498.7242 Zimbabwe dollars = 1 ZiG, April 2024). Every series is on today's unit. A redenomination is never read as a gain or a loss in value; a currency's fall before a change (the Zimbabwe dollar in early 2024) is real and counts.
+- **Stale series:** a series more than 12 months behind the newest month is marked stale and shown to its last month. A currency takes part in a window's ranking only if its series covers the window.
 - **Pegs** are recorded with their dates (CFA francs, the Comorian franc, the Cabo Verdean escudo and the dobra to the euro; the loti, lilangeni and Namibian dollar to the rand; the Djiboutian franc to the dollar). Countries in one currency union share one currency's figures, and a regional figure counts each currency once.
-- **Recent volatility** uses the last 12 months of daily data where available, and otherwise monthly data.
+- **One basis for ranking:** currency performance and stability are ranked on monthly averages for every state (the mean of its daily rates where it has daily data, otherwise the IMF's monthly average), so all 54 compare alike. Daily rates are shown in the charts, and a state's recent daily volatility (the last 12 months) is shown beside it but not ranked.
 
 ## Cardinal and silent contender
 

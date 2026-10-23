@@ -8,6 +8,7 @@ from pipelines.africa_pipelines import (
     boundaries,
     extract_pdf,
     flags,
+    fx,
     gold_mines,
     gold_presence,
     gold_price,
@@ -140,6 +141,13 @@ ALL: list[Command] = [
         "the review report; --approve records them as approved.",
         configure=politics.configure,
         run=politics.run,
+    ),
+    Command(
+        name="fx",
+        help="Fetch exchange rates (IMF monthly, ECB daily and derived pegs) into seeds and the "
+        "review report.",
+        configure=fx.configure,
+        run=fx.run,
     ),
     Command(
         name="load",

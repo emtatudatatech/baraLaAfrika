@@ -664,6 +664,90 @@ export async function loadPolitics(db: PGlite): Promise<void> {
   );
 }
 
+/** Exchange rates, as `python -m pipelines load` writes them (fx_load.py). */
+export async function loadFx(db: PGlite): Promise<void> {
+  const seed = readJson('db', 'seeds', 'fx.json') as {
+    datasets: SeedDataset[];
+    sources: SeedSource[];
+    currencies: SeedTable;
+    changes: SeedTable;
+    monthly: SeedTable;
+    status: SeedTable;
+  };
+  const daily = readJson('db', 'seeds', 'fx_daily.json') as { daily: SeedTable };
+  for (const d of seed.datasets) {
+    await db.query(
+      `INSERT INTO datasets (key, name, provider, license, attribution, coverage_start,
+         coverage_end, as_of, refresh_cadence, last_refreshed_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, '2026-10-15T08:00:00Z')`,
+      [
+        d.key,
+        d.name,
+        d.provider,
+        d.license,
+        d.attribution,
+        d.coverage_start,
+        d.coverage_end,
+        d.as_of,
+        d.refresh_cadence,
+      ],
+    );
+  }
+  await db.query(
+    `INSERT INTO sources (source_key, title, url, source_type, reliability_tier)
+     SELECT source_key, title, url, source_type, reliability_tier::reliability_tier
+     FROM json_to_recordset($1::json) AS s(source_key text, title text, url text,
+       source_type text, reliability_tier text)
+     ON CONFLICT (source_key) DO NOTHING`,
+    [JSON.stringify(seed.sources)],
+  );
+  const source = (key: string) => `(SELECT id FROM sources WHERE source_key = '${key}')`;
+  await db.query(
+    `INSERT INTO country_currencies (country_id, currency_code, union_name, peg_anchor,
+       peg_parity, peg_since, source_id)
+     SELECT c.id, r.currency, r.union_name, r.peg_anchor, r.peg_parity, r.peg_since,
+       CASE WHEN r.peg_anchor IS NULL THEN NULL ELSE ${source('imf-areaer')} END
+     FROM json_to_recordset($1::json) AS r(iso3 text, currency text, union_name text,
+       peg_anchor text, peg_parity numeric, peg_since date)
+     JOIN countries c ON c.iso3 = r.iso3`,
+    [JSON.stringify(recordsOf(seed.currencies))],
+  );
+  await db.query(
+    `INSERT INTO currency_changes (country_id, effective_date, old_code, new_code, old_per_new,
+       note, handling)
+     SELECT c.id, r.date, r.old, r.new, r.old_per_new, r.note,
+       r.outcome::currency_change_handling
+     FROM json_to_recordset($1::json) AS r(iso3 text, date date, old text, new text,
+       old_per_new numeric, note text, outcome text)
+     JOIN countries c ON c.iso3 = r.iso3`,
+    [JSON.stringify(recordsOf(seed.changes))],
+  );
+  await db.query(
+    `INSERT INTO fx_monthly (country_id, month, per_usd_avg, per_usd_end, converted, source_id)
+     SELECT c.id, r.month, r.per_usd_avg, r.per_usd_end, r.converted, ${source('imf-er')}
+     FROM json_to_recordset($1::json) AS r(iso3 text, month date, per_usd_avg numeric,
+       per_usd_end numeric, converted boolean)
+     JOIN countries c ON c.iso3 = r.iso3`,
+    [JSON.stringify(recordsOf(seed.monthly))],
+  );
+  await db.query(
+    `INSERT INTO fx_reporting (country_id, first_month, last_month, months_behind, status)
+     SELECT c.id, r.first_month, r.last_month, r.months_behind, r.status::fx_status
+     FROM json_to_recordset($1::json) AS r(iso3 text, first_month date, last_month date,
+       months_behind int, status text)
+     JOIN countries c ON c.iso3 = r.iso3`,
+    [JSON.stringify(recordsOf(seed.status))],
+  );
+  await db.query(
+    `INSERT INTO fx_daily (currency_code, day, per_usd, basis, source_id)
+     SELECT r.currency, r.date, r.per_usd, r.basis::fx_daily_basis, s.id
+     FROM json_to_recordset($1::json) AS r(currency text, date date, per_usd numeric,
+       basis text, source text)
+     JOIN sources s ON s.source_key = r.source`,
+    [JSON.stringify(recordsOf(daily.daily))],
+  );
+}
+
 export async function seededDb(): Promise<PGlite> {
   const db = await migratedDb();
   await loadSeeds(db);
@@ -671,5 +755,6 @@ export async function seededDb(): Promise<PGlite> {
   await loadGold(db);
   await loadIndicators(db);
   await loadPolitics(db);
+  await loadFx(db);
   return db;
 }

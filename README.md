@@ -141,7 +141,8 @@ The pipelines run from the repo root (`uv run python -m pipelines --help`); see 
 | 6 | `uv run python -m pipelines gold` | Builds the Dhahabu data (see [Gold data](#gold-data-dhahabu)) → `db/seeds/gold_*.json`, `data/gold_coverage_matrix.md` and `data/gold_review_report.md` (needs `COMTRADE_API_KEY`) |
 | 7 | `uv run python -m pipelines indicators` | Builds the annual country indicators and public external debt by creditor (see [Country indicators](#country-indicators-vinara)) → `db/seeds/{indicators,external_debt_creditors}.json`, `data/indicators_coverage_matrix.md` and `data/indicators_review_report.md` |
 | 8 | `uv run python -m pipelines politics` | Reads each state's leaders and next election (see [Leaders and elections](#leaders-and-elections-vinara)) → `db/seeds/politics.json` and `data/politics_review_report.md`; `--approve` records them as approved |
-| 9 | `uv run python -m pipelines load` | Upserts the seeds into Neon (regions with the **approved** colours, countries, profiles, sources, citations, flag palettes, the mountain catalogue, the gold tables, the indicators, the approved leaders and elections, datasets). Only rows whose values changed are written, so re-runs report 0 changes; each run is logged in `ingestion_runs` and refuses to start while migrations are pending |
+| 9 | `uv run python -m pipelines fx` | Exchange rates (see [Exchange rates](#exchange-rates-vinara)) → `db/seeds/{fx,fx_daily}.json` and `data/fx_review_report.md` |
+| 10 | `uv run python -m pipelines load` | Upserts the seeds into Neon (regions with the **approved** colours, countries, profiles, sources, citations, flag palettes, the mountain catalogue, the gold tables, the indicators, the approved leaders and elections, the exchange rates, datasets). Only rows whose values changed are written, so re-runs report 0 changes; each run is logged in `ingestion_runs` and refuses to start while migrations are pending |
 
 `uv run python -m pipelines status` prints every dataset's "as of" date, last refresh, cadence and last run (flagging overdue datasets).
 
@@ -223,6 +224,25 @@ The pipelines run from the repo root (`uv run python -m pipelines --help`); see 
 - **Approval:** the site shows the snapshot in `reference/politics_approved.json`. Every run lists the differences from it in `data/politics_review_report.md`, and `load` keeps the approved records until `politics --approve` records new ones. The weekly refresh never approves.
 - **Database:** `country_leaders` and `country_elections`, with `election_status(next_date, today)`.
 
+### Exchange rates (Vinara)
+
+`python -m pipelines fx` (`pipelines/africa_pipelines/fx*.py`) reads rates in local currency per US dollar from 1 January 2020 (the floor for exchange rates) to the day before the run. Sources and licences are in [docs/vinara-sources.md](docs/vinara-sources.md) (§4, 5 and 12); the reference of currencies, pegs, currency changes and daily sources is `pipelines/africa_pipelines/reference/currencies.json`.
+
+- **Daily, official:** one source per currency, stored per currency (states sharing one share its rates).
+  - **ECB:** the rand, and at their official parities the two CFA francs, the Comorian franc, the Cabo Verdean escudo, the dobra, the loti, the lilangeni, the Namibian dollar and the Djiboutian franc (22 states).
+  - **BIS:** Algeria and Mauritius.
+  - **The state's own central bank**, read through [Frankfurter](https://frankfurter.dev) (the bank's rates as published, never Frankfurter's blend; one year per request, past years cached): Kenya, Tanzania, Zambia, Angola, The Gambia, Liberia, Malawi, Tunisia and Morocco. A bank is used only when its terms allow reuse or it publishes none; banks whose terms could not be read (Nigeria, DR Congo, Rwanda, Madagascar) or require permission (Botswana, Mozambique, Seychelles) are recorded with that status.
+- **Monthly:** the IMF's Exchange Rates (period average and end of month) for all 54 states. It is the series shown for states without a usable daily source, and the check on every daily one.
+  - **One unit throughout:** each currency change is recorded with its official conversion; the pipeline detects whether the IMF already gives earlier months in the new unit and converts them where it does not (Zimbabwe's ZiG, April 2024), so a change is never read as a gain or a loss.
+  - **Status:** each monthly series is current, late or stale (more than 12 months behind the newest month); months that have not ended are refused.
+- **Checks** (the run fails otherwise):
+  - each peg holds against the IMF's own rates in 95% of months (within 1%);
+  - each daily series' monthly mean matches the IMF's monthly average in 90% of months (within 1% for fixed currencies and the rand, 2% otherwise);
+  - each state's currency, and each changed currency's withdrawal date, is checked against the ISO 4217 lists (SIX for ISO);
+  - an unexplained jump across a currency change stops the run.
+- **Report:** `data/fx_review_report.md` lists, per state, its daily source and span, its monthly span and status, and why a state is monthly only; how each currency change was applied; the peg and daily checks; and every month a currency moved more than 50% against the dollar.
+- **Database:** migration `0014_fx.sql`: `country_currencies`, `currency_changes`, `fx_monthly`, `fx_daily` (with each rate's source) and `fx_reporting`.
+
 ### Region colours
 
 Each region's identity colour is the **mode colour across its flags**: flags are rasterised, clustered into at most 8 colours in CIELAB, merged across flags (CIEDE2000 < 10) and summed per region; white, black and grey are excluded by default, and near-identical picks are resolved by giving the colour to the region where it has the larger share. Anti-aliasing blends at stripe edges are folded back into the real flag colours first. Every parameter is a command-line option (`python -m pipelines flags --help`), and `--include-neutrals` switches which result is selected (both are always reported).
@@ -248,7 +268,7 @@ How the extraction works and where its judgement calls live:
 
 ### Scheduled refresh
 
-`.github/workflows/data-refresh.yml` runs every Monday at 03:17 UTC (and on demand): `migrate` → `flags --refresh` → `mountains --refresh`, the gold steps and `indicators --refresh` (first Monday of the month, or on a manual run; gold production only on a manual run), `politics --refresh` (weekly; changes wait for approval) → `load` → `status`, then calls the Netlify build hook if `load` changed any rows. If upstream data changed the generated seeds, the run warns and uploads them (with the colour, mountain, gold, indicator and politics reports) as the `refreshed-data` artifact for you to review and commit; the approved region colours are never replaced automatically. Repository secrets: `DATABASE_URL_WRITE` (required), `COMTRADE_API_KEY` (for gold trade; without it the step is skipped with a warning) and `NETLIFY_BUILD_HOOK` (optional).
+`.github/workflows/data-refresh.yml` runs every Monday at 03:17 UTC (and on demand): `migrate` → `flags --refresh` → `mountains --refresh`, the gold steps and `indicators --refresh` (first Monday of the month, or on a manual run; gold production only on a manual run), `fx --refresh` (weekly), `politics --refresh` (weekly; changes wait for approval) → `load` → `status`, then calls the Netlify build hook if `load` changed any rows. If upstream data changed the generated seeds, the run warns and uploads them (with the colour, mountain, gold, indicator, exchange-rate and politics reports) as the `refreshed-data` artifact for you to review and commit; the approved region colours are never replaced automatically. Repository secrets: `DATABASE_URL_WRITE` (required), `COMTRADE_API_KEY` (for gold trade; without it the step is skipped with a warning) and `NETLIFY_BUILD_HOOK` (optional).
 
 ### Local database for tests
 

@@ -102,6 +102,8 @@ export const strings = {
     'vinara-ids': 'World Bank debt statistics',
     'vinara-leaders': 'Heads of state and government',
     'vinara-elections': 'Next elections',
+    'vinara-fx-imf': 'Exchange rates (IMF, monthly)',
+    'vinara-fx-daily': 'Exchange rates (official, daily)',
   },
   pages: {
     home: {

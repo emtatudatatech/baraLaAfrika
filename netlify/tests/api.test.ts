@@ -250,6 +250,8 @@ describe('GET /api/coverage', () => {
       'mountains-wikidata',
       'symbology-pdf',
       'vinara-elections',
+      'vinara-fx-daily',
+      'vinara-fx-imf',
       'vinara-hdr',
       'vinara-ids',
       'vinara-imf-weo',

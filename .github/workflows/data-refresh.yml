@@ -74,6 +74,10 @@ jobs:
             echo "Not the first Monday of the month; the committed gold seeds are loaded as they are."
           fi
 
+      # Exchange rates: IMF monthly and ECB daily (derived pegs are checked against the IMF).
+      - name: Refresh exchange rates (weekly)
+        run: uv run python -m pipelines fx --refresh
+
       # Leaders and elections: changes are never approved here; they wait in
       # data/politics_review_report.md until the owner approves them (politics --approve).
       - name: Refresh leaders and elections (weekly)
@@ -92,11 +96,11 @@ jobs:
       - name: Flag changes to committed seeds for review
         id: seeds
         run: |
-          if git diff --quiet -- db/seeds data/region_colors_report.md data/mountains_review_report.md data/gold_coverage_matrix.md data/gold_review_report.md data/indicators_coverage_matrix.md data/indicators_review_report.md; then
+          if git diff --quiet -- db/seeds data/region_colors_report.md data/mountains_review_report.md data/gold_coverage_matrix.md data/gold_review_report.md data/indicators_coverage_matrix.md data/indicators_review_report.md data/fx_review_report.md; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "::warning::Upstream data changed the generated seeds; download the 'refreshed-data' artifact, review data/region_colors_report.md, data/mountains_review_report.md, data/gold_review_report.md, data/indicators_review_report.md and data/politics_review_report.md, and commit the changes."
+            echo "::warning::Upstream data changed the generated seeds; download the 'refreshed-data' artifact, review data/region_colors_report.md, data/mountains_review_report.md, data/gold_review_report.md, data/indicators_review_report.md, data/fx_review_report.md and data/politics_review_report.md, and commit the changes."
             git diff --stat -- db/seeds data
           fi
 
@@ -115,6 +119,7 @@ jobs:
             data/indicators_coverage_matrix.md
             data/indicators_review_report.md
             data/politics_review_report.md
+            data/fx_review_report.md
           retention-days: 30
 
       - name: Load into Neon

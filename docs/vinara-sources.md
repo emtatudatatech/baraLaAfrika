@@ -17,8 +17,12 @@ Every terms page was read on **22 October 2026**, and every endpoint below was t
 | [UN M49 standard](#1-un-m49-regions) | The five regions and their members | Web page (no download) | UN site terms: personal, non-commercial | ✅ Used as a cited classification (see the decision) |
 | [World Bank WDI](#2-world-bank-world-development-indicators-wdi) | Population, land and surface area, GDP, GDP at purchasing power parity (PPP), real growth, inflation, GNI, GDP per capita (PPP), population growth | REST API, no key | CC BY 4.0 (per indicator) | ✅ Primary for every annual series except debt |
 | [IMF World Economic Outlook](#3-imf-world-economic-outlook-weo) | Government gross debt (% of GDP); the latest year where WDI has none | SDMX 3.0 API, no key | IMF data terms | ✅ Debt; recent-year estimates only, labelled; projections never |
-| [IMF Exchange Rates (ER)](#4-imf-exchange-rates-er) | Monthly exchange rates for all 54 | SDMX 3.0 API, no key | IMF data terms | ✅ Primary FX series; stale for 5 countries |
+| [IMF Exchange Rates (ER)](#4-imf-exchange-rates-er) | Monthly exchange rates for all 54 from 2020: the series shown where no daily source is usable, and the check on every daily series | SDMX 3.0 API, no key | IMF data terms | ✅ Monthly; stale for 9 countries, none since 2020 for Somalia |
+| [ISO 4217 lists (SIX for ISO)](#4-imf-exchange-rates-er) | Checking each state's currency and currency changes | XML download | Used for checks only | ✅ |
 | [ECB euro reference rates](#5-ecb-euro-foreign-exchange-reference-rates) | Daily rates for euro-pegged, rand-linked and dollar-pegged currencies | Data Portal API, no key | Free reuse, source quoted, not modified (*paraphrased*) | ✅ Daily series for 22 countries |
+| [BIS daily rates](#12-daily-rates-bis-and-central-banks) | Daily rates for Algeria and Mauritius | SDMX API, no key | "Unrestricted", BIS cited | ✅ |
+| [Central banks, through Frankfurter](#12-daily-rates-bis-and-central-banks) | Daily rates from each state's own central bank | frankfurter.dev API (MIT), no key | Each bank's own terms | ✅ 9 banks; 4 pending, 4 need permission |
+| [Banca d'Italia](#12-daily-rates-bis-and-central-banks) | — | — | Written permission required | ⛔ Not used |
 | [World Bank International Debt Statistics](#6-world-bank-international-debt-statistics-ids) | External debt by creditor ("major lenders") | Bulk CSV/XLSX, API | CC BY 4.0 | ✅ |
 | [UNDP Human Development Report](#7-undp-human-development-report) | Human Development Index | CSV/XLSX; Our World in Data's copy when UNDP's site does not answer | CC BY 3.0 IGO | ✅ |
 | [SIPRI Military Expenditure Database](#8-sipri-military-expenditure) | Military spending (US$ and % of GDP) | Via WDI (still SIPRI's terms) | Non-commercial fair use under 10% of the dataset | ⚠️ Fair use only (see the decision) |
@@ -90,17 +94,23 @@ GNI's codes are `NY.GNP.*`; the `NY.GNI.*` codes the README of the original proj
 
 **Provides.** Dataflow `IMF.STA/ER` 4.0.1, dimensions `COUNTRY.INDICATOR.TYPE_OF_TRANSFORMATION.FREQUENCY`. Used: `XDC_USD` (local currency per US dollar), `PA_RT` (period average) and `EOP_RT` (end of period), monthly.
 
-**Coverage, tested for all 54 from January 2013:** every country has a series, but five are stale or short:
+**Coverage** (read 22 October 2026, from January 2020, the floor for exchange rates): every state has a series; the newest month is September 2026. Series reach their last month at different times:
+- 37 are current (at most 3 months behind the newest month);
+- 7 are late (up to 12 months behind);
+- 9 are stale (more than 12 months behind): Guinea (to May 2021), Sudan (February 2023), Mauritania (only June 2022 to August 2024), Malawi (September 2024), Sierra Leone (April 2025), Tanzania (April 2025), South Sudan (May 2025), Liberia and Mozambique (August 2025);
+- Somalia has none since 2020 (its series ends in June 2018).
 
-| Country | Months | Latest |
-|---|---|---|
-| Somalia | 66 | 2018-06 |
-| Guinea | 101 | 2021-05 |
-| Sudan | 122 | 2023-02 |
-| Sierra Leone | 133 | 2024-01 |
-| Mauritania | 27 | 2022-06 to 2024-08 only |
+Malawi, Tanzania and Liberia have current daily rates from their own central banks (section 12), which replace their stale IMF series. With those, 46 of 54 states have rates to December 2025, the end of the default window. The IMF's annual series are no more recent, nor is the World Bank's annual official rate (`PA.NUS.FCRF`), which is drawn from them.
 
-Zimbabwe starts in 2019 (the RTGS dollar), and its series carries an observation dated **2027-03**, after today: every load rejects periods in the future.
+**Units.** The IMF gives earlier months in today's unit for the currency changes it has applied (Ghana 2007, Zambia 2013, São Tomé 2018, Sierra Leone 2022 and others). Zimbabwe is the exception: its months before April 2024 are in Zimbabwe dollars, and before 2009 in currencies since abandoned. The pipeline detects which applies at each change (the step across it either matches the official conversion or does not move) and converts where needed (Zimbabwe: 2,498.7242 dollars per ZiG). Zimbabwe's series is used from February 2019.
+
+**Pegs checked.** Each official parity is checked against the IMF's own rates over the last ten years (95% of months within 1%). Eritrea's nakfa is fixed by its central bank, but the IMF shows 15.075 and 15.375 per dollar in different periods, so no parity is recorded for it.
+
+Zimbabwe's series carries an observation dated **2027-03**, after today: every load rejects months that have not ended.
+
+**Central banks.** Searched on 22 October 2026 for official series to replace the stale ones; none offers a download with stated terms of reuse. The Bank of Sierra Leone publishes daily reference-rate PDFs (no reuse terms found), and the Banque Centrale de Mauritanie publishes a reference rate (no download found). Nothing current was found for Sudan, Guinea or Somalia.
+
+**ISO 4217.** Each state's currency, and each changed currency's withdrawal date, is checked every run against the ISO 4217 lists published by SIX for ISO (<https://www.six-group.com/en/products-services/financial-information/data-standards.html>). The lists are used for checking only; nothing is republished from them.
 
 **Licence.** IMF data terms (as above).
 
@@ -118,7 +128,7 @@ Zimbabwe starts in 2019 (the RTGS dollar), and its series carries an observation
 - South African rand directly, and the loti, lilangeni and Namibian dollar at par with it;
 - Djiboutian franc: fixed at 177.721 per US dollar.
 
-That gives daily series for 22 of the 54 states. Every parity is checked against the IMF monthly averages (within 1%) before a derived day is stored.
+That gives daily series for 22 of the 54 states, stored per currency (states sharing a currency share its rates) from January 2020. Every currency's monthly mean of daily rates is checked against the IMF's monthly average (within 1%); on 22 October 2026 all ten matched in every month (largest difference 0.29%).
 
 **Licence (*paraphrased* from the ECB's reuse policy and disclaimer pages).** Public ECB statistics may be reused free of charge provided the source is quoted and the statistics are not modified; the reference rates are published for information purposes. The site shows the ECB's rates unchanged and labels the derived rates as derived from them at the official parity. Attribution: *"Source: ECB statistics."*
 
@@ -169,12 +179,34 @@ That gives daily series for 22 of the 54 states. Every parity is checked against
 
 Not used. Yahoo publishes no documented Yahoo Finance API; libraries call undocumented endpoints. Yahoo's terms prohibit any user to "access or collect data, or attempt to access or collect data, from our Services using any automated means … without our express, prior permission" and to use its data "to create any database, archive, mobile application, data feed, widget". Daily rates come from the ECB where official parities allow, and monthly rates from the IMF for every country ([Decisions](#decisions)).
 
+## 12. Daily rates: BIS and central banks
+
+Daily rates run from 1 January 2020 (the floor for exchange rates) to the day before each run. Only official sources usable without asking permission are used. Each state's daily series comes from one source:
+
+- **The ECB** for the 22 pegged and rand-linked states (section 5).
+- **The BIS** for Algeria and Mauritius: `WS_XRU`, daily, US dollar rates (<https://data.bis.org/topics/XRU>). Its terms: "The use of the statistics is unrestricted, provided that: (1) if the statistics are reproduced, the BIS must be cited in your publication or product as the source of the statistics". Days the BIS marks `NaN` are skipped.
+- **The state's own central bank**, read through **Frankfurter** (<https://frankfurter.dev>, MIT-licensed open source). Frankfurter relays the official rates of over a hundred central banks. Its licence page says it "holds no ownership" of the rates and conveys no rights beyond each provider's; its blended rates are its own calculation, "not an official rate of any institution". The pipeline reads each bank's series as published (`/v2/rates?providers=…&base=USD`), never the blend, one calendar year per request. Past years are cached; each refresh re-reads the current year.
+
+Central banks by the terms they publish (read 22 October 2026):
+
+| Terms | Banks | Used |
+|---|---|---|
+| None published | Central Bank of Kenya, Bank of Tanzania, Bank of Zambia, Banco Nacional de Angola, Central Bank of The Gambia, Central Bank of Liberia, Reserve Bank of Malawi, Banque Centrale de Tunisie, Bank Al-Maghrib | ✅ Official rates published for public use, credited to each bank |
+| Could not be read | Central Bank of Nigeria, Banque Centrale du Congo, Banque Nationale du Rwanda, Banky Foiben'i Madagasikara (pages timed out or are built in the browser) | ⏸ Added once their terms are confirmed |
+| Permission required | Bank of Botswana ("for personal use or use within an individual organisation and for non-commercial use only"), Banco de Moçambique ("fins privados ou internos"; other uses need "prévia autorização por escrito"), Central Bank of Seychelles ("permission is sought"), Bank of Mauritius ("without the prior written consent") | ⛔ Not used (Mauritius comes from the BIS) |
+
+The Central Bank of Egypt (from March 2024), the Banque de la République du Burundi (from September 2024) and the National Bank of Ethiopia (from October 2024) start after the floor, so those states keep the IMF's monthly rates. The other states have no official daily source usable without permission: Ghana, Uganda, Sudan, South Sudan, Libya, Guinea, Sierra Leone, Mauritania, Somalia, Eritrea and Zimbabwe. Rates that another country's central bank quotes for them (cross rates) are not used.
+
+**Banca d'Italia** publishes daily rates for about 150 currencies, nearly every African one among them. Its copyright notice requires the Bank's "prior written permission" to reproduce its content elsewhere; only its open-data catalogue on dati.gov.it is CC BY 4.0, and its exchange rates are not in it. Not used.
+
+**Checks.** Every daily series' monthly mean is compared with the IMF's monthly average: within 1% for pegged currencies and the rand, within 2% for the others, in at least 90% of months.
+
 ## Decisions
 
 Decided by the owner on 22 October 2026:
 - **Regions:** the whole site uses the UN M49 regions (all 54 states have one). Each country's region is stated with a citation to M49; the M49 table itself is not republished. The display names are M49's, except **Central Africa (M49: Middle Africa)**.
-- **FX:** official sources only: IMF monthly rates as the published series for all 54, and daily rates where an official, licensed daily source exists (the ECB-derived rates above). Yahoo Finance is not used.
-- **Stale exchange rates** (Somalia, Guinea, Sudan, Sierra Leone, Mauritania): official central-bank series with open terms are sought; where none exists, the IMF series is shown to its last month, marked stale, and the country is left out of FX rankings for windows it does not cover.
+- **FX:** official sources only, from 1 January 2020 to the day before each run (the floor applies to exchange rates only). Daily rates from the ECB, the BIS and each state's own central bank where its terms allow reuse or it publishes none (read through Frankfurter, never its blend); the IMF's monthly rates for the other states and as the check on every daily series. Cross rates from other central banks are not used. Yahoo Finance is not used (decided again on 22 October 2026).
+- **Stale exchange rates:** official central-bank series with open terms are sought (Malawi, Tanzania and Liberia now have them); where none exists, the IMF series is shown to its last month, marked stale, and the country is left out of FX rankings for windows it does not cover.
 - **Military spending:** included under SIPRI's fair use. The site is non-commercial; at most 54 states over 10 years are shown or exported (about 4% of the data set); SIPRI is referenced on every view and export. If the site ever becomes commercial, the series must be licensed or removed.
 - **Leaders and elections:** read from Wikipedia's *List of current heads of state and government* and *List of next general elections*, with Wikidata as a cross-check; notes and overrides rest on quotes re-checked every run. The site shows the approved snapshot; changes wait for approval. Dates are shown as the list gives them (Ghana's and Botswana's next dates read 7 January 2029 and 7 January 2030). IFES ElectionGuide is not used unless IFES confirms in writing; EISA is not used.
 - **Inflation:** ranked by the mean absolute rate (closest to price stability), as in [vinara-method.md](vinara-method.md).

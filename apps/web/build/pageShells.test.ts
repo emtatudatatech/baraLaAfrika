@@ -184,7 +184,7 @@ describe('route preloads, site shells and the sitemap', () => {
     expect(siteShells().map((shell) => [shell.path, shell.image])).toEqual([
       ['countries', '/og/site.png'],
       ['dhahabu', '/og/dhahabu.png'],
-      ['vinara', '/og/site.png'],
+      ['vinara', '/og/vinara.png'],
     ]);
   });
 

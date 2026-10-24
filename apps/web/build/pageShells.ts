@@ -136,7 +136,7 @@ export function siteShells(): ShellMeta[] {
       title: `${VINARA} · ${SITE}`,
       description:
         'The leading state and the runner-up in Africa and each UN M49 region on population, GDP, growth, inflation, debt, currencies and more, and whether the lead is narrowing.',
-      image: '/og/site.png',
+      image: '/og/vinara.png',
     },
   ];
 }
@@ -298,7 +298,7 @@ export function pageShellsPlugin(seedsDir: string): Plugin {
       const outDir = join(config.root, config.build.outDir);
       const html = await readFile(join(outDir, 'index.html'), 'utf8');
       // The prerendered pages (build/prerender.ts) paint without scripts: styles only.
-      const prerendered = new Set(['', 'countries', 'harim', 'dhahabu']);
+      const prerendered = new Set(['', 'countries', 'harim', 'dhahabu', 'vinara']);
       const preloaded = (path: string) => {
         const module = routeModuleOf(path);
         return withPreloads(

@@ -55,6 +55,16 @@
   pointer-events: none;
 }
 
+/* Borders between two dark fills: a light line in the light theme (the dark one vanishes). */
+.lightBorders {
+  fill: none;
+  stroke: var(--map-border-on-dark);
+  stroke-width: 0.75;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
 .coast {
   fill: none;
   stroke: var(--map-coast);

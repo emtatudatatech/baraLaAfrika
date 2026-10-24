@@ -26,6 +26,8 @@ export interface MapGeometry {
   borders: MultiLineString;
   /** Coastlines (edges belonging to a single shape). */
   coast: MultiLineString;
+  /** The borders between two countries for which `test(iso3, iso3)` holds. */
+  bordersWhere: (test: (a: string, b: string) => boolean) => MultiLineString;
 }
 
 export const COUNTRIES_TOPOLOGY_URL = '/geo/africa.topo.json';
@@ -60,6 +62,17 @@ export function buildMapGeometry(topology: CountriesTopology): MapGeometry {
     shapes,
     borders: mesh(topology, collection, (a, b) => a !== b && isoOf(a) !== isoOf(b)),
     coast: mesh(topology, collection, (a, b) => a === b),
+    bordersWhere: (test) =>
+      mesh(topology, collection, (a, b) => {
+        const [first, second] = [isoOf(a), isoOf(b)];
+        return (
+          a !== b &&
+          first !== second &&
+          first !== undefined &&
+          second !== undefined &&
+          test(first, second)
+        );
+      }),
   };
 }
 

@@ -14,6 +14,7 @@ import { Link } from 'react-router';
 import { DevApiHint } from '../../components/DevApiHint/DevApiHint';
 import { FlagImage } from '../../components/FlagImage/FlagImage';
 import { placeTooltip } from '../../components/Tooltip/placeTooltip';
+import { prefersLightLine } from '../../lib/colour';
 import { cx } from '../../lib/cx';
 import { strings } from '../../lib/strings';
 import styles from './AfricaMap.module.css';
@@ -63,6 +64,15 @@ export function AfricaMap({
   const [selected, setSelected] = useState<{ iso3: string; anchor: Anchor } | null>(null);
 
   const byIso3 = useMemo(() => new Map((countries ?? []).map((c) => [c.iso3, c])), [countries]);
+  // Countries whose region colour is dark: the borders between two of them are drawn light.
+  const lightBorder = useMemo(() => {
+    const dark = new Set(
+      (countries ?? [])
+        .filter((c) => c.region.colorHex !== null && prefersLightLine(c.region.colorHex))
+        .map((c) => c.iso3),
+    );
+    return (a: string, b: string) => dark.has(a) && dark.has(b);
+  }, [countries]);
   const order = useMemo(
     () => [...(countries ?? [])].sort((a, b) => a.name.localeCompare(b.name)).map((c) => c.iso3),
     [countries],
@@ -268,6 +278,7 @@ export function AfricaMap({
           controllerRef={controllerRef}
           renderCountries={renderCountries}
           renderOverlay={renderOverlay}
+          lightBorder={lightBorder}
         >
           {countriesError !== undefined && (
             <div className={cx('glass glass--strong', styles.notice)} role="alert">

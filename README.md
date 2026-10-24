@@ -52,7 +52,7 @@ Netlify Functions (Node, TypeScript) ── read-only role ──▶ Neon Postgr
 Python pipelines (uv, GitHub Actions cron) ── write role ────┘
 ```
 
-- **Frontend:** React 19, Vite 8, React Router 8 (data router, code-split routes), TypeScript (strict). Plain CSS with design tokens and CSS Modules; no Tailwind or CSS-in-JS. The four main pages are prerendered at build time and hydrated in the browser (see [Performance](#performance)).
+- **Frontend:** React 19, Vite 8, React Router 8 (data router, code-split routes), TypeScript (strict). Plain CSS with design tokens and CSS Modules; no Tailwind or CSS-in-JS. The five main pages are prerendered at build time and hydrated in the browser (see [Performance](#performance)).
 - **API:** Netlify Functions in TypeScript. Input is validated with `zod`; every error uses the shape `{ error: { code, message } }`. Responses send `Cache-Control: public, s-maxage=3600, stale-while-revalidate=86400` plus an `ETag`.
 - **Database:** Postgres on Neon. Plain numbered SQL migrations. Statistics are defined in SQL views, not in the browser.
 - **Pipelines:** Python 3.15, managed with `uv`. Every pipeline is idempotent, logs its runs and records dataset coverage.
@@ -332,6 +332,7 @@ Netlify Functions in `netlify/functions/`, one file per route, each declaring it
 The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth** projection (`d3-geo`), fitted to a box from Cabo Verde to Mauritius (far islands such as South Africa's Prince Edward Islands stay reachable by panning).
 
 - **Fills** use the approved region colours as CSS variables (`--region-<slug>`), set from `/api/regions`, with the same colours in `tokens.css` as no-flash fallbacks (a test keeps them in sync with the approval).
+- **Borders** are one dark line, except between two countries whose region colour is dark (Northern and Eastern Africa today): there the light theme draws a light line, which shows where the dark one would vanish. A fill counts as dark when a light line contrasts with it more than the dark line does (`prefersLightLine`, `lib/colour.ts`); the dark theme lifts those fills, so its borders stay dark.
 - **Dark theme:** `darkThemePalette()` (`lib/colour.ts`) keeps every hue. It lifts a colour's OKLCH lightness only to reach 3:1 against the dark map ocean (WCAG 1.4.11), then lifts the lighter of any pair closer than ΔE 30 until they separate. With the approved colours this changes only East (`#72b6fe`) and Southern (`#2b5acd`).
 - **Boundaries** are drawn once as meshes (borders and coastlines), with thin strokes that stay thin at any zoom. **Somaliland** is merged into Somalia (no internal line); Somalia's tooltip and profile explain this (declared independence in 1991, self-governing, not recognised by the African Union or UN), and screen readers hear the same note. **Western Sahara** is hatched, with the tooltip "Disputed territory". A note under the map states that boundaries do not imply endorsement of any claim.
 - **Small states** (under 20,000 km² on the map: Cabo Verde, São Tomé and Príncipe, Comoros, Mauritius, Seychelles, The Gambia, Eswatini) get clickable circle markers. Lesotho (about 30,000 km²) is large enough to click.
@@ -395,7 +396,7 @@ The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth**
 - **Range pages** (`/harim/ranges/:slug`): the sourced description and formation note with its source ("needs verification" where unsourced; "no sourced description yet" where there is none), type, length, mountain count and tallest peak, the countries it spans (their mountains and profiles), the map fitted to the range, and its peaks (each opening its page).
 - **Peak pages** (`/harim/peaks/:slug`, and "Open full page" in the drawer): name, height in both units, flags, range and volcanic status; the height's confidence, source and every other sourced height; prominence, isolation, coordinates (with a copy button), type, massif and summits; local names and name origin with sources ("Unsourced" otherwise); a locator map; nearby peaks (same range or country, nearest first); sources; and a copy-link button.
 - **Export:** "Export" by the result count downloads the current view or the whole catalogue as CSV or GeoJSON from `/api/mountains/export`; a message confirms the download or reports a failure.
-- **Link previews:** the build writes a page shell for `/countries`, `/harim`, `/dhahabu` and every mountain and range page (`apps/web/build/pageShells.ts`, from the committed seeds) with that page's title, description and Open Graph tags, so shared links show the right text; Netlify serves them before the single-page fallback (as does `vite preview`). The preview images are `public/og/harim.png` (Harim and its pages), `og/dhahabu.png` and `og/site.png` (the site and `/countries`), all from `node scripts/build-og-images.mjs`.
+- **Link previews:** the build writes a page shell for `/countries`, `/harim`, `/dhahabu`, `/vinara` and every mountain and range page (`apps/web/build/pageShells.ts`, from the committed seeds) with that page's title, description and Open Graph tags, so shared links show the right text; Netlify serves them before the single-page fallback (as does `vite preview`). The preview images are `public/og/harim.png` (Harim and its pages), `og/dhahabu.png`, `og/vinara.png` and `og/site.png` (the site and `/countries`), all from `node scripts/build-og-images.mjs`.
 - **Peak drawer:** a click on any mountain or summit opens it: height in both units with its confidence, the source of the height and every other sourced height, prominence, isolation, coordinates, range, type, massif and summits (each opens in the same drawer), local names and name origin with their sources ("Unsourced" otherwise), notes, the "Needs verification" reasons and all sources by field.
 - **URL state:** `?view=country|peaks|ranges`, `region`, `q`, `sort`, `country`, `minHeight`, `volcanic`, `range` and `peak` (the open drawer). Invalid values are ignored. Switching to By country or By range drops the peak-only filters. A `country` in the URL filters to that country and opens its row (the link from other pages).
 - **Units:** a metres/feet toggle, remembered in this browser (`bla-units`) and applied everywhere on the page. Below sea level uses a true minus sign (`−155 m`).
@@ -473,7 +474,7 @@ To add a dataset, add its key to `DATASET_KEYS` (`packages/shared/src/datasets.t
 
 ## Performance
 
-The target is Lighthouse ≥ 90 on mobile for Performance, Accessibility, Best Practices and SEO on `/`, `/countries`, `/harim` and `/dhahabu` (`npm run lighthouse`).
+The target is Lighthouse ≥ 90 on mobile for Performance, Accessibility, Best Practices and SEO on `/`, `/countries`, `/harim`, `/dhahabu` and `/vinara` (`npm run lighthouse`).
 
 - **Prerendered first views:** the build renders each main page's first view (the layout, header, controls and loading skeletons, before any data) into its HTML file: `npm run build` runs the client build, a server build of `src/entry-server.tsx` and `build/prerender.ts`. The page paints as soon as its CSS arrives instead of after the app's script has run.
 - **Hydration, not a second render:** on a bare URL the app hydrates that markup (`hydrateRoot`, after loading the matched route's code-split module, `app/hydration.ts`), so the painted page is kept. The first browser render must therefore equal the prerendered one: anything the server cannot know (the screen, the theme, `<body>` portals) uses `useSyncExternalStore` with a server snapshot or `useIsClient`, and settles straight after hydration. A URL with a query (filters, an open drawer) renders afresh instead, since its first view differs. An e2e test fails on any hydration error.
@@ -489,7 +490,7 @@ The target is Lighthouse ≥ 90 on mobile for Performance, Accessibility, Best P
   | `/harim` | 98 | 100 | 100 | 100 | 1.1 s |
   | `/dhahabu` | 99 | 100 | 100 | 100 | 1.1 s |
 
-  CLS stays under 0.03 and TBT under 300 ms. The local production build scores 97 / 100 / 100 / 100 on all four pages (LCP about 2 s, without the CDN's compression).
+  CLS stays under 0.03 and TBT under 300 ms. The local production build (2026-10-24) scores 96–97 for Performance and 100 for Accessibility, Best Practices and SEO on all five pages, `/vinara` included (LCP about 2 s, without the CDN's compression).
 
 ## Quality checks
 
@@ -501,7 +502,7 @@ The target is Lighthouse ≥ 90 on mobile for Performance, Accessibility, Best P
 | `npm run check:functions` | Builds the Netlify Functions as a deploy does and checks each bundle loads and answers |
 | `npm run e2e` | Playwright: desktop (1440×900) and mobile (390×844) projects; includes axe accessibility checks in light and dark mode and no-horizontal-scroll checks at 320px. It runs the **real API handlers** (`e2e/api-server.ts`) on an in-memory Postgres loaded with the committed seeds, proxied behind `vite preview`, so no Neon connection is needed |
 | `npm run screenshots` | Captures every page at desktop and mobile, light and dark, into `screenshots/` (gitignored) for visual review |
-| `npm run lighthouse` | Lighthouse (mobile) on `/`, `/countries`, `/harim` and `/dhahabu` against the production build (run `npm run build` first) and the local API; fails below 90 in any category; HTML and JSON reports in `lighthouse/` (gitignored). `LIGHTHOUSE_URL=https://… npm run lighthouse` audits a deployed site instead |
+| `npm run lighthouse` | Lighthouse (mobile) on `/`, `/countries`, `/harim`, `/dhahabu` and `/vinara` against the production build (run `npm run build` first) and the local API; fails below 90 in any category; HTML and JSON reports in `lighthouse/` (gitignored). `LIGHTHOUSE_URL=https://… npm run lighthouse` audits a deployed site instead |
 | `uv run ruff check . && uv run ruff format --check .` | Python lint and format |
 | `uv run mypy` | Python type-check (strict) |
 | `uv run pytest` | Python tests (needs `npm install` for the PGlite-backed database tests) |
@@ -650,6 +651,6 @@ The site covers the four sections above. Each was built against review gates on 
 
 ## Credits and licences
 
-Credits are shown in the site footer and in data exports, including the attribution wording required by GeoNames (CC BY 4.0) and the IMF. Sources: the project's state-symbology research document, Natural Earth, Flagpedia, Material Symbols (Apache 2.0), Fraunces and Instrument Sans (SIL OFL 1.1), Wikidata (CC0), GeoNames (CC BY 4.0), the CIA World Factbook's final edition (public domain), Wikipedia (CC BY-SA 4.0, cited per item), the Harim prototype, the IMF, USGS, the World Bank and UN Comtrade. The Smithsonian Global Volcanism Program is linked for reference only; none of its data is republished. The British Geological Survey and the World Gold Council are neither used nor linked (decided 2026-10-18).
+Credits are shown in the site footer and in data exports, including the attribution wording required by GeoNames (CC BY 4.0) and the IMF. Sources: the project's state-symbology research document, Natural Earth, Flagpedia, Material Symbols (Apache 2.0), Fraunces and Instrument Sans (SIL OFL 1.1), Wikidata (CC0), GeoNames (CC BY 4.0), the CIA World Factbook's final edition (public domain), Wikipedia (CC BY-SA 4.0, cited per item), the Harim prototype, the IMF, USGS, the World Bank and UN Comtrade, and for Vinara SIPRI (military spending, under its terms for non-commercial use of a small part of the database), UNDP (CC BY 3.0 IGO), the ECB, the BIS and the central banks of Kenya, Tanzania, Zambia, Angola, The Gambia, Liberia, Malawi, Tunisia and Morocco (read through Frankfurter). Each is credited with its required wording in the footer and in the Vinara export. The Smithsonian Global Volcanism Program is linked for reference only; none of its data is republished. The British Geological Survey and the World Gold Council are neither used nor linked (decided 2026-10-18).
 
 Boundaries are shown as published by Natural Earth and do not imply endorsement of any border or territorial claim.

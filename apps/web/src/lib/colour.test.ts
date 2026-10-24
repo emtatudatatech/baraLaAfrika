@@ -12,6 +12,7 @@ import {
   deltaE,
   hexToOklch,
   oklchToHex,
+  prefersLightLine,
 } from './colour';
 
 // The approved region colours (Vitest runs from the repo root), so the checks below cover the
@@ -67,5 +68,15 @@ describe('darkThemePalette', () => {
   it('leaves colours that already pass unchanged', () => {
     expect(dark.central).toBe('#fcd116');
     expect(dark.west).toBe('#55d27a');
+  });
+});
+
+describe('map borders on dark fills', () => {
+  it('draws a light border on the dark region colours and a dark one on the light ones', () => {
+    // Eastern Africa's green and Northern Africa's red take the light line.
+    expect(prefersLightLine('#006600')).toBe(true);
+    expect(prefersLightLine('#c1272d')).toBe(true);
+    for (const light of ['#55d27a', '#fcd116', '#6da9d2'])
+      expect(prefersLightLine(light)).toBe(false);
   });
 });

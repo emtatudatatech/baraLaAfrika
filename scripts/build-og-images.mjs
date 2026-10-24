@@ -4,7 +4,7 @@
  *   node scripts/build-og-images.mjs
  *
  * Writes apps/web/public/og/site.png (the site and /countries), og/harim.png (Harim and every
- * mountain and range page) and og/dhahabu.png (Dhahabu), rendered with the Chromium that Playwright installs and the site's own fonts and
+ * mountain and range page), og/dhahabu.png (Dhahabu) and og/vinara.png (Vinara), rendered with the Chromium that Playwright installs and the site's own fonts and
  * Africa silhouette. Committed like the favicon; re-run when the design changes. Per-peak images
  * are not generated: rendering ~90 images needs a headless browser at build time, which the
  * deploy build does not have (see the README).
@@ -53,6 +53,12 @@ const CARDS = [
     kicker: 'Bara La Afrika · Dhahabu',
     title: 'Gold in Africa',
     lead: 'Where gold is found, how much is mined and traded, and how much central banks hold, for all 54 states, each figure with its year.',
+  },
+  {
+    file: 'vinara.png',
+    kicker: 'Bara La Afrika · Vinara',
+    title: 'The Cardinals of Africa',
+    lead: 'The leading state and the runner-up on thirteen measures, in Africa and in each region, and whether the lead is narrowing.',
   },
 ];
 

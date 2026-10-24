@@ -123,6 +123,7 @@
   --map-graticule: oklch(45% 0.03 230deg / 18%);
   --map-context-land: oklch(87% 0.012 80deg);
   --map-border: oklch(22% 0.02 50deg / 70%);
+  --map-border-on-dark: oklch(97% 0.012 90deg / 80%);
   --map-coast: oklch(28% 0.03 50deg / 55%);
   --map-disputed: oklch(72% 0.01 80deg);
   --map-disputed-hatch: oklch(45% 0.01 80deg / 70%);
@@ -220,6 +221,9 @@
   --map-graticule: oklch(80% 0.03 250deg / 10%);
   --map-context-land: oklch(29% 0.014 262deg);
   --map-border: oklch(12% 0.02 262deg / 85%);
+
+  /* The dark theme lifts dark fills, so the usual dark border shows on them. */
+  --map-border-on-dark: var(--map-border);
   --map-coast: oklch(88% 0.02 80deg / 40%);
   --map-disputed: oklch(40% 0.01 262deg);
   --map-disputed-hatch: oklch(75% 0.01 262deg / 55%);

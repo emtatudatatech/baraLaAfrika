@@ -1,6 +1,6 @@
 /*
- * `npm run lighthouse`: Lighthouse (mobile) on the production build for /, /countries, /harim
- * and /dhahabu (spec §9: Performance, Accessibility, Best Practices and SEO ≥ 90). It serves
+ * `npm run lighthouse`: Lighthouse (mobile) on the production build for /, /countries, /harim,
+ * /dhahabu and /vinara (spec §9: Performance, Accessibility, Best Practices and SEO ≥ 90). It serves
  * apps/web/dist with `vite preview` (run `npm run build` first) and the real API handlers on the
  * committed seeds (e2e/api-server.ts), runs Playwright's Chromium headless, writes HTML reports
  * to ./lighthouse and fails when any score is below the threshold.
@@ -29,7 +29,7 @@ const API_PORT = '4177';
 const WEB_PORT = '4178';
 const REMOTE = process.env.LIGHTHOUSE_URL?.replace(/\/$/, '');
 const BASE = REMOTE ?? `http://localhost:${WEB_PORT}`;
-const ROUTES = ['/', '/countries', '/harim', '/dhahabu'];
+const ROUTES = ['/', '/countries', '/harim', '/dhahabu', '/vinara'];
 const CATEGORIES = ['performance', 'accessibility', 'best-practices', 'seo'];
 const THRESHOLD = Number(process.env.LIGHTHOUSE_MIN ?? 90);
 const VITE_BIN = join(

@@ -18,12 +18,13 @@ describe('prerender', () => {
     );
   });
 
-  it('prerenders the four main pages, each into the file Netlify serves', () => {
+  it('prerenders the five main pages, each into the file Netlify serves', () => {
     expect(PRERENDERED.map((page) => [page.path, page.file])).toEqual([
       ['/', 'index.html'],
       ['/countries', 'countries.html'],
       ['/harim', 'harim.html'],
       ['/dhahabu', 'dhahabu.html'],
+      ['/vinara', 'vinara.html'],
     ]);
   });
 });

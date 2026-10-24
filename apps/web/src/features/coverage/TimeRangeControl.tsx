@@ -76,7 +76,9 @@ function NoDataControl() {
 }
 
 function YearRangePicker({ bounds, range }: { bounds: YearRange; range: YearRange }) {
-  const { setRange } = useTimeRange();
+  const { setRange, ownDefault, isDefault } = useTimeRange();
+  // A page with its own default years offers it first, in place of "Last 10 years".
+  const presets = ownDefault ? PRESETS.filter((preset) => preset !== 'last10') : PRESETS;
   const [open, setOpen] = useState(false);
   const panelId = useId();
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -124,7 +126,19 @@ function YearRangePicker({ bounds, range }: { bounds: YearRange; range: YearRang
       >
         <Icon name="date_range" size={18} />
         <span className="visually-hidden">{text.label}: </span>
-        <span className={styles.value}>{formatRange(range)}</span>
+        <span className={styles.value}>
+          {ownDefault && isDefault ? (
+            <>
+              <span className={styles.long}>{text.ownDefault}</span>
+              {/* Phones: a shorter label, so the ribbon's line keeps its room. */}
+              <span className={styles.short} aria-hidden="true">
+                {text.ownDefaultShort}
+              </span>
+            </>
+          ) : (
+            formatRange(range)
+          )}
+        </span>
         <Icon
           name="keyboard_arrow_down"
           size={18}
@@ -139,12 +153,24 @@ function YearRangePicker({ bounds, range }: { bounds: YearRange; range: YearRang
         aria-label={text.label}
       >
         <div className={styles.presets} role="group" aria-label={text.presetsLabel}>
-          {PRESETS.map((preset) => (
+          {ownDefault && (
+            <button
+              type="button"
+              className={styles.preset}
+              aria-pressed={isDefault}
+              onClick={() => {
+                setRange(presetRange('last10', bounds));
+              }}
+            >
+              {text.ownDefault}
+            </button>
+          )}
+          {presets.map((preset) => (
             <button
               key={preset}
               type="button"
               className={styles.preset}
-              aria-pressed={matchesPreset(preset, range, bounds)}
+              aria-pressed={!(ownDefault && isDefault) && matchesPreset(preset, range, bounds)}
               onClick={() => {
                 setRange(presetRange(preset, bounds));
               }}
@@ -185,7 +211,10 @@ function YearRangePicker({ bounds, range }: { bounds: YearRange; range: YearRang
             </select>
           </label>
         </div>
-        <p className={styles.note}>{text.covers(formatRange(bounds))}</p>
+        <p className={styles.note}>
+          {text.covers(formatRange(bounds))}
+          {ownDefault && ` ${text.ownDefaultNote}`}
+        </p>
       </div>
     </div>
   );

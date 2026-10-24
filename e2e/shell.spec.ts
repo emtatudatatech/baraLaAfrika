@@ -147,7 +147,8 @@ test('mobile menu opens, lists all sections and closes on navigation', async ({
   await menu.click();
   const nav = page.getByRole('navigation', { name: 'Primary' });
   await expect(nav.getByRole('link', { name: /Harim/ })).toBeVisible();
-  await expect(nav.getByText('Contemporary Africa')).toBeVisible();
+  await expect(nav.getByRole('link', { name: /Vinara/ })).toBeVisible();
+  await expect(nav.getByText('History', { exact: true })).toBeVisible();
   await nav.getByRole('link', { name: /Harim/ }).click();
   await expect(page).toHaveURL(/\/harim$/);
   await expect(page.getByRole('button', { name: 'Open menu' })).toHaveAttribute(

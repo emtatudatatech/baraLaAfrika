@@ -32,6 +32,7 @@ export const APP_HTML = 'app.html';
 const SITE = 'Bara La Afrika';
 const HARIM = 'Harim · Mountains of Africa';
 const DHAHABU = 'Dhahabu · Gold in Africa';
+const VINARA = 'Vinara · The Cardinals of Africa';
 
 /** Which route module each shell path renders (its lazy chunk is preloaded). */
 export const ROUTE_MODULES: readonly { match: (path: string) => boolean; module: string }[] = [
@@ -41,6 +42,7 @@ export const ROUTE_MODULES: readonly { match: (path: string) => boolean; module:
   { match: (path) => path.startsWith('harim/ranges/'), module: 'features/harim/RangePage.tsx' },
   { match: (path) => path === 'harim', module: 'features/harim/HarimPage.tsx' },
   { match: (path) => path === 'dhahabu', module: 'features/dhahabu/DhahabuPage.tsx' },
+  { match: (path) => path === 'vinara', module: 'features/vinara/VinaraPage.tsx' },
 ];
 
 /** A route chunk's files that the entry does not already load. */
@@ -128,6 +130,13 @@ export function siteShells(): ShellMeta[] {
       description:
         'Where gold is found in Africa, how much is mined and traded, and how much central banks hold.',
       image: '/og/dhahabu.png',
+    },
+    {
+      path: 'vinara',
+      title: `${VINARA} · ${SITE}`,
+      description:
+        'The leading state and the runner-up in Africa and each UN M49 region on population, GDP, growth, inflation, debt, currencies and more, and whether the lead is narrowing.',
+      image: '/og/site.png',
     },
   ];
 }

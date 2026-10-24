@@ -1,0 +1,195 @@
+.controls {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.window {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+}
+
+.section {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.sectionHead {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+
+.intro {
+  max-width: 72ch;
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--color-ink-muted);
+}
+
+.panel {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-lg);
+}
+
+.stale {
+  opacity: 0.55;
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.tableSkeleton {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.tableSkeleton > span {
+  height: 4.5rem;
+  border-radius: var(--radius-md);
+}
+
+.state {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  padding: var(--space-8) var(--space-4);
+  border-radius: var(--radius-lg);
+  text-align: center;
+  color: var(--color-ink-muted);
+}
+
+.state p {
+  margin: 0;
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--touch-target);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-pill);
+  font: inherit;
+  font-weight: var(--weight-semibold);
+  color: var(--color-ink);
+  background: var(--glass-bg-strong);
+}
+
+.bandGrid {
+  display: grid;
+  min-width: 0;
+}
+
+.chips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.cardList {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cardNote {
+  font-size: var(--text-xs);
+}
+
+.partialList {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-xs);
+  color: var(--color-ink-muted);
+}
+
+/* The election calendar scrolls inside itself; the page never scrolls sideways. */
+.strip {
+  margin-inline: calc(-1 * var(--gutter));
+  padding: var(--space-1) var(--gutter) var(--space-2);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-padding-inline: var(--gutter);
+  scroll-snap-type: x proximity;
+  border-radius: var(--radius-md);
+}
+
+.strip:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: -3px;
+}
+
+.stripList {
+  display: flex;
+  gap: var(--space-3);
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.election {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  width: 13.5rem;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  scroll-snap-align: start;
+  font-size: var(--text-sm);
+}
+
+.electionSoon {
+  box-shadow:
+    var(--glass-shadow),
+    inset 0 3px 0 var(--color-warning-ink);
+}
+
+.electionDate {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink);
+}
+
+.electionCountry {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--weight-semibold);
+  color: var(--color-ink);
+}
+
+.electionKind {
+  color: var(--color-ink-muted);
+}
+
+.stripNotes {
+  display: grid;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+}
+
+.stripNotes p {
+  margin: 0;
+}

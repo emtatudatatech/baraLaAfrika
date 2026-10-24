@@ -20,6 +20,7 @@ import type {
   RangesResponse,
   RegionSlug,
   RegionsResponse,
+  VinaraResponse,
 } from '@bla/shared';
 
 /** An API call failed; `code` is the API's error code (or a transport-level code). */
@@ -198,6 +199,19 @@ export const api = {
   /** The download address for the gold table as CSV (filtered by `params`). */
   goldExportUrl: (params: Record<string, string | undefined> = {}) =>
     withQuery('/api/gold/export', { format: 'csv', ...params }),
+  /** Every Vinara measure for Africa or one region, over each measure's default years or a range. */
+  vinara: (
+    query: { region: RegionSlug | null; from?: number | undefined; to?: number | undefined },
+    signal?: AbortSignal,
+  ) =>
+    apiGet<VinaraResponse>(
+      withQuery('/api/vinara', {
+        region: query.region ?? undefined,
+        from: query.from === undefined ? undefined : String(query.from),
+        to: query.to === undefined ? undefined : String(query.to),
+      }),
+      signal,
+    ),
   mountainStats: (region: RegionSlug | null = null, signal?: AbortSignal) =>
     apiGet<HarimStatsResponse>(
       withQuery('/api/mountains/stats', { region: region ?? undefined }),

@@ -47,6 +47,20 @@ export const ROUTE_DATA = {
     ],
     timeDependent: true,
   },
+  vinara: {
+    datasets: [
+      'vinara-wdi',
+      'vinara-imf-weo',
+      'vinara-sipri',
+      'vinara-hdr',
+      'vinara-fx-imf',
+      'vinara-fx-daily',
+      'vinara-leaders',
+      'vinara-elections',
+    ],
+    timeDependent: true,
+    ownDefault: true,
+  },
 } as const satisfies Record<string, RouteDataHandle>;
 
 /**
@@ -104,6 +118,13 @@ export const routes: RouteObject[] = [
             handle: ROUTE_DATA.dhahabu,
             lazy: {
               Component: async () => (await import('../features/dhahabu/DhahabuPage')).DhahabuPage,
+            },
+          },
+          {
+            path: 'vinara',
+            handle: ROUTE_DATA.vinara,
+            lazy: {
+              Component: async () => (await import('../features/vinara/VinaraPage')).VinaraPage,
             },
           },
           { path: '*', Component: NotFoundPage },

@@ -6,6 +6,7 @@ export const ROUTES = [
   { path: '/countries', name: 'countries', heading: 'Countries' },
   { path: '/harim', name: 'harim', heading: 'Harim · Mountains of Africa' },
   { path: '/dhahabu', name: 'dhahabu', heading: 'Dhahabu · Gold in Africa' },
+  { path: '/vinara', name: 'vinara', heading: 'Vinara · The Cardinals of Africa' },
 ] as const;
 
 /** Sets the stored theme before any page script runs (as a returning visitor would have). */
@@ -66,6 +67,7 @@ export async function waitForContent(page: Page, path: string): Promise<void> {
     await waitForStats(page);
     await waitForMap(page);
   }
+  if (path.startsWith('/vinara')) await waitForVinara(page);
   if (path.startsWith('/dhahabu')) {
     // The table rows (or cards), the band's final figures, the map's countries and the charts.
     await expect(page.getByTestId('gold-row').first()).toBeVisible();
@@ -74,6 +76,14 @@ export async function waitForContent(page: Page, path: string): Promise<void> {
     await expect(page.getByTestId('gold-production-svg')).toBeAttached();
     await expect(page.getByTestId('gold-holdings-svg')).toBeAttached();
   }
+}
+
+/** Waits for the Vinara page's rankings, summary cards and election strip. */
+async function waitForVinara(page: Page): Promise<void> {
+  await expect(page.getByTestId('vinara-row')).toHaveCount(13);
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
+  await expect(page.getByTestId('stat-card').first()).toBeVisible();
+  await expect(page.getByTestId('vinara-election').first()).toBeVisible();
 }
 
 /** Waits until the statistics band shows its cards and has finished counting up. */

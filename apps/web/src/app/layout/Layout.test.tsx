@@ -82,10 +82,10 @@ describe('Layout', () => {
       'publicCountries',
       'landscapeHarim',
       'diamondDhahabu',
+      'military_techVinara',
       'history_eduHistoryscheduleComing soon',
-      'exploreContemporary AfricascheduleComing soon',
     ]);
-    expect(within(nav).getAllByRole('link')).toHaveLength(4);
+    expect(within(nav).getAllByRole('link')).toHaveLength(5);
     expect(within(nav).queryByRole('link', { name: /History/ })).toBeNull();
   });
 

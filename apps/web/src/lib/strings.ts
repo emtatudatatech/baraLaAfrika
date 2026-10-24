@@ -22,8 +22,8 @@ export const strings = {
     countries: 'Countries',
     harim: 'Harim',
     dhahabu: 'Dhahabu',
+    vinara: 'Vinara',
     history: 'History',
-    contemporary: 'Contemporary Africa',
     comingSoon: 'Coming soon',
   },
   theme: {
@@ -79,6 +79,10 @@ export const strings = {
       },
       from: 'From',
       to: 'To',
+      ownDefault: 'Last 10 complete years',
+      ownDefaultShort: '10 complete yrs',
+      ownDefaultNote:
+        'By default each measure uses its own last ten complete years (a year is complete when at least 90% of the states have a figure).',
       covers: (range: string) => `The data covers ${range}. Ranges never go beyond it.`,
     },
   },
@@ -125,6 +129,11 @@ export const strings = {
       title: 'Dhahabu · Gold in Africa',
       description:
         'Where gold is found in Africa, how much is mined and traded, and how much central banks hold.',
+    },
+    vinara: {
+      title: 'Vinara · The Cardinals of Africa',
+      description:
+        'Vinara is Swahili for “leaders”. For each measure, the cardinal (the leading state) and the silent contender (the runner-up), in Africa and in each UN M49 region, and whether the lead is narrowing.',
     },
     underConstruction: 'This section is being built and will open in a later version of the site.',
     notFound: {
@@ -1069,6 +1078,100 @@ export const strings = {
         columns: { country: 'Country', share: 'Share of exports', year: 'Year' },
         showAll: (count: number) => `Show all ${String(count)}`,
         showTop: (count: number) => `Show the top ${String(count)}`,
+      },
+    },
+  },
+  vinara: {
+    scopeLabel: 'Africa or one UN M49 region',
+    windowDefault: 'Each measure covers its own last ten complete years.',
+    windowChosen: (range: string) =>
+      `Years chosen: ${range}. Each measure keeps to the years it has data for.`,
+    loadError: 'The rankings could not be loaded.',
+    retry: 'Try again',
+    empty: 'No rankings yet: the indicator data has not been loaded.',
+    of: (total: number) => `of ${String(total)} measures`,
+    table: {
+      title: 'Cardinals and silent contenders',
+      intro:
+        'The cardinal leads each measure and the silent contender comes second. Equal values are a tie, and every state in a tie is named.',
+      caption: (scope: string) => `Cardinal and silent contender for each measure, ${scope}`,
+      measure: 'Measure',
+      years: 'Years',
+      cardinal: 'Cardinal',
+      contender: 'Silent contender',
+      signal: 'Is the lead narrowing?',
+      ranked: (ranked: number, total: number) =>
+        `${String(ranked)} of ${String(total)} states ranked`,
+      tie: (count: number) => `Tie of ${String(count)}`,
+      none: 'No other state ranked',
+      estimate: 'IMF estimate',
+      definitionFor: (name: string) => `How ${name} is measured`,
+    },
+    signals: {
+      gap_closing: 'Gap closing',
+      lead_holding: 'Lead holding',
+      not_enough_data: 'Not enough data',
+      tie: 'No signal: a tie',
+    },
+    signalHints: {
+      gap_closing:
+        'For levels: the gap narrowed in each of the last three years. For rates: the contender did better in at least two of the last three years.',
+      lead_holding: 'The gap did not close in the way the signal looks for.',
+      not_enough_data: 'One of the two states lacks a figure for a year the signal needs.',
+      tie: 'The signal compares two states, so a tie has none.',
+    },
+    contenderAhead: (name: string, year: number) => `${name} was ahead in ${String(year)}`,
+    units: {
+      perYear: 'a year',
+      ofGdp: 'of GDP',
+    },
+    regions: {
+      title: 'Region against region',
+      intro:
+        'The five UN M49 regions on each measure: totals for sizes, and weighted averages or medians for rates. A region whose states with data cover less than 90% of it is shown as partial and not ranked.',
+      caption: 'The leading region and the runner-up for each measure',
+      leader: 'Leading region',
+      runnerUp: 'Runner-up',
+      partial: 'Partial, not ranked',
+      covered: (share: string) => `${share} covered`,
+      none: '—',
+    },
+    elections: {
+      title: 'Next elections',
+      intro: (region: string | null) =>
+        region === null
+          ? 'The next election that decides the executive in each of the 54 states, soonest first.'
+          : `The next election that decides the executive in each state of ${region}, soonest first.`,
+      listLabel: 'Upcoming elections, soonest first',
+      noDate: (names: string) => `No date set: ${names}.`,
+      noElections: (names: string) => `No national elections: ${names}.`,
+      none: 'No election dates are known for these states.',
+    },
+    stats: {
+      title: 'At a glance',
+      mostTitles: 'Most cardinal titles',
+      leadingRegion: 'Leading region',
+      gapsClosing: 'Gaps closing',
+      contenderAhead: 'Contender ahead last year',
+      electionsSoon: 'Elections within 12 months',
+      ofStates: (total: number) => `of ${String(total)} states`,
+      none: 'None',
+      next: (name: string, date: string) => `Next: ${name}, ${date}`,
+      closingOn: (measure: string, contender: string, cardinal: string) =>
+        `${measure}: ${contender} closing on ${cardinal}`,
+      aheadOf: (measure: string, contender: string, year: number) =>
+        `${measure}: ${contender} was ahead in ${String(year)}`,
+      definitions: {
+        mostTitles:
+          'The state named cardinal in the most measures, in Africa or in the region chosen, each measure over its own years. A tie for first names every state in it.',
+        leadingRegion:
+          'The UN M49 region that leads the most measures when the five regions are compared. A partial region is not ranked.',
+        gapsClosing:
+          'The measures on which the silent contender is closing in on the cardinal, by the gap-closing signal.',
+        contenderAhead:
+          'The measures on which the silent contender did better than the cardinal in the last year of the window, while the cardinal leads over the window as a whole.',
+        electionsSoon:
+          'The states whose next election that decides the executive falls within 12 months of today.',
       },
     },
   },

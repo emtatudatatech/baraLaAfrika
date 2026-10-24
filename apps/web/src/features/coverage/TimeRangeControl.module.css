@@ -48,6 +48,33 @@
   font-variant-numeric: tabular-nums;
 }
 
+/*
+ * "Last 10 complete years" on wider screens, "10 complete yrs" on phones (where the full label
+ * is still read out, but not shown).
+ */
+.long {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+@media (--bp-md) {
+  .long {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+  }
+
+  .short {
+    display: none;
+  }
+}
+
 .chevron {
   transition: transform var(--duration-fast) var(--ease-out);
 }

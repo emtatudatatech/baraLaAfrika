@@ -8,8 +8,9 @@
 | Countries | `/countries` | All 54 states: the meaning of their names, flags, national symbols and national animals (from the project's research document) |
 | **Harim** | `/harim` | Africa's mountains and their heights, country by country, with ranges, peak pages and exports |
 | **Dhahabu** | `/dhahabu` | Gold in Africa: where it is found, how much is mined and traded, and how much central banks hold |
+| **Vinara** | `/vinara` | The cardinals of Africa: the leading state and the runner-up on 13 measures, in Africa and in each region, whether the lead is narrowing, and the next elections |
 
-History and Contemporary Africa appear in the navigation as "Coming soon".
+History appears in the navigation as "Coming soon".
 
 **Live site:** <https://baralaafrika.netlify.app>. Data is refreshed weekly by a GitHub Actions workflow; every figure on the site carries its own date, and the strip at the top of each page shows the sources behind it.
 
@@ -27,6 +28,7 @@ History and Contemporary Africa appear in the navigation as "Coming soon".
 - [The countries table](#the-countries-table)
 - [Harim: the mountains page](#harim-the-mountains-page)
 - [Dhahabu: the gold page](#dhahabu-the-gold-page)
+- [Vinara: the cardinals of Africa](#vinara-the-cardinals-of-africa)
 - [The data ribbon and time range](#the-data-ribbon-and-time-range)
 - [Performance](#performance)
 - [Quality checks](#quality-checks)
@@ -66,7 +68,7 @@ apps/web/                 React + Vite app
   public/                 favicon (Africa silhouette), boot.js, social images, map topojson, flags
   src/
     app/                  router, layout shell, theme provider, error boundaries
-    features/             map, countries, harim, dhahabu, coverage (data ribbon)
+    features/             map, countries, harim, dhahabu, vinara, coverage (data ribbon)
     components/           Icon, IconButton, GlassCard, PageHeader, Tooltip, Drawer, RegionFilter…
     styles/               tokens.css, glass.css, base.css, media.css, fonts.css
     lib/                  strings (i18n dictionary), api client, units (m/ft), storage, theme
@@ -253,6 +255,7 @@ Every Vinara rule is computed in the database (migration `0015_vinara.sql`), fro
 - `vinara_window(metric, from, to)`: the default window (the last ten complete years) or a range asked for, kept within the data.
 - `vinara_rankings(metric, region, from, to)`: the states ranked, with ties sharing a rank; `vinara_signal(...)`: whether the cardinal's lead is narrowing; `vinara_region_values(...)`: each region's figure, its median over states and the share it covers.
 - `vinara_summary(region, from, to, metric)`: everything the page needs for each metric in one call. It holds intermediate rankings as JSON rather than temporary tables, so it runs for the read-only API role (a test runs it in a read-only transaction).
+- Migration `0016_vinara_speed.sql` redefines the per-state and regional functions with the same results, so that each metric runs only the steps it needs: the exchange-rate steps for the two currency metrics, and each regional step for the metrics that use it.
 
 ### Region colours
 
@@ -428,6 +431,17 @@ The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth**
   - **Central bank gold holdings:** monthly lines for the five largest holders, in tonnes (in the chosen unit) or US dollars, in five validated categorical colours with direct labels and a legend; it starts at the first report (2000). Below it, **Price or tonnes?** picks a bank and shows, as a bridge from the start value to the end value, how much of the change came from the price and how much from tonnes bought or sold, from `/api/gold/holdings-change`.
 - **Country drawer** (`GoldDrawer.tsx`; side panel, bottom sheet on phones): the key figures at the reference year; presence with its evidence, confidence, year and source; production by year with bars and computed values; trade by year (reported and what partners report, with the neutral note) and the top destinations; central bank gold (each year's last month); **in-ground reserves** in a separate dashed block, with a US dollar value labelled "illustrative at a given price, not a realisable sum"; artisanal mining; curated notes with their source and date; every source with its reliability tier and what it supports. "Country profile" opens the country on `/countries`, whose drawer links back ("Gold in …").
 
+## Vinara: the cardinals of Africa
+
+`/vinara` (`apps/web/src/features/vinara/`; Vinara is Swahili for "leaders") names, for each of 13 measures, the **cardinal** (the leading state) and the **silent contender** (the runner-up), in Africa or in one UN M49 region, and says whether the cardinal's lead is narrowing. Every ranking, window and signal comes from `/api/vinara` (computed in the database; rules in [docs/vinara-method.md](docs/vinara-method.md)); the page only counts and lays out what it returns.
+
+- **Scope:** "All" (Africa) or one of the five regions, as chips in the region colours (`?region=`).
+- **Years:** by default each measure covers its own last ten complete years, and the ribbon reads "Last 10 complete years". A range chosen in the ribbon (`?from=&to=`) applies to every measure, each keeping to the years it has data for; a range left open at the end runs to each measure's latest complete year. A line above the cards says which applies.
+- **Summary cards** (`VinaraStatsBand.tsx`): most cardinal titles, the leading region (Africa only), gaps closing, contenders ahead in the last year, and elections within 12 months, each with its definition behind "How is this calculated?" (the text of the method's "summary cards" section, kept identical by a test). Phones show them as a carousel.
+- **Cardinals and silent contenders** (`VinaraTable.tsx`): one row per measure with its years, how many states are ranked, the cardinal and the contender (flag, name, value at the measure's precision, and the year for levels), and the signal: **Gap closing** (highlighted), **Lead holding**, **Not enough data**, or no signal for a tie. Every state in a tie is named. IMF estimates are labelled, and a contender ahead in the window's last year is said in words. Each measure's definition and each signal's meaning show on hover, focus or tap. Below 1024px, one card per measure.
+- **Region against region** (Africa only, `RegionComparison.tsx`): the leading region and the runner-up for each measure with their figures, and the regions shown as partial (with the share covered), which are not ranked.
+- **Next elections** (`ElectionStrip.tsx`): the next election that decides the executive in each state in scope, soonest first, in a strip that scrolls inside itself (elections within 12 months marked), then the states with no date set or no national elections.
+
 ## The data ribbon and time range
 
 The strip at the top of every page (`apps/web/src/features/coverage/`) shows the data behind the current view.
@@ -436,13 +450,13 @@ The strip at the top of every page (`apps/web/src/features/coverage/`) shows the
 - **Summary line:** the kind (reference data or time series), "as of" (the newest date among the datasets), each dataset's short label (with its covered range on time-series pages, e.g. `Gold price: Jan 1990–Sep 2026`) and "Refreshed 2 days ago" (the latest pipeline run). Datasets with no row yet show "(not loaded yet)". Phones show one line; the arrow opens the details.
 - **Details:** for each dataset its full name, "as of", covered range, update cadence, last refresh (date and how long ago), provider and licence.
 - **Dates** are calendar dates formatted in UTC (`14 Oct 2026`), so no time zone shifts them. Ranges use the dataset's granularity from its cadence: months (`Sep 2026`), quarters (`Q2 2026`) or years (`2024`).
-- **Date-range control:** read-only on reference pages ("Not time-dependent", with the explanation on hover, focus or in the details). On time-series pages (`/dhahabu`) it is a year picker with presets (last 5 years, last 10 years, since 2000, all years) and From/To lists. It is bounded by the data's coverage and never goes beyond it. With no data loaded it shows "No data yet" instead of inventing a range.
-- **URL:** the range lives in `?from=&to=` (years). The full coverage is the default and leaves no params; values outside the data are clamped and a reversed range is put in order, so shared links always resolve to a valid range. Reference pages ignore the params.
+- **Date-range control:** read-only on reference pages ("Not time-dependent", with the explanation on hover, focus or in the details). On time-series pages (`/dhahabu`, `/vinara`) it is a year picker with presets (last 5 years, last 10 years, since 2000, all years) and From/To lists. It is bounded by the data's coverage and never goes beyond it. With no data loaded it shows "No data yet" instead of inventing a range.
+- **URL:** the range lives in `?from=&to=` (years). The full coverage is the default and leaves no params (a route with its own default years, `ownDefault` in its handle, uses the last ten years of its coverage instead and the control names that default); values outside the data are clamped and a reversed range is put in order, so shared links always resolve to a valid range. Reference pages ignore the params.
 
-**For time-series views** (Dhahabu, and any later one):
+**For time-series views** (Dhahabu, Vinara, and any later one):
 
 ```ts
-const { interactive, bounds, range, referenceYear, setRange } = useTimeRange();
+const { interactive, bounds, range, referenceYear, isDefault, setRange } = useTimeRange();
 // range: { start, end } years for charts; referenceYear (= range.end) for tables, maps and cards.
 ```
 
@@ -565,7 +579,7 @@ Decisions taken where the project brief (`africa-explorer-claude-code-prompt.md`
 - **Flat page files:** each page with its own HTML is a flat file (`harim.html`, `harim/peaks/<slug>.html`), because Netlify answers a folder's `index.html` with a redirect to a trailing-slash URL.
 - **CI on a pinned runner:** the workflows use `ubuntu-24.04` rather than `ubuntu-latest`, so a new image cannot change system packages unannounced; `astral-sh/setup-uv` is pinned by commit (it publishes no floating major tag).
 - **Icon substitutions:** `terrain` is now only a legacy alias of `landscape`, and `filter_hdr` is not in the current canonical set. They are replaced by `landscape_2` and `mountain_flag` where the specification suggested them.
-- **Nav includes Dhahabu:** the nav order follows §1 of the specification (Home · Countries · Harim · Dhahabu · History · Contemporary Africa).
+- **Nav includes Dhahabu:** the nav order follows §1 of the specification (Home · Countries · Harim · Dhahabu · History · Contemporary Africa). Vinara, the site's contemporary section, takes the place of Contemporary Africa and comes before History, so that every link precedes the one section still to come.
 - **Local database:** tests run SQL against **PGlite** (Postgres in WebAssembly), so neither local work nor CI needs a database server. Real data is loaded into Neon.
 - **API routing:** each function declares its own route with `config.path` (Netlify matches functions before redirects). The specified `/api/*` → `/.netlify/functions/:splat` rewrite is kept as the catch-all for unknown API paths.
 - **Malformed path codes are 404:** `/api/countries/KE` names a country that does not exist, the same as `/api/countries/XYZ`. Invalid query parameters are 400.
@@ -622,7 +636,8 @@ The site covers the four sections above. Each was built against review gates on 
 - **Harim, "Ice and fire":** glacier extent over time (Kilimanjaro, Mount Kenya, the Rwenzori) and eruption histories, driven by the ribbon's year range. It starts with a data assessment of the candidate sources (the Smithsonian Global Volcanism Program, GLIMS and the Randolph Glacier Inventory, published ice-extent studies), and sparse records will be shown as dated points, never interpolated.
 - **Harim:** protected areas and UNESCO World Heritage mountain sites; an elevation-zones infographic; a west-to-east skyline chart; hillshade or 3D terrain; a "which is taller?" quiz; peak photos, climbing routes and first-ascent history.
 - **Dhahabu:** gold demand, jewellery and investment flows (including ETFs); company-level production and ownership data; artisanal-mining formalisation and responsible-sourcing indicators; a standalone page per country; inflation-adjusted values. Forecasts and investment advice will never be added.
-- **General:** the History and Contemporary Africa sections; historical timelines; contemporary indicators (via a future `indicators` / `observations` time-series model); user accounts; a CMS; multi-language content; long-form search; offline/PWA support.
+- **Vinara:** a composite ranking of states and regions, once enough measures are in place that no single one dominates it.
+- **General:** the History section; historical timelines; user accounts; a CMS; multi-language content; long-form search; offline/PWA support.
 
 ## Credits and licences
 

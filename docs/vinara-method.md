@@ -75,6 +75,16 @@ The text the site shows for each metric, word for word (the API's `definition`; 
 - **Ties** (equal to the published precision) are all named; they are never broken at random. Currencies fixed to the dollar, or to one another, can tie at zero: two states sharing a currency always tie on both currency metrics.
 - **Region against region:** the same rule over the five regions' aggregates (below).
 
+## The page's summary cards
+
+The cards above the table count what the rankings already say; they add no rule of their own. Each card's "How is this calculated?" text is the following, word for word (a test keeps them identical). **Leading region** appears for Africa only.
+
+- **Most cardinal titles:** The state named cardinal in the most measures, in Africa or in the region chosen, each measure over its own years. A tie for first names every state in it.
+- **Leading region:** The UN M49 region that leads the most measures when the five regions are compared. A partial region is not ranked.
+- **Gaps closing:** The measures on which the silent contender is closing in on the cardinal, by the gap-closing signal.
+- **Contender ahead last year:** The measures on which the silent contender did better than the cardinal in the last year of the window, while the cardinal leads over the window as a whole.
+- **Elections within 12 months:** The states whose next election that decides the executive falls within 12 months of today.
+
 ## Is the cardinal's lead narrowing?
 
 The signal is descriptive: it reports what happened in the last three years of the window and never projects a crossover.

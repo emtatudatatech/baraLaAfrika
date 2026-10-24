@@ -2,10 +2,12 @@ import {
   type CountryRef,
   REGION_SLUGS,
   type RegionSlug,
+  VINARA_METRICS,
+  type VinaraMetricKey,
   type VinaraResponse,
   isRegionSlug,
 } from '@bla/shared';
-import { useId, useMemo, useState } from 'react';
+import { useCallback, useId, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router';
 
 import { DevApiHint } from '../../components/DevApiHint/DevApiHint';
@@ -22,7 +24,10 @@ import { useResource } from '../../lib/useResource';
 import { formatRange } from '../coverage/timeRange';
 import { useTimeRange } from '../coverage/timeRangeContext';
 import { ElectionStrip } from './ElectionStrip';
+import { MeasureDetail } from './MeasureDetail';
 import { RegionComparison } from './RegionComparison';
+import { VinaraDrawer } from './VinaraDrawer';
+import { VinaraExport } from './VinaraExport';
 import { VinaraCards, VinaraTable } from './VinaraTable';
 import { VinaraStatsBand } from './VinaraStatsBand';
 import { apiWindow } from './vinaraQuery';
@@ -42,6 +47,12 @@ export function VinaraPage() {
   const [params, setParams] = useSearchParams();
   const regionParam = params.get('region');
   const region: RegionSlug | null = isRegionSlug(regionParam) ? regionParam : null;
+  // The measure shown in detail (?metric=) and the open drawer (?country=).
+  const metricKey: VinaraMetricKey =
+    VINARA_METRICS.find((k) => k === params.get('metric')) ?? 'population';
+  const countryParam = /^[A-Z]{3}$/.test(params.get('country') ?? '')
+    ? params.get('country')
+    : null;
   const { range, isDefault } = useTimeRange();
   const { from, to } = apiWindow(range, isDefault, params);
   const isLg = useMediaQuery(minWidthQuery('lg'));
@@ -87,16 +98,36 @@ export function VinaraPage() {
         ? data.metrics[0].ranked + data.metrics[0].unranked.length
         : 0;
 
+  // Views are shareable, not history entries: changes replace the current URL.
+  const setParam = useCallback(
+    (name: string, value: string | null) => {
+      setParams(
+        () => {
+          const nextParams = latestParams();
+          if (value === null) nextParams.delete(name);
+          else nextParams.set(name, value);
+          return nextParams;
+        },
+        { replace: true, preventScrollReset: true },
+      );
+    },
+    [setParams],
+  );
   const setRegion = (next: RegionSlug | null) => {
-    setParams(
-      () => {
-        const nextParams = latestParams();
-        if (next === null) nextParams.delete('region');
-        else nextParams.set('region', next);
-        return nextParams;
-      },
-      { replace: true, preventScrollReset: true },
-    );
+    setParam('region', next);
+  };
+  const openCountry = useCallback(
+    (iso3: string) => {
+      setParam('country', iso3);
+    },
+    [setParam],
+  );
+  const drawerCountry =
+    countryParam === null ? undefined : all.find((c) => c.iso3 === countryParam);
+  const exportParams: Record<string, string | undefined> = {
+    region: region ?? undefined,
+    from: from === undefined ? undefined : String(from),
+    to: to === undefined ? undefined : String(to),
   };
 
   const metrics = data?.metrics ?? null;
@@ -159,9 +190,12 @@ export function VinaraPage() {
             aria-busy={metrics === null || stale}
           >
             <div className={styles.sectionHead}>
-              <h2 id={tableTitleId} className={styles.sectionTitle}>
-                {text.table.title}
-              </h2>
+              <div className={styles.titleRow}>
+                <h2 id={tableTitleId} className={styles.sectionTitle}>
+                  {text.table.title}
+                </h2>
+                <VinaraExport params={exportParams} />
+              </div>
               <p className={styles.intro}>{text.table.intro}</p>
             </div>
             {metrics === null ? (
@@ -181,14 +215,34 @@ export function VinaraPage() {
                   total={total}
                   scopeName={scopeName}
                   countries={countries}
+                  onOpen={openCountry}
                 />
               </div>
             ) : (
               <div className={cx(stale && styles.stale)}>
-                <VinaraCards metrics={metrics} total={total} countries={countries} />
+                <VinaraCards
+                  metrics={metrics}
+                  total={total}
+                  countries={countries}
+                  onOpen={openCountry}
+                />
               </div>
             )}
           </section>
+
+          {metrics !== null && (
+            <MeasureDetail
+              metrics={metrics}
+              metric={metricKey}
+              region={region}
+              from={from}
+              to={to}
+              onMetric={(next) => {
+                setParam('metric', next === 'population' ? null : next);
+              }}
+              onOpen={openCountry}
+            />
+          )}
 
           {metrics !== null && shownRegion === null && (
             <div className={cx(stale && styles.stale)}>
@@ -199,6 +253,18 @@ export function VinaraPage() {
       )}
 
       {calendar !== null && <ElectionStrip calendar={calendar} regionName={regionName} />}
+
+      {drawerCountry !== undefined && (
+        <VinaraDrawer
+          key={drawerCountry.iso3}
+          country={drawerCountry}
+          from={from}
+          to={to}
+          onClose={() => {
+            setParam('country', null);
+          }}
+        />
+      )}
     </>
   );
 }

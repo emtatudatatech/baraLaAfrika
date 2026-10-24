@@ -53,6 +53,12 @@ test('names the cardinal and the silent contender for each of the 13 measures', 
 
 test('compares the regions for Africa, and ranks within a region on its own', async ({ page }) => {
   await openVinara(page);
+  // Small multiples by default, one per measure; the table is the other view.
+  await expect(page.getByTestId('vinara-multiple')).toHaveCount(13);
+  await expect(
+    page.locator('[data-testid="vinara-multiple"][data-metric="inflation"] [data-partial]'),
+  ).toHaveCount(1);
+  await page.getByTestId('vinara-regions-view-table').click();
   await expect(page.getByTestId('vinara-region-row')).toHaveCount(13);
   await expect(card(page, 'leadingRegion')).toContainText('Northern Africa');
   await page.locator('[data-region="east"]').click();
@@ -96,4 +102,74 @@ test('has no accessibility violations, in Africa and in a region', async ({ page
   await expectNoAxeViolations(page);
   await openVinara(page, '?region=west');
   await expectNoAxeViolations(page);
+});
+
+test('shows one measure in detail: the leaders year by year, and every state ranked', async ({
+  page,
+}) => {
+  await openVinara(page);
+  const detail = page.getByTestId('vinara-detail');
+  await expect(detail.getByTestId('vinara-leaders-line')).toHaveCount(2);
+  await expect(detail.getByTestId('vinara-ranking-bar')).toHaveCount(10);
+  await expect(detail.getByTestId('vinara-ranking-bar').first()).toHaveAttribute(
+    'data-iso3',
+    'NGA',
+  );
+  await expect(detail.getByTestId('vinara-ranking-bar').first()).toHaveAttribute(
+    'data-role',
+    'cardinal',
+  );
+  await detail.getByTestId('vinara-ranking-toggle').click();
+  await expect(detail.getByTestId('vinara-ranking-bar')).toHaveCount(54);
+  // Another measure, kept in the URL.
+  await detail.getByTestId('vinara-metric-select').selectOption('currency_performance');
+  await expect(page).toHaveURL(/metric=currency_performance/);
+  await expect(detail).toContainText('2020–2025');
+  await expect(detail.getByTestId('vinara-ranking-bar').first()).toHaveAttribute(
+    'data-iso3',
+    'LBR',
+  );
+  // The contender is a tie: no two lines to follow.
+  await expect(detail).toContainText('A tie at the top or for second place');
+  await expect(detail.getByTestId('vinara-leaders-line')).toHaveCount(0);
+});
+
+test('a state’s name opens its drawer: every measure ranked, debt and currency', async ({
+  page,
+}) => {
+  await openVinara(page);
+  await row(page, 'population').getByRole('button', { name: 'Nigeria' }).click();
+  await expect(page).toHaveURL(/country=NGA/);
+  const drawer = page.getByTestId('vinara-drawer');
+  await expect(drawer).toBeVisible();
+  await expect(drawer.getByTestId('vinara-drawer-measure')).toHaveCount(13);
+  await expect(
+    drawer.locator('[data-testid="vinara-drawer-measure"][data-metric="population"]'),
+  ).toContainText('1st of 54 in Africa');
+  // Nigeria's central bank terms are unconfirmed: the IMF's monthly averages only.
+  await expect(drawer).toContainText('Currency: NGN');
+  await expect(drawer.getByTestId('vinara-drawer-currency')).toContainText(
+    'the IMF’s monthly averages',
+  );
+  await expectNoAxeViolations(page);
+  await page.keyboard.press('Escape');
+  await expect(drawer).toHaveCount(0);
+  await expect(page).not.toHaveURL(/country=/);
+});
+
+test('a shared link opens a drawer with debt by creditor', async ({ page }) => {
+  await openVinara(page, '?country=KEN');
+  const drawer = page.getByTestId('vinara-drawer');
+  await expect(drawer.getByTestId('vinara-drawer-creditors').locator('li').first()).toBeVisible();
+  await expect(drawer).toContainText('Currency: KES');
+  await expect(drawer.getByTestId('vinara-drawer-currency')).toContainText('Official daily rates');
+});
+
+test('Export CSV downloads every ranking for the scope', async ({ page }) => {
+  await openVinara(page, '?region=east');
+  const download = page.waitForEvent('download');
+  await page.getByTestId('vinara-export').click();
+  const file = await download;
+  expect(file.suggestedFilename()).toMatch(/^vinara-east-\d{4}-\d{2}-\d{2}\.csv$/);
+  await expect(page.getByTestId('vinara-export-toast')).toContainText('Downloaded');
 });

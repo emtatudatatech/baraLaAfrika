@@ -1149,6 +1149,99 @@ export const strings = {
       noElections: (names: string) => `No national elections: ${names}.`,
       none: 'No election dates are known for these states.',
     },
+    detail: {
+      title: 'One measure in detail',
+      intro:
+        'How the cardinal and the silent contender compare year by year over the window, and where every state stands.',
+      measureLabel: 'Measure',
+      loadError: 'This measure could not be loaded.',
+      retry: 'Try again',
+      leadersTitle: (name: string) =>
+        `${name}: the cardinal and the silent contender, year by year`,
+      leadersTie:
+        'A tie at the top or for second place: there are no two states to follow year by year. The ranking names every state in the tie.',
+      leadersDescription: (cardinal: string, contender: string, from: number, to: number) =>
+        `Lines for ${cardinal} (cardinal) and ${contender} (silent contender), ${String(from)} to ${String(to)}. The table below has the same figures.`,
+      yearlyNote: {
+        level: 'Each year’s figure.',
+        rate: 'Each year’s figure; the ranking uses their mean over the window.',
+        fx: 'Each calendar year’s change (January to December) or volatility; the ranking uses the whole window.',
+      },
+      estimateMark: 'Hollow points are IMF estimates.',
+      rankingTitle: (name: string) => `${name}: every state ranked`,
+      rankingDescription: (name: string, count: number) =>
+        `Bars for the ${String(count)} states ranked on ${name}, best first; the cardinal and the silent contender in colour. The table below has the same figures.`,
+      showAll: (count: number) => `Show all ${String(count)}`,
+      showTop: (count: number) => `Show the top ${String(count)}`,
+      rank: (rank: string) => `Ranked ${rank}`,
+      openCountry: 'Open the state',
+      tableToggle: 'Show the figures as a table',
+      columns: { year: 'Year', rank: 'Rank', state: 'State', value: 'Value' },
+      cardinal: 'Cardinal',
+      contender: 'Silent contender',
+      other: 'Other states',
+    },
+    multiples: {
+      viewLabel: 'Show the regions as',
+      charts: 'Charts',
+      table: 'Table',
+      description: (name: string) =>
+        `Bars for the five regions on ${name}, in the region colours. Partial regions are lighter and labelled.`,
+      partial: (share: string) => `partial, ${share}`,
+      shareOfAfrica: (share: string) => `${share} of Africa`,
+      key: 'Outlined: the leading region. Lighter and dashed: partial, not ranked.',
+    },
+    drawer: {
+      profile: 'Country profile: names, flag and symbols',
+      measures: 'On each measure',
+      measuresNote: (years: string) => `Over each measure’s years (${years}).`,
+      rankAfrica: (rank: string, total: number) => `${rank} of ${String(total)} in Africa`,
+      rankRegion: (rank: string, total: number, region: string) =>
+        `${rank} of ${String(total)} in ${region}`,
+      notRanked: 'Not ranked',
+      leaders: 'Leaders and the next election',
+      context: 'For context (not ranked)',
+      debt: (year: number | null) =>
+        year === null
+          ? 'Who its public external debt is owed to'
+          : `Who its public external debt is owed to (${String(year)})`,
+      debtTotal: (total: string) => `Public and publicly guaranteed external debt: ${total}.`,
+      debtOthers: (amount: string) => `Other creditors: ${amount}`,
+      noDebt: 'Not covered by the World Bank’s International Debt Statistics.',
+      creditorKinds: {
+        multilateral: 'Multilateral',
+        bilateral: 'Government',
+        bondholders: 'Bondholders',
+        commercial_banks: 'Commercial banks',
+        other_private: 'Other private',
+      },
+      currency: 'Currency',
+      union: (name: string) => `Shared in the ${name}.`,
+      peg: (parity: string, anchor: string, since: string) =>
+        `Fixed at ${parity} per ${anchor} since ${since}.`,
+      noPeg: 'Not fixed to another currency.',
+      daily: (source: string, first: string, last: string) =>
+        `Official daily rates: ${source}, ${first} to ${last}.`,
+      derived: 'Derived from the ECB’s reference rates at the official parity.',
+      monthlyOnly:
+        'No official daily source usable without permission: the IMF’s monthly averages.',
+      monthly: {
+        current: (month: string) => `IMF monthly series to ${month}.`,
+        late: (month: string) => `IMF monthly series to ${month} (late).`,
+        stale: (month: string) =>
+          `IMF monthly series to ${month} (stale: more than 12 months behind).`,
+        none: () => 'No IMF monthly series.',
+      },
+      source:
+        'Figures from the World Bank, the IMF, SIPRI, UNDP, the ECB, the BIS and central banks, as credited below; ranks computed by Bara La Afrika.',
+    },
+    export: {
+      button: 'Export CSV',
+      busy: 'Preparing…',
+      note: 'Every measure’s ranking for this scope and these years, with definitions and the sources’ required attributions.',
+      success: (file: string) => `Downloaded ${file}`,
+      error: 'The export failed. Please try again.',
+    },
     stats: {
       title: 'At a glance',
       mostTitles: 'Most cardinal titles',

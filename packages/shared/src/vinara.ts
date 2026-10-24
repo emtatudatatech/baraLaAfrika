@@ -32,6 +32,7 @@ export const VINARA_SIGNALS = ['gap_closing', 'lead_holding', 'not_enough_data']
 export type VinaraSignal = (typeof VINARA_SIGNALS)[number];
 
 const Year = z.coerce.number().int().min(1960).max(2100);
+const IsoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 
 export const VinaraQuerySchema = z
   .object({
@@ -140,3 +141,110 @@ export const VinaraMetricResponseSchema = z.object({
   series: z.array(VinaraSeriesSchema),
 });
 export type VinaraMetricResponse = z.infer<typeof VinaraMetricResponseSchema>;
+
+/** One measure for one state: its value over the window and its rank in Africa and its region. */
+export const VinaraCountryMeasureSchema = z.object({
+  key: VinaraMetricKeySchema,
+  name: z.string(),
+  unit: z.string(),
+  decimals: z.number().int(),
+  kind: z.enum(['level', 'rate']),
+  window: VinaraWindowSchema,
+  /** Null when the state takes no part (see `unrankedReason`). */
+  value: z.number().nullable(),
+  year: z.number().int().nullable(),
+  estimate: z.boolean(),
+  rankAfrica: z.number().int().nullable(),
+  rankedAfrica: z.number().int().nonnegative(),
+  rankRegion: z.number().int().nullable(),
+  rankedRegion: z.number().int().nonnegative(),
+  unrankedReason: z.string().nullable(),
+});
+export type VinaraCountryMeasure = z.infer<typeof VinaraCountryMeasureSchema>;
+
+/** A figure shown for context and not ranked (population growth, external debt…): its latest. */
+export const VinaraContextFigureSchema = z.object({
+  key: z.string(),
+  name: z.string(),
+  unit: z.string(),
+  decimals: z.number().int(),
+  value: z.number(),
+  year: z.number().int(),
+  estimate: z.boolean(),
+});
+export type VinaraContextFigure = z.infer<typeof VinaraContextFigureSchema>;
+
+export const CREDITOR_KINDS = [
+  'multilateral',
+  'bilateral',
+  'bondholders',
+  'commercial_banks',
+  'other_private',
+] as const;
+
+export const VinaraCreditorSchema = z.object({
+  kind: z.enum(CREDITOR_KINDS),
+  name: z.string(),
+  amountUsd: z.number(),
+  /** Share of the public external debt owed that year, 0 to 100. */
+  sharePct: z.number(),
+});
+export type VinaraCreditor = z.infer<typeof VinaraCreditorSchema>;
+
+export const VinaraCurrencySchema = z.object({
+  code: z.string().length(3),
+  unionName: z.string().nullable(),
+  peg: z.object({ anchor: z.string().length(3), parity: z.number(), since: IsoDate }).nullable(),
+  /** Official daily rates, where the state has a source usable without permission. */
+  daily: z
+    .object({
+      basis: z.enum(['ecb', 'derived', 'bis', 'central_bank']),
+      source: z.string(),
+      url: z.string(),
+      first: IsoDate,
+      last: IsoDate,
+    })
+    .nullable(),
+  /** The IMF's monthly series: how recent it is. */
+  monthly: z
+    .object({
+      status: z.enum(['current', 'late', 'stale', 'none']),
+      lastMonth: IsoDate.nullable(),
+    })
+    .nullable(),
+});
+export type VinaraCurrency = z.infer<typeof VinaraCurrencySchema>;
+
+export const VinaraCountryResponseSchema = z.object({
+  country: z.object({
+    iso3: z.string().length(3),
+    name: z.string(),
+    region: z.object({ slug: RegionSlugSchema, name: z.string() }),
+  }),
+  measures: z.array(VinaraCountryMeasureSchema),
+  context: z.array(VinaraContextFigureSchema),
+  /** Public external debt by creditor in its latest year (null outside the World Bank's IDS). */
+  debt: z
+    .object({
+      year: z.number().int(),
+      totalUsd: z.number(),
+      creditors: z.array(VinaraCreditorSchema),
+      /** Creditors beyond those listed, summed. */
+      othersUsd: z.number(),
+    })
+    .nullable(),
+  currency: VinaraCurrencySchema.nullable(),
+});
+export type VinaraCountryResponse = z.infer<typeof VinaraCountryResponseSchema>;
+
+export const VinaraExportQuerySchema = z
+  .object({
+    format: z.literal('csv').default('csv'),
+    region: RegionSlugSchema.optional(),
+    from: Year.optional(),
+    to: Year.optional(),
+  })
+  .refine((q) => q.from === undefined || q.to === undefined || q.from <= q.to, {
+    message: '`from` must not be after `to`',
+  });
+export type VinaraExportQuery = z.infer<typeof VinaraExportQuerySchema>;

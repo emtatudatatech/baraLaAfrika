@@ -21,10 +21,11 @@ export interface VinaraTableProps {
   /** "Africa" or the region's name, for the caption. */
   scopeName: string;
   countries: ReadonlyMap<string, CountryRef>;
+  onOpen: (iso3: string) => void;
 }
 
 /** The signature table (wide screens): one row per measure. */
-export function VinaraTable({ metrics, total, scopeName, countries }: VinaraTableProps) {
+export function VinaraTable({ metrics, total, scopeName, countries, onOpen }: VinaraTableProps) {
   return (
     <table className={cx(tableStyles.table, styles.table)} data-testid="vinara-table">
       <caption className="visually-hidden">{text.table.caption(scopeName)}</caption>
@@ -49,10 +50,20 @@ export function VinaraTable({ metrics, total, scopeName, countries }: VinaraTabl
             </th>
             <td className={styles.years}>{formatWindow(metric.window)}</td>
             <td>
-              <Leaders metric={metric} entities={metric.cardinals} countries={countries} />
+              <Leaders
+                metric={metric}
+                entities={metric.cardinals}
+                countries={countries}
+                onOpen={onOpen}
+              />
             </td>
             <td>
-              <Leaders metric={metric} entities={metric.contenders} countries={countries} />
+              <Leaders
+                metric={metric}
+                entities={metric.contenders}
+                countries={countries}
+                onOpen={onOpen}
+              />
             </td>
             <td>
               <Signal metric={metric} />
@@ -65,7 +76,12 @@ export function VinaraTable({ metrics, total, scopeName, countries }: VinaraTabl
 }
 
 /** The same, as one card per measure (phones and tablets). */
-export function VinaraCards({ metrics, total, countries }: Omit<VinaraTableProps, 'scopeName'>) {
+export function VinaraCards({
+  metrics,
+  total,
+  countries,
+  onOpen,
+}: Omit<VinaraTableProps, 'scopeName'>) {
   return (
     <ul className={styles.cards} data-testid="vinara-cards">
       {metrics.map((metric) => (
@@ -83,13 +99,23 @@ export function VinaraCards({ metrics, total, countries }: Omit<VinaraTableProps
             <div>
               <dt>{text.table.cardinal}</dt>
               <dd>
-                <Leaders metric={metric} entities={metric.cardinals} countries={countries} />
+                <Leaders
+                  metric={metric}
+                  entities={metric.cardinals}
+                  countries={countries}
+                  onOpen={onOpen}
+                />
               </dd>
             </div>
             <div>
               <dt>{text.table.contender}</dt>
               <dd>
-                <Leaders metric={metric} entities={metric.contenders} countries={countries} />
+                <Leaders
+                  metric={metric}
+                  entities={metric.contenders}
+                  countries={countries}
+                  onOpen={onOpen}
+                />
               </dd>
             </div>
           </dl>
@@ -139,10 +165,13 @@ export function Leaders({
   metric,
   entities,
   countries,
+  onOpen,
 }: {
   metric: VinaraMetric;
   entities: readonly VinaraEntity[];
   countries: ReadonlyMap<string, CountryRef>;
+  /** Opens the state's drawer. */
+  onOpen: (iso3: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const listId = useId();
@@ -166,7 +195,16 @@ export function Leaders({
               ) : (
                 <span className={styles.flagGap} aria-hidden="true" />
               )}
-              <span className={styles.name}>{entity.name}</span>
+              <button
+                type="button"
+                className={styles.name}
+                data-testid="vinara-state"
+                onClick={() => {
+                  onOpen(entity.iso3);
+                }}
+              >
+                {entity.name}
+              </button>
             </li>
           );
         })}

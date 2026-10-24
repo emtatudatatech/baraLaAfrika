@@ -1,12 +1,14 @@
 import type { VinaraMetric } from '@bla/shared';
-import { useId } from 'react';
+import { useId, useState } from 'react';
 
 import { Icon } from '../../components/Icon/Icon';
 import { RegionChip } from '../../components/RegionChip/RegionChip';
+import { SegmentedControl } from '../../components/SegmentedControl/SegmentedControl';
 import { cx } from '../../lib/cx';
 import { strings } from '../../lib/strings';
 import tableStyles from '../harim/HarimTable.module.css';
 import { formatShare, formatVinaraValue, formatWindow } from './vinaraFormat';
+import { RegionMultiples } from './charts/RegionMultiples';
 import { METRIC_ICONS } from './metricIcons';
 import styles from './VinaraPage.module.css';
 import rowStyles from './VinaraTable.module.css';
@@ -27,6 +29,7 @@ export function RegionComparison({
   wide: boolean;
 }) {
   const titleId = useId();
+  const [view, setView] = useState<'charts' | 'table'>('charts');
   const rows = metrics.flatMap((metric) =>
     metric.regions === null ? [] : [{ metric, regions: metric.regions }],
   );
@@ -39,7 +42,22 @@ export function RegionComparison({
         </h2>
         <p className={styles.intro}>{text.intro}</p>
       </div>
-      {wide ? (
+      <SegmentedControl
+        label={strings.vinara.multiples.viewLabel}
+        options={[
+          { value: 'charts', label: strings.vinara.multiples.charts, icon: 'bar_chart' },
+          { value: 'table', label: strings.vinara.multiples.table, icon: 'table_view' },
+        ]}
+        value={view}
+        onChange={setView}
+        testId="vinara-regions-view"
+      />
+      {view === 'charts' ? (
+        <>
+          <p className={styles.intro}>{strings.vinara.multiples.key}</p>
+          <RegionMultiples metrics={metrics} />
+        </>
+      ) : wide ? (
         <div className={cx('glass glass--strong', styles.panel)}>
           <table className={cx(tableStyles.table, rowStyles.table)}>
             <caption className="visually-hidden">{text.caption}</caption>

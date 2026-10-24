@@ -1,5 +1,7 @@
 import type {
   RegionSlug,
+  VinaraCountryResponse,
+  VinaraCreditor,
   VinaraEntity,
   VinaraMetric,
   VinaraMetricKey,
@@ -9,6 +11,7 @@ import type {
 } from './contract.ts';
 
 import type { Db } from './db.ts';
+import type { DatasetMeta } from './harimQueries.ts';
 
 /*
  * Vinara: every rule is computed by the SQL functions of migration 0015 (vinara_summary,
@@ -219,4 +222,353 @@ export async function getVinaraMetric(
         .map((s) => ({ year: s.year, value: num(s.value), estimate: s.estimate })),
     })),
   };
+}
+
+// ── One state (the drawer) ───────────────────────────────────────────────────
+
+interface CountryMeasureRow {
+  key: VinaraMetricKey;
+  name: string;
+  unit: string;
+  decimals: number;
+  kind: 'level' | 'rate';
+  from_year: number;
+  to_year: number;
+  is_default: boolean;
+  value: number | string | null;
+  year: number | null;
+  estimate: boolean;
+  rank_africa: number | null;
+  rank_region: number | null;
+  ranked_africa: number;
+  ranked_region: number;
+  unranked_reason: string | null;
+}
+
+/** The figures shown for context in the drawer (not ranked). */
+const CONTEXT_KEYS = [
+  'population_growth',
+  'military_pct_gdp',
+  'external_debt',
+  'external_debt_public',
+] as const;
+
+/** How many creditors the drawer lists by name (the rest are summed). */
+const CREDITORS_LISTED = 8;
+
+/**
+ * One state's page in the drawer: each measure's value over its window (the page's years) with
+ * its rank in Africa and in its region, context figures, public external debt by creditor and
+ * its currency. Null for an unknown state.
+ */
+export async function getVinaraCountry(
+  db: Db,
+  iso3: string,
+  from: number | undefined,
+  to: number | undefined,
+): Promise<VinaraCountryResponse | null> {
+  const [country] = await db.query<{
+    iso3: string;
+    name: string;
+    slug: RegionSlug;
+    region: string;
+  }>(
+    `SELECT c.iso3::text AS iso3, c.name, r.slug, r.name AS region
+     FROM countries c JOIN regions r ON r.id = c.region_id WHERE c.iso3 = $1`,
+    [iso3],
+  );
+  if (country === undefined) return null;
+
+  const [measures, context, creditors, currencies] = await Promise.all([
+    db.query<CountryMeasureRow>(
+      `WITH c AS (
+         SELECT c.id, r.slug FROM countries c JOIN regions r ON r.id = c.region_id WHERE c.iso3 = $1
+       ),
+       w AS (
+         SELECT m.key, m.sort_order, m.name, m.unit, m.decimals, m.kind, m.unranked_reason,
+                w.from_year, w.to_year, w.is_default
+         FROM vinara_metrics m CROSS JOIN LATERAL vinara_window(m.key, $2, $3) w
+         WHERE w.to_year IS NOT NULL
+       ),
+       r AS MATERIALIZED (
+         SELECT w.key, x.country_id, x.region, x.value, x.year, x.estimate, x.rank
+         FROM w CROSS JOIN LATERAL vinara_rankings(w.key, NULL, w.from_year, w.to_year) x
+       ),
+       rr AS (
+         SELECT r.*, rank() OVER (PARTITION BY r.key, r.region ORDER BY r.rank)::int AS rank_region
+         FROM r
+       )
+       SELECT w.key, w.name, w.unit, w.decimals, w.kind, w.from_year, w.to_year, w.is_default,
+              me.value, me.year, coalesce(me.estimate, false) AS estimate,
+              me.rank AS rank_africa, me.rank_region,
+              (SELECT count(*)::int FROM r WHERE r.key = w.key) AS ranked_africa,
+              (SELECT count(*)::int FROM r WHERE r.key = w.key AND r.region = c.slug) AS ranked_region,
+              CASE WHEN me.country_id IS NULL THEN w.unranked_reason END AS unranked_reason
+       FROM w CROSS JOIN c
+       LEFT JOIN rr me ON me.key = w.key AND me.country_id = c.id
+       ORDER BY w.sort_order`,
+      [iso3, from ?? null, to ?? null],
+    ),
+    db.query<{
+      key: string;
+      name: string;
+      unit: string;
+      decimals: number;
+      value: number | string;
+      year: number;
+      estimate: boolean;
+    }>(
+      `SELECT * FROM (
+         SELECT DISTINCT ON (i.key) i.key, i.name, i.unit, i.decimals, i.sort_order,
+                round(o.value, i.decimals) AS value, o.year::int AS year,
+                o.basis = 'estimate' AS estimate
+         FROM indicator_observations o
+         JOIN indicators i ON i.id = o.indicator_id
+         JOIN countries c ON c.id = o.country_id
+         WHERE c.iso3 = $1 AND i.key = ANY ($2::text[])
+         ORDER BY i.key, o.year DESC
+       ) latest ORDER BY sort_order`,
+      [iso3, [...CONTEXT_KEYS]],
+    ),
+    db.query<{
+      year: number;
+      kind: VinaraCreditor['kind'];
+      name: string;
+      amount_usd: number | string;
+      total_usd: number | string;
+    }>(
+      `WITH d AS (
+         SELECT e.* FROM external_debt_creditors e JOIN countries c ON c.id = e.country_id
+         WHERE c.iso3 = $1
+       ),
+       latest AS (SELECT max(year) AS year FROM d)
+       SELECT d.year::int AS year, d.creditor_kind::text AS kind, d.creditor_name AS name,
+              d.amount_usd, sum(d.amount_usd) OVER () AS total_usd
+       FROM d JOIN latest ON d.year = latest.year
+       ORDER BY d.amount_usd DESC, d.creditor_name`,
+      [iso3],
+    ),
+    db.query<{
+      code: string;
+      union_name: string | null;
+      anchor: string | null;
+      parity: number | string | null;
+      since: string | null;
+      basis: 'ecb' | 'derived' | 'bis' | 'central_bank' | null;
+      source: string | null;
+      url: string | null;
+      first_day: string | null;
+      last_day: string | null;
+      status: 'current' | 'late' | 'stale' | 'none' | null;
+      last_month: string | null;
+    }>(
+      `SELECT cc.currency_code::text AS code, cc.union_name, cc.peg_anchor::text AS anchor,
+              cc.peg_parity AS parity, cc.peg_since::text AS since,
+              d.basis::text AS basis, s.title AS source, s.url,
+              d.first_day::text AS first_day, d.last_day::text AS last_day,
+              fr.status::text AS status, fr.last_month::text AS last_month
+       FROM countries c
+       JOIN country_currencies cc ON cc.country_id = c.id
+       LEFT JOIN LATERAL (
+         SELECT min(f.day) AS first_day, max(f.day) AS last_day,
+                (array_agg(f.basis ORDER BY f.day DESC))[1] AS basis,
+                (array_agg(f.source_id ORDER BY f.day DESC))[1] AS source_id
+         FROM fx_daily f WHERE f.currency_code = cc.currency_code
+         HAVING count(*) > 0
+       ) d ON true
+       LEFT JOIN sources s ON s.id = d.source_id
+       LEFT JOIN fx_reporting fr ON fr.country_id = c.id
+       WHERE c.iso3 = $1`,
+      [iso3],
+    ),
+  ]);
+
+  const [first] = creditors;
+  const listed = creditors.slice(0, CREDITORS_LISTED);
+  const total = first === undefined ? 0 : num(first.total_usd);
+  const share = (amount: number) => (total > 0 ? Math.round((amount / total) * 1000) / 10 : 0);
+  const [currency] = currencies;
+
+  return {
+    country: {
+      iso3: country.iso3,
+      name: country.name,
+      region: { slug: country.slug, name: country.region },
+    },
+    measures: measures.map((m) => ({
+      key: m.key,
+      name: m.name,
+      unit: m.unit,
+      decimals: m.decimals,
+      kind: m.kind,
+      window: { from: m.from_year, to: m.to_year, isDefault: m.is_default },
+      value: numOrNull(m.value),
+      year: m.year,
+      estimate: m.estimate,
+      rankAfrica: m.rank_africa,
+      rankedAfrica: m.ranked_africa,
+      rankRegion: m.rank_region,
+      rankedRegion: m.ranked_region,
+      unrankedReason: m.unranked_reason,
+    })),
+    context: context.map((c) => ({
+      key: c.key,
+      name: c.name,
+      unit: c.unit,
+      decimals: c.decimals,
+      value: num(c.value),
+      year: c.year,
+      estimate: c.estimate,
+    })),
+    debt:
+      first === undefined
+        ? null
+        : {
+            year: first.year,
+            totalUsd: total,
+            creditors: listed.map((c) => ({
+              kind: c.kind,
+              name: c.name,
+              amountUsd: num(c.amount_usd),
+              sharePct: share(num(c.amount_usd)),
+            })),
+            othersUsd: Math.max(0, total - listed.reduce((sum, c) => sum + num(c.amount_usd), 0)),
+          },
+    currency:
+      currency === undefined
+        ? null
+        : {
+            code: currency.code,
+            unionName: currency.union_name,
+            peg:
+              currency.anchor === null || currency.parity === null || currency.since === null
+                ? null
+                : { anchor: currency.anchor, parity: num(currency.parity), since: currency.since },
+            daily:
+              currency.basis === null ||
+              currency.source === null ||
+              currency.url === null ||
+              currency.first_day === null ||
+              currency.last_day === null
+                ? null
+                : {
+                    basis: currency.basis,
+                    source: currency.source,
+                    url: currency.url,
+                    first: currency.first_day,
+                    last: currency.last_day,
+                  },
+            monthly:
+              currency.status === null
+                ? null
+                : { status: currency.status, lastMonth: currency.last_month },
+          },
+  };
+}
+
+// ── Export ────────────────────────────────────────────────────────────────────
+
+export interface VinaraExportRow {
+  metric: VinaraMetricKey;
+  metricName: string;
+  unit: string;
+  from: number;
+  to: number;
+  rank: number | null;
+  iso3: string;
+  country: string;
+  region: string;
+  value: number | null;
+  year: number | null;
+  estimate: boolean;
+  unrankedReason: string | null;
+}
+
+/** Every measure's full ranking for the scope and years, then the states taking no part. */
+export async function getVinaraExportRows(
+  db: Db,
+  region: RegionSlug | undefined,
+  from: number | undefined,
+  to: number | undefined,
+): Promise<VinaraExportRow[]> {
+  const rows = await db.query<{
+    key: VinaraMetricKey;
+    name: string;
+    unit: string;
+    from_year: number;
+    to_year: number;
+    rank: number | null;
+    iso3: string;
+    country: string;
+    region: string;
+    value: number | string | null;
+    year: number | null;
+    estimate: boolean | null;
+    unranked_reason: string | null;
+  }>(
+    `WITH w AS (
+       SELECT m.key, w.from_year, w.to_year
+       FROM vinara_metrics m CROSS JOIN LATERAL vinara_window(m.key, $2, $3) w
+       WHERE w.to_year IS NOT NULL
+     ),
+     r AS MATERIALIZED (
+       SELECT w.key, x.* FROM w CROSS JOIN LATERAL vinara_rankings(w.key, $1, w.from_year, w.to_year) x
+     )
+     SELECT m.key, m.name, m.unit, w.from_year, w.to_year, r.rank, c.iso3::text AS iso3,
+            c.name AS country, rg.name AS region, r.value, r.year, r.estimate,
+            CASE WHEN r.country_id IS NULL THEN m.unranked_reason END AS unranked_reason
+     FROM w
+     JOIN vinara_metrics m ON m.key = w.key
+     CROSS JOIN countries c
+     JOIN regions rg ON rg.id = c.region_id
+     LEFT JOIN r ON r.key = w.key AND r.country_id = c.id
+     WHERE $1::text IS NULL OR rg.slug = $1
+     ORDER BY m.sort_order, r.rank NULLS LAST, c.name`,
+    [region ?? null, from ?? null, to ?? null],
+  );
+  return rows.map((r) => ({
+    metric: r.key,
+    metricName: r.name,
+    unit: r.unit,
+    from: r.from_year,
+    to: r.to_year,
+    rank: r.rank,
+    iso3: r.iso3,
+    country: r.country,
+    region: r.region,
+    value: numOrNull(r.value),
+    year: r.year,
+    estimate: r.estimate ?? false,
+    unrankedReason: r.unranked_reason,
+  }));
+}
+
+/** The datasets behind Vinara (versions, licences and attributions), for the export. */
+export async function vinaraDatasets(db: Db): Promise<DatasetMeta[]> {
+  const rows = await db.query<{
+    key: string;
+    name: string;
+    provider: string;
+    license: string;
+    attribution: string;
+    as_of: string;
+  }>(
+    `SELECT key, name, provider, license, attribution, as_of::text AS as_of
+     FROM datasets WHERE key LIKE 'vinara-%' ORDER BY key`,
+  );
+  return rows.map((row) => ({
+    key: row.key,
+    name: row.name,
+    provider: row.provider,
+    license: row.license,
+    attribution: row.attribution,
+    asOf: row.as_of,
+  }));
+}
+
+/** Each measure's definition, in display order (docs/vinara-method.md, word for word). */
+export async function vinaraDefinitions(db: Db): Promise<{ key: string; definition: string }[]> {
+  return db.query<{ key: string; definition: string }>(
+    'SELECT key, definition FROM vinara_metrics ORDER BY sort_order',
+  );
 }

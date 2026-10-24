@@ -100,7 +100,7 @@
 
 .names {
   display: grid;
-  gap: var(--space-1);
+  gap: 2px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -117,9 +117,23 @@
   width: 24px;
 }
 
+/* A state's name opens its drawer (at least 24px tall: WCAG 2.5.8 target size). */
 .name {
+  min-height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-xs);
+  font: inherit;
   font-weight: var(--weight-semibold);
+  text-align: start;
   color: var(--color-ink);
+  background: none;
+  cursor: pointer;
+}
+
+.name:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 /* "Show all 17": a quiet text button under a large tie. */

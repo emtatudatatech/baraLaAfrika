@@ -122,6 +122,25 @@
   color: var(--color-ink);
 }
 
+/* "Show all 17": a quiet text button under a large tie. */
+.more {
+  min-height: var(--touch-target);
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--color-ink);
+  background: transparent;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--color-accent) 70%, transparent);
+  text-underline-offset: 0.2em;
+}
+
+.more:hover {
+  color: var(--color-accent);
+}
+
 .value {
   font-variant-numeric: tabular-nums;
   color: var(--color-ink);

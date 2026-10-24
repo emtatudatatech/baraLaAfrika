@@ -256,6 +256,7 @@ Every Vinara rule is computed in the database (migration `0015_vinara.sql`), fro
 - `vinara_rankings(metric, region, from, to)`: the states ranked, with ties sharing a rank; `vinara_signal(...)`: whether the cardinal's lead is narrowing; `vinara_region_values(...)`: each region's figure, its median over states and the share it covers.
 - `vinara_summary(region, from, to, metric)`: everything the page needs for each metric in one call. It holds intermediate rankings as JSON rather than temporary tables, so it runs for the read-only API role (a test runs it in a read-only transaction).
 - Migration `0016_vinara_speed.sql` redefines the per-state and regional functions with the same results, so that each metric runs only the steps it needs: the exchange-rate steps for the two currency metrics, and each regional step for the metrics that use it.
+- Migration `0017_vinara_currency_window.sql` ends the currency metrics' default window at the latest full year of rates any state has, so they show the latest rates; states without rates for its last month are listed as not ranked.
 
 ### Region colours
 

@@ -166,6 +166,24 @@ describe('Vinara rules on a fixture', () => {
     expect(all.currency_stability).toMatchObject({ from_year: 2020, to_year: 2024 });
   });
 
+  it('ends the currency window at the latest full year of rates, leaving out states without it', async () => {
+    await db.exec('BEGIN');
+    try {
+      // DDD's rates stop after 2023: three states of four have 2024, below 90%.
+      await db.exec(`DELETE FROM fx_monthly WHERE month >= '2024-01-01'
+                     AND country_id = (SELECT id FROM countries WHERE iso3 = 'DDD')`);
+      const later = await summary(null);
+      expect(later.currency_performance).toMatchObject({ from_year: 2020, to_year: 2024 });
+      expect(later.currency_stability).toMatchObject({ from_year: 2020, to_year: 2024 });
+      expect(isos(later.currency_performance?.unranked ?? [])).toEqual(['DDD']);
+      expect(isos(later.currency_stability?.unranked ?? [])).toEqual(['DDD']);
+      // The other metrics keep the 90% rule.
+      expect(later.population).toMatchObject({ to_year: 2022 });
+    } finally {
+      await db.exec('ROLLBACK');
+    }
+  });
+
   it('names the cardinal and the contender, and sees a narrowing gap in levels', () => {
     const row = all.population;
     expect(isos(row?.cardinals ?? [])).toEqual(['AAA']);

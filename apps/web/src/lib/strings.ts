@@ -82,7 +82,7 @@ export const strings = {
       ownDefault: 'Last 10 complete years',
       ownDefaultShort: '10 complete yrs',
       ownDefaultNote:
-        'By default each measure uses its own last ten complete years (a year is complete when at least 90% of the states have a figure).',
+        'By default each measure uses its own last ten complete years (a year is complete when at least 90% of the states have a figure; the currency measures run to the latest full year of rates).',
       covers: (range: string) => `The data covers ${range}. Ranges never go beyond it.`,
     },
   },
@@ -1104,6 +1104,8 @@ export const strings = {
         `${String(ranked)} of ${String(total)} states ranked`,
       tie: (count: number) => `Tie of ${String(count)}`,
       none: 'No other state ranked',
+      showAll: (count: number) => `Show all ${String(count)}`,
+      showFewer: 'Show fewer',
       estimate: 'IMF estimate',
       definitionFor: (name: string) => `How ${name} is measured`,
     },
@@ -1157,6 +1159,7 @@ export const strings = {
       ofStates: (total: number) => `of ${String(total)} states`,
       none: 'None',
       next: (name: string, date: string) => `Next: ${name}, ${date}`,
+      andMore: (count: number) => `and ${String(count)} more, tied`,
       closingOn: (measure: string, contender: string, cardinal: string) =>
         `${measure}: ${contender} closing on ${cardinal}`,
       aheadOf: (measure: string, contender: string, year: number) =>

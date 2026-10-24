@@ -166,7 +166,13 @@ function buildCards(
       detail:
         titles === null ? null : (
           <>
-            <Flags iso3s={titles.holders.map((h) => h.key)} countries={countries} />
+            <Flags
+              iso3s={titles.holders.slice(0, titles.holders.length > 4 ? 3 : 4).map((h) => h.key)}
+              countries={countries}
+            />
+            {titles.holders.length > 4 && (
+              <p className={pageStyles.cardNote}>{text.andMore(titles.holders.length - 3)}</p>
+            )}
             {titles.holders.length === 1 && (
               <p className={pageStyles.cardNote}>{titles.holders[0]?.measures.join(', ')}</p>
             )}

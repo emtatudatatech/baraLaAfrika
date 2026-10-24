@@ -16,7 +16,7 @@ Every rule here is computed in the database, not in the browser, and the definit
 - **Recency.** Each figure is the most recent available in the window and is shown with its own year (or month, for exchange rates). Reported figures are preferred. Where the World Bank has no figure for the year before the latest WEO edition, the IMF's figure for that year fills it (GDP, GDP at PPP, GDP per capita, real growth and inflation), labelled **IMF estimate**. Government debt is the IMF's series, and its figure for that year is labelled **IMF estimate** too. Projections are never shown.
 - **No data is never zero.** A country without a figure for the window takes no part in that metric's ranking, and says so.
 - **Enough years.** A mean over the window (growth, inflation) needs a figure in at least 80% of the window's years. Currency performance needs a rate in the window's first and last months; currency stability needs rates in at least 90% of its months.
-- **One window for currencies.** Currency performance and stability share one window, set by how many states have a full year of rates (January to December).
+- **One window for currencies.** Currency performance and stability share one window. By default it ends at the latest full calendar year of rates (January to December) that any state has, so the rankings use the latest rates; a state without rates for the window's last month takes no part and says so.
 
 ## Metrics and their direction
 

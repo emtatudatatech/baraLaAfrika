@@ -30,6 +30,15 @@ test('names the cardinal and the silent contender for each of the 13 measures', 
   await expect(stability).toContainText('Djibouti');
   await expect(stability).toContainText('Eritrea');
   await expect(stability.getByTestId('vinara-signal')).toContainText('No signal: a tie');
+  // A large tie (the currencies fixed to the euro) shows three names, and all on request.
+  const performance = row(page, 'currency_performance');
+  await expect(performance).toContainText('2020–2025');
+  await expect(performance).toContainText('Liberia');
+  await expect(performance).toContainText('Tie of 17');
+  await expect(performance.locator('[data-iso3]')).toHaveCount(4);
+  await performance.getByTestId('vinara-tie-toggle').click();
+  await expect(performance.locator('[data-iso3]')).toHaveCount(18);
+  await expect(performance).toContainText('Togo');
   // The contender closing in, and ahead in the window's last year.
   const inflation = row(page, 'inflation');
   await expect(inflation.getByTestId('vinara-signal')).toContainText('Gap closing');

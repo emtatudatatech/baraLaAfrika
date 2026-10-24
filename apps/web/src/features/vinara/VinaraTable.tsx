@@ -1,4 +1,5 @@
 import type { CountryRef, VinaraEntity, VinaraMetric } from '@bla/shared';
+import { useId, useState } from 'react';
 
 import { FlagImage } from '../../components/FlagImage/FlagImage';
 import { Icon } from '../../components/Icon/Icon';
@@ -143,14 +144,20 @@ export function Leaders({
   entities: readonly VinaraEntity[];
   countries: ReadonlyMap<string, CountryRef>;
 }) {
+  const [expanded, setExpanded] = useState(false);
+  const listId = useId();
   const [first] = entities;
   if (first === undefined) return <span className={styles.muted}>{text.table.none}</span>;
   const estimate = entities.some((e) => e.estimate);
+  // A large tie (states sharing a currency, or currencies fixed to the same anchor) shows its
+  // first names and the rest on request, so one cell never runs down the page.
+  const long = entities.length > TIE_SHOWN + 1;
+  const shown = long && !expanded ? entities.slice(0, TIE_SHOWN) : entities;
   return (
     <div className={styles.leaders} data-testid="vinara-leaders">
       {entities.length > 1 && <span className={styles.tie}>{text.table.tie(entities.length)}</span>}
-      <ul className={styles.names}>
-        {entities.map((entity) => {
+      <ul id={listId} className={styles.names}>
+        {shown.map((entity) => {
           const country = countries.get(entity.iso3);
           return (
             <li key={entity.iso3} data-iso3={entity.iso3}>
@@ -164,6 +171,20 @@ export function Leaders({
           );
         })}
       </ul>
+      {long && (
+        <button
+          type="button"
+          className={styles.more}
+          aria-expanded={expanded}
+          aria-controls={listId}
+          data-testid="vinara-tie-toggle"
+          onClick={() => {
+            setExpanded((value) => !value);
+          }}
+        >
+          {expanded ? text.table.showFewer : text.table.showAll(entities.length)}
+        </button>
+      )}
       <span className={styles.value}>
         {formatVinaraValue(metric, first.value)}
         {metric.kind === 'level' && <span className={styles.year}> · {first.year}</span>}
@@ -172,6 +193,9 @@ export function Leaders({
     </div>
   );
 }
+
+/** How many states of a large tie show before "Show all". */
+const TIE_SHOWN = 3;
 
 const SIGNAL_ICONS = {
   gap_closing: 'compare_arrows',

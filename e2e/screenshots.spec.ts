@@ -42,6 +42,7 @@ const DHAHABU_STATES = [
 /** Vinara for one region, and over a chosen range. */
 const VINARA_STATES = [
   { path: '/vinara?region=east', name: 'vinara-east', ready: 'vinara-row' },
+  { path: '/vinara?region=central', name: 'vinara-central', ready: 'vinara-row' },
   { path: '/vinara?from=2000', name: 'vinara-since-2000', ready: 'vinara-row' },
 ] as const;
 

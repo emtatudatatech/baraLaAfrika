@@ -89,7 +89,14 @@ def build_report(extraction: Extraction) -> str:
                 key=lambda kv: [r["slug"] for r in extraction.regions].index(kv[0]),
             )
         )
-        + " (the document's grouping)."
+        + " (UN M49 regions; Central Africa is M49's Middle Africa)."
+    )
+    w(
+        "- **Regions follow UN M49, not the document.** The document files five states under "
+        "other headings: Mauritania under North Africa (M49: Western Africa); Sudan under East "
+        "Africa (M49: Northern Africa); Mozambique, Zambia and Zimbabwe under Southern Africa "
+        "(M49: Eastern Africa). The region descriptions are the document's own text and were "
+        "written for its grouping."
     )
     w(
         f"- **{len(flagged)} of {len(countries)} countries are flagged `needs_review`.** Most "

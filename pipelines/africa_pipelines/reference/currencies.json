@@ -1,0 +1,112 @@
+{
+  "$comment": "Vinara's currency reference (docs/vinara-sources.md §4–5, docs/vinara-method.md 'Exchange rates'). `currencies`: each state's ISO 4217 currency today, checked every run against the ISO 4217 list (SIX, the ISO maintenance agency). `pegs`: official fixed parities, from the IMF's Annual Report on Exchange Arrangements and Exchange Restrictions (AREAER), each checked every run against the IMF's own monthly rates (within `peg_tolerance`). `changes`: currency changes since 2000 with their official conversion (old units per new); each old code's ISO withdrawal date is checked. A change is never read as a gain or a loss: the pipeline puts every series on today's unit.",
+  "start_month": "2020-01",
+  "peg_tolerance": 0.01,
+  "peg_check_months": 120,
+  "daily_check_tolerance": 0.02,
+  "current_within_months": 3,
+  "stale_after_months": 12,
+  "large_move": 0.5,
+  "iso4217": {
+    "current": "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml",
+    "historic": "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-three.xml",
+    "names": {
+      "CIV": "CÔTE D'IVOIRE",
+      "COD": "CONGO (THE DEMOCRATIC REPUBLIC OF THE)",
+      "COG": "CONGO (THE)",
+      "CAF": "CENTRAL AFRICAN REPUBLIC (THE)",
+      "COM": "COMOROS (THE)",
+      "GMB": "GAMBIA (THE)",
+      "NER": "NIGER (THE)",
+      "SDN": "SUDAN (THE)",
+      "TZA": "TANZANIA, UNITED REPUBLIC OF",
+      "CPV": "CABO VERDE",
+      "STP": "SAO TOME AND PRINCIPE",
+      "SWZ": "ESWATINI",
+      "LBY": "LIBYA",
+      "EGY": "EGYPT"
+    }
+  },
+  "areaer": {
+    "source_key": "imf-areaer",
+    "title": "IMF, Annual Report on Exchange Arrangements and Exchange Restrictions (AREAER)",
+    "url": "https://www.elibrary-areaer.imf.org/"
+  },
+  "currencies": {
+    "DZA": "DZD", "EGY": "EGP", "LBY": "LYD", "MAR": "MAD", "SDN": "SDG", "TUN": "TND",
+    "BEN": "XOF", "BFA": "XOF", "CPV": "CVE", "CIV": "XOF", "GMB": "GMD", "GHA": "GHS",
+    "GIN": "GNF", "GNB": "XOF", "LBR": "LRD", "MLI": "XOF", "MRT": "MRU", "NER": "XOF",
+    "NGA": "NGN", "SEN": "XOF", "SLE": "SLE", "TGO": "XOF",
+    "AGO": "AOA", "CMR": "XAF", "CAF": "XAF", "TCD": "XAF", "COG": "XAF", "COD": "CDF",
+    "GNQ": "XAF", "GAB": "XAF", "STP": "STN",
+    "BDI": "BIF", "COM": "KMF", "DJI": "DJF", "ERI": "ERN", "ETH": "ETB", "KEN": "KES",
+    "MDG": "MGA", "MWI": "MWK", "MUS": "MUR", "RWA": "RWF", "SYC": "SCR", "SOM": "SOS",
+    "SSD": "SSP", "TZA": "TZS", "UGA": "UGX", "MOZ": "MZN", "ZMB": "ZMW", "ZWE": "ZWG",
+    "BWA": "BWP", "LSO": "LSL", "NAM": "NAD", "SWZ": "SZL", "ZAF": "ZAR"
+  },
+  "unions": {
+    "XOF": "West African CFA franc (WAEMU, issued by the BCEAO)",
+    "XAF": "Central African CFA franc (CEMAC, issued by the BEAC)"
+  },
+  "pegs": {
+    "XOF": {"anchor": "EUR", "parity": 655.957, "since": "1999-01-01"},
+    "XAF": {"anchor": "EUR", "parity": 655.957, "since": "1999-01-01"},
+    "KMF": {"anchor": "EUR", "parity": 491.96775, "since": "1999-01-01"},
+    "CVE": {"anchor": "EUR", "parity": 110.265, "since": "1999-01-01"},
+    "STN": {"anchor": "EUR", "parity": 24.5, "since": "2018-01-01"},
+    "DJF": {"anchor": "USD", "parity": 177.721, "since": "1973-01-01"},
+    "LSL": {"anchor": "ZAR", "parity": 1.0, "since": "1980-01-01"},
+    "NAD": {"anchor": "ZAR", "parity": 1.0, "since": "1993-09-14"},
+    "SZL": {"anchor": "ZAR", "parity": 1.0, "since": "1986-01-01"}
+  },
+  "daily": {
+    "$comment": "Daily rates from 2020 to yesterday, from official sources usable without permission: the ECB's reference rates (the rand, and the currencies fixed to the euro, the rand or the dollar at their parities), the BIS's daily rates, and each state's own central bank through Frankfurter (frankfurter.dev, the bank's rates as published, never Frankfurter's blended rates). A central bank is used only when its terms allow reuse or it publishes none; `terms` records which. States without a usable daily source keep the IMF's monthly rates.",
+    "start": "2020-01-01",
+    "ecb_currencies": ["XOF", "XAF", "KMF", "CVE", "STN", "ZAR", "LSL", "NAD", "SZL", "DJF"],
+    "ecb_url": "https://data-api.ecb.europa.eu/service/data/EXR/D.USD+ZAR.EUR.SP00.A?format=csvdata&startPeriod={start}",
+    "bis": {"DZD": "DZ", "MUR": "MU"},
+    "bis_url": "https://stats.bis.org/api/v1/data/WS_XRU/D.{areas}..A?startPeriod={start}&format=csv",
+    "frankfurter_url": "https://api.frankfurter.dev/v2/rates?providers={provider}&from={start}&to={end}&base=USD&quotes={currency}",
+    "central_banks": {
+      "KES": {"provider": "CBK", "name": "Central Bank of Kenya", "url": "https://www.centralbank.go.ke/forex/", "terms": "none_published"},
+      "TZS": {"provider": "BOTA", "name": "Bank of Tanzania", "url": "https://www.bot.go.tz/exchangerate/excrates", "terms": "none_published"},
+      "ZMW": {"provider": "BOZ", "name": "Bank of Zambia", "url": "https://www.boz.zm/average-exchange-rates", "terms": "none_published"},
+      "AOA": {"provider": "BNA", "name": "Banco Nacional de Angola", "url": "https://www.bna.ao/Conteudos/Mercados/listaTaxasCambioReferencia.aspx", "terms": "none_published"},
+      "GMD": {"provider": "CBG", "name": "Central Bank of The Gambia", "url": "https://www.cbg.gm/indicative-exchange-rates-latest", "terms": "none_published"},
+      "LRD": {"provider": "CBLLR", "name": "Central Bank of Liberia", "url": "https://www.cbl.org.lr/research/buying-selling-rates", "terms": "none_published"},
+      "MWK": {"provider": "RBM", "name": "Reserve Bank of Malawi", "url": "https://www.rbm.mw/Statistics/MajorRates/", "terms": "none_published"},
+      "TND": {"provider": "BCT", "name": "Banque Centrale de Tunisie", "url": "https://www.bct.gov.tn/bct/siteprod/cours_archive.jsp", "terms": "none_published"},
+      "MAD": {"provider": "BAM", "name": "Bank Al-Maghrib", "url": "https://apihelpdesk.centralbankofmorocco.ma/apis", "terms": "none_published"},
+      "NGN": {"provider": "CBN", "name": "Central Bank of Nigeria", "url": "https://www.cbn.gov.ng/rates/exchratebycurrency.asp", "terms": "unconfirmed"},
+      "CDF": {"provider": "BCCCD", "name": "Banque Centrale du Congo", "url": "https://www.bcc.cd/marche-des-changes/cours-de-change", "terms": "unconfirmed"},
+      "RWF": {"provider": "BNRRW", "name": "Banque Nationale du Rwanda", "url": "https://www.bnr.rw/exchangeRate", "terms": "unconfirmed"},
+      "MGA": {"provider": "BFM", "name": "Banky Foiben'i Madagasikara", "url": "https://www.banky-foibe.mg/", "terms": "unconfirmed"},
+      "BWP": {"provider": "BOB", "name": "Bank of Botswana", "url": "https://www.bankofbotswana.bw/exchange-rates", "terms": "permission_required"},
+      "MZN": {"provider": "BM", "name": "Banco de Moçambique", "url": "https://www.bancomoc.mz/", "terms": "permission_required"},
+      "SCR": {"provider": "CBSSC", "name": "Central Bank of Seychelles", "url": "https://www.cbs.sc/marketinfo/CAR.html", "terms": "permission_required"}
+    },
+    "usable_terms": ["open", "none_published"],
+    "no_rate_since_floor": {
+      "SOS": "no exchange rate since 2020: the IMF's series for Somalia ends in June 2018, and no official daily source is usable"
+    },
+    "starts_after_floor": {
+      "EGP": "the Central Bank of Egypt's daily series starts in March 2024",
+      "BIF": "the Banque de la République du Burundi's daily series starts in September 2024",
+      "ETB": "the National Bank of Ethiopia's daily series starts in October 2024"
+    }
+  },
+  "changes": [
+    {"iso3": "MDG", "date": "2005-01-01", "old": "MGF", "new": "MGA", "old_per_new": 5, "note": "The ariary replaced the Malagasy franc (5 francs = 1 ariary)."},
+    {"iso3": "MOZ", "date": "2006-07-01", "old": "MZM", "new": "MZN", "old_per_new": 1000, "note": "The new metical replaced the old (1,000 to 1)."},
+    {"iso3": "GHA", "date": "2007-07-01", "old": "GHC", "new": "GHS", "old_per_new": 10000, "note": "The Ghana cedi replaced the cedi (10,000 to 1)."},
+    {"iso3": "SDN", "date": "2007-01-10", "old": "SDD", "new": "SDG", "old_per_new": 100, "note": "The Sudanese pound replaced the dinar (100 dinars = 1 pound)."},
+    {"iso3": "ZMB", "date": "2013-01-01", "old": "ZMK", "new": "ZMW", "old_per_new": 1000, "note": "The kwacha was rebased (1,000 to 1)."},
+    {"iso3": "MRT", "date": "2018-01-01", "old": "MRO", "new": "MRU", "old_per_new": 10, "note": "The ouguiya was redenominated (10 to 1)."},
+    {"iso3": "STP", "date": "2018-01-01", "old": "STD", "new": "STN", "old_per_new": 1000, "note": "The dobra was redenominated (1,000 to 1)."},
+    {"iso3": "SLE", "date": "2022-07-01", "old": "SLL", "new": "SLE", "old_per_new": 1000, "note": "The leone was redenominated (1,000 to 1)."},
+    {"iso3": "ZWE", "date": "2024-04-05", "old": "ZWL", "new": "ZWG", "old_per_new": 2498.7242, "note": "Zimbabwe Gold (ZiG) replaced the Zimbabwe dollar at 2,498.7242 dollars per ZiG."}
+  ],
+  "series_start": {
+    "ZWE": {"month": "2019-02", "reason": "Zimbabwe used foreign currencies from 2009 until the RTGS dollar (later the Zimbabwe dollar) was introduced in February 2019; earlier figures are in abandoned currencies and are not used."}
+  }
+}

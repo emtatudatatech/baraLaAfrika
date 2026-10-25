@@ -106,22 +106,24 @@
   --glass-saturate: 165%;
 
   /*
-   * Region identity colours: the approved flag-mode colours (2026-10-15). The app sets
+   * Region identity colours: the approved flag-mode colours (2026-10-22). The app sets
    * --region-<slug>-light/-dark from /api/regions at runtime; these literals are the
    * no-flash fallbacks and are kept equal to reference/region_colors_approval.json and to
    * darkThemePalette() by tests (src/styles/regionTokens.test.ts).
    */
   --region-north: var(--region-north-light, #c1272d);
-  --region-west: var(--region-west-light, #009e49);
+  --region-west: var(--region-west-light, #55d27a);
   --region-central: var(--region-central-light, #fcd116);
-  --region-east: var(--region-east-light, #418fde);
-  --region-southern: var(--region-southern-light, #001489);
+  /* stylelint-disable-next-line color-hex-length -- written as in the approval file (tested) */
+  --region-east: var(--region-east-light, #006600);
+  --region-southern: var(--region-southern-light, #6da9d2);
 
   /* Map */
   --map-ocean: oklch(93.5% 0.018 225deg);
   --map-graticule: oklch(45% 0.03 230deg / 18%);
   --map-context-land: oklch(87% 0.012 80deg);
   --map-border: oklch(22% 0.02 50deg / 70%);
+  --map-border-on-dark: oklch(97% 0.012 90deg / 80%);
   --map-coast: oklch(28% 0.03 50deg / 55%);
   --map-disputed: oklch(72% 0.01 80deg);
   --map-disputed-hatch: oklch(45% 0.01 80deg / 70%);
@@ -211,14 +213,17 @@
 
   /* Region colours lifted for contrast/distinctness on the dark map (hue unchanged). */
   --region-north: var(--region-north-dark, #c1272d);
-  --region-west: var(--region-west-dark, #009e49);
+  --region-west: var(--region-west-dark, #55d27a);
   --region-central: var(--region-central-dark, #fcd116);
-  --region-east: var(--region-east-dark, #72b6fe);
-  --region-southern: var(--region-southern-dark, #2b5acd);
+  --region-east: var(--region-east-dark, #177214);
+  --region-southern: var(--region-southern-dark, #6da9d2);
   --map-ocean: #0f1520; /* = DARK_MAP_BACKGROUND in lib/colour.ts */
   --map-graticule: oklch(80% 0.03 250deg / 10%);
   --map-context-land: oklch(29% 0.014 262deg);
   --map-border: oklch(12% 0.02 262deg / 85%);
+
+  /* The dark theme lifts dark fills, so the usual dark border shows on them. */
+  --map-border-on-dark: var(--map-border);
   --map-coast: oklch(88% 0.02 80deg / 40%);
   --map-disputed: oklch(40% 0.01 262deg);
   --map-disputed-hatch: oklch(75% 0.01 262deg / 55%);

@@ -208,3 +208,12 @@ export function contrastRatio(first: string, second: string): number {
   ];
   return (high + 0.05) / (low + 0.05);
 }
+
+/**
+ * Whether a light line shows better than a dark one on this fill: the map's country borders
+ * are drawn light between two such fills in the light theme (the dark line vanishes on, for
+ * example, a dark green). `light` and `dark` approximate the two border colours.
+ */
+export function prefersLightLine(fill: string, light = '#f7f3ea', dark = '#2b2420'): boolean {
+  return contrastRatio(fill, light) > contrastRatio(fill, dark);
+}

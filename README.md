@@ -4,12 +4,13 @@
 
 | Section | Route | What it shows |
 |---|---|---|
-| Home | `/` | Interactive Equal Earth map of Africa, countries coloured by region |
+| Home | `/` | Interactive Equal Earth map of Africa, countries coloured by their UN M49 region |
 | Countries | `/countries` | All 54 states: the meaning of their names, flags, national symbols and national animals (from the project's research document) |
 | **Harim** | `/harim` | Africa's mountains and their heights, country by country, with ranges, peak pages and exports |
 | **Dhahabu** | `/dhahabu` | Gold in Africa: where it is found, how much is mined and traded, and how much central banks hold |
+| **Vinara** | `/vinara` | The cardinals of Africa: the leading state and the runner-up on 13 measures, in Africa and in each region, whether the lead is narrowing, and the next elections |
 
-History and Contemporary Africa appear in the navigation as "Coming soon".
+History appears in the navigation as "Coming soon".
 
 **Live site:** <https://baralaafrika.netlify.app>. Data is refreshed weekly by a GitHub Actions workflow; every figure on the site carries its own date, and the strip at the top of each page shows the sources behind it.
 
@@ -27,6 +28,7 @@ History and Contemporary Africa appear in the navigation as "Coming soon".
 - [The countries table](#the-countries-table)
 - [Harim: the mountains page](#harim-the-mountains-page)
 - [Dhahabu: the gold page](#dhahabu-the-gold-page)
+- [Vinara: the cardinals of Africa](#vinara-the-cardinals-of-africa)
 - [The data ribbon and time range](#the-data-ribbon-and-time-range)
 - [Performance](#performance)
 - [Quality checks](#quality-checks)
@@ -50,7 +52,7 @@ Netlify Functions (Node, TypeScript) ── read-only role ──▶ Neon Postgr
 Python pipelines (uv, GitHub Actions cron) ── write role ────┘
 ```
 
-- **Frontend:** React 19, Vite 8, React Router 8 (data router, code-split routes), TypeScript (strict). Plain CSS with design tokens and CSS Modules; no Tailwind or CSS-in-JS. The four main pages are prerendered at build time and hydrated in the browser (see [Performance](#performance)).
+- **Frontend:** React 19, Vite 8, React Router 8 (data router, code-split routes), TypeScript (strict). Plain CSS with design tokens and CSS Modules; no Tailwind or CSS-in-JS. The five main pages are prerendered at build time and hydrated in the browser (see [Performance](#performance)).
 - **API:** Netlify Functions in TypeScript. Input is validated with `zod`; every error uses the shape `{ error: { code, message } }`. Responses send `Cache-Control: public, s-maxage=3600, stale-while-revalidate=86400` plus an `ETag`.
 - **Database:** Postgres on Neon. Plain numbered SQL migrations. Statistics are defined in SQL views, not in the browser.
 - **Pipelines:** Python 3.15, managed with `uv`. Every pipeline is idempotent, logs its runs and records dataset coverage.
@@ -66,7 +68,7 @@ apps/web/                 React + Vite app
   public/                 favicon (Africa silhouette), boot.js, social images, map topojson, flags
   src/
     app/                  router, layout shell, theme provider, error boundaries
-    features/             map, countries, harim, dhahabu, coverage (data ribbon)
+    features/             map, countries, harim, dhahabu, vinara, coverage (data ribbon)
     components/           Icon, IconButton, GlassCard, PageHeader, Tooltip, Drawer, RegionFilter…
     styles/               tokens.css, glass.css, base.css, media.css, fonts.css
     lib/                  strings (i18n dictionary), api client, units (m/ft), storage, theme
@@ -82,7 +84,8 @@ scripts/                  build helpers (Material Symbols subsetting, favicon, s
 config/constants.json     single source of truth for unit constants
 e2e/                      Playwright suites (desktop 1440×900, mobile 390×844)
 data/source/              the research PDF (raw downloads go to data/raw/, gitignored)
-docs/                     statistic definitions (harim-stats.md, dhahabu-stats.md), gold sources and licences
+docs/                     statistic definitions (harim-stats.md, dhahabu-stats.md), the Vinara method,
+                          and gold and Vinara sources and licences
 data/*.md                 review reports: research document, region colours, boundaries, mountains, gold
 ```
 
@@ -134,12 +137,15 @@ The pipelines run from the repo root (`uv run python -m pipelines --help`); see 
 | Step | Command | What it does |
 |---|---|---|
 | 1 | `uv run python -m pipelines migrate` | Applies `db/migrations/*.sql` in order (checksummed; an applied file that was edited is an error) and grants `SELECT` to `bla_reader` |
-| 2 | `uv run python -m pipelines extract-pdf` | Research PDF → `db/seeds/{countries,sources,datasets}.json` and `data/review_report.md`, with loud validation (54 countries; region counts 6/15/9/16/8; unique ISO codes; every summary field present; no stray citation digits) |
+| 2 | `uv run python -m pipelines extract-pdf` | Research PDF → `db/seeds/{countries,sources,datasets}.json` and `data/review_report.md`, with loud validation (54 countries; UN M49 region counts 6/16/9/18/5; the PDF's own headings checked against the document's grouping; unique ISO codes; every summary field present; no stray citation digits) |
 | 3 | `uv run python -m pipelines flags` | Downloads the 54 flag SVGs from flagcdn.com (cached in `data/raw/flags/`, copied to `apps/web/public/flags/` as the offline fallback), computes each flag's palette and each region's colour, and writes `db/seeds/flags.json` and `data/region_colors_report.md` |
 | 4 | `uv run python -m pipelines boundaries` | Natural Earth 4.1.0 (1:50m, via world-atlas 2.0.2) → `apps/web/public/geo/africa.topo.json` (the 54 countries, Somaliland tagged as Somalia, Western Sahara as disputed) and `africa-context.topo.json` (neighbouring land, loaded after the countries); computes each country's area on the equal-area Equal Earth projection, a map anchor and whether it needs a circle marker; writes `db/seeds/boundaries.json` and `data/boundaries_report.md` |
 | 5 | `uv run python -m pipelines mountains` | Builds the Harim catalogue (see [Mountain data](#mountain-data-harim)) → `db/seeds/{mountains,mountain_ranges,country_low_points}.json` and `data/mountains_review_report.md` |
 | 6 | `uv run python -m pipelines gold` | Builds the Dhahabu data (see [Gold data](#gold-data-dhahabu)) → `db/seeds/gold_*.json`, `data/gold_coverage_matrix.md` and `data/gold_review_report.md` (needs `COMTRADE_API_KEY`) |
-| 7 | `uv run python -m pipelines load` | Upserts the seeds into Neon (regions with the **approved** colours, countries, profiles, sources, citations, flag palettes, the mountain catalogue, the gold tables, datasets). Only rows whose values changed are written, so re-runs report 0 changes; each run is logged in `ingestion_runs` and refuses to start while migrations are pending |
+| 7 | `uv run python -m pipelines indicators` | Builds the annual country indicators and public external debt by creditor (see [Country indicators](#country-indicators-vinara)) → `db/seeds/{indicators,external_debt_creditors}.json`, `data/indicators_coverage_matrix.md` and `data/indicators_review_report.md` |
+| 8 | `uv run python -m pipelines politics` | Reads each state's leaders and next election (see [Leaders and elections](#leaders-and-elections-vinara)) → `db/seeds/politics.json` and `data/politics_review_report.md`; `--approve` records them as approved |
+| 9 | `uv run python -m pipelines fx` | Exchange rates (see [Exchange rates](#exchange-rates-vinara)) → `db/seeds/{fx,fx_daily}.json` and `data/fx_review_report.md` |
+| 10 | `uv run python -m pipelines load` | Upserts the seeds into Neon (regions with the **approved** colours, countries, profiles, sources, citations, flag palettes, the mountain catalogue, the gold tables, the indicators, the approved leaders and elections, the exchange rates, datasets). Only rows whose values changed are written, so re-runs report 0 changes; each run is logged in `ingestion_runs` and refuses to start while migrations are pending |
 
 `uv run python -m pipelines status` prints every dataset's "as of" date, last refresh, cadence and last run (flagging overdue datasets).
 
@@ -192,13 +198,73 @@ The pipelines run from the repo root (`uv run python -m pipelines --help`); see 
 - **Reports:** `data/gold_coverage_matrix.md` (country × metric, with the years available) and `data/gold_review_report.md` (tiers with their evidence, source conflicts, lumped countries, late reporters, trade gaps, the mines verdict, figures left out, what needs review).
 - **Database:** migration `0007_dhahabu.sql` (tables, `v_gold_price_annual`, `v_gold_production`, and `troy_oz_per_tonne()`, which a test checks against `config/constants.json`). Migration `0008_dhahabu_api.sql` adds world production (the MCS world totals) and each central bank's reporting status (`gold_reserves_reporting`), `gold_country_metrics(year)` with `v_gold_country_latest` (each metric's latest value in or before a year, with its own year or date), and `v_gold_stats(region, year)`, the statistics band (definitions in [docs/dhahabu-stats.md](docs/dhahabu-stats.md), which a test keeps word for word in step with the SQL). Migration `0009_dhahabu_charts.sql` adds `gold_price_effect()` and `gold_holdings_change()`, the split of a change in holdings value into a price effect and a volume effect (they sum exactly to the change, by construction), and the 11th card, "Price effect" (the 0008 function is renamed `gold_stats_core` and `v_gold_stats` adds the card to its ten).
 
+### Country indicators (Vinara)
+
+`python -m pipelines indicators` (`pipelines/africa_pipelines/indicators*.py`) reads annual figures for the 54 states from 2000. Every download is cached under `data/raw/indicators/`; `--refresh` fetches again. What each series is, and its code at the source, is in `pipelines/africa_pipelines/reference/indicators_config.json`; sources and licences are in [docs/vinara-sources.md](docs/vinara-sources.md) and the rules in [docs/vinara-method.md](docs/vinara-method.md).
+
+| Indicators | Source |
+|---|---|
+| Population and its growth, land and surface area, GDP (US$ and PPP), GDP per capita (PPP), real growth, inflation, GNI | World Bank WDI (CC BY 4.0) |
+| Government gross debt (% of GDP) | IMF World Economic Outlook |
+| Military spending (US$ and % of GDP) | SIPRI, read through WDI; only the latest ten years are kept (fair use) |
+| Human Development Index | UNDP Human Development Report (CC BY 3.0 IGO); when UNDP's site does not answer, Our World in Data's copy of the same series |
+| External debt, public external debt, and what is owed to multilateral lenders, governments, bondholders, commercial banks and other private lenders; each creditor's share | World Bank International Debt Statistics (CC BY 4.0) |
+
+- **One value per country, indicator and year.** The World Bank's figure is used where it has one. Where it has none for the year before the IMF's latest WEO edition, the IMF's figure for that year fills it (GDP, GDP at PPP, GDP per capita, growth, inflation), stored as an **estimate**. Government debt comes from the IMF, whose figure for that year is likewise an estimate. Projections (the edition's year and later) and years not yet ended are refused.
+- **No data is a missing row,** never zero. Countries outside the World Bank's debt reporting (Libya, Namibia, Seychelles, South Sudan) have no debt rows.
+- **Creditors:** the last ten years of public and publicly guaranteed external debt by creditor. A creditor's kind is the series it appears in (multilateral, bilateral, commercial banks, other private); bondholders are one creditor. Creditor amounts are checked against their totals.
+- **Validation** (the run fails otherwise): no duplicate or future observation; estimates only for the year before the edition; every value within a plausible range for its unit; at most ten years of SIPRI data; every indicator has data.
+- **Reports:** `data/indicators_coverage_matrix.md` (each country's latest year per indicator) and `data/indicators_review_report.md` (coverage and each indicator's default ten-year window, gaps, the IMF estimates used, where the World Bank and the IMF disagree, SIPRI's years, external debt coverage and the largest creditors, and extreme values to check).
+- **Database:** migration `0011_indicators.sql`: `indicators` (definition, unit, display precision, source code and dataset), `indicator_observations` (value, `reported` or `estimate`, source and edition) and `external_debt_creditors`.
+
+### Leaders and elections (Vinara)
+
+`python -m pipelines politics` (`pipelines/africa_pipelines/politics*.py`) reads two Wikipedia lists through the MediaWiki API: *List of current heads of state and government* and *List of next general elections*. Sources and licences are in [docs/vinara-sources.md](docs/vinara-sources.md); the rules are in [docs/vinara-method.md](docs/vinara-method.md).
+
+- **Leaders:** the office the list marks as holding executive power comes first, then the other of head of state and head of government where it is a different person. Each is labelled transitional or de facto where the list says so, and carries the Wikidata item read from the person's article. Wikidata's own head-of-state and head-of-government statements are compared, and differences are reported.
+- **Elections:** the next election that decides the executive. That is the presidential election where the executive president is directly elected, otherwise the legislative election. A month or year alone is the list's latest possible date and is stored as its last day, with its precision. `election_status()` (migration `0012_politics.sql`) gives "Election within 12 months", "No election within 12 months" or "No date set" from today's date whenever it is read.
+- **Curation:** `pipelines/africa_pipelines/reference/politics_curation.json` holds country names as the lists spell them, the executive override for Sudan's collective council, Eritrea's lack of elections, and short notes (Somalia's disputed presidency, Libya's and Sudan's rival authorities, Cabo Verde's acting president, the monarchies). Every note and override rests on quotes from the lists, which each run re-checks.
+- **Approval:** the site shows the snapshot in `reference/politics_approved.json`. Every run lists the differences from it in `data/politics_review_report.md`, and `load` keeps the approved records until `politics --approve` records new ones. The weekly refresh never approves.
+- **Database:** `country_leaders` and `country_elections`, with `election_status(next_date, today)`.
+
+### Exchange rates (Vinara)
+
+`python -m pipelines fx` (`pipelines/africa_pipelines/fx*.py`) reads rates in local currency per US dollar from 1 January 2020 (the floor for exchange rates) to the day before the run. Sources and licences are in [docs/vinara-sources.md](docs/vinara-sources.md) (§4, 5 and 12); the reference of currencies, pegs, currency changes and daily sources is `pipelines/africa_pipelines/reference/currencies.json`.
+
+- **Daily, official:** one source per currency, stored per currency (states sharing one share its rates).
+  - **ECB:** the rand, and at their official parities the two CFA francs, the Comorian franc, the Cabo Verdean escudo, the dobra, the loti, the lilangeni, the Namibian dollar and the Djiboutian franc (22 states).
+  - **BIS:** Algeria and Mauritius.
+  - **The state's own central bank**, read through [Frankfurter](https://frankfurter.dev) (the bank's rates as published, never Frankfurter's blend; one year per request, past years cached): Kenya, Tanzania, Zambia, Angola, The Gambia, Liberia, Malawi, Tunisia and Morocco. A bank is used only when its terms allow reuse or it publishes none; banks whose terms could not be read (Nigeria, DR Congo, Rwanda, Madagascar) or require permission (Botswana, Mozambique, Seychelles) are recorded with that status.
+- **Monthly:** the IMF's Exchange Rates (period average and end of month) for all 54 states. It is the series shown for states without a usable daily source, and the check on every daily one.
+  - **One unit throughout:** each currency change is recorded with its official conversion; the pipeline detects whether the IMF already gives earlier months in the new unit and converts them where it does not (Zimbabwe's ZiG, April 2024), so a change is never read as a gain or a loss.
+  - **Status:** each monthly series is current, late or stale (more than 12 months behind the newest month); months that have not ended are refused.
+- **Checks** (the run fails otherwise):
+  - each peg holds against the IMF's own rates in 95% of months (within 1%);
+  - each daily series' monthly mean matches the IMF's monthly average in 90% of months (within 1% for fixed currencies and the rand, 2% otherwise);
+  - each state's currency, and each changed currency's withdrawal date, is checked against the ISO 4217 lists (SIX for ISO);
+  - an unexplained jump across a currency change stops the run.
+- **Report:** `data/fx_review_report.md` lists, per state, its daily source and span, its monthly span and status, and why a state is monthly only; how each currency change was applied; the peg and daily checks; and every month a currency moved more than 50% against the dollar.
+- **Database:** migration `0014_fx.sql`: `country_currencies`, `currency_changes`, `fx_monthly`, `fx_daily` (with each rate's source) and `fx_reporting`.
+
+### The rankings (Vinara)
+
+Every Vinara rule is computed in the database (migration `0015_vinara.sql`), from the indicators and exchange rates above; there is no pipeline step. The rules are in [docs/vinara-method.md](docs/vinara-method.md), and each metric's definition there is word for word the one the database returns (a test keeps them identical).
+
+- `vinara_metrics`: the 13 ranked metrics, each with how it is measured over the window, which way leads, its precision (values equal at it tie), how a region's figure is made, and its definition.
+- `v_fx_month`: each state's monthly rate on one basis for ranking (the mean of its daily rates where it has them, otherwise the IMF's monthly average).
+- `vinara_window(metric, from, to)`: the default window (the last ten complete years) or a range asked for, kept within the data.
+- `vinara_rankings(metric, region, from, to)`: the states ranked, with ties sharing a rank; `vinara_signal(...)`: whether the cardinal's lead is narrowing; `vinara_region_values(...)`: each region's figure, its median over states and the share it covers.
+- `vinara_summary(region, from, to, metric)`: everything the page needs for each metric in one call. It holds intermediate rankings as JSON rather than temporary tables, so it runs for the read-only API role (a test runs it in a read-only transaction).
+- Migration `0016_vinara_speed.sql` redefines the per-state and regional functions with the same results, so that each metric runs only the steps it needs: the exchange-rate steps for the two currency metrics, and each regional step for the metrics that use it.
+- Migration `0017_vinara_currency_window.sql` ends the currency metrics' default window at the latest full year of rates any state has, so they show the latest rates; states without rates for its last month are listed as not ranked.
+
 ### Region colours
 
 Each region's identity colour is the **mode colour across its flags**: flags are rasterised, clustered into at most 8 colours in CIELAB, merged across flags (CIEDE2000 < 10) and summed per region; white, black and grey are excluded by default, and near-identical picks are resolved by giving the colour to the region where it has the larger share. Anti-aliasing blends at stripe edges are folded back into the real flag colours first. Every parameter is a command-line option (`python -m pipelines flags --help`), and `--include-neutrals` switches which result is selected (both are always reported).
 
-`data/region_colors_report.md` shows the picks with swatches, the top five candidates per region, every uniqueness decision, both results, per-flag palettes and automated checks (distinctness, colour-vision-deficiency simulation, contrast against the light and dark page). Colours are never adjusted by hand.
+`data/region_colors_report.md` shows the picks with swatches, the top five candidates per region, every uniqueness decision, both results, per-flag palettes and automated checks (distinctness, colour-vision-deficiency simulation, contrast against the light and dark page). Colours are never adjusted by hand in the computation; an adjustment the owner approves is recorded with its reason in the approval file.
 
-**Approval.** The approved colours (2026-10-15: North `#c1272d`, West `#009e49`, Central `#fcd116`, East `#418fde`, Southern `#001489`) are recorded in `pipelines/africa_pipelines/reference/region_colors_approval.json`, and `load` writes **only** those to `regions.color_hex`. If a later `flags` run computes different colours, the approved ones stay in use and the report says the computation differs, until a new approval is recorded there.
+**Approval.** The approved colours (2026-10-22: Northern `#c1272d`, Western `#55d27a`, Central `#fcd116`, Eastern `#006600`, Southern `#6da9d2`) are recorded in `pipelines/africa_pipelines/reference/region_colors_approval.json`, and `load` writes **only** those to `regions.color_hex`. The file keeps the approved computation separately from the colours in use: Western Africa's computed `#009e49` is lightened to `#55d27a` (same hue) so it stands apart from Eastern Africa's green, and the report names that adjustment with its reason. If a later `flags` run computes different colours, the approved ones stay in use and the report says the computation differs, until a new approval is recorded there.
 
 ### Correcting the data
 
@@ -211,13 +277,13 @@ The research document is not fully verified (see `data/review_report.md`). To co
 
 How the extraction works and where its judgement calls live:
 
-- `pipelines/africa_pipelines/reference/african_states.json`: canonical names (with diacritics), ISO codes, regions, and every label the PDF uses for each country.
+- `pipelines/africa_pipelines/reference/african_states.json`: canonical names (with diacritics), ISO codes, UN M49 regions (with the research document's own grouping for the five states it files differently), and every label the PDF uses for each country.
 - `pipelines/africa_pipelines/reference/symbology_curation.json`: the reviewed mapping of each country's prose sentences to profile fields, the animal-status decisions with their reasons, the reviewed etymology categories, the known inconsistencies (each marked corrected, status changed or open) and the **verified corrections**. Each correction replaces or appends exact text, gives its reason and cites the reference source it was checked against; that source is added to `sources` and cited on the corrected field. If a correction's original text stops matching, extraction fails rather than silently skipping it. The review report lists every correction with its before and after text.
 - `pipelines/africa_pipelines/reference/source_tiers.json`: the reliability tier for each cited website.
 
 ### Scheduled refresh
 
-`.github/workflows/data-refresh.yml` runs every Monday at 03:17 UTC (and on demand): `migrate` → `flags --refresh` → `mountains --refresh` and the gold steps (first Monday of the month, or on a manual run; gold production only on a manual run) → `load` → `status`, then calls the Netlify build hook if `load` changed any rows. If upstream data changed the generated seeds, the run warns and uploads them (with the colour and mountain reports) as the `refreshed-data` artifact for you to review and commit; the approved region colours are never replaced automatically. Repository secrets: `DATABASE_URL_WRITE` (required), `COMTRADE_API_KEY` (for gold trade; without it the step is skipped with a warning) and `NETLIFY_BUILD_HOOK` (optional).
+`.github/workflows/data-refresh.yml` runs every Monday at 03:17 UTC (and on demand): `migrate` → `flags --refresh` → `mountains --refresh`, the gold steps and `indicators --refresh` (first Monday of the month, or on a manual run; gold production only on a manual run), `fx --refresh` (weekly), `politics --refresh` (weekly; changes wait for approval) → `load` → `status`, then calls the Netlify build hook if `load` changed any rows. If upstream data changed the generated seeds, the run warns and uploads them (with the colour, mountain, gold, indicator, exchange-rate and politics reports) as the `refreshed-data` artifact for you to review and commit; the approved region colours are never replaced automatically. Repository secrets: `DATABASE_URL_WRITE` (required), `COMTRADE_API_KEY` (for gold trade; without it the step is skipped with a warning) and `NETLIFY_BUILD_HOOK` (optional).
 
 ### Local database for tests
 
@@ -229,8 +295,8 @@ Netlify Functions in `netlify/functions/`, one file per route, each declaring it
 
 | Route | Returns |
 |---|---|
-| `GET /api/regions` | The five regions in document order: name, description, approved `colorHex`, country count |
-| `GET /api/countries?region=<slug>&q=<text>` | Country summaries (all 54 without parameters): region, flag URLs (Flagpedia SVG, PNG template, self-hosted fallback), short profile fields, animal status, `needsReview`. `q` matches names, official names and ISO codes, accent-insensitively ("cote" finds Côte d'Ivoire) |
+| `GET /api/regions` | The five UN M49 regions in display order: name, description, approved `colorHex`, country count |
+| `GET /api/countries?region=<slug>&q=<text>` | Country summaries (all 54 without parameters): region, flag URLs (Flagpedia SVG, PNG template, self-hosted fallback), short profile fields, animal status, `needsReview`, and `facts` from `v_country_facts` (migration 0013): latest population and land area with their years, leaders (executive first), and the next election with its status as of the request. `q` matches names, official names and ISO codes, accent-insensitively ("cote" finds Côte d'Ivoire) |
 | `GET /api/countries/:iso3` | The full profile: long texts, scientific name, review notes and every cited source with its reliability tier and the fields it supports. Unknown or malformed codes are 404 |
 | `GET /api/coverage?datasets=a,b` | Each dataset's provider, licence, attribution, coverage, "as of" date and last refresh; requested keys with no data yet are listed in `missing` |
 | `GET /api/mountains/summary?region=&q=` | One row per country (54), highest peak first: the highest peak (with a massif's top summit and the countries it is shared with), number of mountains, mean height, ranges, lowest point and relief |
@@ -247,10 +313,15 @@ Netlify Functions in `netlify/functions/`, one file per route, each declaring it
 | `GET /api/gold/countries/:iso3?year=` | One country's drawer: its table row at the reference year, production by year (with computed values), trade by year (reported and mirror) and its top export partners, central bank holdings (each year's last month), in-ground reserves, curated notes and every source with what it supports. Unknown or malformed codes are 404 |
 | `GET /api/gold/series?metric=production\|exports\|imports\|holdings_tonnes\|holdings_usd&countries=&region=&from=&to=&granularity=` | Chart series, one per country, pre-aggregated in SQL; production adds Africa's (or the region's) yearly totals with their completeness. At most 12 countries per request and 6,000 points (larger requests drop the earliest periods and say `capped`) |
 | `GET /api/gold/holdings-change?countries=&from=&to=` | For each country with two or more reports in the years, its first and last holding and the change in value split into price and volume effects (`gold_holdings_change`) |
+| `GET /api/vinara?region=&from=&to=` | For each of the 13 metrics, over its default window or the years asked for: the window, the cardinal and the silent contender (ties all named, each value with its year and whether it is an IMF estimate), the gap-closing signal, whether the contender led in the window's last year, how many states are ranked and why the others are not, and its definition. For Africa (no `region`), the five regions compared: each region's figure, median, coverage, whether it is partial, and its rank. 503 until the indicators are loaded |
+| `GET /api/vinara/metrics/:key?region=&from=&to=` | One metric in full: the same summary, every ranked state with its rank, the regions' figures (Africa only) and the cardinal's and contender's yearly values over the window, for charts. Unknown metrics are 404 |
+| `GET /api/vinara/countries/:iso3?from=&to=` | One state on every measure over the page's years: its value, year, whether it is an IMF estimate, and its rank in Africa and in its region (or why it takes no part); context figures (population growth, military spending as % of GDP, external debt); public external debt by creditor in its latest year (the eight largest, the rest summed, each with its share); and its currency (peg, official daily source and span, the IMF monthly series' status). Unknown or malformed codes are 404 |
+| `GET /api/vinara/export?format=csv&region=&from=&to=` | Every measure's ranking for Africa or a region as CSV, ranked states first and then those taking no part (with why): a `#` block with the as-of date, scope, years, notes, each measure's definition and the datasets' licences and required attributions |
 
 - **Errors** always have the shape `{ "error": { "code", "message" } }`: `bad_request` (400, invalid query parameters), `not_found` (404), `method_not_allowed` (405; only GET and HEAD), `service_unavailable` (503, database not configured) and `internal_error` (500; details are logged, never returned).
 - **Caching:** `Cache-Control: public, s-maxage=3600, stale-while-revalidate=86400` with a weak `ETag` (304 on `If-None-Match`). Errors are `no-store`.
 - **Database:** the Neon HTTP driver with the read-only `bla_reader` role (`DATABASE_URL_READ`); every query is parameterised (`netlify/functions/_shared/queries.ts` and `harimQueries.ts`). Search uses the `search_fold()` SQL function and the `v_country_summary` view (migration 0002). The Harim routes read `v_mountains`, `v_country_mountain_summary` and `v_harim_stats()` (migration 0004; 0005 adds each height's confidence and other sourced heights to the statistics, and names the region in the lowest point's label). Every statistic's definition and tie rule is in [`docs/harim-stats.md`](docs/harim-stats.md), word for word as the SQL returns it (a test keeps them identical).
+- **Vinara** reads `vinara_summary()`, `vinara_rankings()` and `vinara_country_years()` (migration 0015) through `netlify/functions/_shared/vinaraQueries.ts`, which only shapes their rows.
 - **Routing:** `/api/mountains/:slug` excludes the fixed paths (`summary`, `stats`, `export`, `ranges`), and a test checks every API path reaches exactly one function.
 - **Files:** a handler may return a ready `Response` (the export), with the same caching and ETag as JSON.
 - **Bundling:** functions import the shared contract by relative path (`_shared/contract.ts`), so Netlify's bundler inlines it. `npm run check:functions` builds the functions exactly as a deploy does and checks every bundle loads and answers.
@@ -261,11 +332,12 @@ Netlify Functions in `netlify/functions/`, one file per route, each declaring it
 The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth** projection (`d3-geo`), fitted to a box from Cabo Verde to Mauritius (far islands such as South Africa's Prince Edward Islands stay reachable by panning).
 
 - **Fills** use the approved region colours as CSS variables (`--region-<slug>`), set from `/api/regions`, with the same colours in `tokens.css` as no-flash fallbacks (a test keeps them in sync with the approval).
+- **Borders** are one dark line, except between two countries whose region colour is dark (Northern and Eastern Africa today): there the light theme draws a light line, which shows where the dark one would vanish. A fill counts as dark when a light line contrasts with it more than the dark line does (`prefersLightLine`, `lib/colour.ts`); the dark theme lifts those fills, so its borders stay dark.
 - **Dark theme:** `darkThemePalette()` (`lib/colour.ts`) keeps every hue. It lifts a colour's OKLCH lightness only to reach 3:1 against the dark map ocean (WCAG 1.4.11), then lifts the lighter of any pair closer than ΔE 30 until they separate. With the approved colours this changes only East (`#72b6fe`) and Southern (`#2b5acd`).
 - **Boundaries** are drawn once as meshes (borders and coastlines), with thin strokes that stay thin at any zoom. **Somaliland** is merged into Somalia (no internal line); Somalia's tooltip and profile explain this (declared independence in 1991, self-governing, not recognised by the African Union or UN), and screen readers hear the same note. **Western Sahara** is hatched, with the tooltip "Disputed territory". A note under the map states that boundaries do not imply endorsement of any claim.
 - **Small states** (under 20,000 km² on the map: Cabo Verde, São Tomé and Príncipe, Comoros, Mauritius, Seychelles, The Gambia, Eswatini) get clickable circle markers. Lesotho (about 30,000 km²) is large enough to click.
 - **Interaction:**
-  - Hover or keyboard focus shows a tooltip with the flag, name and region.
+  - Hover or keyboard focus shows a tooltip with the flag, name and region, the population and land area, the leader and the next election with its status; the click popover (a bottom sheet on phones) shows the same facts.
   - Click or tap opens a short profile with "See in table": a popover on larger screens, a bottom sheet on phones. Escape closes it and returns focus.
   - The **legend** isolates a region (others dim) and links to `/countries?region=…`.
   - Zoom with the + / − / reset buttons, pinch, or Ctrl/⌘ + scroll; drag to pan. One-finger swipes still scroll the page on phones.
@@ -275,12 +347,15 @@ The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth**
 
 ## The countries table
 
-`/countries` (`apps/web/src/features/countries/`) lists all 54 countries with their flag, region, name meaning, national symbol and national animal.
+`/countries` (`apps/web/src/features/countries/`) lists all 54 countries with their flag and region, in two views:
 
-- **Filters live in the URL**, so every view can be shared: `?region=<slug>`, `?q=<search>`, `?sort=<column>` (a leading `-` sorts descending, e.g. `sort=-animal`) and `?country=<ISO3>` (opens that country's drawer). Invalid values are ignored. Filter changes replace the current history entry rather than adding one.
+- **Symbols** (the default): name meaning, national symbol and national animal.
+- **Facts** (`?view=facts`): population and land area, each with its year; the leader holding executive power (title above the name), then the other of head of state and head of government; and the next election that decides the executive, with its status ("Election within 12 months", "No election within 12 months" or "No date set", computed from today's date). Transitional and de facto leaders are labelled, and an "i" button explains a country's political context (Somalia's disputed presidency, Libya's and Sudan's rival authorities). A month or year alone reads as a deadline ("by Jul 2031").
+
+- **Filters live in the URL**, so every view can be shared: `?view=facts`, `?region=<slug>`, `?q=<search>`, `?sort=<column>` (a leading `-` sorts descending, e.g. `sort=-animal`) and `?country=<ISO3>` (opens that country's drawer). Invalid values are ignored. Filter changes replace the current history entry rather than adding one.
 - **Region chips** in the region colours, plus "All", each with its country count.
-- **Search** ignores case and accents ("cote" finds Côte d'Ivoire). It matches names, official names, ISO codes and every visible column, so "eagle" finds the countries whose animal is an eagle. The list loads once (shared with the map) and filters instantly; the API's `q` parameter matches names and codes only.
-- **Sorting:** every column but the flag. Ties sort by country name; regions sort in their display order (North → Southern). Phones get a "Sort by" menu.
+- **Search** ignores case and accents ("cote" finds Côte d'Ivoire). It matches names, official names, ISO codes, leaders and the symbol columns, so "eagle" finds the countries whose animal is an eagle and "ruto" finds Kenya. The list loads once (shared with the map) and filters instantly; the API's `q` parameter matches names and codes only.
+- **Sorting:** every column but the flag. Population and land area sort largest first on the first click, and elections soonest first; countries without a figure or a date always sort last. Ties sort by country name; regions sort in their display order (Northern → Southern). Phones get a "Sort by" menu for the view's columns, and cards that expand to the view's fields.
 - **Flags** come from Flagpedia (`flagcdn.com`, 1x/2x, explicit size, lazy-loaded, self-hosted fallback). Hovering or focusing a flag shows the document's flag text (summary, then the full description); a tap toggles it on touch screens. Escape dismisses it, and it stays inside the viewport.
 - **Animal status:** anything short of official (de facto, inferred, sports nickname, contested) is badged in the table, so inference never reads as fact.
 - **Drawer:** a click on a row (or Enter on the country name) opens the full profile in a modal dialog: a side panel on wide screens, a bottom sheet on phones. It shows the long texts, the etymology category (when assigned), the animal status with its meaning, every source with its reliability tier and the fields it supports, and a "Needs verification" marker that expands to the review notes. Somalia's drawer explains Somaliland. Escape, the close button or a click on the backdrop close it, and focus returns to where it was.
@@ -298,7 +373,7 @@ The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth**
 - **Statistics band** (`features/harim/stats/`): nine glass cards under the header, all figures from `/api/mountains/stats` (computed in the database; definitions in [`docs/harim-stats.md`](docs/harim-stats.md)).
   - **Hero cards:** mountains catalogued (with countries and territory peaks), volcanic mountains (a bar and legend by status), the tallest mountain (a massif with its top summit, and the flag), and the lowest national high point ("Africa's lowest 'highest point'", never "the shortest mountain").
   - **Compact cards:** peaks above 4,000 m (a bar and legend of the four height bands), the most mountainous country, the busiest range with its tallest peak, the lowest point and the greatest relief. Ties are listed, each with its own button.
-  - **Scope:** "All Africa", or the selected region as a chip in its colour, always shown above the cards; the figures recompute for the region (the previous figures stay, dimmed, while the new ones load). Screen readers hear the scope with each card's name, and the lowest-point card names the region ("Lowest point in East Africa").
+  - **Scope:** "All Africa", or the selected region as a chip in its colour, always shown above the cards; the figures recompute for the region (the previous figures stay, dimmed, while the new ones load). Screen readers hear the scope with each card's name, and the lowest-point card names the region ("Lowest point in Eastern Africa").
   - **Each card does something:** open the peak's drawer (tallest, lowest high point), filter All peaks (volcanoes; peaks above 4,000 m from 4,001 m, since the bands are strict; the most mountainous country's peaks of 3,000 m or more; the busiest range's peaks of 3,000 m or more), or open the country's row (lowest point, greatest relief). The page then scrolls to the list. The whole card is the target, through its own button (keyboard and screen readers).
   - **"How is this calculated?":** the "i" button shows the API's definition over the card; Escape or Close returns focus to the button.
   - **Caveats:** a height whose confidence is low, or whose other sources differ by more than 10 m, gets a "Sources disagree" marker listing the other heights; a low point marked for review gets "Needs verification".
@@ -321,7 +396,7 @@ The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth**
 - **Range pages** (`/harim/ranges/:slug`): the sourced description and formation note with its source ("needs verification" where unsourced; "no sourced description yet" where there is none), type, length, mountain count and tallest peak, the countries it spans (their mountains and profiles), the map fitted to the range, and its peaks (each opening its page).
 - **Peak pages** (`/harim/peaks/:slug`, and "Open full page" in the drawer): name, height in both units, flags, range and volcanic status; the height's confidence, source and every other sourced height; prominence, isolation, coordinates (with a copy button), type, massif and summits; local names and name origin with sources ("Unsourced" otherwise); a locator map; nearby peaks (same range or country, nearest first); sources; and a copy-link button.
 - **Export:** "Export" by the result count downloads the current view or the whole catalogue as CSV or GeoJSON from `/api/mountains/export`; a message confirms the download or reports a failure.
-- **Link previews:** the build writes a page shell for `/countries`, `/harim`, `/dhahabu` and every mountain and range page (`apps/web/build/pageShells.ts`, from the committed seeds) with that page's title, description and Open Graph tags, so shared links show the right text; Netlify serves them before the single-page fallback (as does `vite preview`). The preview images are `public/og/harim.png` (Harim and its pages), `og/dhahabu.png` and `og/site.png` (the site and `/countries`), all from `node scripts/build-og-images.mjs`.
+- **Link previews:** the build writes a page shell for `/countries`, `/harim`, `/dhahabu`, `/vinara` and every mountain and range page (`apps/web/build/pageShells.ts`, from the committed seeds) with that page's title, description and Open Graph tags, so shared links show the right text; Netlify serves them before the single-page fallback (as does `vite preview`). The preview images are `public/og/harim.png` (Harim and its pages), `og/dhahabu.png`, `og/vinara.png` and `og/site.png` (the site and `/countries`), all from `node scripts/build-og-images.mjs`.
 - **Peak drawer:** a click on any mountain or summit opens it: height in both units with its confidence, the source of the height and every other sourced height, prominence, isolation, coordinates, range, type, massif and summits (each opens in the same drawer), local names and name origin with their sources ("Unsourced" otherwise), notes, the "Needs verification" reasons and all sources by field.
 - **URL state:** `?view=country|peaks|ranges`, `region`, `q`, `sort`, `country`, `minHeight`, `volcanic`, `range` and `peak` (the open drawer). Invalid values are ignored. Switching to By country or By range drops the peak-only filters. A `country` in the URL filters to that country and opens its row (the link from other pages).
 - **Units:** a metres/feet toggle, remembered in this browser (`bla-units`) and applied everywhere on the page. Below sea level uses a true minus sign (`−155 m`).
@@ -360,6 +435,23 @@ The home page (`apps/web/src/features/map/`) draws Africa on the **Equal Earth**
   - **Central bank gold holdings:** monthly lines for the five largest holders, in tonnes (in the chosen unit) or US dollars, in five validated categorical colours with direct labels and a legend; it starts at the first report (2000). Below it, **Price or tonnes?** picks a bank and shows, as a bridge from the start value to the end value, how much of the change came from the price and how much from tonnes bought or sold, from `/api/gold/holdings-change`.
 - **Country drawer** (`GoldDrawer.tsx`; side panel, bottom sheet on phones): the key figures at the reference year; presence with its evidence, confidence, year and source; production by year with bars and computed values; trade by year (reported and what partners report, with the neutral note) and the top destinations; central bank gold (each year's last month); **in-ground reserves** in a separate dashed block, with a US dollar value labelled "illustrative at a given price, not a realisable sum"; artisanal mining; curated notes with their source and date; every source with its reliability tier and what it supports. "Country profile" opens the country on `/countries`, whose drawer links back ("Gold in …").
 
+## Vinara: the cardinals of Africa
+
+`/vinara` (`apps/web/src/features/vinara/`; Vinara is Swahili for "leaders") names, for each of 13 measures, the **cardinal** (the leading state) and the **silent contender** (the runner-up), in Africa or in one UN M49 region, and says whether the cardinal's lead is narrowing. Every ranking, window and signal comes from `/api/vinara` (computed in the database; rules in [docs/vinara-method.md](docs/vinara-method.md)); the page only counts and lays out what it returns.
+
+- **Scope:** "All" (Africa) or one of the five regions, as chips in the region colours (`?region=`).
+- **Years:** by default each measure covers its own last ten complete years, and the ribbon reads "Last 10 complete years". A range chosen in the ribbon (`?from=&to=`) applies to every measure, each keeping to the years it has data for; a range left open at the end runs to each measure's latest complete year. A line above the cards says which applies.
+- **Summary cards** (`VinaraStatsBand.tsx`): most cardinal titles, the leading region (Africa only), gaps closing, contenders ahead in the last year, and elections within 12 months, each with its definition behind "How is this calculated?" (the text of the method's "summary cards" section, kept identical by a test). Phones show them as a carousel.
+- **Cardinals and silent contenders** (`VinaraTable.tsx`): one row per measure with its years, how many states are ranked, the cardinal and the contender (flag, name, value at the measure's precision, and the year for levels), and the signal: **Gap closing** (highlighted), **Lead holding**, **Not enough data**, or no signal for a tie. Every state in a tie is named. IMF estimates are labelled, and a contender ahead in the window's last year is said in words. Each measure's definition and each signal's meaning show on hover, focus or tap. Below 1024px, one card per measure.
+- **Region against region** (Africa only, `RegionComparison.tsx`): the leading region and the runner-up for each measure with their figures, and the regions shown as partial (with the share covered), which are not ranked.
+- **Export CSV** (`VinaraExport.tsx`): every measure's ranking for the scope and years from `/api/vinara/export`, with a message confirming the download or reporting a failure.
+- **One measure in detail** (`MeasureDetail.tsx`, `?metric=`; from `/api/vinara/metrics/:key`): the measure's definition and years, then two charts.
+  - **The leaders year by year** (`charts/LeadersChart.tsx`): the cardinal's and the contender's yearly figures as two lines (the first two categorical colours, a legend and direct labels), with hollow points for IMF estimates, a crosshair tooltip by year and the figures as a table. A tie at the top or for second place has no two lines to follow, and says so.
+  - **Every state ranked** (`charts/RankingBars.tsx`): horizontal bars from zero, so a currency's loss runs left; the cardinal and the contender in colour and the rest neutral. The top ten show first, then all on request. Hover, focus or tap shows the rank and figure with "Open the state", and the figures are also a table.
+- **Region against region** also shows as **small multiples** (`charts/RegionMultiples.tsx`, the default; "Table" switches back): one small bar chart per measure, the five regions in their colours, every bar labelled with its figure (and each region's share of Africa for totals). The leading region is outlined; a partial region is lighter and dashed, says how much of it is covered, and is not ranked.
+- **State drawer** (`VinaraDrawer.tsx`, `?country=`; a state's name in the table, or "Open the state" in the ranking): its figure and rank on every measure (bold where it leads Africa or its region), its leaders and next election, context figures, who its public external debt is owed to (the eight largest creditors with their shares) and its currency (peg, official daily rates or the IMF's monthly series, and how recent they are). A link opens its country profile.
+- **Next elections** (`ElectionStrip.tsx`): the next election that decides the executive in each state in scope, soonest first, in a strip that scrolls inside itself (elections within 12 months marked), then the states with no date set or no national elections.
+
 ## The data ribbon and time range
 
 The strip at the top of every page (`apps/web/src/features/coverage/`) shows the data behind the current view.
@@ -368,13 +460,13 @@ The strip at the top of every page (`apps/web/src/features/coverage/`) shows the
 - **Summary line:** the kind (reference data or time series), "as of" (the newest date among the datasets), each dataset's short label (with its covered range on time-series pages, e.g. `Gold price: Jan 1990–Sep 2026`) and "Refreshed 2 days ago" (the latest pipeline run). Datasets with no row yet show "(not loaded yet)". Phones show one line; the arrow opens the details.
 - **Details:** for each dataset its full name, "as of", covered range, update cadence, last refresh (date and how long ago), provider and licence.
 - **Dates** are calendar dates formatted in UTC (`14 Oct 2026`), so no time zone shifts them. Ranges use the dataset's granularity from its cadence: months (`Sep 2026`), quarters (`Q2 2026`) or years (`2024`).
-- **Date-range control:** read-only on reference pages ("Not time-dependent", with the explanation on hover, focus or in the details). On time-series pages (`/dhahabu`) it is a year picker with presets (last 5 years, last 10 years, since 2000, all years) and From/To lists. It is bounded by the data's coverage and never goes beyond it. With no data loaded it shows "No data yet" instead of inventing a range.
-- **URL:** the range lives in `?from=&to=` (years). The full coverage is the default and leaves no params; values outside the data are clamped and a reversed range is put in order, so shared links always resolve to a valid range. Reference pages ignore the params.
+- **Date-range control:** read-only on reference pages ("Not time-dependent", with the explanation on hover, focus or in the details). On time-series pages (`/dhahabu`, `/vinara`) it is a year picker with presets (last 5 years, last 10 years, since 2000, all years) and From/To lists. It is bounded by the data's coverage and never goes beyond it. With no data loaded it shows "No data yet" instead of inventing a range.
+- **URL:** the range lives in `?from=&to=` (years). The full coverage is the default and leaves no params (a route with its own default years, `ownDefault` in its handle, uses the last ten years of its coverage instead and the control names that default); values outside the data are clamped and a reversed range is put in order, so shared links always resolve to a valid range. Reference pages ignore the params.
 
-**For time-series views** (Dhahabu, and any later one):
+**For time-series views** (Dhahabu, Vinara, and any later one):
 
 ```ts
-const { interactive, bounds, range, referenceYear, setRange } = useTimeRange();
+const { interactive, bounds, range, referenceYear, isDefault, setRange } = useTimeRange();
 // range: { start, end } years for charts; referenceYear (= range.end) for tables, maps and cards.
 ```
 
@@ -382,7 +474,7 @@ To add a dataset, add its key to `DATASET_KEYS` (`packages/shared/src/datasets.t
 
 ## Performance
 
-The target is Lighthouse ≥ 90 on mobile for Performance, Accessibility, Best Practices and SEO on `/`, `/countries`, `/harim` and `/dhahabu` (`npm run lighthouse`).
+The target is Lighthouse ≥ 90 on mobile for Performance, Accessibility, Best Practices and SEO on `/`, `/countries`, `/harim`, `/dhahabu` and `/vinara` (`npm run lighthouse`).
 
 - **Prerendered first views:** the build renders each main page's first view (the layout, header, controls and loading skeletons, before any data) into its HTML file: `npm run build` runs the client build, a server build of `src/entry-server.tsx` and `build/prerender.ts`. The page paints as soon as its CSS arrives instead of after the app's script has run.
 - **Hydration, not a second render:** on a bare URL the app hydrates that markup (`hydrateRoot`, after loading the matched route's code-split module, `app/hydration.ts`), so the painted page is kept. The first browser render must therefore equal the prerendered one: anything the server cannot know (the screen, the theme, `<body>` portals) uses `useSyncExternalStore` with a server snapshot or `useIsClient`, and settles straight after hydration. A URL with a query (filters, an open drawer) renders afresh instead, since its first view differs. An e2e test fails on any hydration error.
@@ -398,7 +490,7 @@ The target is Lighthouse ≥ 90 on mobile for Performance, Accessibility, Best P
   | `/harim` | 98 | 100 | 100 | 100 | 1.1 s |
   | `/dhahabu` | 99 | 100 | 100 | 100 | 1.1 s |
 
-  CLS stays under 0.03 and TBT under 300 ms. The local production build scores 97 / 100 / 100 / 100 on all four pages (LCP about 2 s, without the CDN's compression).
+  CLS stays under 0.03 and TBT under 300 ms. The local production build (2026-10-24) scores 96–97 for Performance and 100 for Accessibility, Best Practices and SEO on all five pages, `/vinara` included (LCP about 2 s, without the CDN's compression).
 
 ## Quality checks
 
@@ -410,7 +502,7 @@ The target is Lighthouse ≥ 90 on mobile for Performance, Accessibility, Best P
 | `npm run check:functions` | Builds the Netlify Functions as a deploy does and checks each bundle loads and answers |
 | `npm run e2e` | Playwright: desktop (1440×900) and mobile (390×844) projects; includes axe accessibility checks in light and dark mode and no-horizontal-scroll checks at 320px. It runs the **real API handlers** (`e2e/api-server.ts`) on an in-memory Postgres loaded with the committed seeds, proxied behind `vite preview`, so no Neon connection is needed |
 | `npm run screenshots` | Captures every page at desktop and mobile, light and dark, into `screenshots/` (gitignored) for visual review |
-| `npm run lighthouse` | Lighthouse (mobile) on `/`, `/countries`, `/harim` and `/dhahabu` against the production build (run `npm run build` first) and the local API; fails below 90 in any category; HTML and JSON reports in `lighthouse/` (gitignored). `LIGHTHOUSE_URL=https://… npm run lighthouse` audits a deployed site instead |
+| `npm run lighthouse` | Lighthouse (mobile) on `/`, `/countries`, `/harim`, `/dhahabu` and `/vinara` against the production build (run `npm run build` first) and the local API; fails below 90 in any category; HTML and JSON reports in `lighthouse/` (gitignored). `LIGHTHOUSE_URL=https://… npm run lighthouse` audits a deployed site instead |
 | `uv run ruff check . && uv run ruff format --check .` | Python lint and format |
 | `uv run mypy` | Python type-check (strict) |
 | `uv run pytest` | Python tests (needs `npm install` for the PGlite-backed database tests) |
@@ -497,7 +589,7 @@ Decisions taken where the project brief (`africa-explorer-claude-code-prompt.md`
 - **Flat page files:** each page with its own HTML is a flat file (`harim.html`, `harim/peaks/<slug>.html`), because Netlify answers a folder's `index.html` with a redirect to a trailing-slash URL.
 - **CI on a pinned runner:** the workflows use `ubuntu-24.04` rather than `ubuntu-latest`, so a new image cannot change system packages unannounced; `astral-sh/setup-uv` is pinned by commit (it publishes no floating major tag).
 - **Icon substitutions:** `terrain` is now only a legacy alias of `landscape`, and `filter_hdr` is not in the current canonical set. They are replaced by `landscape_2` and `mountain_flag` where the specification suggested them.
-- **Nav includes Dhahabu:** the nav order follows §1 of the specification (Home · Countries · Harim · Dhahabu · History · Contemporary Africa).
+- **Nav includes Dhahabu:** the nav order follows §1 of the specification (Home · Countries · Harim · Dhahabu · History · Contemporary Africa). Vinara, the site's contemporary section, takes the place of Contemporary Africa and comes before History, so that every link precedes the one section still to come.
 - **Local database:** tests run SQL against **PGlite** (Postgres in WebAssembly), so neither local work nor CI needs a database server. Real data is loaded into Neon.
 - **API routing:** each function declares its own route with `config.path` (Netlify matches functions before redirects). The specified `/api/*` → `/.netlify/functions/:splat` rewrite is kept as the catch-all for unknown API paths.
 - **Malformed path codes are 404:** `/api/countries/KE` names a country that does not exist, the same as `/api/countries/XYZ`. Invalid query parameters are 400.
@@ -554,10 +646,11 @@ The site covers the four sections above. Each was built against review gates on 
 - **Harim, "Ice and fire":** glacier extent over time (Kilimanjaro, Mount Kenya, the Rwenzori) and eruption histories, driven by the ribbon's year range. It starts with a data assessment of the candidate sources (the Smithsonian Global Volcanism Program, GLIMS and the Randolph Glacier Inventory, published ice-extent studies), and sparse records will be shown as dated points, never interpolated.
 - **Harim:** protected areas and UNESCO World Heritage mountain sites; an elevation-zones infographic; a west-to-east skyline chart; hillshade or 3D terrain; a "which is taller?" quiz; peak photos, climbing routes and first-ascent history.
 - **Dhahabu:** gold demand, jewellery and investment flows (including ETFs); company-level production and ownership data; artisanal-mining formalisation and responsible-sourcing indicators; a standalone page per country; inflation-adjusted values. Forecasts and investment advice will never be added.
-- **General:** the History and Contemporary Africa sections; historical timelines; contemporary indicators (via a future `indicators` / `observations` time-series model); user accounts; a CMS; multi-language content; long-form search; offline/PWA support.
+- **Vinara:** a composite ranking of states and regions, once enough measures are in place that no single one dominates it.
+- **General:** the History section; historical timelines; user accounts; a CMS; multi-language content; long-form search; offline/PWA support.
 
 ## Credits and licences
 
-Credits are shown in the site footer and in data exports, including the attribution wording required by GeoNames (CC BY 4.0) and the IMF. Sources: the project's state-symbology research document, Natural Earth, Flagpedia, Material Symbols (Apache 2.0), Fraunces and Instrument Sans (SIL OFL 1.1), Wikidata (CC0), GeoNames (CC BY 4.0), the CIA World Factbook's final edition (public domain), Wikipedia (CC BY-SA 4.0, cited per item), the Harim prototype, the IMF, USGS, the World Bank and UN Comtrade. The Smithsonian Global Volcanism Program is linked for reference only; none of its data is republished. The British Geological Survey and the World Gold Council are neither used nor linked (decided 2026-10-18).
+Credits are shown in the site footer and in data exports, including the attribution wording required by GeoNames (CC BY 4.0) and the IMF. Sources: the project's state-symbology research document, Natural Earth, Flagpedia, Material Symbols (Apache 2.0), Fraunces and Instrument Sans (SIL OFL 1.1), Wikidata (CC0), GeoNames (CC BY 4.0), the CIA World Factbook's final edition (public domain), Wikipedia (CC BY-SA 4.0, cited per item), the Harim prototype, the IMF, USGS, the World Bank and UN Comtrade, and for Vinara SIPRI (military spending, under its terms for non-commercial use of a small part of the database), UNDP (CC BY 3.0 IGO), the ECB, the BIS and the central banks of Kenya, Tanzania, Zambia, Angola, The Gambia, Liberia, Malawi, Tunisia and Morocco (read through Frankfurter). Each is credited with its required wording in the footer and in the Vinara export. The Smithsonian Global Volcanism Program is linked for reference only; none of its data is republished. The British Geological Survey and the World Gold Council are neither used nor linked (decided 2026-10-18).
 
 Boundaries are shown as published by Natural Earth and do not imply endorsement of any border or territorial claim.

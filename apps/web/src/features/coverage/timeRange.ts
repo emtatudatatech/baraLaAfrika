@@ -36,28 +36,38 @@ function parseYear(value: string | null): number | null {
 const clamp = (value: number, { start, end }: YearRange) => Math.min(end, Math.max(start, value));
 
 /**
- * Reads ?from=&to= against the bounds: missing values default to the bounds, values outside
- * are clamped to them, and a reversed range is put in order. Null without bounds (no data).
+ * Reads ?from=&to= against the bounds: missing values default to the route's default range (the
+ * bounds, unless the route has its own), values outside are clamped to the bounds, and a
+ * reversed range is put in order. Null without bounds (no data).
  */
-export function resolveRange(params: URLSearchParams, bounds: YearRange | null): YearRange | null {
+export function resolveRange(
+  params: URLSearchParams,
+  bounds: YearRange | null,
+  fallback: YearRange | null = bounds,
+): YearRange | null {
   if (bounds === null) return null;
-  const from = clamp(parseYear(params.get('from')) ?? bounds.start, bounds);
-  const to = clamp(parseYear(params.get('to')) ?? bounds.end, bounds);
+  const base = fallback ?? bounds;
+  const from = clamp(parseYear(params.get('from')) ?? base.start, bounds);
+  const to = clamp(parseYear(params.get('to')) ?? base.end, bounds);
   return { start: Math.min(from, to), end: Math.max(from, to) };
 }
 
-/** Writes a range to the params; the full coverage is the default and leaves no params. */
+/**
+ * Writes a range to the params; the default range (the full coverage, unless the route has its
+ * own) leaves no params.
+ */
 export function applyRange(
   current: URLSearchParams,
   range: YearRange,
   bounds: YearRange,
+  fallback: YearRange = bounds,
 ): URLSearchParams {
   const next = new URLSearchParams(current);
   const start = clamp(Math.min(range.start, range.end), bounds);
   const end = clamp(Math.max(range.start, range.end), bounds);
-  if (start === bounds.start) next.delete('from');
+  if (start === fallback.start) next.delete('from');
   else next.set('from', String(start));
-  if (end === bounds.end) next.delete('to');
+  if (end === fallback.end) next.delete('to');
   else next.set('to', String(end));
   return next;
 }

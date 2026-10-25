@@ -1,0 +1,158 @@
+/* Vinara's charts. Shared chart classes come from Harim's and Dhahabu's modules. */
+
+.chart {
+  /* The states other than the cardinal and the contender: neutral, never a categorical hue. */
+  --vinara-other: color-mix(in oklch, var(--color-ink-subtle) 60%, transparent);
+
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.zero {
+  stroke: var(--color-line-strong);
+}
+
+.point {
+  fill: var(--line);
+  stroke: var(--color-surface-solid);
+  stroke-width: 2;
+}
+
+/* An IMF estimate: a hollow point. */
+.estimatePoint {
+  fill: var(--color-surface-solid);
+  stroke: var(--line);
+}
+
+.rankingFrame {
+  overflow: hidden;
+}
+
+.toggle,
+.nameButton {
+  justify-self: start;
+  min-height: var(--touch-target);
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  text-align: start;
+  color: var(--color-ink);
+  background: transparent;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--color-accent) 70%, transparent);
+  text-underline-offset: 0.2em;
+}
+
+.nameButton {
+  min-height: 2rem;
+  font-weight: var(--weight-regular);
+}
+
+.toggle:hover,
+.nameButton:hover {
+  color: var(--color-accent);
+}
+
+.multiples {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (--bp-md) {
+  .multiples {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (--bp-xl) {
+  .multiples {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.multiple {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+}
+
+.multiple svg {
+  display: block;
+  overflow: visible;
+}
+
+.multipleHead {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.multipleIcon {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.multipleTitle {
+  flex: 1;
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-ink);
+}
+
+.multipleYears {
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink-muted);
+}
+
+.multipleValue {
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  fill: var(--color-ink);
+  dominant-baseline: central;
+}
+
+.partialText {
+  fill: var(--color-ink-muted);
+}
+
+/* A partial region: lighter, with a dashed outline, so it never reads as a ranked figure. */
+.partialBar {
+  fill-opacity: 0.35;
+  stroke: var(--fill);
+  stroke-width: 1;
+  stroke-dasharray: 3 2;
+}
+
+/* The leading region: a ring in the ink colour. */
+.leaderBar {
+  stroke: var(--color-ink);
+  stroke-width: 1.5;
+}
+
+/*
+ * A chart's SVG is drawn at its container's measured width; until a resize is measured it
+ * scales down with the container, so the page never scrolls sideways.
+ */
+.chart svg,
+.multiple svg {
+  max-width: 100%;
+  height: auto;
+}

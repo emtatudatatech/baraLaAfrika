@@ -135,6 +135,17 @@ describe('time range', () => {
     );
   });
 
+  it('defaults to a page’s own years, and leaves them out of the URL', () => {
+    const own = { start: 2016, end: 2025 };
+    const read = (query: string) => resolveRange(new URLSearchParams(query), bounds, own);
+    expect(read('')).toEqual(own);
+    expect(read('from=2000')).toEqual({ start: 2000, end: 2025 });
+    expect(read('to=2020')).toEqual({ start: 2016, end: 2020 });
+    const current = new URLSearchParams('region=west&from=2000');
+    expect(applyRange(current, own, bounds, own).toString()).toBe('region=west');
+    expect(applyRange(current, bounds, bounds, own).toString()).toBe('region=west&from=1990');
+  });
+
   it('computes presets inside the coverage', () => {
     expect(presetRange('last5', bounds)).toEqual({ start: 2021, end: 2025 });
     expect(presetRange('last10', bounds)).toEqual({ start: 2016, end: 2025 });

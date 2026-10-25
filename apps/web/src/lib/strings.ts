@@ -22,8 +22,8 @@ export const strings = {
     countries: 'Countries',
     harim: 'Harim',
     dhahabu: 'Dhahabu',
+    vinara: 'Vinara',
     history: 'History',
-    contemporary: 'Contemporary Africa',
     comingSoon: 'Coming soon',
   },
   theme: {
@@ -79,6 +79,10 @@ export const strings = {
       },
       from: 'From',
       to: 'To',
+      ownDefault: 'Last 10 complete years',
+      ownDefaultShort: '10 complete yrs',
+      ownDefaultNote:
+        'By default each measure uses its own last ten complete years (a year is complete when at least 90% of the states have a figure; the currency measures run to the latest full year of rates).',
       covers: (range: string) => `The data covers ${range}. Ranges never go beyond it.`,
     },
   },
@@ -95,6 +99,15 @@ export const strings = {
     'gold-trade': 'Gold trade',
     'gold-presence': 'Presence tiers',
     'gold-mines': 'Gold mines',
+    'vinara-wdi': 'World Bank indicators',
+    'vinara-imf-weo': 'IMF World Economic Outlook',
+    'vinara-sipri': 'SIPRI military spending',
+    'vinara-hdr': 'UNDP Human Development Index',
+    'vinara-ids': 'World Bank debt statistics',
+    'vinara-leaders': 'Heads of state and government',
+    'vinara-elections': 'Next elections',
+    'vinara-fx-imf': 'Exchange rates (IMF, monthly)',
+    'vinara-fx-daily': 'Exchange rates (official, daily)',
   },
   pages: {
     home: {
@@ -106,7 +119,7 @@ export const strings = {
     countries: {
       title: 'Countries',
       description:
-        'All 54 African states: the meaning of their names, their flags, national symbols and national animals.',
+        'All 54 African states: the meaning of their names, their flags, national symbols and national animals, and their population, leaders and next elections.',
     },
     harim: {
       title: 'Harim · Mountains of Africa',
@@ -116,6 +129,11 @@ export const strings = {
       title: 'Dhahabu · Gold in Africa',
       description:
         'Where gold is found in Africa, how much is mined and traded, and how much central banks hold.',
+    },
+    vinara: {
+      title: 'Vinara · The Cardinals of Africa',
+      description:
+        'Vinara is Swahili for “leaders”. For each measure, the cardinal (the leading state) and the silent contender (the runner-up), in Africa and in each UN M49 region, and whether the lead is narrowing.',
     },
     underConstruction: 'This section is being built and will open in a later version of the site.',
     notFound: {
@@ -162,6 +180,10 @@ export const strings = {
     close: 'Close',
     meaning: 'Name means',
     animal: 'National animal',
+    population: 'Population',
+    area: 'Land area',
+    leader: 'Leader',
+    election: 'Next election',
     seeInTable: 'See in table',
   },
   animalStatus: {
@@ -201,7 +223,9 @@ export const strings = {
     regionGroup: 'Region',
     allRegions: 'All',
     searchLabel: 'Search countries',
-    searchPlaceholder: 'Name, meaning, symbol or animal',
+    searchPlaceholder: 'Name, meaning, symbol, animal or leader',
+    viewLabel: 'Columns',
+    views: { symbols: 'Symbols', facts: 'Facts' },
     sortLabel: 'Sort by',
     sortOptions: {
       name: 'Country',
@@ -209,15 +233,27 @@ export const strings = {
       etymology: 'Name meaning',
       symbol: 'National symbol',
       animal: 'National animal',
+      population: 'Population',
+      area: 'Land area',
+      leader: 'Leader',
+      election: 'Next election',
     },
     ascending: 'A to Z',
     descending: 'Z to A',
+    /** Direction labels for columns that are not text. */
+    directions: {
+      population: { asc: 'smallest first', desc: 'largest first' },
+      area: { asc: 'smallest first', desc: 'largest first' },
+      election: { asc: 'soonest first', desc: 'latest first' },
+    },
     resultCount: (shown: number, total: number) =>
       shown === total
         ? `Showing all ${String(total)} countries`
         : `Showing ${String(shown)} of ${String(total)} countries`,
     caption:
       'African countries with the meaning of their names, their flags, national symbols and national animals',
+    factsCaption:
+      'African countries with their population, land area, leaders and next national election',
     columns: {
       flag: 'Flag design',
       name: 'Country',
@@ -225,6 +261,10 @@ export const strings = {
       etymology: 'Name meaning',
       symbol: 'National symbol',
       animal: 'National animal',
+      population: 'Population',
+      area: 'Land area',
+      leader: 'Leader',
+      election: 'Next election',
     },
     flagButton: (name: string) => `Flag of ${name}`,
     viewDetails: 'Full profile and sources',
@@ -233,6 +273,30 @@ export const strings = {
     clearFilters: 'Clear filters',
     loadError: 'The countries could not be loaded.',
     retry: 'Retry',
+  },
+  facts: {
+    noData: 'No data',
+    estimate: 'IMF estimate',
+    population: (formatted: string, year: number) => `${formatted} (${String(year)})`,
+    area: (formatted: string) => `${formatted} km²`,
+    million: (value: string) => `${value} million`,
+    billion: (value: string) => `${value} billion`,
+    leaderPending: 'Not yet available',
+    transitional: 'Transitional',
+    deFacto: 'De facto',
+    electionKinds: {
+      presidential: 'Presidential election',
+      legislative: 'Legislative election',
+      general: 'General election',
+    },
+    noElections: 'No national elections',
+    byDate: (date: string) => `by ${date}`,
+    electionStatus: {
+      within_12_months: 'Election within 12 months',
+      beyond_12_months: 'No election within 12 months',
+      no_date_set: 'No date set',
+    },
+    noteLabel: (name: string) => `About ${name}'s leaders and elections`,
   },
   drawer: {
     close: 'Close',
@@ -1014,6 +1078,196 @@ export const strings = {
         columns: { country: 'Country', share: 'Share of exports', year: 'Year' },
         showAll: (count: number) => `Show all ${String(count)}`,
         showTop: (count: number) => `Show the top ${String(count)}`,
+      },
+    },
+  },
+  vinara: {
+    scopeLabel: 'Africa or one UN M49 region',
+    windowDefault: 'Each measure covers its own last ten complete years.',
+    windowChosen: (range: string) =>
+      `Years chosen: ${range}. Each measure keeps to the years it has data for.`,
+    loadError: 'The rankings could not be loaded.',
+    retry: 'Try again',
+    empty: 'No rankings yet: the indicator data has not been loaded.',
+    of: (total: number) => `of ${String(total)} measures`,
+    table: {
+      title: 'Cardinals and silent contenders',
+      intro:
+        'The cardinal leads each measure and the silent contender comes second. Equal values are a tie, and every state in a tie is named.',
+      caption: (scope: string) => `Cardinal and silent contender for each measure, ${scope}`,
+      measure: 'Measure',
+      years: 'Years',
+      cardinal: 'Cardinal',
+      contender: 'Silent contender',
+      signal: 'Is the lead narrowing?',
+      ranked: (ranked: number, total: number) =>
+        `${String(ranked)} of ${String(total)} states ranked`,
+      tie: (count: number) => `Tie of ${String(count)}`,
+      none: 'No other state ranked',
+      showAll: (count: number) => `Show all ${String(count)}`,
+      showFewer: 'Show fewer',
+      estimate: 'IMF estimate',
+      definitionFor: (name: string) => `How ${name} is measured`,
+    },
+    signals: {
+      gap_closing: 'Gap closing',
+      lead_holding: 'Lead holding',
+      not_enough_data: 'Not enough data',
+      tie: 'No signal: a tie',
+    },
+    signalHints: {
+      gap_closing:
+        'For levels: the gap narrowed in each of the last three years. For rates: the contender did better in at least two of the last three years.',
+      lead_holding: 'The gap did not close in the way the signal looks for.',
+      not_enough_data: 'One of the two states lacks a figure for a year the signal needs.',
+      tie: 'The signal compares two states, so a tie has none.',
+    },
+    contenderAhead: (name: string, year: number) => `${name} was ahead in ${String(year)}`,
+    units: {
+      perYear: 'a year',
+      ofGdp: 'of GDP',
+    },
+    regions: {
+      title: 'Region against region',
+      intro:
+        'The five UN M49 regions on each measure: totals for sizes, and weighted averages or medians for rates. A region whose states with data cover less than 90% of it is shown as partial and not ranked.',
+      caption: 'The leading region and the runner-up for each measure',
+      leader: 'Leading region',
+      runnerUp: 'Runner-up',
+      partial: 'Partial, not ranked',
+      covered: (share: string) => `${share} covered`,
+      none: '—',
+    },
+    elections: {
+      title: 'Next elections',
+      intro: (region: string | null) =>
+        region === null
+          ? 'The next election that decides the executive in each of the 54 states, soonest first.'
+          : `The next election that decides the executive in each state of ${region}, soonest first.`,
+      listLabel: 'Upcoming elections, soonest first',
+      noDate: (names: string) => `No date set: ${names}.`,
+      noElections: (names: string) => `No national elections: ${names}.`,
+      none: 'No election dates are known for these states.',
+    },
+    detail: {
+      title: 'One measure in detail',
+      intro:
+        'How the cardinal and the silent contender compare year by year over the window, and where every state stands.',
+      measureLabel: 'Measure',
+      loadError: 'This measure could not be loaded.',
+      retry: 'Try again',
+      leadersTitle: (name: string) =>
+        `${name}: the cardinal and the silent contender, year by year`,
+      leadersTie:
+        'A tie at the top or for second place: there are no two states to follow year by year. The ranking names every state in the tie.',
+      leadersDescription: (cardinal: string, contender: string, from: number, to: number) =>
+        `Lines for ${cardinal} (cardinal) and ${contender} (silent contender), ${String(from)} to ${String(to)}. The table below has the same figures.`,
+      yearlyNote: {
+        level: 'Each year’s figure.',
+        rate: 'Each year’s figure; the ranking uses their mean over the window.',
+        fx: 'Each calendar year’s change (January to December) or volatility; the ranking uses the whole window.',
+      },
+      estimateMark: 'Hollow points are IMF estimates.',
+      rankingTitle: (name: string) => `${name}: every state ranked`,
+      rankingDescription: (name: string, count: number) =>
+        `Bars for the ${String(count)} states ranked on ${name}, best first; the cardinal and the silent contender in colour. The table below has the same figures.`,
+      showAll: (count: number) => `Show all ${String(count)}`,
+      showTop: (count: number) => `Show the top ${String(count)}`,
+      rank: (rank: string) => `Ranked ${rank}`,
+      openCountry: 'Open the state',
+      tableToggle: 'Show the figures as a table',
+      columns: { year: 'Year', rank: 'Rank', state: 'State', value: 'Value' },
+      cardinal: 'Cardinal',
+      contender: 'Silent contender',
+      other: 'Other states',
+    },
+    multiples: {
+      viewLabel: 'Show the regions as',
+      charts: 'Charts',
+      table: 'Table',
+      description: (name: string) =>
+        `Bars for the five regions on ${name}, in the region colours. Partial regions are lighter and labelled.`,
+      partial: (share: string) => `partial, ${share}`,
+      shareOfAfrica: (share: string) => `${share} of Africa`,
+      key: 'Outlined: the leading region. Lighter and dashed: partial, not ranked.',
+    },
+    drawer: {
+      profile: 'Country profile: names, flag and symbols',
+      measures: 'On each measure',
+      measuresNote: (years: string) => `Over each measure’s years (${years}).`,
+      rankAfrica: (rank: string, total: number) => `${rank} of ${String(total)} in Africa`,
+      rankRegion: (rank: string, total: number, region: string) =>
+        `${rank} of ${String(total)} in ${region}`,
+      notRanked: 'Not ranked',
+      leaders: 'Leaders and the next election',
+      context: 'For context (not ranked)',
+      debt: (year: number | null) =>
+        year === null
+          ? 'Who its public external debt is owed to'
+          : `Who its public external debt is owed to (${String(year)})`,
+      debtTotal: (total: string) => `Public and publicly guaranteed external debt: ${total}.`,
+      debtOthers: (amount: string) => `Other creditors: ${amount}`,
+      noDebt: 'Not covered by the World Bank’s International Debt Statistics.',
+      creditorKinds: {
+        multilateral: 'Multilateral',
+        bilateral: 'Government',
+        bondholders: 'Bondholders',
+        commercial_banks: 'Commercial banks',
+        other_private: 'Other private',
+      },
+      currency: 'Currency',
+      union: (name: string) => `Shared in the ${name}.`,
+      peg: (parity: string, anchor: string, since: string) =>
+        `Fixed at ${parity} per ${anchor} since ${since}.`,
+      noPeg: 'Not fixed to another currency.',
+      daily: (source: string, first: string, last: string) =>
+        `Official daily rates: ${source}, ${first} to ${last}.`,
+      derived: 'Derived from the ECB’s reference rates at the official parity.',
+      monthlyOnly:
+        'No official daily source usable without permission: the IMF’s monthly averages.',
+      monthly: {
+        current: (month: string) => `IMF monthly series to ${month}.`,
+        late: (month: string) => `IMF monthly series to ${month} (late).`,
+        stale: (month: string) =>
+          `IMF monthly series to ${month} (stale: more than 12 months behind).`,
+        none: () => 'No IMF monthly series.',
+      },
+      source:
+        'Figures from the World Bank, the IMF, SIPRI, UNDP, the ECB, the BIS and central banks, as credited below; ranks computed by Bara La Afrika.',
+    },
+    export: {
+      button: 'Export CSV',
+      busy: 'Preparing…',
+      note: 'Every measure’s ranking for this scope and these years, with definitions and the sources’ required attributions.',
+      success: (file: string) => `Downloaded ${file}`,
+      error: 'The export failed. Please try again.',
+    },
+    stats: {
+      title: 'At a glance',
+      mostTitles: 'Most cardinal titles',
+      leadingRegion: 'Leading region',
+      gapsClosing: 'Gaps closing',
+      contenderAhead: 'Contender ahead last year',
+      electionsSoon: 'Elections within 12 months',
+      ofStates: (total: number) => `of ${String(total)} states`,
+      none: 'None',
+      next: (name: string, date: string) => `Next: ${name}, ${date}`,
+      andMore: (count: number) => `and ${String(count)} more, tied`,
+      closingOn: (measure: string, contender: string, cardinal: string) =>
+        `${measure}: ${contender} closing on ${cardinal}`,
+      aheadOf: (measure: string, contender: string, year: number) =>
+        `${measure}: ${contender} was ahead in ${String(year)}`,
+      definitions: {
+        mostTitles:
+          'The state named cardinal in the most measures, in Africa or in the region chosen, each measure over its own years. A tie for first names every state in it.',
+        leadingRegion:
+          'The UN M49 region that leads the most measures when the five regions are compared. A partial region is not ranked.',
+        gapsClosing:
+          'The measures on which the silent contender is closing in on the cardinal, by the gap-closing signal.',
+        contenderAhead:
+          'The measures on which the silent contender did better than the cardinal in the last year of the window, while the cardinal leads over the window as a whole.',
+        electionsSoon:
+          'The states whose next election that decides the executive falls within 12 months of today.',
       },
     },
   },

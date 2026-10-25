@@ -88,7 +88,7 @@ describe('GET /api/mountains/summary', () => {
     const east = MountainSummaryResponseSchema.parse(
       await (await call(mountainsSummary, '/api/mountains/summary?region=east')).json(),
     );
-    expect(east.count).toBe(16);
+    expect(east.count).toBe(18);
     const rwenzori = MountainSummaryResponseSchema.parse(
       await (await call(mountainsSummary, '/api/mountains/summary?q=rwenzori')).json(),
     );

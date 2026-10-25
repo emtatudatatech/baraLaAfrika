@@ -1252,19 +1252,19 @@
   "region_colors": {
     "selected": "strict",
     "approved": true,
-    "approved_on": "2026-10-15",
+    "approved_on": "2026-10-22",
     "strict": {
       "north": "#c1272d",
       "west": "#009e49",
       "central": "#fcd116",
-      "east": "#418fde",
-      "southern": "#001489"
+      "east": "#006600",
+      "southern": "#6da9d2"
     },
     "with_neutrals": {
       "north": "#c1272d",
       "west": "#009e49",
       "central": "#fcd116",
-      "east": "#ffffff",
+      "east": "#000000",
       "southern": "#6da9d2"
     }
   }

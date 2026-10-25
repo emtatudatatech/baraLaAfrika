@@ -1,0 +1,233 @@
+{
+  "$comment": "Vinara annual indicators: what each series is, where it comes from and how it is read. Sources and licences: docs/vinara-sources.md; rules: docs/vinara-method.md. `definition` is the text the site shows. `imf_fill` names the IMF WEO series that may fill the year before the WEO edition where the World Bank has no figure (labelled an IMF estimate). `max_years` caps how many of the latest years are kept (SIPRI fair use).",
+  "start_year": 2000,
+  "complete_year_share": 0.9,
+  "wdi": {
+    "url": "https://api.worldbank.org/v2/country/{countries}/indicator/{code}?format=json&date={start}:{end}&per_page=20000"
+  },
+  "weo": {
+    "url": "https://api.imf.org/external/sdmx/3.0/data/dataflow/IMF.RES/WEO/+/{countries}.{codes}.A?attributes=all",
+    "page": "https://data.imf.org/en/datasets/IMF.RES:WEO"
+  },
+  "hdr": {
+    "url": "https://hdr.undp.org/sites/default/files/2025_HDR/HDR25_Composite_indices_complete_time_series.csv",
+    "edition": "Human Development Report 2025",
+    "fallback_url": "https://ourworldindata.org/grapher/human-development-index.csv?v=1&csvType=full&useColumnShortNames=true",
+    "fallback_column": "hdi__sex_total",
+    "fallback_accepted_on": "2026-10-22"
+  },
+  "ids": {
+    "totals_url": "https://api.worldbank.org/v2/sources/6/series/{code}/country/{countries}/counterpart-area/WLD/time/{years}?format=json&per_page=20000",
+    "creditors_url": "https://api.worldbank.org/v2/sources/6/series/{code}/country/{countries}/counterpart-area/all/time/YR{year}?format=json&per_page=20000",
+    "creditor_years": 10,
+    "creditor_series": {
+      "multilateral": "DT.DOD.MLAT.CD",
+      "bilateral": "DT.DOD.BLAT.CD",
+      "commercial_banks": "DT.DOD.PCBK.CD",
+      "other_private": "DT.DOD.PROP.CD"
+    },
+    "bondholders_series": "DT.DOD.PBND.CD"
+  },
+  "cross_check": {
+    "relative_tolerance": 0.1,
+    "points_tolerance": 2.0
+  },
+  "indicators": [
+    {
+      "key": "population",
+      "name": "Population",
+      "unit": "people",
+      "decimals": 0,
+      "source": "wdi",
+      "code": "SP.POP.TOTL",
+      "definition": "Total population: all residents regardless of legal status or citizenship, mid-year estimate."
+    },
+    {
+      "key": "population_growth",
+      "name": "Population growth",
+      "unit": "percent",
+      "decimals": 2,
+      "source": "wdi",
+      "code": "SP.POP.GROW",
+      "definition": "Annual population growth, per cent."
+    },
+    {
+      "key": "land_area",
+      "name": "Land area",
+      "unit": "km2",
+      "decimals": 0,
+      "source": "wdi",
+      "code": "AG.LND.TOTL.K2",
+      "definition": "Land area in square kilometres, excluding inland water bodies, national claims to the continental shelf and exclusive economic zones."
+    },
+    {
+      "key": "surface_area",
+      "name": "Surface area",
+      "unit": "km2",
+      "decimals": 0,
+      "source": "wdi",
+      "code": "AG.SRF.TOTL.K2",
+      "definition": "Surface area in square kilometres: land area plus inland water bodies."
+    },
+    {
+      "key": "gdp_usd",
+      "name": "GDP",
+      "unit": "current_usd",
+      "decimals": 0,
+      "source": "wdi",
+      "code": "NY.GDP.MKTP.CD",
+      "imf_fill": "NGDPD",
+      "definition": "Gross domestic product in current US dollars, converted at official exchange rates."
+    },
+    {
+      "key": "gdp_ppp",
+      "name": "GDP at purchasing power parity",
+      "unit": "current_intl_usd",
+      "decimals": 0,
+      "source": "wdi",
+      "code": "NY.GDP.MKTP.PP.CD",
+      "imf_fill": "PPPGDP",
+      "definition": "Gross domestic product converted to international dollars at purchasing power parity rates, so that a dollar buys the same amount of goods and services in every country."
+    },
+    {
+      "key": "gdp_per_capita_ppp",
+      "name": "GDP per capita (PPP)",
+      "unit": "current_intl_usd",
+      "decimals": 0,
+      "source": "wdi",
+      "code": "NY.GDP.PCAP.PP.CD",
+      "imf_fill": "PPPPC",
+      "definition": "GDP at purchasing power parity divided by mid-year population, in current international dollars."
+    },
+    {
+      "key": "gdp_growth",
+      "name": "Real GDP growth",
+      "unit": "percent",
+      "decimals": 2,
+      "source": "wdi",
+      "code": "NY.GDP.MKTP.KD.ZG",
+      "imf_fill": "NGDP_RPCH",
+      "definition": "Annual growth of GDP at constant prices (after inflation), per cent."
+    },
+    {
+      "key": "inflation",
+      "name": "Inflation",
+      "unit": "percent",
+      "decimals": 2,
+      "source": "wdi",
+      "code": "FP.CPI.TOTL.ZG",
+      "imf_fill": "PCPIPCH",
+      "definition": "Annual change in consumer prices, per cent. A negative figure is deflation."
+    },
+    {
+      "key": "gni_usd",
+      "name": "GNI",
+      "unit": "current_usd",
+      "decimals": 0,
+      "source": "wdi",
+      "code": "NY.GNP.MKTP.CD",
+      "definition": "Gross national income in current US dollars: GDP plus net income received from abroad."
+    },
+    {
+      "key": "government_debt",
+      "name": "Government debt",
+      "unit": "percent_of_gdp",
+      "decimals": 2,
+      "source": "weo",
+      "code": "GGXWDG_NGDP",
+      "definition": "General government gross debt as a share of GDP, per cent."
+    },
+    {
+      "key": "military_usd",
+      "name": "Military spending",
+      "unit": "current_usd",
+      "decimals": 0,
+      "source": "sipri",
+      "code": "MS.MIL.XPND.CD",
+      "max_years": 10,
+      "definition": "Military expenditure in current US dollars, as estimated by SIPRI."
+    },
+    {
+      "key": "military_pct_gdp",
+      "name": "Military spending (% of GDP)",
+      "unit": "percent_of_gdp",
+      "decimals": 2,
+      "source": "sipri",
+      "code": "MS.MIL.XPND.GD.ZS",
+      "max_years": 10,
+      "definition": "Military expenditure as a share of GDP, per cent, as estimated by SIPRI."
+    },
+    {
+      "key": "hdi",
+      "name": "Human Development Index",
+      "unit": "index",
+      "decimals": 3,
+      "source": "hdr",
+      "code": "hdi",
+      "definition": "UNDP's Human Development Index (0 to 1): a summary of life expectancy, education and income per person."
+    },
+    {
+      "key": "external_debt",
+      "name": "External debt",
+      "unit": "current_usd",
+      "decimals": 0,
+      "source": "ids",
+      "code": "DT.DOD.DECT.CD",
+      "definition": "Total external debt stocks in current US dollars: debt owed to non-residents, public and private, including IMF credit."
+    },
+    {
+      "key": "external_debt_public",
+      "name": "Public external debt",
+      "unit": "current_usd",
+      "decimals": 0,
+      "source": "ids",
+      "code": "DT.DOD.DPPG.CD",
+      "definition": "Public and publicly guaranteed external debt in current US dollars: owed by the government or guaranteed by it."
+    },
+    {
+      "key": "external_debt_multilateral",
+      "name": "Owed to multilateral lenders",
+      "unit": "current_usd",
+      "decimals": 0,
+      "source": "ids",
+      "code": "DT.DOD.MLAT.CD",
+      "definition": "Public external debt owed to multilateral institutions (such as the World Bank and the African Development Bank), current US dollars."
+    },
+    {
+      "key": "external_debt_bilateral",
+      "name": "Owed to governments",
+      "unit": "current_usd",
+      "decimals": 0,
+      "source": "ids",
+      "code": "DT.DOD.BLAT.CD",
+      "definition": "Public external debt owed to other governments and their agencies (bilateral), current US dollars."
+    },
+    {
+      "key": "external_debt_bondholders",
+      "name": "Owed to bondholders",
+      "unit": "current_usd",
+      "decimals": 0,
+      "source": "ids",
+      "code": "DT.DOD.PBND.CD",
+      "definition": "Public external debt owed to holders of bonds, current US dollars."
+    },
+    {
+      "key": "external_debt_commercial_banks",
+      "name": "Owed to commercial banks",
+      "unit": "current_usd",
+      "decimals": 0,
+      "source": "ids",
+      "code": "DT.DOD.PCBK.CD",
+      "definition": "Public external debt owed to commercial banks, current US dollars."
+    },
+    {
+      "key": "external_debt_other_private",
+      "name": "Owed to other private lenders",
+      "unit": "current_usd",
+      "decimals": 0,
+      "source": "ids",
+      "code": "DT.DOD.PROP.CD",
+      "definition": "Public external debt owed to other private creditors (such as suppliers), current US dollars."
+    }
+  ]
+}

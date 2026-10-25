@@ -39,10 +39,30 @@ const DHAHABU_STATES = [
   { path: '/dhahabu?metric=holdings&country=GHA', name: 'dhahabu-drawer', ready: 'gold-drawer' },
 ] as const;
 
+/** Vinara for one region, and over a chosen range. */
+const VINARA_STATES = [
+  { path: '/vinara?region=east', name: 'vinara-east', ready: 'vinara-row' },
+  { path: '/vinara?region=central', name: 'vinara-central', ready: 'vinara-row' },
+  { path: '/vinara?from=2000', name: 'vinara-since-2000', ready: 'vinara-row' },
+  {
+    path: '/vinara?metric=currency_performance',
+    name: 'vinara-currency',
+    ready: 'vinara-ranking-bar',
+  },
+  { path: '/vinara?country=KEN', name: 'vinara-drawer', ready: 'vinara-drawer-measure' },
+] as const;
+
+/** The countries table's Facts view (population, land area, leaders, next election). */
+const COUNTRIES_STATES = [
+  { path: '/countries?view=facts', name: 'countries-facts', ready: 'country-name' },
+] as const;
+
 const SHOTS = [
   ...ROUTES.map((route) => ({ path: route.path, name: route.name, ready: null })),
+  ...COUNTRIES_STATES,
   ...HARIM_STATES,
   ...DHAHABU_STATES,
+  ...VINARA_STATES,
 ];
 
 for (const viewport of VIEWPORTS) {
@@ -68,6 +88,7 @@ for (const viewport of VIEWPORTS) {
         }
         if (route.path.startsWith('/harim/ranges/')) await waitForMap(page);
         if (route.path.startsWith('/dhahabu')) await waitForContent(page, '/dhahabu');
+        if (route.path.startsWith('/vinara')) await waitForContent(page, '/vinara');
         await waitForAnimations(page);
         // A full-page capture does not scroll, so lazy images below the fold would stay blank.
         await page.evaluate(async () => {

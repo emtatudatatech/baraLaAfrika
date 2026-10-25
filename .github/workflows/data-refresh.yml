@@ -3,8 +3,8 @@ name: Data refresh
 # Weekly refresh of the pipelines' data into Neon (Netlify scheduled functions are Node-only, so
 # the Python pipelines run here). Flags refresh weekly; the mountain catalogue (Wikidata, GeoNames,
 # the Factbook's final edition) and the gold price, central bank holdings and trade monthly, on
-# the first Monday, or on any manual run. Gold mine production (annual USGS editions) refreshes
-# only on manual runs.
+# the first Monday, or on any manual run, as are Vinara's annual indicators (World Bank, IMF,
+# UNDP, SIPRI). Gold mine production (annual USGS editions) refreshes only on manual runs.
 on:
   schedule:
     - cron: '17 3 * * 1' # Mondays 03:17 UTC
@@ -74,14 +74,33 @@ jobs:
             echo "Not the first Monday of the month; the committed gold seeds are loaded as they are."
           fi
 
+      # Exchange rates: IMF monthly and ECB daily (derived pegs are checked against the IMF).
+      - name: Refresh exchange rates (weekly)
+        run: uv run python -m pipelines fx --refresh
+
+      # Leaders and elections: changes are never approved here; they wait in
+      # data/politics_review_report.md until the owner approves them (politics --approve).
+      - name: Refresh leaders and elections (weekly)
+        run: uv run python -m pipelines politics --refresh
+
+      # Vinara's indicators: projections and future years are refused, and validation failures
+      # stop the run (see data/indicators_review_report.md).
+      - name: Refresh Vinara indicators (monthly, or when run by hand)
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "$(date -u +%d)" -le 7 ]; then
+            uv run python -m pipelines indicators --refresh
+          else
+            echo "Not the first Monday of the month; the committed indicator seeds are loaded as they are."
+          fi
+
       - name: Flag changes to committed seeds for review
         id: seeds
         run: |
-          if git diff --quiet -- db/seeds data/region_colors_report.md data/mountains_review_report.md data/gold_coverage_matrix.md data/gold_review_report.md; then
+          if git diff --quiet -- db/seeds data/region_colors_report.md data/mountains_review_report.md data/gold_coverage_matrix.md data/gold_review_report.md data/indicators_coverage_matrix.md data/indicators_review_report.md data/fx_review_report.md; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "::warning::Upstream data changed the generated seeds; download the 'refreshed-data' artifact, review data/region_colors_report.md, data/mountains_review_report.md and data/gold_review_report.md, and commit the changes."
+            echo "::warning::Upstream data changed the generated seeds; download the 'refreshed-data' artifact, review data/region_colors_report.md, data/mountains_review_report.md, data/gold_review_report.md, data/indicators_review_report.md, data/fx_review_report.md and data/politics_review_report.md, and commit the changes."
             git diff --stat -- db/seeds data
           fi
 
@@ -97,6 +116,10 @@ jobs:
             data/mountains_review_report.md
             data/gold_coverage_matrix.md
             data/gold_review_report.md
+            data/indicators_coverage_matrix.md
+            data/indicators_review_report.md
+            data/politics_review_report.md
+            data/fx_review_report.md
           retention-days: 30
 
       - name: Load into Neon

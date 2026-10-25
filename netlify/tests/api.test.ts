@@ -46,16 +46,16 @@ async function errorOf(response: Response): Promise<{ code: string; message: str
 }
 
 describe('GET /api/regions', () => {
-  it('returns the five regions in document order with approved colours and counts', async () => {
+  it('returns the five M49 regions in order with approved colours and counts', async () => {
     const response = await call(regions, '/api/regions');
     expect(response.status).toBe(200);
     const body = RegionsResponseSchema.parse(await response.json());
     expect(body.regions.map((r) => [r.slug, r.countryCount, r.colorHex])).toEqual([
       ['north', 6, '#c1272d'],
-      ['west', 15, '#009e49'],
+      ['west', 16, '#55d27a'],
       ['central', 9, '#fcd116'],
-      ['east', 16, '#418fde'],
-      ['southern', 8, '#001489'],
+      ['east', 18, '#006600'],
+      ['southern', 5, '#6da9d2'],
     ]);
   });
 });
@@ -70,7 +70,7 @@ describe('GET /api/countries', () => {
     const kenya = body.countries.find((c) => c.iso3 === 'KEN');
     expect(kenya).toMatchObject({
       name: 'Kenya',
-      region: { slug: 'east', colorHex: '#418fde' },
+      region: { slug: 'east', colorHex: '#006600' },
       flag: {
         svgUrl: 'https://flagcdn.com/ke.svg',
         pngUrlTemplate: 'https://flagcdn.com/w{width}/ke.png',
@@ -80,11 +80,39 @@ describe('GET /api/countries', () => {
     });
   });
 
+  it('carries each country’s facts: population, land area, leaders and next election', async () => {
+    const body = CountriesResponseSchema.parse(
+      await (await call(countries, '/api/countries')).json(),
+    );
+    const kenya = body.countries.find((c) => c.iso3 === 'KEN');
+    expect(kenya?.facts.population?.year).toBeGreaterThanOrEqual(2024);
+    expect(kenya?.facts.population?.value).toBeGreaterThan(50e6);
+    expect(kenya?.facts.landAreaKm2?.value).toBeGreaterThan(500_000);
+    expect(kenya?.facts.leaders.map((l) => [l.title, l.name, l.executive])).toEqual([
+      ['President', 'William Ruto', true],
+    ]);
+    expect(kenya?.facts.election).toMatchObject({
+      decides: 'presidential',
+      kind: 'general',
+      date: '2027-08-10',
+      precision: 'day',
+    });
+    const ethiopia = body.countries.find((c) => c.iso3 === 'ETH');
+    expect(ethiopia?.facts.leaders.map((l) => l.role)).toEqual([
+      'head_of_government',
+      'head_of_state',
+    ]);
+    const eritrea = body.countries.find((c) => c.iso3 === 'ERI');
+    expect(eritrea?.facts.election).toMatchObject({ decides: 'none', status: 'no_date_set' });
+    expect(eritrea?.facts.note).toContain('no national elections');
+    expect(body.countries.every((c) => c.facts.leaders.length > 0)).toBe(true);
+  });
+
   it('filters by region', async () => {
     const body = CountriesResponseSchema.parse(
       await (await call(countries, '/api/countries?region=north')).json(),
     );
-    expect(body.countries.map((c) => c.iso3)).toEqual(['DZA', 'EGY', 'LBY', 'MRT', 'MAR', 'TUN']);
+    expect(body.countries.map((c) => c.iso3)).toEqual(['DZA', 'EGY', 'LBY', 'MAR', 'SDN', 'TUN']);
   });
 
   it('searches without accents and by ISO code', async () => {
@@ -221,6 +249,15 @@ describe('GET /api/coverage', () => {
       'mountains-geonames',
       'mountains-wikidata',
       'symbology-pdf',
+      'vinara-elections',
+      'vinara-fx-daily',
+      'vinara-fx-imf',
+      'vinara-hdr',
+      'vinara-ids',
+      'vinara-imf-weo',
+      'vinara-leaders',
+      'vinara-sipri',
+      'vinara-wdi',
     ]);
     expect(all.missing).toEqual([]);
     const bad = await call(coverage, '/api/coverage?datasets=symbology-pdf,nope');

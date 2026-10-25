@@ -7,28 +7,80 @@ import { RegionChip } from '../../components/RegionChip/RegionChip';
 import { cx } from '../../lib/cx';
 import { strings } from '../../lib/strings';
 import styles from './CountriesTable.module.css';
-import type { SortKey, SortState } from './countryQuery';
+import { ElectionSummary, LeaderSummary } from './CountryFacts';
+import { areaText, formatPopulation } from './factsFormat';
+import { type SortKey, type SortState, type TableView, VIEW_SORT_KEYS } from './countryQuery';
 import { FlagCell } from './FlagCell';
 
 export interface CountriesTableProps {
+  view: TableView;
   countries: readonly CountrySummary[];
   sort: SortState;
   onSort: (key: SortKey) => void;
   onOpen: (iso3: string) => void;
 }
 
-const COLUMNS: { key: SortKey; label: string }[] = [
-  { key: 'name', label: strings.countries.columns.name },
-  { key: 'region', label: strings.countries.columns.region },
-  { key: 'etymology', label: strings.countries.columns.etymology },
-  { key: 'symbol', label: strings.countries.columns.symbol },
-  { key: 'animal', label: strings.countries.columns.animal },
-];
+function columns(view: TableView): { key: SortKey; label: string }[] {
+  return VIEW_SORT_KEYS[view].map((key) => ({ key, label: strings.countries.columns[key] }));
+}
 
 const COLUMN_CLASS: Partial<Record<SortKey, string | undefined>> = {
   name: styles.colName,
   region: styles.colRegion,
+  population: styles.colFigure,
+  area: styles.colFigure,
 };
+
+/** The cells after the name and region: the symbols, or the country's facts. */
+function ViewCells({ view, country }: { view: TableView; country: CountrySummary }) {
+  if (view === 'symbols') {
+    return (
+      <>
+        <td>{country.etymologySummary}</td>
+        <td>{country.nationalSymbolSummary}</td>
+        <td>
+          <span className={styles.animal}>
+            {country.nationalAnimalName}
+            {country.animalStatus !== 'official' && (
+              <AnimalStatusBadge status={country.animalStatus} />
+            )}
+          </span>
+        </td>
+      </>
+    );
+  }
+  const { population, landAreaKm2 } = country.facts;
+  return (
+    <>
+      <td className={styles.figure} data-testid="cell-population">
+        {population === null ? (
+          <span className={styles.muted}>{strings.facts.noData}</span>
+        ) : (
+          <>
+            {formatPopulation(population.value)}
+            <span className={styles.year}>{population.year}</span>
+          </>
+        )}
+      </td>
+      <td className={styles.figure} data-testid="cell-area">
+        {landAreaKm2 === null ? (
+          <span className={styles.muted}>{strings.facts.noData}</span>
+        ) : (
+          <>
+            {areaText(landAreaKm2)}
+            <span className={styles.year}>{landAreaKm2.year}</span>
+          </>
+        )}
+      </td>
+      <td data-testid="cell-leader">
+        <LeaderSummary facts={country.facts} countryName={country.name} />
+      </td>
+      <td data-testid="cell-election">
+        <ElectionSummary election={country.facts.election} />
+      </td>
+    </>
+  );
+}
 
 /**
  * Clicks on a row open its drawer, except clicks on its own controls (flag, name button) and
@@ -44,16 +96,18 @@ function opensDrawer(event: MouseEvent<HTMLElement>): boolean {
  * sorts; the country name is the keyboard entry point to the drawer (the whole row is a larger
  * pointer target for the same action).
  */
-export function CountriesTable({ countries, sort, onSort, onOpen }: CountriesTableProps) {
+export function CountriesTable({ view, countries, sort, onSort, onOpen }: CountriesTableProps) {
   return (
-    <table className={styles.table} data-testid="countries-table">
-      <caption className="visually-hidden">{strings.countries.caption}</caption>
+    <table className={styles.table} data-testid="countries-table" data-view={view}>
+      <caption className="visually-hidden">
+        {view === 'facts' ? strings.countries.factsCaption : strings.countries.caption}
+      </caption>
       <thead>
         <tr>
           <th scope="col" className={styles.flagCol}>
             {strings.countries.columns.flag}
           </th>
-          {COLUMNS.map((column) => {
+          {columns(view).map((column) => {
             const active = sort.key === column.key;
             return (
               <th
@@ -116,16 +170,7 @@ export function CountriesTable({ countries, sort, onSort, onOpen }: CountriesTab
             <td>
               <RegionChip slug={country.region.slug} name={country.region.name} />
             </td>
-            <td>{country.etymologySummary}</td>
-            <td>{country.nationalSymbolSummary}</td>
-            <td>
-              <span className={styles.animal}>
-                {country.nationalAnimalName}
-                {country.animalStatus !== 'official' && (
-                  <AnimalStatusBadge status={country.animalStatus} />
-                )}
-              </span>
-            </td>
+            <ViewCells view={view} country={country} />
           </tr>
         ))}
       </tbody>
@@ -134,13 +179,19 @@ export function CountriesTable({ countries, sort, onSort, onOpen }: CountriesTab
 }
 
 /** Placeholder rows while the countries load (same structure, so nothing jumps). */
-export function CountriesTableSkeleton({ rows = 8 }: { rows?: number }) {
+export function CountriesTableSkeleton({
+  view = 'symbols',
+  rows = 8,
+}: {
+  view?: TableView;
+  rows?: number;
+}) {
   return (
     <table className={styles.table} aria-hidden="true" data-testid="countries-skeleton">
       <thead>
         <tr>
           <th className={styles.flagCol} />
-          {COLUMNS.map((column) => (
+          {columns(view).map((column) => (
             <th key={column.key} className={COLUMN_CLASS[column.key]}>
               <span className={styles.sortButton}>{column.label}</span>
             </th>
@@ -153,7 +204,7 @@ export function CountriesTableSkeleton({ rows = 8 }: { rows?: number }) {
             <td className={styles.flagCell}>
               <span className={cx('skeleton', styles.skeletonFlag)} />
             </td>
-            {COLUMNS.map((column) => (
+            {columns(view).map((column) => (
               <td key={column.key}>
                 <span className={cx('skeleton', styles.skeletonText)} />
               </td>

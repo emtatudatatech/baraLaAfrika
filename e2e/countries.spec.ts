@@ -47,16 +47,16 @@ test('region chips filter the list and update the URL', async ({ page, isMobile 
   const list = await openCountries(page, isMobile);
   const east = page
     .getByRole('group', { name: 'Region' })
-    .getByRole('button', { name: /East Africa/ });
+    .getByRole('button', { name: /Eastern Africa/ });
   await east.click();
   await expect(page).toHaveURL(/\/countries\?region=east$/);
   await expect(east).toHaveAttribute('aria-pressed', 'true');
-  await expect(list).toHaveCount(16);
+  await expect(list).toHaveCount(18);
   await expect(
-    page.getByRole('status').filter({ hasText: 'Showing 16 of 54 countries' }),
+    page.getByRole('status').filter({ hasText: 'Showing 18 of 54 countries' }),
   ).toBeVisible();
-  // Every remaining row or card carries the East Africa chip.
-  await expect(list.filter({ hasText: 'East Africa' })).toHaveCount(16);
+  // Every remaining row or card carries the Eastern Africa chip.
+  await expect(list.filter({ hasText: 'Eastern Africa' })).toHaveCount(18);
   await page.getByRole('button', { name: /^All/ }).click();
   await expect(page).toHaveURL(/\/countries$/);
   await expect(list).toHaveCount(54);
@@ -84,7 +84,7 @@ test('search ignores accents, updates the URL, and shows an empty state', async 
 test('a shared URL restores region, search and sort', async ({ page, isMobile }) => {
   const list = await openCountries(page, isMobile, '?region=west&q=gu&sort=-name');
   await expect(
-    page.getByRole('group', { name: 'Region' }).getByRole('button', { name: /West Africa/ }),
+    page.getByRole('group', { name: 'Region' }).getByRole('button', { name: /Western Africa/ }),
   ).toHaveAttribute('aria-pressed', 'true');
   await expect(page.getByRole('searchbox', { name: 'Search countries' })).toHaveValue('gu');
   const shown = await names(list);
@@ -137,7 +137,7 @@ test('column headers sort the table and update the URL', async ({ page, isMobile
     );
     return [regions[0], regions.at(-1)];
   };
-  await expect.poll(regionEnds).toEqual(['North Africa', 'Southern Africa']);
+  await expect.poll(regionEnds).toEqual(['Northern Africa', 'Southern Africa']);
 });
 
 test('phones sort with the Sort by menu', async ({ page, isMobile }) => {
@@ -359,3 +359,52 @@ for (const theme of ['light', 'dark'] as const) {
     await expectNoAxeViolations(page);
   });
 }
+
+test('the Facts view shows population, land area, leaders and the next election', async ({
+  page,
+  isMobile,
+}) => {
+  const list = await openCountries(page, isMobile);
+  await page.getByTestId('countries-view-facts').click();
+  await expect(page).toHaveURL(/\/countries\?view=facts$/);
+  await expect(page.getByTestId('countries-view-facts')).toHaveAttribute('aria-pressed', 'true');
+  const kenya = list.filter({ has: page.getByTestId('country-name').getByText('Kenya') });
+  if (isMobile) await kenya.getByRole('button', { expanded: false }).click();
+  await expect(kenya).toContainText(/million/);
+  await expect(kenya).toContainText('km²');
+  await expect(kenya).toContainText('William Ruto');
+  await expect(kenya).toContainText('General election, 10 Aug 2027');
+  await expect(kenya.locator('[data-status]')).toHaveCount(1);
+  // Eritrea holds no national elections; Somalia's note explains its disputed presidency.
+  const eritrea = list.filter({ has: page.getByTestId('country-name').getByText('Eritrea') });
+  if (isMobile) await eritrea.getByRole('button', { expanded: false }).click();
+  await expect(eritrea).toContainText('No national elections');
+  if (!isMobile) {
+    await expect(page.getByRole('columnheader', { name: 'National animal' })).toHaveCount(0);
+    const somalia = list.filter({ has: page.getByTestId('country-name').getByText('Somalia') });
+    await somalia.getByRole('button', { name: /About Somalia/ }).hover();
+    await expect(page.getByRole('tooltip')).toContainText('disputed since 15 May 2026');
+    await page.keyboard.press('Escape');
+    await page.mouse.move(0, 0);
+    // Rows scrolled under the sticky header count as obscured targets; check from the top.
+    await page.evaluate(() => {
+      window.scrollTo(0, 0);
+    });
+  }
+  await expectNoHorizontalOverflow(page);
+  await expectNoAxeViolations(page);
+});
+
+test('the Facts view sorts by population, largest first, and keeps the sort in the URL', async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, 'desktop headers');
+  const list = await openCountries(page, isMobile, '?view=facts');
+  await page.getByRole('button', { name: 'Population' }).click();
+  await expect(page).toHaveURL(/view=facts&sort=-population/);
+  await expect.poll(async () => (await names(list)).slice(0, 2)).toEqual(['Nigeria', 'Ethiopia']);
+  // Switching back to Symbols drops a sort its columns do not have.
+  await page.getByTestId('countries-view-symbols').click();
+  await expect(page).toHaveURL(/\/countries$/);
+});

@@ -20,6 +20,10 @@ import type {
   RangesResponse,
   RegionSlug,
   RegionsResponse,
+  VinaraCountryResponse,
+  VinaraMetricKey,
+  VinaraMetricResponse,
+  VinaraResponse,
 } from '@bla/shared';
 
 /** An API call failed; `code` is the API's error code (or a transport-level code). */
@@ -198,6 +202,52 @@ export const api = {
   /** The download address for the gold table as CSV (filtered by `params`). */
   goldExportUrl: (params: Record<string, string | undefined> = {}) =>
     withQuery('/api/gold/export', { format: 'csv', ...params }),
+  /** Every Vinara measure for Africa or one region, over each measure's default years or a range. */
+  vinara: (
+    query: { region: RegionSlug | null; from?: number | undefined; to?: number | undefined },
+    signal?: AbortSignal,
+  ) =>
+    apiGet<VinaraResponse>(
+      withQuery('/api/vinara', {
+        region: query.region ?? undefined,
+        from: query.from === undefined ? undefined : String(query.from),
+        to: query.to === undefined ? undefined : String(query.to),
+      }),
+      signal,
+    ),
+  /** One measure in full: its ranking, regions and the leaders' yearly values. */
+  vinaraMetric: (
+    query: {
+      key: VinaraMetricKey;
+      region: RegionSlug | null;
+      from?: number | undefined;
+      to?: number | undefined;
+    },
+    signal?: AbortSignal,
+  ) =>
+    apiGet<VinaraMetricResponse>(
+      withQuery(`/api/vinara/metrics/${encodeURIComponent(query.key)}`, {
+        region: query.region ?? undefined,
+        from: query.from === undefined ? undefined : String(query.from),
+        to: query.to === undefined ? undefined : String(query.to),
+      }),
+      signal,
+    ),
+  /** One state on every measure, with context, debt by creditor and its currency. */
+  vinaraCountry: (
+    query: { iso3: string; from?: number | undefined; to?: number | undefined },
+    signal?: AbortSignal,
+  ) =>
+    apiGet<VinaraCountryResponse>(
+      withQuery(`/api/vinara/countries/${encodeURIComponent(query.iso3)}`, {
+        from: query.from === undefined ? undefined : String(query.from),
+        to: query.to === undefined ? undefined : String(query.to),
+      }),
+      signal,
+    ),
+  /** The download address for every measure's ranking as CSV. */
+  vinaraExportUrl: (params: Record<string, string | undefined> = {}) =>
+    withQuery('/api/vinara/export', { format: 'csv', ...params }),
   mountainStats: (region: RegionSlug | null = null, signal?: AbortSignal) =>
     apiGet<HarimStatsResponse>(
       withQuery('/api/mountains/stats', { region: region ?? undefined }),

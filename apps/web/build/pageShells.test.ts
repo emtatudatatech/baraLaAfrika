@@ -179,10 +179,12 @@ describe('route preloads, site shells and the sitemap', () => {
     expect(routeModuleOf('')).toBe('features/map/HomePage.tsx');
     expect(routeModuleOf('harim/peaks/mount-kenya')).toBe('features/harim/PeakPage.tsx');
     expect(routeModuleOf('dhahabu')).toBe('features/dhahabu/DhahabuPage.tsx');
+    expect(routeModuleOf('vinara')).toBe('features/vinara/VinaraPage.tsx');
     expect(routeModuleOf('history')).toBeUndefined();
     expect(siteShells().map((shell) => [shell.path, shell.image])).toEqual([
       ['countries', '/og/site.png'],
       ['dhahabu', '/og/dhahabu.png'],
+      ['vinara', '/og/vinara.png'],
     ]);
   });
 

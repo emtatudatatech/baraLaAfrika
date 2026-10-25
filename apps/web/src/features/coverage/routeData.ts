@@ -10,6 +10,12 @@ import { useMatches } from 'react-router';
 export interface RouteDataHandle {
   datasets: readonly DatasetKey[];
   timeDependent: boolean;
+  /**
+   * The page has its own default years (Vinara: each metric's last ten complete years). With
+   * no range chosen, the range is the last ten years of the coverage and the ribbon names the
+   * page's default instead of the years.
+   */
+  ownDefault?: boolean;
 }
 
 export function isRouteDataHandle(value: unknown): value is RouteDataHandle {

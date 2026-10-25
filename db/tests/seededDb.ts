@@ -513,10 +513,248 @@ export async function loadGold(db: PGlite): Promise<void> {
   );
 }
 
+interface IndicatorSeed {
+  datasets: SeedDataset[];
+  sources: SeedSource[];
+  editions: Record<string, string>;
+  indicators: SeedTable;
+  observations: SeedTable;
+}
+
+/**
+ * Vinara's indicator tables, as `python -m pipelines load` writes them (indicators_load.py).
+ */
+export async function loadIndicators(db: PGlite): Promise<void> {
+  const seed = readJson('db', 'seeds', 'indicators.json') as IndicatorSeed;
+  const creditors = readJson('db', 'seeds', 'external_debt_creditors.json') as {
+    creditor_names: Record<string, string>;
+    creditors: SeedTable;
+  };
+  for (const d of seed.datasets) {
+    await db.query(
+      `INSERT INTO datasets (key, name, provider, license, attribution, coverage_start,
+         coverage_end, as_of, refresh_cadence, last_refreshed_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, '2026-10-15T08:00:00Z')`,
+      [
+        d.key,
+        d.name,
+        d.provider,
+        d.license,
+        d.attribution,
+        d.coverage_start,
+        d.coverage_end,
+        d.as_of,
+        d.refresh_cadence,
+      ],
+    );
+  }
+  await db.query(
+    `INSERT INTO sources (source_key, title, url, source_type, reliability_tier)
+     SELECT source_key, title, url, source_type, reliability_tier::reliability_tier
+     FROM json_to_recordset($1::json) AS s(source_key text, title text, url text,
+       source_type text, reliability_tier text)
+     ON CONFLICT (source_key) DO NOTHING`,
+    [JSON.stringify(seed.sources)],
+  );
+  await db.query(
+    `INSERT INTO indicators (key, name, unit, decimals, definition, source_code, dataset_id,
+       sort_order)
+     SELECT r.key, r.name, r.unit, r.decimals, r.definition, r.source_code, d.id, r.sort_order
+     FROM json_to_recordset($1::json) AS r(key text, name text, unit text, decimals int,
+       definition text, source_code text, dataset text, sort_order int)
+     JOIN datasets d ON d.key = r.dataset`,
+    [JSON.stringify(recordsOf(seed.indicators))],
+  );
+  await db.query(
+    `INSERT INTO indicator_observations (indicator_id, country_id, year, value, basis, source_id,
+       edition)
+     SELECT i.id, c.id, r.year, r.value, r.basis::observation_basis, s.id,
+       ($2::json ->> r.source)
+     FROM json_to_recordset($1::json) AS r(indicator text, iso3 text, year int, value numeric,
+       basis text, source text)
+     JOIN indicators i ON i.key = r.indicator
+     JOIN countries c ON c.iso3 = r.iso3
+     JOIN sources s ON s.source_key = r.source`,
+    [JSON.stringify(recordsOf(seed.observations)), JSON.stringify(seed.editions)],
+  );
+  await db.query(
+    `INSERT INTO external_debt_creditors (country_id, year, creditor_kind, creditor_code,
+       creditor_name, amount_usd, source_id, edition)
+     SELECT c.id, r.year, r.kind::creditor_kind, r.code, ($2::json ->> r.code), r.amount_usd,
+       (SELECT id FROM sources WHERE source_key = 'wb-ids'), $3
+     FROM json_to_recordset($1::json) AS r(iso3 text, year int, kind text, code text,
+       amount_usd numeric)
+     JOIN countries c ON c.iso3 = r.iso3`,
+    [
+      JSON.stringify(recordsOf(creditors.creditors)),
+      JSON.stringify(creditors.creditor_names),
+      seed.editions['wb-ids'],
+    ],
+  );
+}
+
+interface PoliticsSeed {
+  datasets: SeedDataset[];
+  sources: SeedSource[];
+  approved_on: string | null;
+  leaders: SeedTable;
+  elections: SeedTable;
+  notes: Record<string, string>;
+}
+
+/**
+ * Leaders and elections, as `python -m pipelines load` writes them once approved
+ * (politics_load.py). A seed still awaiting approval is loaded here too, dated by its run, so
+ * the API can be tested before the owner's approval.
+ */
+export async function loadPolitics(db: PGlite): Promise<void> {
+  const seed = readJson('db', 'seeds', 'politics.json') as PoliticsSeed;
+  const approvedOn = seed.approved_on ?? '2026-10-22';
+  for (const d of seed.datasets) {
+    await db.query(
+      `INSERT INTO datasets (key, name, provider, license, attribution, coverage_start,
+         coverage_end, as_of, refresh_cadence, last_refreshed_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, '2026-10-15T08:00:00Z')`,
+      [
+        d.key,
+        d.name,
+        d.provider,
+        d.license,
+        d.attribution,
+        d.coverage_start,
+        d.coverage_end,
+        d.as_of,
+        d.refresh_cadence,
+      ],
+    );
+  }
+  await db.query(
+    `INSERT INTO sources (source_key, title, url, source_type, reliability_tier)
+     SELECT source_key, title, url, source_type, reliability_tier::reliability_tier
+     FROM json_to_recordset($1::json) AS s(source_key text, title text, url text,
+       source_type text, reliability_tier text)
+     ON CONFLICT (source_key) DO NOTHING`,
+    [JSON.stringify(seed.sources)],
+  );
+  await db.query(
+    `INSERT INTO country_leaders (country_id, position, role, title, person_name,
+       wikipedia_article, wikidata_qid, is_executive, is_transitional, is_de_facto, source_id,
+       approved_on)
+     SELECT c.id, r.position, r.role::leader_role, r.title, r.person, r.article, r.wikidata_qid,
+       r.executive, r.transitional, r.de_facto, s.id, $2::date
+     FROM json_to_recordset($1::json) AS r(iso3 text, position int, role text, title text,
+       person text, article text, wikidata_qid text, executive boolean, transitional boolean,
+       de_facto boolean, source text)
+     JOIN countries c ON c.iso3 = r.iso3
+     JOIN sources s ON s.source_key = r.source`,
+    [JSON.stringify(recordsOf(seed.leaders)), approvedOn],
+  );
+  await db.query(
+    `INSERT INTO country_elections (country_id, decides, kind, next_date, next_precision,
+       next_article, last_date, last_precision, last_article, note, source_id, approved_on)
+     SELECT c.id, r.decides::election_decides, r.kind::election_kind, r.next_date,
+       r.next_precision::date_precision, r.next_article, r.last_date,
+       r.last_precision::date_precision, r.last_article, ($2::json ->> r.iso3), s.id, $3::date
+     FROM json_to_recordset($1::json) AS r(iso3 text, decides text, kind text, next_date date,
+       next_precision text, next_article text, last_date date, last_precision text,
+       last_article text, source text)
+     JOIN countries c ON c.iso3 = r.iso3
+     JOIN sources s ON s.source_key = r.source`,
+    [JSON.stringify(recordsOf(seed.elections)), JSON.stringify(seed.notes), approvedOn],
+  );
+}
+
+/** Exchange rates, as `python -m pipelines load` writes them (fx_load.py). */
+export async function loadFx(db: PGlite): Promise<void> {
+  const seed = readJson('db', 'seeds', 'fx.json') as {
+    datasets: SeedDataset[];
+    sources: SeedSource[];
+    currencies: SeedTable;
+    changes: SeedTable;
+    monthly: SeedTable;
+    status: SeedTable;
+  };
+  const daily = readJson('db', 'seeds', 'fx_daily.json') as { daily: SeedTable };
+  for (const d of seed.datasets) {
+    await db.query(
+      `INSERT INTO datasets (key, name, provider, license, attribution, coverage_start,
+         coverage_end, as_of, refresh_cadence, last_refreshed_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, '2026-10-15T08:00:00Z')`,
+      [
+        d.key,
+        d.name,
+        d.provider,
+        d.license,
+        d.attribution,
+        d.coverage_start,
+        d.coverage_end,
+        d.as_of,
+        d.refresh_cadence,
+      ],
+    );
+  }
+  await db.query(
+    `INSERT INTO sources (source_key, title, url, source_type, reliability_tier)
+     SELECT source_key, title, url, source_type, reliability_tier::reliability_tier
+     FROM json_to_recordset($1::json) AS s(source_key text, title text, url text,
+       source_type text, reliability_tier text)
+     ON CONFLICT (source_key) DO NOTHING`,
+    [JSON.stringify(seed.sources)],
+  );
+  const source = (key: string) => `(SELECT id FROM sources WHERE source_key = '${key}')`;
+  await db.query(
+    `INSERT INTO country_currencies (country_id, currency_code, union_name, peg_anchor,
+       peg_parity, peg_since, source_id)
+     SELECT c.id, r.currency, r.union_name, r.peg_anchor, r.peg_parity, r.peg_since,
+       CASE WHEN r.peg_anchor IS NULL THEN NULL ELSE ${source('imf-areaer')} END
+     FROM json_to_recordset($1::json) AS r(iso3 text, currency text, union_name text,
+       peg_anchor text, peg_parity numeric, peg_since date)
+     JOIN countries c ON c.iso3 = r.iso3`,
+    [JSON.stringify(recordsOf(seed.currencies))],
+  );
+  await db.query(
+    `INSERT INTO currency_changes (country_id, effective_date, old_code, new_code, old_per_new,
+       note, handling)
+     SELECT c.id, r.date, r.old, r.new, r.old_per_new, r.note,
+       r.outcome::currency_change_handling
+     FROM json_to_recordset($1::json) AS r(iso3 text, date date, old text, new text,
+       old_per_new numeric, note text, outcome text)
+     JOIN countries c ON c.iso3 = r.iso3`,
+    [JSON.stringify(recordsOf(seed.changes))],
+  );
+  await db.query(
+    `INSERT INTO fx_monthly (country_id, month, per_usd_avg, per_usd_end, converted, source_id)
+     SELECT c.id, r.month, r.per_usd_avg, r.per_usd_end, r.converted, ${source('imf-er')}
+     FROM json_to_recordset($1::json) AS r(iso3 text, month date, per_usd_avg numeric,
+       per_usd_end numeric, converted boolean)
+     JOIN countries c ON c.iso3 = r.iso3`,
+    [JSON.stringify(recordsOf(seed.monthly))],
+  );
+  await db.query(
+    `INSERT INTO fx_reporting (country_id, first_month, last_month, months_behind, status)
+     SELECT c.id, r.first_month, r.last_month, r.months_behind, r.status::fx_status
+     FROM json_to_recordset($1::json) AS r(iso3 text, first_month date, last_month date,
+       months_behind int, status text)
+     JOIN countries c ON c.iso3 = r.iso3`,
+    [JSON.stringify(recordsOf(seed.status))],
+  );
+  await db.query(
+    `INSERT INTO fx_daily (currency_code, day, per_usd, basis, source_id)
+     SELECT r.currency, r.date, r.per_usd, r.basis::fx_daily_basis, s.id
+     FROM json_to_recordset($1::json) AS r(currency text, date date, per_usd numeric,
+       basis text, source text)
+     JOIN sources s ON s.source_key = r.source`,
+    [JSON.stringify(recordsOf(daily.daily))],
+  );
+}
+
 export async function seededDb(): Promise<PGlite> {
   const db = await migratedDb();
   await loadSeeds(db);
   await loadHarim(db);
   await loadGold(db);
+  await loadIndicators(db);
+  await loadPolitics(db);
+  await loadFx(db);
   return db;
 }

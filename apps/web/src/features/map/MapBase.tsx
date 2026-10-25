@@ -78,6 +78,11 @@ export interface MapBaseProps {
   /** Absolutely positioned content inside the frame (notices, legends). */
   children?: ReactNode;
   onTransform?: (transform: ZoomTransform) => void;
+  /**
+   * Borders drawn as a light line (in the light theme) between two countries for which this
+   * holds: two dark fills. Keep it stable (memoised); without it every border is one line.
+   */
+  lightBorder?: ((a: string, b: string) => boolean) | undefined;
   /** Called once the map has its size and geometry (camera moves work from then on). */
   onReady?: () => void;
 }
@@ -104,6 +109,7 @@ export function MapBase({
   children,
   onTransform,
   onReady,
+  lightBorder,
 }: MapBaseProps) {
   const geometry = useResource('geo:countries', () =>
     fetchJson<CountriesTopology>(COUNTRIES_TOPOLOGY_URL).then(buildMapGeometry),
@@ -151,11 +157,16 @@ export function MapBase({
     return {
       path,
       graticule: path(geoGraticule10()) ?? '',
-      borders: path(geometry.data.borders) ?? '',
+      borders:
+        (lightBorder === undefined
+          ? path(geometry.data.borders)
+          : path(geometry.data.bordersWhere((a, b) => !lightBorder(a, b)))) ?? '',
+      lightBorders:
+        lightBorder === undefined ? '' : (path(geometry.data.bordersWhere(lightBorder)) ?? ''),
       coast: path(geometry.data.coast) ?? '',
       shapes: geometry.data.shapes.map((shape) => ({ ...shape, d: path(shape.geometry) ?? '' })),
     };
-  }, [projection, geometry]);
+  }, [projection, geometry, lightBorder]);
   const contextPath = useMemo(
     () =>
       projection && context.status === 'success' ? (geoPath(projection)(context.data) ?? '') : '',
@@ -314,6 +325,9 @@ export function MapBase({
                 {contextPath && <path className={styles.context} d={contextPath} />}
                 {renderCountries(mapContext)}
                 <path className={styles.borders} d={drawn.borders} />
+                {drawn.lightBorders !== '' && (
+                  <path className={styles.lightBorders} d={drawn.lightBorders} />
+                )}
                 <path className={styles.coast} d={drawn.coast} />
                 {renderOverlay?.(mapContext)}
               </g>

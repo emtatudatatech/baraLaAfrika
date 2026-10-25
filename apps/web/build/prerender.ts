@@ -20,6 +20,7 @@ export const PRERENDERED = [
   { path: '/countries', file: 'countries.html' },
   { path: '/harim', file: 'harim.html' },
   { path: '/dhahabu', file: 'dhahabu.html' },
+  { path: '/vinara', file: 'vinara.html' },
 ] as const;
 
 /**

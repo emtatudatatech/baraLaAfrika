@@ -14,6 +14,10 @@ export interface TimeRangeContextValue {
   bounds: YearRange | null;
   /** The selected years (?from=&to=), always inside the bounds; null whenever bounds is. */
   range: YearRange | null;
+  /** The page has its own default years (see RouteDataHandle.ownDefault). */
+  ownDefault: boolean;
+  /** No range has been chosen: the route's default (the full coverage, or the page's own). */
+  isDefault: boolean;
   /** The end of the range: the year tables, maps and cards show (latest available by default). */
   referenceYear: number | null;
   /** Updates the URL (replacing the history entry); the full coverage leaves no params. */

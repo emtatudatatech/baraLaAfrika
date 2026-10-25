@@ -22,6 +22,10 @@ import * as mountainsExport from '../functions/mountains-export.ts';
 import * as mountainsStats from '../functions/mountains-stats.ts';
 import * as mountainsSummary from '../functions/mountains-summary.ts';
 import * as regions from '../functions/regions.ts';
+import * as vinara from '../functions/vinara.ts';
+import * as vinaraCountry from '../functions/vinara-country.ts';
+import * as vinaraExport from '../functions/vinara-export.ts';
+import * as vinaraMetric from '../functions/vinara-metric.ts';
 
 type Handler = (request: Request, context: Context) => Promise<Response>;
 
@@ -49,6 +53,10 @@ export const FUNCTIONS: Record<string, FunctionModule> = {
   'mountains-stats': mountainsStats,
   'mountains-summary': mountainsSummary,
   regions,
+  vinara,
+  'vinara-country': vinaraCountry,
+  'vinara-export': vinaraExport,
+  'vinara-metric': vinaraMetric,
 };
 
 const asList = (value: string | string[] | undefined): string[] =>

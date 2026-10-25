@@ -40,7 +40,10 @@ CURATION_FILE = REFERENCE_DIR / "symbology_curation.json"
 REPORT_PATH = DATA_DIR / "review_report.md"
 
 FIELDS = ("etymology", "flag_design", "national_symbol", "national_animal")
-EXPECTED_REGION_COUNTS = {"north": 6, "west": 15, "central": 9, "east": 16, "southern": 8}
+# UN M49 membership (the site's regions) and the research document's own grouping, which
+# differs for five states and is still what the PDF's headings follow.
+EXPECTED_REGION_COUNTS = {"north": 6, "west": 16, "central": 9, "east": 18, "southern": 5}
+DOCUMENT_REGION_COUNTS = {"north": 6, "west": 15, "central": 9, "east": 16, "southern": 8}
 ANIMAL_STATUSES = {"official", "de_facto", "inferred", "sports_nickname", "contested"}
 ETYMOLOGY_CATEGORIES = {
     "geographic_feature",
@@ -191,6 +194,11 @@ def _scientific_name(
     return None, problems
 
 
+def document_region(country: dict[str, Any]) -> str:
+    """The region the research document files the country under (its M49 region unless noted)."""
+    return str(country.get("document_region", country["region"]))
+
+
 def extract(pdf_path: Path = PDF_PATH) -> Extraction:
     document = parse(pdf_path)
     states = _load_json(STATES_FILE)
@@ -260,10 +268,10 @@ def extract(pdf_path: Path = PDF_PATH) -> Extraction:
         if country["iso3"] in prose_by_iso3:
             problems.append(f"Two prose paragraphs for {country['name']}")
         prose_by_iso3[country["iso3"]] = paragraph
-        if region_by_heading.get(paragraph.region_heading) != country["region"]:
+        if region_by_heading.get(paragraph.region_heading) != document_region(country):
             problems.append(
                 f"{country['name']}: prose sits under {paragraph.region_heading!r}, "
-                f"reference region is {country['region']!r}"
+                f"the document's region is {document_region(country)!r}"
             )
     table_by_iso3: dict[str, Any] = {}
     for row in document.table_rows:
@@ -274,10 +282,10 @@ def extract(pdf_path: Path = PDF_PATH) -> Extraction:
         if country["iso3"] in table_by_iso3:
             problems.append(f"Two table rows for {country['name']}")
         table_by_iso3[country["iso3"]] = row
-        if region_by_heading.get(row.region_heading) != country["region"]:
+        if region_by_heading.get(row.region_heading) != document_region(country):
             problems.append(
                 f"{country['name']}: table row sits under {row.region_heading!r}, "
-                f"reference region is {country['region']!r}"
+                f"the document's region is {document_region(country)!r}"
             )
 
     # ── Build country records ────────────────────────────────────────────────
@@ -454,6 +462,14 @@ def validate(extraction: Extraction, states: dict[str, Any]) -> list[str]:
     counts = Counter(c.region for c in countries)
     if dict(counts) != EXPECTED_REGION_COUNTS:
         problems.append(f"Region counts {dict(counts)} != expected {EXPECTED_REGION_COUNTS}")
+    document_counts = Counter(document_region(c) for c in states["countries"])
+    if dict(document_counts) != DOCUMENT_REGION_COUNTS:
+        problems.append(
+            f"Document region counts {dict(document_counts)} != expected {DOCUMENT_REGION_COUNTS}"
+        )
+    for country in states["countries"]:
+        if country.get("document_region") == country["region"]:
+            problems.append(f"{country['name']}: document_region repeats the M49 region")
     for key in ("iso2", "iso3", "iso_numeric", "name"):
         duplicates = [v for v, n in Counter(getattr(c, key) for c in countries).items() if n > 1]
         if duplicates:

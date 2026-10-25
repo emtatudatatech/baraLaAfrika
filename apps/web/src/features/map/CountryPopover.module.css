@@ -27,6 +27,11 @@
   right: 0;
   bottom: 0;
   width: auto;
+
+  /* Never taller than the screen; long content scrolls inside the sheet. */
+  max-height: 85dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding-bottom: max(var(--space-4), env(safe-area-inset-bottom));
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }

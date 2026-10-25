@@ -1,7 +1,7 @@
 import type { PGlite } from '@electric-sql/pglite';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { migratedDb, seedCountries, seededDb } from './seededDb.ts';
+import { migratedDb, readJson, seedCountries, seededDb } from './seededDb.ts';
 
 describe('schema', () => {
   let db: PGlite;
@@ -79,6 +79,25 @@ describe('schema', () => {
   });
 });
 
+describe('election_status()', () => {
+  it('counts 12 months from today; a missing or passed date is "no date set"', async () => {
+    const db = await migratedDb();
+    const result = await db.query<{ s: string[] }>(`
+      SELECT array[
+        election_status('2027-10-22', '2026-10-22'),
+        election_status('2027-10-23', '2026-10-22'),
+        election_status(NULL, '2026-10-22'),
+        election_status('2026-10-01', '2026-10-22')
+      ] AS s`);
+    expect(result.rows[0]?.s).toEqual([
+      'within_12_months',
+      'beyond_12_months',
+      'no_date_set',
+      'no_date_set',
+    ]);
+  });
+});
+
 describe('committed seeds', () => {
   it('load into the schema: 54 countries with profiles and citations', async () => {
     const db = await seededDb();
@@ -87,10 +106,10 @@ describe('committed seeds', () => {
       JOIN regions r ON r.id = c.region_id GROUP BY r.slug`);
     expect(Object.fromEntries(counts.rows.map((r) => [r.region, r.n]))).toEqual({
       north: 6,
-      west: 15,
+      west: 16,
       central: 9,
-      east: 16,
-      southern: 8,
+      east: 18,
+      southern: 5,
     });
     const profiles = await db.query<{ n: number }>(
       'SELECT count(*)::int AS n FROM country_profiles',
@@ -106,6 +125,60 @@ describe('committed seeds', () => {
     const links = await db.query<{ n: number }>('SELECT count(*)::int AS n FROM country_sources');
     expect(links.rows[0]?.n).toBe(expected);
     expect(expected).toBeGreaterThan(54);
+  });
+
+  it('load every indicator observation and creditor, each with its edition', async () => {
+    const db = await seededDb();
+    const seed = readJson('db', 'seeds', 'indicators.json') as {
+      observations: { rows: unknown[] };
+    };
+    const creditors = readJson('db', 'seeds', 'external_debt_creditors.json') as {
+      creditors: { rows: unknown[] };
+    };
+    const counts = await db.query<{ observations: number; creditors: number; editions: number }>(`
+      SELECT (SELECT count(*)::int FROM indicator_observations) AS observations,
+             (SELECT count(*)::int FROM external_debt_creditors) AS creditors,
+             (SELECT count(*)::int FROM indicator_observations WHERE edition IS NULL)
+               + (SELECT count(*)::int FROM external_debt_creditors WHERE creditor_name IS NULL)
+               AS editions`);
+    expect(counts.rows[0]).toEqual({
+      observations: seed.observations.rows.length,
+      creditors: creditors.creditors.rows.length,
+      editions: 0,
+    });
+    const population = await db.query<{ n: number }>(`
+      SELECT count(DISTINCT o.country_id)::int AS n FROM indicator_observations o
+      JOIN indicators i ON i.id = o.indicator_id WHERE i.key = 'population'`);
+    expect(population.rows[0]?.n).toBe(54);
+  });
+
+  it('load one executive leader and one election record per country', async () => {
+    const db = await seededDb();
+    const counts = await db.query<{ executives: number; elections: number }>(`
+      SELECT (SELECT count(*)::int FROM country_leaders WHERE is_executive) AS executives,
+             (SELECT count(*)::int FROM country_elections) AS elections`);
+    expect(counts.rows[0]).toEqual({ executives: 54, elections: 54 });
+  });
+
+  it('load exchange rates for every state, and daily rates per shared currency', async () => {
+    const db = await seededDb();
+    const counts = await db.query<{
+      states: number;
+      daily: number;
+      fresh: number;
+      reported: number;
+    }>(`
+      SELECT (SELECT count(DISTINCT country_id)::int FROM fx_monthly) AS states,
+             (SELECT count(DISTINCT currency_code)::int FROM fx_daily) AS daily,
+             (SELECT count(*)::int FROM fx_reporting WHERE status = 'current') AS fresh,
+             (SELECT count(*)::int FROM fx_reporting) AS reported`);
+    const daily = readJson('db', 'seeds', 'fx_daily.json') as { daily: { rows: string[][] } };
+    const monthly = readJson('db', 'seeds', 'fx.json') as { monthly: { rows: string[][] } };
+    // Every state has a status row; Somalia has no rate since 2020 (status "none").
+    expect(counts.rows[0]?.reported).toBe(54);
+    expect(counts.rows[0]?.states).toBe(new Set(monthly.monthly.rows.map((r) => r[0])).size);
+    expect(counts.rows[0]?.daily).toBe(new Set(daily.daily.rows.map((r) => r[0])).size);
+    expect(counts.rows[0]?.fresh).toBeGreaterThan(30);
   });
 
   it('fold accents for search', async () => {

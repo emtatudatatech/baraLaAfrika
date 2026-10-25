@@ -135,7 +135,7 @@ describe('GET /api/gold/countries', () => {
 
   it('filters by region, presence and search', async () => {
     const west = await countries('?region=west');
-    expect(west.countries).toHaveLength(15);
+    expect(west.countries).toHaveLength(16);
     const none = await countries('?presence=none_identified');
     expect(none.countries.every((c) => c.presence.tier === 'none_identified')).toBe(true);
     const search = await countries('?q=cote');
@@ -211,7 +211,7 @@ describe('GET /api/gold/stats', () => {
     for (const stat of body.stats) {
       if (stat.asOf !== null) expect(stat.asOf <= '2019-12-31').toBe(true);
     }
-    expect(card(body.stats, 'gold_producing_countries').detail.countries).toBe(15);
+    expect(card(body.stats, 'gold_producing_countries').detail.countries).toBe(16);
     expect(card(body.stats, 'gold_price').detail.month).toBe('2019-12-01');
   });
 
@@ -261,7 +261,7 @@ describe('GET /api/gold/export', () => {
         .trimEnd()
         .split('\r\n')
         .filter((l) => !l.startsWith('# ')),
-    ).toHaveLength(17);
+    ).toHaveLength(19);
   });
 });
 

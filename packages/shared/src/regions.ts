@@ -1,7 +1,7 @@
 /**
- * Region slugs follow the research document's grouping (the project's source of truth),
- * not the UN geoscheme. The authoritative assignment of countries lives in the database;
- * this list only fixes the closed set of slugs and their display order.
+ * Region slugs for the five UN M49 regions of Africa (Middle Africa is shown as Central Africa).
+ * The authoritative assignment of countries lives in the database; this list only fixes the
+ * closed set of slugs and their display order.
  */
 export const REGION_SLUGS = ['north', 'west', 'central', 'east', 'southern'] as const;
 
@@ -12,14 +12,14 @@ export function isRegionSlug(value: unknown): value is RegionSlug {
 }
 
 /**
- * The regions' names as the database holds them (from the research document; a test keeps them
+ * The regions' names as the database holds them (UN M49's names; a test keeps them
  * equal to db/seeds/countries.json). For views that must name the regions before the API has
  * answered, such as a page's prerendered first view; the API's names are used once loaded.
  */
 export const REGION_NAMES: Readonly<Record<RegionSlug, string>> = {
-  north: 'North Africa',
-  west: 'West Africa',
+  north: 'Northern Africa',
+  west: 'Western Africa',
   central: 'Central Africa',
-  east: 'East Africa',
+  east: 'Eastern Africa',
   southern: 'Southern Africa',
 };

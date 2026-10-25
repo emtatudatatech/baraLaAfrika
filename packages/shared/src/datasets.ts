@@ -15,6 +15,15 @@ export const DATASET_KEYS = [
   'gold-trade',
   'gold-presence',
   'gold-mines',
+  'vinara-wdi',
+  'vinara-imf-weo',
+  'vinara-sipri',
+  'vinara-hdr',
+  'vinara-ids',
+  'vinara-leaders',
+  'vinara-elections',
+  'vinara-fx-imf',
+  'vinara-fx-daily',
 ] as const;
 
 export type DatasetKey = (typeof DATASET_KEYS)[number];

@@ -12,6 +12,7 @@ const PAGES = [
   { path: '/countries', heading: 'Countries' },
   { path: '/harim', heading: 'Harim · Mountains of Africa' },
   { path: '/dhahabu', heading: 'Dhahabu · Gold in Africa' },
+  { path: '/vinara', heading: 'Vinara · The Cardinals of Africa' },
 ] as const;
 
 for (const { path, heading } of PAGES) {
@@ -45,6 +46,8 @@ test.describe('without script', () => {
   test.use({ javaScriptEnabled: false });
 
   test('the main pages are still readable: header, navigation and skeletons', async ({ page }) => {
+    // Each page waits briefly for an app that never starts without script.
+    test.setTimeout(60_000);
     for (const { path, heading } of PAGES) {
       await page.goto(path);
       await expect(page.getByRole('heading', { level: 1 })).toContainText(heading);

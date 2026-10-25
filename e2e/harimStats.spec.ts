@@ -58,16 +58,16 @@ test('the band recomputes for the selected region and always shows the scope', a
   await openHarim(page);
   await page
     .getByRole('group', { name: 'Region' })
-    .getByRole('button', { name: /East Africa/ })
+    .getByRole('button', { name: /Eastern Africa/ })
     .click();
-  await expect(page.getByTestId('stats-scope')).toContainText('East Africa');
-  await expect(card(page, 'mountains_catalogued')).toContainText('142');
-  await expect(card(page, 'mountains_catalogued')).toContainText('across 16 countries');
+  await expect(page.getByTestId('stats-scope')).toContainText('Eastern Africa');
+  await expect(card(page, 'mountains_catalogued')).toContainText('149');
+  await expect(card(page, 'mountains_catalogued')).toContainText('across 18 countries');
   // A regional figure never reads as Africa's.
   await expect(card(page, 'lowest_point').getByRole('heading')).toContainText(
-    'Lowest point in East Africa',
+    'Lowest point in Eastern Africa',
   );
-  await expect(page.getByRole('article', { name: /\(East Africa\)$/ })).toHaveCount(9);
+  await expect(page.getByRole('article', { name: /\(Eastern Africa\)$/ })).toHaveCount(9);
 });
 
 test('“How is this calculated?” shows the definition and closes with Escape', async ({ page }) => {

@@ -3,20 +3,20 @@
     "by": "python -m pipelines extract-pdf",
     "source_pdf": "data/source/africa-state-symbology.pdf",
     "source_pdf_sha256": "fa0f533bf8ba372dcf1afd49970821f0c0dc9e34ff552c19ab51651e3e1b0dc9",
-    "content_sha256": "16a7cf41ee06047ff10432b1cbd75985de21e18f5e5f726450a03e8edc3bf1de",
+    "content_sha256": "e40b9fff61843e6f3d6a66303fe00b83bdf74f0183578c71661ff636c515f47f",
     "note": "Edit freely, then run `python -m pipelines load`. Re-running extract-pdf will not overwrite edited seeds unless --force is given."
   },
   "regions": [
     {
       "slug": "north",
-      "name": "North Africa",
+      "name": "Northern Africa",
       "description": "The symbology of North Africa is heavily influenced by its geographic dominance by the Sahara Desert, its Mediterranean coastline, and its deep historical integration with the Islamic and Arab worlds. Consequently, the vexillology of the region frequently incorporates the crescent moon and star, while national fauna often highlights species capable of surviving extreme arid conditions.",
       "sort_order": 1,
       "color_hex": null
     },
     {
       "slug": "west",
-      "name": "West Africa",
+      "name": "Western Africa",
       "description": "West Africa presents a rich tapestry of states whose names are often deeply tied to ancient empires, major river systems, or early Portuguese exploration. The vexillology here is heavily dominated by the Ethiopian-inspired Pan-African colors (red, yellow, and green), reflecting a shared regional commitment to post-colonial solidarity and the rejection of European imperial aesthetics.",
       "sort_order": 2,
       "color_hex": null
@@ -30,7 +30,7 @@
     },
     {
       "slug": "east",
-      "name": "East Africa",
+      "name": "Eastern Africa",
       "description": "East Africa is a region of immense geographic and ecological diversity, stretching from the arid Horn of Africa to the tectonic Great Rift Valley and the island states of the Indian Ocean. The vexillology here is highly diverse, eschewing uniform Pan-Africanism for deeply localized designs. The biological symbology frequently features savanna apex predators, majestic birds, and ancient marine life.",
       "sort_order": 4,
       "color_hex": null
@@ -183,7 +183,7 @@
       "iso_numeric": 478,
       "name": "Mauritania",
       "official_name": "Islamic Republic of Mauritania",
-      "region": "north",
+      "region": "west",
       "flag_url_template": "https://flagcdn.com/w{width}/mr.png",
       "is_microstate_marker": false,
       "profile": {
@@ -1843,7 +1843,7 @@
       "iso_numeric": 729,
       "name": "Sudan",
       "official_name": "Republic of the Sudan",
-      "region": "east",
+      "region": "north",
       "flag_url_template": "https://flagcdn.com/w{width}/sd.png",
       "is_microstate_marker": false,
       "profile": {
@@ -2105,7 +2105,7 @@
       "iso_numeric": 508,
       "name": "Mozambique",
       "official_name": "Republic of Mozambique",
-      "region": "southern",
+      "region": "east",
       "flag_url_template": "https://flagcdn.com/w{width}/mz.png",
       "is_microstate_marker": false,
       "profile": {
@@ -2246,7 +2246,7 @@
       "iso_numeric": 894,
       "name": "Zambia",
       "official_name": "Republic of Zambia",
-      "region": "southern",
+      "region": "east",
       "flag_url_template": "https://flagcdn.com/w{width}/zm.png",
       "is_microstate_marker": false,
       "profile": {
@@ -2293,7 +2293,7 @@
       "iso_numeric": 716,
       "name": "Zimbabwe",
       "official_name": "Republic of Zimbabwe",
-      "region": "southern",
+      "region": "east",
       "flag_url_template": "https://flagcdn.com/w{width}/zw.png",
       "is_microstate_marker": false,
       "profile": {

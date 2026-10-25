@@ -1,0 +1,175 @@
+import { type Page, expect, test } from './fixtures';
+
+import { expectNoAxeViolations, expectNoHorizontalOverflow, waitForContent } from './helpers';
+
+const row = (page: Page, key: string) =>
+  page.locator(`[data-testid="vinara-row"][data-metric="${key}"]`);
+const card = (page: Page, key: string) =>
+  page.locator(`[data-testid="stat-card"][data-stat="${key}"]`);
+
+async function openVinara(page: Page, query = '') {
+  await page.goto(`/vinara${query}`);
+  await waitForContent(page, '/vinara');
+}
+
+test('names the cardinal and the silent contender for each of the 13 measures', async ({
+  page,
+  isMobile,
+}) => {
+  await openVinara(page);
+  await expect(page.getByTestId(isMobile ? 'vinara-cards' : 'vinara-table')).toBeVisible();
+  const population = row(page, 'population');
+  await expect(population).toContainText('Nigeria');
+  await expect(population).toContainText('Ethiopia');
+  await expect(population).toContainText('2016–2025');
+  await expect(population).toContainText('54 of 54 states ranked');
+  await expect(population.getByTestId('vinara-signal')).toContainText('Lead holding');
+  // Ties are all named, and have no signal.
+  const stability = row(page, 'currency_stability');
+  await expect(stability).toContainText('Tie of 2');
+  await expect(stability).toContainText('Djibouti');
+  await expect(stability).toContainText('Eritrea');
+  await expect(stability.getByTestId('vinara-signal')).toContainText('No signal: a tie');
+  // A large tie (the currencies fixed to the euro) shows three names, and all on request.
+  const performance = row(page, 'currency_performance');
+  await expect(performance).toContainText('2020–2025');
+  await expect(performance).toContainText('Liberia');
+  await expect(performance).toContainText('Tie of 17');
+  await expect(performance.locator('[data-iso3]')).toHaveCount(4);
+  await performance.getByTestId('vinara-tie-toggle').click();
+  await expect(performance.locator('[data-iso3]')).toHaveCount(18);
+  await expect(performance).toContainText('Togo');
+  // The contender closing in, and ahead in the window's last year.
+  const inflation = row(page, 'inflation');
+  await expect(inflation.getByTestId('vinara-signal')).toContainText('Gap closing');
+  await expect(inflation.getByTestId('vinara-ahead')).toContainText('Djibouti was ahead in 2025');
+  // An IMF estimate says so.
+  await expect(row(page, 'government_debt')).toContainText('IMF estimate');
+  await expect(page.getByTestId('vinara-window')).toContainText(
+    'Each measure covers its own last ten complete years.',
+  );
+  await expectNoHorizontalOverflow(page);
+});
+
+test('compares the regions for Africa, and ranks within a region on its own', async ({ page }) => {
+  await openVinara(page);
+  // Small multiples by default, one per measure; the table is the other view.
+  await expect(page.getByTestId('vinara-multiple')).toHaveCount(13);
+  await expect(
+    page.locator('[data-testid="vinara-multiple"][data-metric="inflation"] [data-partial]'),
+  ).toHaveCount(1);
+  await page.getByTestId('vinara-regions-view-table').click();
+  await expect(page.getByTestId('vinara-region-row')).toHaveCount(13);
+  await expect(card(page, 'leadingRegion')).toContainText('Northern Africa');
+  await page.locator('[data-region="east"]').click();
+  await expect(page).toHaveURL(/region=east/);
+  await expect(row(page, 'gdp_usd')).toContainText('Kenya');
+  await expect(row(page, 'population')).toContainText('18 of 18 states ranked');
+  await expect(page.getByTestId('vinara-regions')).toHaveCount(0);
+  await expect(card(page, 'leadingRegion')).toHaveCount(0);
+  await expect(page.getByTestId('vinara-election').first()).toBeVisible();
+  // Every election shown is in the region.
+  const shown = await page
+    .getByTestId('vinara-election')
+    .evaluateAll((items) => items.map((item) => item.getAttribute('data-iso3')));
+  expect(shown).toContain('KEN');
+  expect(shown).not.toContain('NGA');
+});
+
+test('follows a range chosen in the ribbon', async ({ page }) => {
+  await openVinara(page);
+  await expect(page.getByTestId('ribbon-years')).toContainText('Last 10 complete years');
+  await openVinara(page, '?from=2018&to=2022');
+  await expect(page.getByTestId('vinara-window')).toContainText(
+    'Years chosen: 2018–2022. Each measure keeps to the years it has data for.',
+  );
+  await expect(row(page, 'gdp_usd')).toContainText('2018–2022');
+  // The currency measures keep to the years they have data for.
+  await expect(row(page, 'currency_performance')).toContainText('2020–2022');
+  await expect(page.getByTestId('ribbon-years')).toContainText('2018–2022');
+});
+
+test('explains each measure and each signal', async ({ page }) => {
+  await openVinara(page);
+  await row(page, 'inflation').getByTestId('vinara-definition').focus();
+  await expect(page.getByRole('tooltip')).toContainText('the mean of the absolute annual rates');
+  await card(page, 'gapsClosing').getByTestId('stat-info').click();
+  await expect(page.getByTestId('stat-definition')).toContainText('gap-closing signal');
+});
+
+test('has no accessibility violations, in Africa and in a region', async ({ page }) => {
+  await openVinara(page);
+  await expectNoAxeViolations(page);
+  await openVinara(page, '?region=west');
+  await expectNoAxeViolations(page);
+});
+
+test('shows one measure in detail: the leaders year by year, and every state ranked', async ({
+  page,
+}) => {
+  await openVinara(page);
+  const detail = page.getByTestId('vinara-detail');
+  await expect(detail.getByTestId('vinara-leaders-line')).toHaveCount(2);
+  await expect(detail.getByTestId('vinara-ranking-bar')).toHaveCount(10);
+  await expect(detail.getByTestId('vinara-ranking-bar').first()).toHaveAttribute(
+    'data-iso3',
+    'NGA',
+  );
+  await expect(detail.getByTestId('vinara-ranking-bar').first()).toHaveAttribute(
+    'data-role',
+    'cardinal',
+  );
+  await detail.getByTestId('vinara-ranking-toggle').click();
+  await expect(detail.getByTestId('vinara-ranking-bar')).toHaveCount(54);
+  // Another measure, kept in the URL.
+  await detail.getByTestId('vinara-metric-select').selectOption('currency_performance');
+  await expect(page).toHaveURL(/metric=currency_performance/);
+  await expect(detail).toContainText('2020–2025');
+  await expect(detail.getByTestId('vinara-ranking-bar').first()).toHaveAttribute(
+    'data-iso3',
+    'LBR',
+  );
+  // The contender is a tie: no two lines to follow.
+  await expect(detail).toContainText('A tie at the top or for second place');
+  await expect(detail.getByTestId('vinara-leaders-line')).toHaveCount(0);
+});
+
+test('a state’s name opens its drawer: every measure ranked, debt and currency', async ({
+  page,
+}) => {
+  await openVinara(page);
+  await row(page, 'population').getByRole('button', { name: 'Nigeria' }).click();
+  await expect(page).toHaveURL(/country=NGA/);
+  const drawer = page.getByTestId('vinara-drawer');
+  await expect(drawer).toBeVisible();
+  await expect(drawer.getByTestId('vinara-drawer-measure')).toHaveCount(13);
+  await expect(
+    drawer.locator('[data-testid="vinara-drawer-measure"][data-metric="population"]'),
+  ).toContainText('1st of 54 in Africa');
+  // Nigeria's central bank terms are unconfirmed: the IMF's monthly averages only.
+  await expect(drawer).toContainText('Currency: NGN');
+  await expect(drawer.getByTestId('vinara-drawer-currency')).toContainText(
+    'the IMF’s monthly averages',
+  );
+  await expectNoAxeViolations(page);
+  await page.keyboard.press('Escape');
+  await expect(drawer).toHaveCount(0);
+  await expect(page).not.toHaveURL(/country=/);
+});
+
+test('a shared link opens a drawer with debt by creditor', async ({ page }) => {
+  await openVinara(page, '?country=KEN');
+  const drawer = page.getByTestId('vinara-drawer');
+  await expect(drawer.getByTestId('vinara-drawer-creditors').locator('li').first()).toBeVisible();
+  await expect(drawer).toContainText('Currency: KES');
+  await expect(drawer.getByTestId('vinara-drawer-currency')).toContainText('Official daily rates');
+});
+
+test('Export CSV downloads every ranking for the scope', async ({ page }) => {
+  await openVinara(page, '?region=east');
+  const download = page.waitForEvent('download');
+  await page.getByTestId('vinara-export').click();
+  const file = await download;
+  expect(file.suggestedFilename()).toMatch(/^vinara-east-\d{4}-\d{2}-\d{2}\.csv$/);
+  await expect(page.getByTestId('vinara-export-toast')).toContainText('Downloaded');
+});

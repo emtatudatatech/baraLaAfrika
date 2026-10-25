@@ -4,12 +4,13 @@ import { expectNoHorizontalOverflow, useTheme, waitForAnimations } from './helpe
 
 const LIGHT = {
   north: 'rgb(193, 39, 45)',
-  west: 'rgb(0, 158, 73)',
+  west: 'rgb(85, 210, 122)',
   central: 'rgb(252, 209, 22)',
-  east: 'rgb(65, 143, 222)',
-  southern: 'rgb(0, 20, 137)',
+  east: 'rgb(0, 102, 0)',
+  southern: 'rgb(109, 169, 210)',
 };
-const DARK = { ...LIGHT, east: 'rgb(114, 182, 254)', southern: 'rgb(43, 90, 205)' };
+// Only Eastern Africa's dark green is lifted on the dark map.
+const DARK = { ...LIGHT, east: 'rgb(23, 114, 20)' };
 
 async function openMap(page: Page) {
   await page.goto('/');
@@ -53,7 +54,7 @@ test('dark theme lifts only the colours that need it, keeping their hue', async 
 test('the legend isolates a region and links to the table', async ({ page }) => {
   const map = await openMap(page);
   const legend = page.getByRole('region', { name: 'Regions' });
-  const west = legend.getByRole('button', { name: /West Africa/ });
+  const west = legend.getByRole('button', { name: /Western Africa/ });
   await west.click();
   await expect(west).toHaveAttribute('aria-pressed', 'true');
   await expect(map.locator('path[data-region="east"]').first()).toHaveClass(/dimmed/);
@@ -96,7 +97,12 @@ test('hovering shows a tooltip with the flag, name and region', async ({ page, i
   await map.locator('path[data-iso3="NER"]').hover();
   const tooltip = page.getByRole('tooltip');
   await expect(tooltip).toContainText('Niger');
-  await expect(tooltip).toContainText('West Africa');
+  await expect(tooltip).toContainText('Western Africa');
+  // The country's facts: population, land area, leader and next election.
+  await expect(tooltip.getByTestId('map-facts')).toContainText('million');
+  await expect(tooltip.getByTestId('map-facts')).toContainText('km²');
+  await expect(tooltip.getByTestId('map-facts')).toContainText('Abdourahamane Tiani');
+  await expect(tooltip.getByTestId('map-facts')).toContainText('Transitional');
   const flag = tooltip.getByRole('img', { name: 'Flag of Niger' });
   await expect(flag).toBeVisible();
   await expect
@@ -128,7 +134,7 @@ test('countries are keyboard navigable with one tab stop', async ({ page, isMobi
   const map = await openMap(page);
   const first = map.locator('[role="button"][tabindex="0"]');
   await expect(first).toHaveCount(1);
-  await expect(first).toHaveAttribute('aria-label', 'Algeria, North Africa');
+  await expect(first).toHaveAttribute('aria-label', 'Algeria, Northern Africa');
   await first.focus();
   await page.keyboard.press('ArrowRight');
   await expect(map.locator('[data-iso3="AGO"]')).toBeFocused();
@@ -137,6 +143,8 @@ test('countries are keyboard navigable with one tab stop', async ({ page, isMobi
   await expect(map.locator('[data-iso3="ZWE"]')).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.getByTestId('country-popover')).toContainText('Zimbabwe');
+  await expect(page.getByTestId('country-popover')).toContainText('Emmerson Mnangagwa');
+  await expect(page.getByTestId('country-popover')).toContainText('No election within 12 months');
 });
 
 test('zoom buttons zoom in, out and reset', async ({ page }) => {

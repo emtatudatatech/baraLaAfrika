@@ -17,6 +17,10 @@ export default defineConfig({
         test: {
           name: 'node',
           environment: 'node',
+          // Database tests build an in-memory Postgres with every seed; under a full parallel
+          // run that can take longer than the 5-second default.
+          testTimeout: 30_000,
+          hookTimeout: 60_000,
           include: [
             'packages/**/*.test.ts',
             'netlify/tests/**/*.test.ts',

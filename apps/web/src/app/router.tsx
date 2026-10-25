@@ -13,11 +13,24 @@ import { RouteErrorBoundary } from './RouteErrorBoundary';
  */
 export const ROUTE_DATA = {
   home: {
-    datasets: ['symbology-pdf', 'boundaries-natural-earth', 'flags-flagpedia'],
+    datasets: [
+      'symbology-pdf',
+      'boundaries-natural-earth',
+      'flags-flagpedia',
+      'vinara-wdi',
+      'vinara-leaders',
+      'vinara-elections',
+    ],
     timeDependent: false,
   },
   countries: {
-    datasets: ['symbology-pdf', 'flags-flagpedia'],
+    datasets: [
+      'symbology-pdf',
+      'flags-flagpedia',
+      'vinara-wdi',
+      'vinara-leaders',
+      'vinara-elections',
+    ],
     timeDependent: false,
   },
   harim: {
@@ -33,6 +46,20 @@ export const ROUTE_DATA = {
       'gold-presence',
     ],
     timeDependent: true,
+  },
+  vinara: {
+    datasets: [
+      'vinara-wdi',
+      'vinara-imf-weo',
+      'vinara-sipri',
+      'vinara-hdr',
+      'vinara-fx-imf',
+      'vinara-fx-daily',
+      'vinara-leaders',
+      'vinara-elections',
+    ],
+    timeDependent: true,
+    ownDefault: true,
   },
 } as const satisfies Record<string, RouteDataHandle>;
 
@@ -91,6 +118,13 @@ export const routes: RouteObject[] = [
             handle: ROUTE_DATA.dhahabu,
             lazy: {
               Component: async () => (await import('../features/dhahabu/DhahabuPage')).DhahabuPage,
+            },
+          },
+          {
+            path: 'vinara',
+            handle: ROUTE_DATA.vinara,
+            lazy: {
+              Component: async () => (await import('../features/vinara/VinaraPage')).VinaraPage,
             },
           },
           { path: '*', Component: NotFoundPage },

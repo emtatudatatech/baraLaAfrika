@@ -9,7 +9,15 @@ from typing import LiteralString
 import psycopg
 import pytest
 
-from pipelines.africa_pipelines import gold_load, load, migrate, status
+from pipelines.africa_pipelines import (
+    fx_load,
+    gold_load,
+    indicators_load,
+    load,
+    migrate,
+    politics_load,
+    status,
+)
 from pipelines.africa_pipelines.settings import SEEDS_DIR
 
 APPROVED = json.loads(load.APPROVAL_PATH.read_text(encoding="utf-8"))["colors"]
@@ -40,10 +48,23 @@ def test_first_load_populates_everything_with_approved_colours(pglite_url: str) 
         harim = json.loads((SEEDS_DIR / "mountains.json").read_text())
         gold = gold_load.read(SEEDS_DIR)
         assert gold is not None
+        indicators = indicators_load.read(SEEDS_DIR)
+        assert indicators is not None
+        politics = politics_load.read(SEEDS_DIR)
+        assert politics is not None
+        fx_seeds = fx_load.read(SEEDS_DIR)
+        assert fx_seeds is not None
         expected_sources = (
             {s["source_key"] for s in symbology_sources}
             | {s["source_key"] for s in harim["sources"]}
             | {s["source_key"] for s in gold["sources"]}
+            | {s["source_key"] for s in indicators["sources"]}
+            | (
+                {s["source_key"] for s in politics["sources"]}
+                if politics["seed"]["approved_on"]
+                else set()
+            )
+            | {s["source_key"] for s in fx_seeds["sources"]}
         )
         assert scalar(conn, "SELECT count(*) FROM sources") == len(expected_sources)
         palette_rows = scalar(conn, "SELECT count(*) FROM flag_palette")
@@ -62,6 +83,9 @@ def test_first_load_populates_everything_with_approved_colours(pglite_url: str) 
             "JOIN datasets d ON d.id = r.dataset_id"
         ).fetchall()
         gold_runs = [(d["key"], "succeeded") for d in gold["datasets"]]
+        indicator_runs = [(d["key"], "succeeded") for d in indicators["datasets"]]
+        politics_runs = [(d["key"], "succeeded") for d in politics["datasets"]]
+        fx_runs = [(d["key"], "succeeded") for d in fx_seeds["datasets"]]
         assert sorted(runs) == sorted(
             [
                 ("boundaries-natural-earth", "succeeded"),
@@ -71,6 +95,9 @@ def test_first_load_populates_everything_with_approved_colours(pglite_url: str) 
                 ("mountains-wikidata", "succeeded"),
                 ("symbology-pdf", "succeeded"),
                 *gold_runs,
+                *indicator_runs,
+                *politics_runs,
+                *fx_runs,
             ]
         )
         assert scalar(conn, "SELECT count(*) FROM datasets WHERE last_refreshed_at IS NULL") == 0
@@ -228,3 +255,88 @@ def test_status_reports_freshness_and_overdue_datasets() -> None:
     lines = status.format_rows(rows, now)
     assert "40 days ago" in lines[1] and "overdue" in lines[1]
     assert "today" in lines[2] and "overdue" not in lines[2]
+
+
+def test_indicators_load_their_rules_and_reload_without_changes(pglite_url: str) -> None:
+    seed = json.loads((SEEDS_DIR / "indicators.json").read_text())
+    creditors = json.loads((SEEDS_DIR / "external_debt_creditors.json").read_text())
+    with migrated(pglite_url) as conn:
+        first = load.load(conn)
+        assert first.changes["indicators"] == len(seed["indicators"]["rows"])
+        assert first.changes["indicator_observations"] == len(seed["observations"]["rows"])
+        assert first.changes["external_debt_creditors"] == len(creditors["creditors"]["rows"])
+        # Estimates are IMF figures for one year only; nothing is stored for a year not ended.
+        assert (
+            scalar(
+                conn,
+                "SELECT count(DISTINCT year) FROM indicator_observations o JOIN sources s "
+                "ON s.id = o.source_id WHERE o.basis = 'estimate' AND s.source_key = 'imf-weo'",
+            )
+            == 1
+        )
+        assert (
+            scalar(
+                conn,
+                "SELECT count(*) FROM indicator_observations "
+                "WHERE year >= extract(year FROM now())",
+            )
+            == 0
+        )
+        assert scalar(
+            conn,
+            "SELECT count(*) FROM indicator_observations o JOIN indicators i "
+            "ON i.id = o.indicator_id WHERE i.key = 'population'",
+        ) == sum(1 for r in seed["observations"]["rows"] if r[0] == "population")
+        second = load.load(conn)
+        for table in ("indicators", "indicator_observations", "external_debt_creditors"):
+            assert second.changes.get(table, 0) == 0, table
+
+
+def test_leaders_and_elections_load_only_once_approved(pglite_url: str, tmp_path: Path) -> None:
+    seeds = tmp_path / "seeds"
+    shutil.copytree(SEEDS_DIR, seeds)
+    politics_seed = json.loads((seeds / "politics.json").read_text())
+    with migrated(pglite_url) as conn:
+        politics_seed["approved_on"] = None
+        (seeds / "politics.json").write_text(json.dumps(politics_seed))
+        skipped = load.load(conn, seeds)
+        assert any("awaiting approval" in w for w in skipped.warnings)
+        assert scalar(conn, "SELECT count(*) FROM country_leaders") == 0
+
+        politics_seed["approved_on"] = "2026-10-22"
+        (seeds / "politics.json").write_text(json.dumps(politics_seed))
+        loaded = load.load(conn, seeds)
+        assert loaded.changes["country_elections"] == 54
+        assert scalar(conn, "SELECT count(*) FROM country_leaders WHERE is_executive") == 54
+        assert (
+            scalar(
+                conn,
+                "SELECT count(*) FROM country_elections e JOIN countries c ON c.id = e.country_id "
+                "WHERE c.iso3 = 'ERI' AND e.decides = 'none' AND e.note IS NOT NULL",
+            )
+            == 1
+        )
+        again = load.load(conn, seeds)
+        assert again.changes.get("country_leaders", 0) == 0
+        assert again.changes.get("country_elections", 0) == 0
+
+
+def test_exchange_rates_load_and_reload_without_changes(pglite_url: str) -> None:
+    seed = json.loads((SEEDS_DIR / "fx.json").read_text())
+    daily = json.loads((SEEDS_DIR / "fx_daily.json").read_text())
+    with migrated(pglite_url) as conn:
+        first = load.load(conn)
+        assert first.changes["fx_monthly"] == len(seed["monthly"]["rows"])
+        assert first.changes["fx_daily"] == len(daily["daily"]["rows"])
+        assert first.changes["country_currencies"] == 54
+        assert (
+            scalar(
+                conn,
+                "SELECT count(*) FROM country_currencies WHERE peg_anchor = 'EUR' "
+                "AND currency_code IN ('XOF', 'XAF')",
+            )
+            == 14
+        )
+        second = load.load(conn)
+        for table in ("fx_monthly", "fx_daily", "country_currencies", "fx_reporting"):
+            assert second.changes.get(table, 0) == 0, table

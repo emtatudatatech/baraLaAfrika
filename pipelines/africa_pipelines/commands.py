@@ -8,6 +8,7 @@ from pipelines.africa_pipelines import (
     boundaries,
     extract_pdf,
     flags,
+    fx,
     gold_mines,
     gold_presence,
     gold_price,
@@ -16,8 +17,10 @@ from pipelines.africa_pipelines import (
     gold_reserves,
     gold_trade,
     harim,
+    indicators,
     load,
     migrate,
+    politics,
     status,
 )
 from pipelines.cli import Command
@@ -124,6 +127,27 @@ ALL: list[Command] = [
         "presence, profiles).",
         configure=_configure_gold,
         run=_run_gold,
+    ),
+    Command(
+        name="indicators",
+        help="Fetch Vinara's annual indicators (World Bank, IMF, UNDP, SIPRI) and debt by "
+        "creditor into seeds, with the coverage matrix and review report.",
+        configure=indicators.configure,
+        run=indicators.run,
+    ),
+    Command(
+        name="politics",
+        help="Read leaders and next elections (Wikipedia lists, Wikidata check) into a seed and "
+        "the review report; --approve records them as approved.",
+        configure=politics.configure,
+        run=politics.run,
+    ),
+    Command(
+        name="fx",
+        help="Fetch exchange rates (IMF monthly, ECB daily and derived pegs) into seeds and the "
+        "review report.",
+        configure=fx.configure,
+        run=fx.run,
     ),
     Command(
         name="load",

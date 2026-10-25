@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -9,15 +12,19 @@ import {
   deltaE,
   hexToOklch,
   oklchToHex,
+  prefersLightLine,
 } from './colour';
 
-const APPROVED = {
-  north: '#c1272d',
-  west: '#009e49',
-  central: '#fcd116',
-  east: '#418fde',
-  southern: '#001489',
-};
+// The approved region colours (Vitest runs from the repo root), so the checks below cover the
+// palette the site uses.
+const APPROVED = (
+  JSON.parse(
+    readFileSync(
+      resolve(process.cwd(), 'pipelines/africa_pipelines/reference/region_colors_approval.json'),
+      'utf8',
+    ),
+  ) as { colors: Record<string, string> }
+).colors;
 
 describe('colour helpers', () => {
   it('round-trips OKLCH', () => {
@@ -60,6 +67,16 @@ describe('darkThemePalette', () => {
 
   it('leaves colours that already pass unchanged', () => {
     expect(dark.central).toBe('#fcd116');
-    expect(dark.west).toBe('#009e49');
+    expect(dark.west).toBe('#55d27a');
+  });
+});
+
+describe('map borders on dark fills', () => {
+  it('draws a light border on the dark region colours and a dark one on the light ones', () => {
+    // Eastern Africa's green and Northern Africa's red take the light line.
+    expect(prefersLightLine('#006600')).toBe(true);
+    expect(prefersLightLine('#c1272d')).toBe(true);
+    for (const light of ['#55d27a', '#fcd116', '#6da9d2'])
+      expect(prefersLightLine(light)).toBe(false);
   });
 });
